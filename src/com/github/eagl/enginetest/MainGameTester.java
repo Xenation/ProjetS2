@@ -8,7 +8,7 @@ import com.github.eagl.render.*;
 public class MainGameTester {
 	
 	public static void main(String[] args) {
-		// Display Window initialisation
+		// Display Window initialization
 		DisplayManager.createDisplay();
 		Renderer renderer = new Renderer();
 		//Loader loader = new Loader();
@@ -17,6 +17,9 @@ public class MainGameTester {
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {
+			DisplayManager.updateDelta();
+			DisplayManager.updateFPS();
+			
 			renderer.prepare();
 			renderer.render(tilSpr);
 			

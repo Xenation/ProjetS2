@@ -24,10 +24,10 @@ public class DisplayManager {
 	/**
 	 * the maximum number of frames per second
 	 */
-	private static final int FPS_CAP = 120;
+	private static final int FPS_CAP = Integer.MAX_VALUE;
 	
 	/**
-	 * the aspect ratio of the screen at initialisation
+	 * the aspect ratio of the screen at initialization
 	 */
 	public static final float ASPECT_RATIO = ((float) WIDTH)/((float) HEIGHT);
 	
@@ -41,16 +41,25 @@ public class DisplayManager {
 	private static float delta;
 	
 	/**
+	 * the last time the fps counter has been display
+	 */
+	private static long lastFPS;
+	
+	/**
+	 * the number of frame per second display on the screen
+	 */
+	private static int fps;
+	
+	/**
 	 * Creates a new display window
 	 */
-	public static void createDisplay() {
-		
+	public static void createDisplay() {		
 		// Display creation
 		try {
 			
 			DisplayMode current = new DisplayMode(WIDTH, HEIGHT);
 			
-			// Temporary Code to put the display in fullscreen
+			// Temporary Code to put the display in full screen
 			/*DisplayMode[] modes = Display.getAvailableDisplayModes();
 			
 			for (int i=0;i<modes.length;i++) {
@@ -76,9 +85,9 @@ public class DisplayManager {
 		
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		// delta time initialisation
-		lastFrameTime = getCurrentTime();
+
+		updateDelta();
+		lastFPS = getCurrentTime();		
 	}
 	
 	/**
@@ -86,20 +95,31 @@ public class DisplayManager {
 	 */
 	public static void updateDisplay() {
 		// FPS syncing and screen update
+		Display.update();		
 		Display.sync(FPS_CAP);
-		Display.update();
-		
-		// delta time update
+	}
+	
+	/**
+	 * Updates delta
+	 */
+    public static void updateDelta() {
 		long currentFrameTime = getCurrentTime();
-		delta = (currentFrameTime - lastFrameTime) / 1000f;
+		delta = currentFrameTime - lastFrameTime;
 		lastFrameTime = currentFrameTime;
 		
-		if (delta > 1) {
-			delta = 0;
-		}
-		
-		Display.setTitle("FPS: "+1/delta);
 	}
+
+    /**
+     * Updates the number of frame per second
+     */
+	public static void updateFPS() {
+		if (getCurrentTime() - lastFPS > 1000) {
+            Display.setTitle("FPS: " + fps);
+            fps = 0;
+            lastFPS += 1000;
+        }
+        fps++;
+    }
 	
 	/**
 	 * Returns the delta time meaning the amount of time the current frame took to be loader
@@ -121,7 +141,7 @@ public class DisplayManager {
 	 * @return the current time in milliseconds
 	 */
 	private static long getCurrentTime() {
-		return Sys.getTime()*1000/Sys.getTimerResolution();
+		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
 	
 }
