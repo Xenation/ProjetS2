@@ -94,6 +94,9 @@ public class DisplayManager {
 	 * Updates the display (delta time also)
 	 */
 	public static void updateDisplay() {
+		updateDelta();
+		updateFPS();
+		
 		// FPS syncing and screen update
 		Display.update();		
 		Display.sync(FPS_CAP);
@@ -106,17 +109,16 @@ public class DisplayManager {
 		long currentFrameTime = getCurrentTime();
 		delta = currentFrameTime - lastFrameTime;
 		lastFrameTime = currentFrameTime;
-		
 	}
 
     /**
      * Updates the number of frame per second
      */
 	public static void updateFPS() {
-		if (getCurrentTime() - lastFPS > 1000) {
+		if (getCurrentTime() - lastFPS > 500) {
             Display.setTitle("FPS: " + fps);
             fps = 0;
-            lastFPS += 1000;
+            lastFPS += 500;
         }
         fps++;
     }
