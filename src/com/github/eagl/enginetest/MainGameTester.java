@@ -17,7 +17,7 @@ public class MainGameTester {
 		TileSprite tilSpr = new TileSprite("tile_dirt");
 		
 		// Game Loop
-		while (!Display.isCloseRequested()) {
+		while (!Display.isCloseRequested()) {			
 			renderer.prepare();
 			renderer.render(tilSpr);
 			

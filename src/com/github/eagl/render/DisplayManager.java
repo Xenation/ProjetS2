@@ -115,10 +115,10 @@ public class DisplayManager {
      * Updates the number of frame per second
      */
 	public static void updateFPS() {
-		if (getCurrentTime() - lastFPS > 500) {
+		if (getCurrentTime() - lastFPS > 1000) {
             Display.setTitle("FPS: " + fps);
             fps = 0;
-            lastFPS += 500;
+            lastFPS += 1000;
         }
         fps++;
     }
