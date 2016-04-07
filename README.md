@@ -13,3 +13,10 @@
 * Basic Sprites
 	* Sprite
 	* TileSprite
+
+### TODO (short term)
+* Rendering Flexibility
+	* currently using fixed pipeline for rendering which is heavier on the CPU and not flexible at all
+	* should use programmable pipeline which allow to do more calculations on GPU and to create more complex visual effects
+* Layers
+* Shader Programs

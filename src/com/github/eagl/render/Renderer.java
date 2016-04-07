@@ -5,6 +5,9 @@ import static org.lwjgl.opengl.GL15.*;
 import org.lwjgl.opengl.GL13;
 
 import com.github.eagl.models.*;
+import com.github.eagl.storage.Chunk;
+import com.github.eagl.storage.GameWorld;
+import com.github.eagl.tiles.Tile;
 
 /**
  * Allows the rendering of objects to the screen
@@ -22,7 +25,10 @@ public class Renderer {
 	 * Initialises the orthogonal projection matrix of OGL
 	 */
 	public Renderer() {
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
 		glOrtho(-DisplayManager.ASPECT_RATIO * (UNITS_Y/2), DisplayManager.ASPECT_RATIO * (UNITS_Y/2), -UNITS_Y/2, UNITS_Y/2, -1, 1);
+		glMatrixMode(GL_MODELVIEW);
 	}
 	
 	/**
@@ -44,6 +50,32 @@ public class Renderer {
 		glDisableClientState(GL_VERTEX_ARRAY);
 		
 		unbindBuffer();
+	}
+	
+	public void render(GameWorld gameWorld) {
+		for (Chunk chk : gameWorld.getChunkMap()) {
+			for (TileSprite spr : chk.sprites()) {
+				prepareSprite(spr);
+				
+				// Enables the client side Vertex Array and TextureUVs
+				glEnableClientState(GL_VERTEX_ARRAY);
+				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+				
+				for (Tile tile : chk.getTiles(spr)) {
+					glLoadIdentity();
+					glTranslatef(tile.x, tile.y, 0);
+					
+					// Draws the sprite
+					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+				}
+				
+				// Disables the client side Vertex Array and TextureUVs
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+				glDisableClientState(GL_VERTEX_ARRAY);
+				
+				unbindBuffer();
+			}
+		}
 	}
 	
 	/**
