@@ -2,17 +2,23 @@
 
 ### DONE
 * Basic Renderer
-	* only renders Sprites individually
-* Loader (not much to add)
+	* renders Sprites individually
+	* renders game world's chunks
+* Loader (not much to add in the future)
 	* loads position/textureUVs
 	* loads textures
 * Basic DisplayManager
-	* screen size: 1280x720
+	* best displaymode available
 	* does not support resizing
 	* keeps track of time (delta time)
 * Basic Sprites
 	* Sprite
 	* TileSprite
+* Tiles
+* ChunkMap
+	* orders chunks by position to only render chunks in view (to implement)
+* Chunks
+	* orders tiles by sprites to optimise rendering 
 
 ### TODO (short term)
 * Rendering Flexibility
