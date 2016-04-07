@@ -57,21 +57,21 @@ public class DisplayManager {
 		// Display creation
 		try {
 			
-			DisplayMode current = new DisplayMode(WIDTH, HEIGHT);
+			DisplayMode finalMode = new DisplayMode(0, 0);
 			
 			// Temporary Code to put the display in full screen
-			/*DisplayMode[] modes = Display.getAvailableDisplayModes();
+			DisplayMode[] modes = Display.getAvailableDisplayModes();
 			
-			for (int i=0;i<modes.length;i++) {
-				current = modes[i];
-				System.out.println(current.getWidth() + "x" + current.getHeight() + "x" +
-						current.getBitsPerPixel() + " " + current.getFrequency() + "Hz");
-				if (current.getWidth() == 1920 && current.getHeight() == 1080 && current.getBitsPerPixel() == 32) {
-					break;
+			for (int i = 0; i < modes.length; i++) {
+				DisplayMode current = modes[i];
+				if (current.getWidth() >= finalMode.getWidth() && current.getHeight() >= finalMode.getHeight() && current.getBitsPerPixel() >= finalMode.getBitsPerPixel()) {
+					finalMode = current;
 				}
-			}*/
+			}
 			
-			Display.setDisplayModeAndFullscreen(current);
+			System.out.println(finalMode.getWidth() + "x" + finalMode.getHeight() + "x" + finalMode.getBitsPerPixel() + " " + finalMode.getFrequency() + "Hz");
+			
+			Display.setDisplayModeAndFullscreen(finalMode);
 			Display.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
