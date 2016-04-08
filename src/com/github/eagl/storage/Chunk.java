@@ -12,6 +12,8 @@ import com.github.eagl.tiles.Tile;
 
 public class Chunk implements Iterable<Tile> {
 	
+	public static final int CHUNK_SIZE = 16;
+	
 	private final Vector2i position;
 	private Map<TileSprite, List<Tile>> tiles = new HashMap<TileSprite, List<Tile>>();
 	
@@ -89,10 +91,10 @@ public class Chunk implements Iterable<Tile> {
 	}
 	public static int toChunkPosition(int i) {
 		int n;
-		if (i < 0 && i % 8 != 0) {
-			n = i/8-1;
+		if (i < 0 && i % CHUNK_SIZE != 0) {
+			n = i/CHUNK_SIZE-1;
 		} else {
-			n = i/8;
+			n = i/CHUNK_SIZE;
 		}
 		return n;
 	}

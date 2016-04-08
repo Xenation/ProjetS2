@@ -1,13 +1,19 @@
 package com.github.eagl.render;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
+
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.util.vector.Matrix4f;
 
 import com.github.eagl.models.*;
+import com.github.eagl.shaders.Shader;
 import com.github.eagl.storage.Chunk;
 import com.github.eagl.storage.GameWorld;
 import com.github.eagl.tiles.Tile;
+import com.github.eagl.toolbox.Maths;
 
 /**
  * Allows the rendering of objects to the screen
@@ -22,100 +28,124 @@ public class Renderer {
 	public static final float UNITS_Y = 20;
 	
 	/**
-	 * Initialises the orthogonal projection matrix of OGL
+	 * the orthogonal projection matrix
+	 */
+	private Matrix4f projectionMatrix;
+	
+	/**
+	 * the shader used by this renderer
+	 */
+	private Shader shader;
+	
+	/**
+	 * A new Renderer.
+	 * Initialises a new shader, the orthogonal projection matrix,
+	 * Loads the projectionMatrix to the shader
 	 */
 	public Renderer() {
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(-DisplayManager.aspectRatio * (UNITS_Y/2), DisplayManager.aspectRatio * (UNITS_Y/2), -UNITS_Y/2, UNITS_Y/2, -1, 1);
-		glMatrixMode(GL_MODELVIEW);
+		shader = new Shader();
+		createOrthoProjectionMatrix(-DisplayManager.aspectRatio*UNITS_Y/2, DisplayManager.aspectRatio*UNITS_Y/2, -UNITS_Y/2, UNITS_Y/2, 2, -5);
+		shader.start();
+		shader.loadProjectionMatrix(projectionMatrix);
+		shader.stop();
 	}
 	
 	/**
-	 * Renders a sprite to the screen
-	 * @param spr the sprite to render
+	 * Renders all the tiles in the gameWorld through the view of the gameWorld's camera
+	 * @param gameWorld the game world to render
 	 */
-	public void render(AbstractSprite spr) {
-		prepareSprite(spr);
-		
-		// Enables the client side Vertex Array and TextureUVs
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		
-		// Draws the sprite
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		// Disables the client side Vertex Array and TextureUVs
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);
-		
-		unbindBuffer();
-	}
-	
 	public void render(GameWorld gameWorld) {
+		shader.start();
+		shader.loadViewMatrix(gameWorld.getCamera());
+		
 		for (Chunk chk : gameWorld.getChunkMap()) {
 			for (TileSprite spr : chk.sprites()) {
 				prepareSprite(spr);
 				
-				// Enables the client side Vertex Array and TextureUVs
-				glEnableClientState(GL_VERTEX_ARRAY);
-				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-				
 				for (Tile tile : chk.getTiles(spr)) {
-					glLoadIdentity();
-					glTranslatef(tile.x, tile.y, 0);
+					
+					Matrix4f matrix = Maths.createTransformationMatrix(tile.x, tile.y);
+					shader.loadTransformation(matrix);
 					
 					// Draws the sprite
 					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 				}
 				
-				// Disables the client side Vertex Array and TextureUVs
-				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-				glDisableClientState(GL_VERTEX_ARRAY);
-				
-				unbindBuffer();
+				unbindSprite();
 			}
 		}
+		
+		shader.stop();
 	}
 	
 	/**
 	 * Prepares the display by clearing it
 	 */
 	public void prepare() {
-		// Clear Display
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearDepth(1);
 	}
 	
 	/**
-	 * Prepares a sprite by binding its buffer and texture
+	 * Prepares a sprite by enabling its attributes and texture
 	 * @param spr the sprite to prepare
 	 */
 	private void prepareSprite(AbstractSprite spr) {
-		// How the values for the stride and offset are calculated
-//		int floatByteSize = 4;
-//		int positionFloatCount = 2;
-//		int textureFloatCount = 2;
-//		int floatsPerVertex = positionFloatCount + textureFloatCount;
-//		int vertexFloatSizeInBytes = floatByteSize * floatsPerVertex;
-//		int byteOffset = floatByteSize * positionFloatCount;
-		
-		// Bind the Buffer
-		glBindBuffer(GL_ARRAY_BUFFER, spr.getVboID());
-		// Point toward the vertex part of the buffer
-		glVertexPointer(2, GL_FLOAT, 16, 0);
-		// Point toward the texUV part of the buffer
-		glTexCoordPointer(2, GL_FLOAT, 16, 8);
-		// Bind the texture
+		GL30.glBindVertexArray(spr.getVaoID());
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glEnableVertexAttribArray(1);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, spr.getTextureID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, spr.getTextureID());
 	}
 	
 	/**
-	 * Unbinds the active buffer
+	 * Unbinds the active sprite
 	 */
-	private void unbindBuffer() {
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	private void unbindSprite() {
+		GL20.glDisableVertexAttribArray(0);
+		GL20.glDisableVertexAttribArray(1);
+		GL30.glBindVertexArray(0);
+	}
+	
+	public void cleanUp() {
+		shader.cleanUp();
+	}
+	
+	/**
+	 * Creates a projection matrix using the specified left, right, bottom, top, near and far boundaries
+	 * @param left the left limit
+	 * @param right the right limit
+	 * @param bottom the bottom limit
+	 * @param top the top limit
+	 * @param near the near plane
+	 * @param far the far plane
+	 */
+	public void createOrthoProjectionMatrix(float left, float right, float bottom, float top, float near, float far) {
+        float x_orth = 2 / (right - left);
+        float y_orth = 2 / (top - bottom);
+        float z_orth = -2 / (far - near);
+        
+        float tx = -(right + left) / (right - left);
+        float ty = -(top + bottom) / (top - bottom);
+        float tz = -(far + near) / (far - near);
+        
+        projectionMatrix = new Matrix4f();
+        projectionMatrix.m00 = x_orth;
+        projectionMatrix.m10 = 0;
+        projectionMatrix.m20 = 0;
+        projectionMatrix.m30 = 0;
+        projectionMatrix.m01 = 0;
+        projectionMatrix.m11 = y_orth;
+        projectionMatrix.m21 = 0;
+        projectionMatrix.m31 = 0;
+        projectionMatrix.m02 = 0;
+        projectionMatrix.m12 = 0;
+        projectionMatrix.m22 = z_orth;
+        projectionMatrix.m32 = 0;
+        projectionMatrix.m03 = tx;
+        projectionMatrix.m13 = ty;
+        projectionMatrix.m23 = tz;
+        projectionMatrix.m33 = 1;
 	}
 	
 }

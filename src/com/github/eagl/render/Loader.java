@@ -10,6 +10,8 @@ import java.util.List;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
@@ -26,6 +28,10 @@ public class Loader {
 	public static final Loader TILE_LOADER = new Loader();
 	
 	/**
+	 * The list of IDs from the VAOs that have been loaded with this loader
+	 */
+	private List<Integer> vaos = new ArrayList<Integer>();
+	/**
 	 * The list of IDs from the VBOs that have been loaded with this loader
 	 */
 	private List<Integer> vbos = new ArrayList<Integer>();
@@ -35,14 +41,69 @@ public class Loader {
 	private List<Integer> textures = new ArrayList<Integer>();
 	
 	/**
-	 * Loads a new quad in OpenGL using an array of positions and textureUVs.
-	 * The order of the positions must be the same as textureUVs
-	 * @param positions the array of positions of the quad
-	 * @param textureUVs the array of textureUVs of the quad
-	 * @return the id of the loaded VBO
+	 * Loads the specified positions and textureUVs inside a new VAO
+	 * positions and textureUVs are to be in the same order
+	 * @param positions the array of positions
+	 * @param textureUVs the array of textureUVs
+	 * @return the ID of the created VAO
 	 */
-	public int loadVbo(float[] positions, float[] textureUVs) {
-		return createInterleavedVbo(positions, textureUVs);
+	public int loadtoVao(float[] positions, float[] textureUVs) {
+		int vaoID = createVAO();
+		storeInterleavedDataInAttributeList(0, 1, 2, positions, textureUVs);
+		unbindVAO();
+		return vaoID;
+	}
+	
+	/**
+	 * unloads all the VAOs, VBOs and Textures that loaded this Loader
+	 */
+	public void unloadAll() {
+		for (int texture : textures) {
+			GL11.glDeleteTextures(texture);			
+		}
+		for (int vbo : vbos) {
+			GL15.glDeleteBuffers(vbo);			
+		}
+		for (int vao : vaos) {
+			GL30.glDeleteVertexArrays(vao);
+		}
+	}
+	
+	/**
+	 * Stores the two data arrays in a single Interleaved VBO and links it into two different attributes
+	 * @param attrib1 the index of the first attribute (data1)
+	 * @param attrib2 the index of the second attribute (data2)
+	 * @param coordinateSize the size of coordinates (here 2: x,y)
+	 * @param data1 the first array of data
+	 * @param data2 the second array of data
+	 */
+	private void storeInterleavedDataInAttributeList(int attrib1, int attrib2, int coordinateSize, float[] data1, float[] data2) {
+		int vboID = GL15.glGenBuffers();
+		vbos.add(vboID);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		FloatBuffer buffer = storeInterleavedDataInFloatBuffer(data1, data2);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(attrib1, coordinateSize, GL11.GL_FLOAT, false, 16, 0);
+		GL20.glVertexAttribPointer(attrib2, coordinateSize, GL11.GL_FLOAT, false, 16, 8);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
+	/**
+	 * Creates a new VAO
+	 * @return the ID of the newly created VAO
+	 */
+	private int createVAO() {
+		int vaoID = GL30.glGenVertexArrays();
+		vaos.add(vaoID);
+		GL30.glBindVertexArray(vaoID);
+		return vaoID;
+	}
+	
+	/**
+	 * unbinds the currently bound VAO
+	 */
+	private void unbindVAO() {
+		GL30.glBindVertexArray(0);
 	}
 	
 	/**
@@ -64,25 +125,6 @@ public class Loader {
 		int textureID = texture.getTextureID();
 		textures.add(textureID);
 		return textureID;
-	}
-	
-	/**
-	 * Creates a Interleaved VBO using data1 and data2.
-	 * Interleaved VBO:
-	 * a VBO that stores both the positions and the UVs alternatively
-	 * Exemple: x, y, u, v, x, y, u, v
-	 * @param data1 the first array of data (positions)
-	 * @param data2 the second array of data (textureUVs)
-	 * @return the id of the created VBO
-	 */
-	private int createInterleavedVbo(float[] data1, float[] data2) {
-		int vboID = GL15.glGenBuffers();
-		vbos.add(vboID);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
-		FloatBuffer buffer = storeInterleavedDataInFloatBuffer(data1, data2);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-		return vboID;
 	}
 	
 	/**

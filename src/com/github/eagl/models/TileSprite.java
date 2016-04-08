@@ -33,7 +33,7 @@ public class TileSprite extends AbstractSprite {
 	 * @param fileName the name of the texture file
 	 */
 	public TileSprite(String fileName) {
-		super(Loader.TILE_LOADER.loadVbo(POSITIONS, TEXTUREUVS), Loader.TILE_LOADER.loadTexture(fileName));
+		super(Loader.TILE_LOADER.loadtoVao(POSITIONS, TEXTUREUVS), Loader.TILE_LOADER.loadTexture(fileName));
 	}
 	
 }

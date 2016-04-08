@@ -17,25 +17,35 @@ public class MainGameTester {
 		DisplayManager.createDisplay();
 		
 		Renderer renderer = new Renderer();
-		//Loader loader = new Loader();
 		
-//		TileSprite tilSpr = new TileSprite("tile_dirt");
+		TileSprite tilSpr = new TileSprite("tile_dirt");
 		
 		GameWorld gameWorld = new GameWorld(new ChunkMap());
 		Chunk chk = new Chunk(new Vector2i(0, 0));
 		gameWorld.getChunkMap().put(chk.getPosition(), chk);
-		gameWorld.getChunkMap().addTile(new Tile(new TileSprite("tile_dirt"), 1, 1));
-		gameWorld.getChunkMap().addTile(new Tile(new TileSprite("tile_dirt"), 3, 1));
+		gameWorld.getChunkMap().addTile(new Tile(tilSpr, 0, 1));
+		gameWorld.getChunkMap().addTile(new Tile(tilSpr, 2, 1));
+		gameWorld.getChunkMap().addTile(new Tile(tilSpr, 4, 1));
+		gameWorld.getChunkMap().addTile(new Tile(tilSpr, 6, 1));
+		Chunk chk2 = new Chunk(new Vector2i(-1, 0));
+		gameWorld.getChunkMap().put(chk2.getPosition(), chk2);
+		gameWorld.getChunkMap().addTile(new Tile(tilSpr, -1, 1));
+		gameWorld.getChunkMap().addTile(new Tile(tilSpr, -3, 1));
+		gameWorld.getChunkMap().addTile(new Tile(tilSpr, -5, 1));
+		gameWorld.getChunkMap().addTile(new Tile(tilSpr, -7, 1));
 		
 		// Game Loop
-		while (!Display.isCloseRequested()) {			
+		while (!Display.isCloseRequested()) {
+			gameWorld.update();
+			
 			renderer.prepare();
-//			renderer.render(tilSpr);
 			renderer.render(gameWorld);
 			
 			DisplayManager.updateDisplay();
 		}
 		
+		renderer.cleanUp();
+		Loader.TILE_LOADER.unloadAll();
 		DisplayManager.closeDisplay();
 		
 	}

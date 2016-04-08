@@ -9,11 +9,11 @@ public class Sprite extends AbstractSprite {
 	
 	/**
 	 * A Sprite with the specified VBO and texture (using IDs)
-	 * @param vboID the id of the VBO
+	 * @param vaoID the id of the VBO
 	 * @param texID the id of the texture
 	 */
-	public Sprite(int vboID, int texID) {
-		super(vboID, texID);
+	public Sprite(int vaoID, int texID) {
+		super(vaoID, texID);
 	}
 	
 }
