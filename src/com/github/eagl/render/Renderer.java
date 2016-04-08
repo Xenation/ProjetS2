@@ -27,7 +27,7 @@ public class Renderer {
 	public Renderer() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(-DisplayManager.ASPECT_RATIO * (UNITS_Y/2), DisplayManager.ASPECT_RATIO * (UNITS_Y/2), -UNITS_Y/2, UNITS_Y/2, -1, 1);
+		glOrtho(-DisplayManager.aspectRatio * (UNITS_Y/2), DisplayManager.aspectRatio * (UNITS_Y/2), -UNITS_Y/2, UNITS_Y/2, -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 	}
 	

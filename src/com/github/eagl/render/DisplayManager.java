@@ -14,22 +14,18 @@ import org.lwjgl.opengl.GL11;
 public class DisplayManager {
 	
 	/**
-	 * the width of the screen
+	 * The default displayMode to be used
 	 */
-	private static final int WIDTH = 1280;
-	/**
-	 * the height of the screen
-	 */
-	private static final int HEIGHT = 720;
+	private static final DisplayMode DEF_DISPLAYMODE = new DisplayMode(1280, 720);
 	/**
 	 * the maximum number of frames per second
 	 */
-	private static final int FPS_CAP = Integer.MAX_VALUE;
+	private static int fpsCap = Integer.MAX_VALUE;
 	
 	/**
 	 * the aspect ratio of the screen at initialization
 	 */
-	public static final float ASPECT_RATIO = ((float) WIDTH)/((float) HEIGHT);
+	public static float aspectRatio;
 	
 	/**
 	 * the absolute time at which the last frame was loaded
@@ -53,11 +49,11 @@ public class DisplayManager {
 	/**
 	 * Creates a new display window
 	 */
-	public static void createDisplay() {		
+	public static void createDisplay() {
 		// Display creation
 		try {
 			
-			DisplayMode finalMode = new DisplayMode(0, 0);
+			DisplayMode finalMode = DEF_DISPLAYMODE;
 			
 			// Temporary Code to put the display in full screen
 			DisplayMode[] modes = Display.getAvailableDisplayModes();
@@ -70,6 +66,9 @@ public class DisplayManager {
 			}
 			
 			System.out.println(finalMode.getWidth() + "x" + finalMode.getHeight() + "x" + finalMode.getBitsPerPixel() + " " + finalMode.getFrequency() + "Hz");
+			
+			fpsCap = finalMode.getFrequency();
+			aspectRatio = ((float) finalMode.getWidth() /(float) finalMode.getHeight());
 			
 			Display.setDisplayModeAndFullscreen(finalMode);
 			Display.create();
@@ -87,7 +86,7 @@ public class DisplayManager {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		updateDelta();
-		lastFPS = getCurrentTime();		
+		lastFPS = getCurrentTime();
 	}
 	
 	/**
@@ -99,7 +98,7 @@ public class DisplayManager {
 		
 		// FPS syncing and screen update
 		Display.update();		
-		Display.sync(FPS_CAP);
+		Display.sync(fpsCap);
 	}
 	
 	/**
