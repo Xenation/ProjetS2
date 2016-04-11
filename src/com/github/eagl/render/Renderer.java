@@ -13,6 +13,7 @@ import com.github.eagl.shaders.Shader;
 import com.github.eagl.storage.Chunk;
 import com.github.eagl.storage.GameWorld;
 import com.github.eagl.tiles.Tile;
+import com.github.eagl.tiles.TileType;
 import com.github.eagl.toolbox.Maths;
 
 /**
@@ -59,10 +60,10 @@ public class Renderer {
 		shader.loadViewMatrix(gameWorld.getCamera());
 		
 		for (Chunk chk : gameWorld.getChunkMap()) {
-			for (TileSprite spr : chk.sprites()) {
-				prepareSprite(spr);
+			for (TileType typ : chk.types()) {
+				prepareSprite(typ.getSprite());
 				
-				for (Tile tile : chk.getTiles(spr)) {
+				for (Tile tile : chk.getTiles(typ)) {
 					
 					Matrix4f matrix = Maths.createTransformationMatrix(tile.x, tile.y);
 					shader.loadTransformation(matrix);
@@ -73,6 +74,19 @@ public class Renderer {
 				
 				unbindSprite();
 			}
+			
+			/// Code to Render whole chunks (not working)
+//			prepareChunk(chk);
+//			
+//			for (Tile til : chk) {
+//				Matrix4f matrix = Maths.createTransformationMatrix(til.x, til.y);
+//				shader.loadTransformation(matrix);
+//				
+//				int tileIndex = til.getRelY(chk)*Chunk.CHUNK_SIZE + til.getRelX(chk);
+//				glDrawArrays(GL_TRIANGLE_STRIP, tileIndex*4, 4);
+//			}
+//			
+//			unbindSprite();
 		}
 		
 		shader.stop();
@@ -85,6 +99,14 @@ public class Renderer {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearDepth(1);
 	}
+	
+//	private void prepareChunk(Chunk chk) {
+//		GL30.glBindVertexArray(chk.getVaoID());
+//		GL20.glEnableVertexAttribArray(0);
+//		GL20.glEnableVertexAttribArray(1);
+//		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+//		GL11.glBindTexture(GL11.GL_TEXTURE_2D, chk.getTextureID());
+//	}
 	
 	/**
 	 * Prepares a sprite by enabling its attributes and texture

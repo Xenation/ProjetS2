@@ -14,7 +14,7 @@ public class GameWorld {
 	}
 	
 	public void update() {
-		camera.update();
+		camera.update(this);
 	}
 
 	public ChunkMap getChunkMap() {

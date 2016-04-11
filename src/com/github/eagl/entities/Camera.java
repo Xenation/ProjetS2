@@ -1,9 +1,16 @@
 package com.github.eagl.entities;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
 import com.github.eagl.render.DisplayManager;
+import com.github.eagl.render.Renderer;
+import com.github.eagl.storage.GameWorld;
+import com.github.eagl.tiles.Tile;
+import com.github.eagl.tiles.TileType;
+import com.github.eagl.toolbox.Maths;
 
 /**
  * A Camera with a position and rotation
@@ -32,7 +39,7 @@ public class Camera {
 	/**
 	 * Checks for inputs and moves the camera according to them
 	 */
-	public void update() {
+	public void update(GameWorld gameWorld) {
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8)) {
 			this.position.y += 0.05 * DisplayManager.deltaTime();
@@ -50,6 +57,12 @@ public class Camera {
 			setPosition(0, 0);
 		}
 		
+		if (Mouse.isButtonDown(0)) {
+			gameWorld.getChunkMap().addTile(new Tile(TileType.Dirt, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
+		}
+		if (Mouse.isButtonDown(1)) {
+			gameWorld.getChunkMap().removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+		}
 	}
 	
 	/**
@@ -101,6 +114,14 @@ public class Camera {
 	 */
 	public void setRotation(float rotation) {
 		this.rotation = rotation;
+	}
+	
+	public float getMouseWorldX() {
+		return this.position.x + (Mouse.getX() - Display.getWidth()/2) / ((float) Display.getHeight() / Renderer.UNITS_Y);
+	}
+	
+	public float getMouseWorldY() {
+		return this.position.y + (Mouse.getY() - Display.getHeight()/2) / ((float) Display.getHeight() / Renderer.UNITS_Y);
 	}
 	
 }
