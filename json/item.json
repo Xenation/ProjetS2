@@ -1,0 +1,6 @@
+[
+	{"id":0,	"name":"Fire Plant",		"description":"A plant who shoots fire !",		"rarity":"POOR",		"maxStack":"50",		"value":"1"},
+	{"id":1,	"name":"Bed",				"description":"Sleepy ?",						"rarity":"COMMON",		"maxStack":"1",			"value":"15"},
+	{"id":2,	"name":"Unicorne",			"description":"A fabulous mount.",				"rarity":"RAINBOW",		"maxStack":"99",		"value":"999"},
+	{"id":3,	"name":"Sunglasses",		"description":"It will give you cool.",			"rarity":"RARE",		"maxStack":"5",			"value":"100"}
+]
