@@ -71,6 +71,7 @@ public class DisplayManager {
 			aspectRatio = ((float) finalMode.getWidth() /(float) finalMode.getHeight());
 			
 			Display.setDisplayModeAndFullscreen(finalMode);
+			Display.setVSyncEnabled(true);
 			Display.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();

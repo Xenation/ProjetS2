@@ -46,16 +46,16 @@ public class Camera {
 		gameWorld.getChunkMap().generateSurroundingChunks(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, position);
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8)) {
-			this.position.y += 0.05 * DisplayManager.deltaTime();
+			this.position.y += 0.02 * DisplayManager.deltaTime();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD5)) {
-			this.position.y -= 0.05 * DisplayManager.deltaTime();
+			this.position.y -= 0.02 * DisplayManager.deltaTime();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD6)) {
-			this.position.x += 0.05 * DisplayManager.deltaTime();
+			this.position.x += 0.02 * DisplayManager.deltaTime();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4)) {
-			this.position.x -= 0.05 * DisplayManager.deltaTime();
+			this.position.x -= 0.02 * DisplayManager.deltaTime();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD0)) {
 			setPosition(0, 0);
