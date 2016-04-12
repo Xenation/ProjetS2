@@ -27,4 +27,25 @@ public abstract class Entity {
 	public void update() {
 		
 	}
+
+	public Sprite getSprite() {
+		return this.sprite;
+	}
+
+	public Vector2f getPosition() {
+		return pos;
+	}
+
+	public void setPosition(Vector2f pos) {
+		this.pos = pos;
+	}
+
+	public float getRotation() {
+		return rotation;
+	}
+
+	public void setRotation(float rotation) {
+		this.rotation = rotation;
+	}
+	
 }

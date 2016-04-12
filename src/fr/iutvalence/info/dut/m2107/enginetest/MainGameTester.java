@@ -8,6 +8,7 @@ import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.ChunkMap;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.LayerMap;
 import fr.iutvalence.info.dut.m2107.storage.Vector2i;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
@@ -20,7 +21,7 @@ public class MainGameTester {
 		
 		Renderer renderer = new Renderer();
 		
-		GameWorld gameWorld = new GameWorld(new ChunkMap());
+		GameWorld gameWorld = new GameWorld(new ChunkMap(), new LayerMap());
 		Chunk chk = new Chunk(new Vector2i(0, 0));
 		gameWorld.getChunkMap().put(chk.getPosition(), chk);
 		gameWorld.getChunkMap().addTile(new Tile(TileType.Dirt, 0, 0));
@@ -33,6 +34,8 @@ public class MainGameTester {
 		gameWorld.getChunkMap().addTile(new Tile(TileType.Stone, -3, 0));
 		gameWorld.getChunkMap().addTile(new Tile(TileType.Stone, -5, 0));
 		gameWorld.getChunkMap().addTile(new Tile(TileType.Stone, -7, 0));
+		
+		gameWorld.getLayerMap().addEmptyRange(0, 4);
 		
 		// Debug for the whole chunk rendering 
 		//System.out.println(ChunkLoader.CHUNK_LOADER.debugBuffers());

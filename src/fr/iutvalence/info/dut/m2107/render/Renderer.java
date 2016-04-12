@@ -8,10 +8,12 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
+import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.models.*;
 import fr.iutvalence.info.dut.m2107.shaders.Shader;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
@@ -87,6 +89,22 @@ public class Renderer {
 //			}
 //			
 //			unbindSprite();
+		}
+		
+		for (int i = gameWorld.getLayerMap().getLayersCount()-1; i >= 0; i--) {
+			Layer layer = gameWorld.getLayerMap().getLayer(i);
+			for (Sprite spr : layer.sprites()) {
+				prepareSprite(spr);
+				
+				for (Entity ent : layer.getEntities(spr)) {
+					Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
+					shader.loadTransformation(matrix);
+					
+					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+				}
+				
+				unbindSprite();
+			}
 		}
 		
 		shader.stop();

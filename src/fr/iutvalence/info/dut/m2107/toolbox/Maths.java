@@ -13,6 +13,14 @@ import fr.iutvalence.info.dut.m2107.entities.Camera;
  */
 public class Maths {
 	
+	public static Matrix4f createTransformationMatrix(Vector2f translation, float rotation) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity();
+		Matrix4f.translate(translation, matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(-rotation), new Vector3f(0, 0, 1), matrix, matrix);
+		return matrix;
+	}
+	
 	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();

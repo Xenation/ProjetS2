@@ -7,10 +7,12 @@ public class GameWorld {
 	private final Camera camera;
 	
 	private final ChunkMap chunkMap;
+	private final LayerMap layerMap;
 	
-	public GameWorld(ChunkMap chkMap) {
+	public GameWorld(ChunkMap chkMap, LayerMap layMap) {
 		this.camera = new Camera();
 		this.chunkMap = chkMap;
+		this.layerMap = layMap;
 	}
 	
 	public void update() {
@@ -19,6 +21,10 @@ public class GameWorld {
 
 	public ChunkMap getChunkMap() {
 		return chunkMap;
+	}
+	
+	public LayerMap getLayerMap() {
+		return layerMap;
 	}
 	
 	public Camera getCamera() {
