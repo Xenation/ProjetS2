@@ -3,6 +3,8 @@ package fr.iutvalence.info.dut.m2107.enginetest;
 import org.lwjgl.opengl.Display;
 
 import fr.iutvalence.info.dut.m2107.render.*;
+import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
+import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.ChunkMap;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
@@ -35,6 +37,9 @@ public class MainGameTester {
 		// Debug for the whole chunk rendering 
 		//System.out.println(ChunkLoader.CHUNK_LOADER.debugBuffers());
 		//System.out.println(ChunkLoader.CHUNK_LOADER.debugGLBuffers());
+		
+		WorldSaver.setFilePath("res/test.sav");
+		WorldLoader.setFilePath("res/test.sav");
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {

@@ -59,7 +59,7 @@ public class Renderer {
 		shader.start();
 		shader.loadViewMatrix(gameWorld.getCamera());
 		
-		for (Chunk chk : gameWorld.getChunkMap()) {
+		for (Chunk chk : gameWorld.getChunkMap().getSurroundingChunks(-UNITS_Y/2*DisplayManager.aspectRatio, UNITS_Y/2*DisplayManager.aspectRatio, UNITS_Y/2, -UNITS_Y/2, gameWorld.getCamera().getPosition())) {
 			for (TileType typ : chk.types()) {
 				prepareSprite(typ.getSprite());
 				

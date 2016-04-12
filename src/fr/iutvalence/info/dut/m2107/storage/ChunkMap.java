@@ -9,7 +9,10 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
+import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	
@@ -20,11 +23,54 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 			chk.add(til);
 		}
 	}
+	public void addTilenChunk(Tile til) {
+		Chunk chk = get(Chunk.toChunkPosition(til.x, til.y));
+		if (chk != null) {
+			chk.add(til);
+		} else {
+			Vector2i pos = Chunk.toChunkPosition(til.x, til.y);
+			chk = new Chunk(pos);
+			put(pos, chk);
+			chk.add(til);
+		}
+	}
 	public void removeTileAt(int x, int y) {
 		Chunk chk = get(Chunk.toChunkPosition(x, y));
 		if (chk != null) {
 			chk.removeAt(x, y);
 		}
+	}
+	
+	public void generateSurroundingChunks(float left, float right, float top, float bottom, Vector2f center) {
+		for (int y = Chunk.toChunkPosition(Maths.fastFloor(bottom + center.y)); y <= Chunk.toChunkPosition(Maths.fastFloor(top + center.y)); y++) {
+			for (int x = Chunk.toChunkPosition(Maths.fastFloor(left + center.x)); x <= Chunk.toChunkPosition(Maths.fastFloor(right + center.x)); x++) {
+				Vector2i pos = new Vector2i(x, y);
+				if (!this.containsKey(pos)) {
+					this.put(pos, new Chunk(pos));
+				}
+			}
+		}
+	}
+	
+	public List<Chunk> getSurroundingChunks(float left, float right, float top, float bottom, Vector2f center) {
+		List<Chunk> chks = new ArrayList<Chunk>();
+		for (int y = Chunk.toChunkPosition(Maths.fastFloor(bottom + center.y)); y <= Chunk.toChunkPosition(Maths.fastFloor(top + center.y)); y++) {
+			for (int x = Chunk.toChunkPosition(Maths.fastFloor(left + center.x)); x <= Chunk.toChunkPosition(Maths.fastFloor(right + center.x)); x++) {
+				Vector2i pos = new Vector2i(x, y);
+				if (this.containsKey(pos)) {
+					chks.add(this.get(pos));
+				}
+			}
+		}
+		return chks;
+	}
+	
+	public int getTilesCount() {
+		int count = 0;
+		for (Chunk chk : this) {
+			count += chk.getTilesCount();
+		}
+		return count;
 	}
 	
 	

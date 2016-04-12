@@ -40,7 +40,7 @@ public class Shader extends ShaderProgram {
 	 * Loads the specified transformation matrix to the shader
 	 * @param matrix the transformation matrix to load
 	 */
-	public void loadTransformation(Matrix4f matrix){
+	public void loadTransformation(Matrix4f matrix) {
 		super.loadMatrix(location_transformationMatrix, matrix);
 	}
 	
