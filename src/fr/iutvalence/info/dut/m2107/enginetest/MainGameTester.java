@@ -35,7 +35,7 @@ public class MainGameTester {
 		gameWorld.getChunkMap().addTile(new Tile(TileType.Stone, -5, 0));
 		gameWorld.getChunkMap().addTile(new Tile(TileType.Stone, -7, 0));
 		
-		gameWorld.getLayerMap().addEmptyRange(0, 4);
+		gameWorld.getLayerMap().addEmpty(4);
 		
 		// Debug for the whole chunk rendering 
 		//System.out.println(ChunkLoader.CHUNK_LOADER.debugBuffers());

@@ -14,6 +14,12 @@ public class Layer implements Iterable<Entity> {
 	
 	private Map<Sprite, List<Entity>> layer = new HashMap<Sprite, List<Entity>>();
 	
+	public void update() {
+		for (Entity ent : this) {
+			ent.update();
+		}
+	}
+	
 	public void add(Entity ent) {
 		List<Entity> newList = layer.get(ent.getSprite());
 		if (newList == null) {

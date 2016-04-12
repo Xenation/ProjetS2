@@ -7,16 +7,19 @@ public class LayerMap {
 	
 	private List<Layer> layerMap = new ArrayList<Layer>();
 	
+	public void update() {
+		for (Layer layer : layerMap) {
+			layer.update();
+		}
+	}
+	
 	public void add(Layer lay) {
 		layerMap.add(lay);
 	}
 	
-	public void addEmptyRange(int startIndex, int endIndex) {
-		if (startIndex >= 0 && startIndex < layerMap.size()-1
-				&& endIndex > startIndex && endIndex < layerMap.size()) {
-			for (int i = startIndex; i < endIndex; i++) {
-				layerMap.set(i, new Layer());
-			}
+	public void addEmpty(int count) {
+		for (int i = 0; i < count; i++) {
+			add(new Layer());
 		}
 	}
 	
