@@ -128,7 +128,7 @@ public class DisplayManager {
 	 * @return the current delta time
 	 */
 	public static float deltaTime() {
-		return delta;
+		return (delta/1000);
 	}
 	
 	/**

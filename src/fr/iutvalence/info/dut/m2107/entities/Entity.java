@@ -6,11 +6,11 @@ import fr.iutvalence.info.dut.m2107.models.Sprite;
 
 public abstract class Entity {
 
-	private Vector2f pos;
+	protected Vector2f pos;
 	
-	private float rotation;
+	protected float rotation;
 	
-	private Sprite sprite;
+	protected Sprite sprite;
 	
 	public Entity(Vector2f pos, float rotation, Sprite sprite) {
 		this.pos = pos;
@@ -25,7 +25,7 @@ public abstract class Entity {
 	}
 	
 	public void update() {
-		
+		return;
 	}
 
 	public Sprite getSprite() {

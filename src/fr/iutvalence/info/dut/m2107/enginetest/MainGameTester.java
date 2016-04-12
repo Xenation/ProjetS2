@@ -1,7 +1,10 @@
 package fr.iutvalence.info.dut.m2107.enginetest;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.entities.MovableEntity;
+import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.render.*;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
@@ -18,6 +21,7 @@ public class MainGameTester {
 	public static void main(String[] args) {
 		// Display Window initialization
 		DisplayManager.createDisplay();
+		DisplayManager.updateDisplay();
 		
 		Renderer renderer = new Renderer();
 		
@@ -36,7 +40,7 @@ public class MainGameTester {
 		gameWorld.getChunkMap().addTile(new Tile(TileType.Stone, -7, 0));
 		
 		gameWorld.getLayerMap().addEmpty(4);
-		
+
 		// Debug for the whole chunk rendering 
 		//System.out.println(ChunkLoader.CHUNK_LOADER.debugBuffers());
 		//System.out.println(ChunkLoader.CHUNK_LOADER.debugGLBuffers());
@@ -46,12 +50,22 @@ public class MainGameTester {
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {
+			
+			gameWorld.getLayerMap().getLayer(0).add(
+					new MovableEntity(new Vector2f((float) (-10 + (Math.random()* 20)), (float) (-10 + (Math.random()* 20))), (float) (-360 + (Math.random()* 720)), new Sprite("item/diamond", new Vector2f(1, 1)), new Vector2f((float) (-10 + (Math.random()* 20)), (float) (-10 + (Math.random()* 20))), (float) (-10 + (Math.random()* 40))));
+			gameWorld.getLayerMap().getLayer(0).add(
+					new MovableEntity(new Vector2f((float) (-10 + (Math.random()* 20)), (float) (-10 + (Math.random()* 20))), (float) (-360 + (Math.random()* 720)), new Sprite("item/coal", new Vector2f(1, 1)), new Vector2f((float) (-10 + (Math.random()* 20)), (float) (-10 + (Math.random()* 20))), (float) (-10 + (Math.random()* 40))));
+			gameWorld.getLayerMap().getLayer(0).add(
+					new MovableEntity(new Vector2f((float) (-10 + (Math.random()* 20)), (float) (-10 + (Math.random()* 20))), (float) (-360 + (Math.random()* 720)), new Sprite("item/cookie", new Vector2f(1, 1)), new Vector2f((float) (-10 + (Math.random()* 20)), (float) (-10 + (Math.random()* 20))), (float) (-10 + (Math.random()* 40))));
+			gameWorld.getLayerMap().getLayer(0).add(
+					new MovableEntity(new Vector2f((float) (-10 + (Math.random()* 20)), (float) (-10 + (Math.random()* 20))), (float) (-360 + (Math.random()* 720)), new Sprite("item/sugar", new Vector2f(1, 1)), new Vector2f((float) (-10 + (Math.random()* 20)), (float) (-10 + (Math.random()* 20))), (float) (-10 + (Math.random()* 40))));
+			
 			gameWorld.update();
 			
 			renderer.prepare();
 			renderer.render(gameWorld);
-			
 			DisplayManager.updateDisplay();
+			
 		}
 		
 		renderer.cleanUp();
