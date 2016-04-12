@@ -53,6 +53,7 @@ public class MainGameTester {
 		
 		renderer.cleanUp();
 		Loader.TILE_LOADER.unloadAll();
+		Loader.SPRITE_LOADER.unloadAll();
 		// Code to clean the whole chunk loader
 		//ChunkLoader.CHUNK_LOADER.unloadAll();
 		DisplayManager.closeDisplay();

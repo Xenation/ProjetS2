@@ -10,11 +10,11 @@ public abstract class AbstractSprite {
 	/**
 	 * the ID of the VBO
 	 */
-	protected final int vaoID;
+	protected int vaoID;
 	/**
 	 * the ID of the texture
 	 */
-	protected final int textureID;
+	protected int textureID;
 	
 	/**
 	 * A Sprite with the specified VBO and texture
@@ -24,6 +24,11 @@ public abstract class AbstractSprite {
 	public AbstractSprite(int vaoID, int texID) {
 		this.vaoID = vaoID;
 		this.textureID = texID;
+	}
+	
+	public AbstractSprite() {
+		this.vaoID = 0;
+		this.textureID = 0;
 	}
 	
 	/**
@@ -40,6 +45,14 @@ public abstract class AbstractSprite {
 	 */
 	public int getVaoID() {
 		return vaoID;
+	}
+	
+	protected void setVaoID(int vaoID) {
+		this.vaoID = vaoID;
+	}
+
+	protected void setTextureID(int texID) {
+		this.textureID = texID;
 	}
 	
 }

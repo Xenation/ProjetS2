@@ -27,6 +27,8 @@ public class Loader {
 	 */
 	public static final Loader TILE_LOADER = new Loader();
 	
+	public static final Loader SPRITE_LOADER = new Loader();
+	
 	/**
 	 * The list of IDs from the VAOs that have been loaded with this loader
 	 */
