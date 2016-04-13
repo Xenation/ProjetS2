@@ -26,9 +26,11 @@ public class Camera {
 	 */
 	private Vector2f position;
 	/**
-	 * The roation of the camera
+	 * The rotation of the camera
 	 */
 	private float rotation;
+	
+	private Entity target;
 	
 	/**
 	 * A new Camera at 0,0 and with a rotation of 0
@@ -41,38 +43,41 @@ public class Camera {
 	/**
 	 * Checks for inputs and moves the camera according to them
 	 */
-	public void update(GameWorld gameWorld) {
+	public void update() {
 		
-		gameWorld.getChunkMap().generateSurroundingChunks(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, position);
+		GameWorld.chunkMap.generateSurroundingChunks(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, position);
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8)) {
-			this.position.y += 0.02 * DisplayManager.deltaTime();
+		this.position.x = Maths.lerp(this.position.x, target.pos.x, 0.1f);
+		this.position.y = Maths.lerp(this.position.y, target.pos.y, 0.1f);
+		
+		/*if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+			this.position.y += 20 * DisplayManager.deltaTime();
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD5)) {
-			this.position.y -= 0.02 * DisplayManager.deltaTime();
+		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+			this.position.y -= 20 * DisplayManager.deltaTime();
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD6)) {
-			this.position.x += 0.02 * DisplayManager.deltaTime();
+		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+			this.position.x += 20 * DisplayManager.deltaTime();
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4)) {
-			this.position.x -= 0.02 * DisplayManager.deltaTime();
+		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+			this.position.x -= 20 * DisplayManager.deltaTime();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD0)) {
 			setPosition(0, 0);
-		}
+		}*/
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_DIVIDE)) {
-			WorldSaver.writeWorld(gameWorld);
+			WorldSaver.writeWorld();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_MULTIPLY)) {
-			WorldLoader.loadWorld(gameWorld);
+			WorldLoader.loadWorld();
 		}
 		
 		if (Mouse.isButtonDown(0)) {
-			gameWorld.getChunkMap().addTile(new Tile(TileType.Dirt, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
+			GameWorld.chunkMap.addTile(new Tile(TileType.Dirt, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
 		}
 		if (Mouse.isButtonDown(1)) {
-			gameWorld.getChunkMap().removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+			GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 		}
 	}
 	
@@ -125,6 +130,10 @@ public class Camera {
 	 */
 	public void setRotation(float rotation) {
 		this.rotation = rotation;
+	}
+	
+	public void setTarget(Entity target) {
+		this.target = target;
 	}
 	
 	public float getMouseWorldX() {

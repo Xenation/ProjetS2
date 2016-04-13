@@ -3,39 +3,47 @@ package fr.iutvalence.info.dut.m2107.entities;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.render.DisplayManager;
+import fr.iutvalence.info.dut.m2107.storage.Layer;
 
 public class MovableEntity extends Entity {
 	
-	protected Vector2f velocity;
+	private final Vector2f DEF_VEL = new Vector2f(0, 0);
+	private final float DEF_SPD = 2;
 	
-	protected float speed;
+	protected Vector2f vel;
+	
+	protected float spd;
 
-	public MovableEntity(Vector2f pos, float rotation, Sprite sprite, Vector2f velocity, float speed) {
-		super(pos, rotation, sprite);
-		this.velocity = velocity;
-		this.speed = speed;
+	public MovableEntity(Vector2f pos, float rot, Sprite spr, Layer lay, Collider col, Vector2f vel, float spd) {
+		super(pos, rot, spr, lay, col);
+		this.vel = vel;
+		this.spd = spd;
+	}
+	
+	public MovableEntity(Vector2f pos, Sprite spr, Layer lay) {
+		super(pos, spr, lay);
+		this.vel = DEF_VEL;
+		this.spd = DEF_SPD;
 	}
 	
 	public MovableEntity() {
-		super();	
+		super();
+		this.vel = DEF_VEL;
+		this.spd = DEF_SPD;
 	}
 	
 	@Override
-	public void update() {
-		this.rotation += 1;
-		if(rotation >= 360)
-			rotation = 0;
-		this.pos.x = (float) Math.cos(rotation* this.velocity.x * Math.PI/180)*speed;
-		this.pos.y = (float) Math.sin(rotation* this.velocity.y * Math.PI/180)*speed;
-		//this.pos.x += this.velocity.x * speed * DisplayManager.deltaTime();
-		//this.pos.y += this.velocity.y * speed * DisplayManager.deltaTime();
+	public void update(Layer layer) {
+		this.pos.x += this.vel.x * DisplayManager.deltaTime();
+		this.pos.y += this.vel.y * DisplayManager.deltaTime();
 	}
 
 	public Vector2f getVelocity() {
-		return velocity;
+		return vel;
 	}
 	
 	public float getSpeed() {
-		return speed;
+		return spd;
 	}
 }

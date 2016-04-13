@@ -17,7 +17,7 @@ public class WorldSaver {
 		file = new File(path);
 	}
 	
-	public static void writeWorld(GameWorld gameWorld) {
+	public static void writeWorld() {
 		
 		double start = System.currentTimeMillis()/1000;
 		
@@ -40,9 +40,9 @@ public class WorldSaver {
 				return;
 			}
 			
-			byte[] data = new byte[gameWorld.getChunkMap().getTilesCount()*4];
+			byte[] data = new byte[GameWorld.chunkMap.getTilesCount()*4];
 			int index = 0;
-			for (Chunk chk : gameWorld.getChunkMap()) {
+			for (Chunk chk : GameWorld.chunkMap) {
 				for (Tile tile : chk) {
 					switch (tile.getType()) {
 					case Dirt:
@@ -77,7 +77,7 @@ public class WorldSaver {
 			}
 		}
 		
-		System.out.println("World Saved ("+gameWorld.getChunkMap().getTilesCount()+" tiles) in: "+(System.currentTimeMillis()-start)+"ms");
+		System.out.println("World Saved ("+GameWorld.chunkMap.getTilesCount()+" tiles) in: "+(System.currentTimeMillis()-start)+"ms");
 		
 	}
 	

@@ -19,7 +19,7 @@ public class WorldLoader {
 		file = new File(path);
 	}
 	
-	public static void loadWorld(GameWorld gameWorld) {
+	public static void loadWorld() {
 		double start = System.currentTimeMillis();
 		
 		if (file != null) {
@@ -63,7 +63,7 @@ public class WorldLoader {
 					typ = TileType.Dirt;
 					break;
 				}
-				gameWorld.getChunkMap().addTilenChunk(new Tile(typ, data[i], data[i+1]));
+				GameWorld.chunkMap.addTilenChunk(new Tile(typ, data[i], data[i+1]));
 				i += 2;
 			}
 			

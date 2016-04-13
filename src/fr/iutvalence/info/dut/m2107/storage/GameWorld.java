@@ -1,46 +1,20 @@
 package fr.iutvalence.info.dut.m2107.storage;
 
-import java.awt.Font;
-
-import org.newdawn.slick.TrueTypeFont;
-
 import fr.iutvalence.info.dut.m2107.entities.Camera;
+import fr.iutvalence.info.dut.m2107.entities.Player;
 
 public class GameWorld {
 	
-	private final Camera camera;
-	private final ChunkMap chunkMap;
-	private final LayerMap layerMap;
+	public static float modGravity = 7.5f;
+	public static float gravity = 9.81f * modGravity;
 	
-	private TrueTypeFont debugFont;
+	public static final Player player = new Player();
+	public static final Camera camera = new Camera();
+	public static final ChunkMap chunkMap = new ChunkMap();
+	public static final LayerMap layerMap = new LayerMap();
 	
-	public GameWorld(ChunkMap chkMap, LayerMap layMap) {
-		this.camera = new Camera();
-		this.chunkMap = chkMap;
-		this.layerMap = layMap;
-		Font awtFont = new Font("Times New Roman", Font.BOLD, 16);
-		debugFont = new TrueTypeFont(awtFont, true);
-	}
-	
-	public void update() {
-		camera.update(this);
+	public static void update() {
+		camera.update();
 		layerMap.update();
 	}
-
-	public ChunkMap getChunkMap() {
-		return chunkMap;
-	}
-	
-	public LayerMap getLayerMap() {
-		return layerMap;
-	}
-	
-	public Camera getCamera() {
-		return camera;
-	}
-
-	public TrueTypeFont getDebugFont() {
-		return debugFont;
-	}
-	
 }

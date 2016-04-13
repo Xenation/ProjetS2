@@ -3,33 +3,52 @@ package fr.iutvalence.info.dut.m2107.entities;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.storage.Layer;
 
 public abstract class Entity {
 
+	private final Vector2f DEF_POS = new Vector2f(0, 0);
+	private final float DEF_ROT = 0;
+	protected final Sprite DEF_SPR = new Sprite("item/default", new Vector2f(1, 1));
+	
 	protected Vector2f pos;
 	
-	protected float rotation;
+	protected float rot;
 	
-	protected Sprite sprite;
+	protected Sprite spr;
 	
-	public Entity(Vector2f pos, float rotation, Sprite sprite) {
+	protected Collider col;
+	
+	public Entity(Vector2f pos, float rot, Sprite spr, Layer lay, Collider col) {
 		this.pos = pos;
-		this.rotation = rotation;
-		this.sprite = sprite;
+		this.rot = rot;
+		this.spr = spr;
+		this.col = col;
+		col.setEnt(this);
+	}
+	
+	public Entity(Vector2f pos, Sprite spr, Layer lay) {
+		this.pos = pos;
+		this.rot = DEF_ROT;
+		this.spr = spr;
+		this.col = new Collider();
+		col.setEnt(this);
 	}
 	
 	public Entity() {
-		this.pos = new Vector2f(0, 0);
-		this.rotation = 0;
-		this.sprite = null;
+		this.pos = DEF_POS;
+		this.rot = DEF_ROT;
+		this.spr = DEF_SPR;
+		this.col = new Collider();
+		col.setEnt(this);
 	}
 	
-	public void update() {
+	public void update(Layer layer) {
 		return;
 	}
 
 	public Sprite getSprite() {
-		return this.sprite;
+		return this.spr;
 	}
 
 	public Vector2f getPosition() {
@@ -41,11 +60,11 @@ public abstract class Entity {
 	}
 
 	public float getRotation() {
-		return rotation;
+		return rot;
 	}
 
-	public void setRotation(float rotation) {
-		this.rotation = rotation;
+	public void setRotation(float rot) {
+		this.rot = rot;
 	}
 	
 }

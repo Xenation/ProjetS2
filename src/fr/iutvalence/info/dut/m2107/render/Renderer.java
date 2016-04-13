@@ -58,11 +58,11 @@ public class Renderer {
 	 * Renders all the tiles in the gameWorld through the view of the gameWorld's camera
 	 * @param gameWorld the game world to render
 	 */
-	public void render(GameWorld gameWorld) {
+	public void render() {
 		shader.start();
-		shader.loadViewMatrix(gameWorld.getCamera());
+		shader.loadViewMatrix(GameWorld.camera);
 		
-		for (Chunk chk : gameWorld.getChunkMap().getSurroundingChunks(-UNITS_Y/2*DisplayManager.aspectRatio, UNITS_Y/2*DisplayManager.aspectRatio, UNITS_Y/2, -UNITS_Y/2, gameWorld.getCamera().getPosition())) {
+		for (Chunk chk : GameWorld.chunkMap.getSurroundingChunks(-UNITS_Y/2*DisplayManager.aspectRatio, UNITS_Y/2*DisplayManager.aspectRatio, UNITS_Y/2, -UNITS_Y/2, GameWorld.camera.getPosition())) {
 			for (TileType typ : chk.types()) {
 				prepareSprite(typ.getSprite());
 				
@@ -92,8 +92,8 @@ public class Renderer {
 //			unbindSprite();
 		}
 		
-		for (int i = gameWorld.getLayerMap().getLayersCount()-1; i >= 0; i--) {
-			Layer layer = gameWorld.getLayerMap().getLayer(i);
+		for (int i = GameWorld.layerMap.getLayersCount()-1; i >= 0; i--) {
+			Layer layer = GameWorld.layerMap.getLayer(i);
 			for (Sprite spr : layer.sprites()) {
 				prepareSprite(spr);
 				

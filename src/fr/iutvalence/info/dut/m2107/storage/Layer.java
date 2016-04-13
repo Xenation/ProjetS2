@@ -16,7 +16,7 @@ public class Layer implements Iterable<Entity> {
 	
 	public void update() {
 		for (Entity ent : this) {
-			ent.update();
+			ent.update(this);
 		}
 	}
 	
