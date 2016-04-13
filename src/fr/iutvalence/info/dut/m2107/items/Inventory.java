@@ -22,20 +22,20 @@ public class Inventory {
 	 */
 	public boolean add(Item item, int stack) {
 		int index = inventory.indexOf(item);
-		if(stack <= item.MAX_STACK()) {
+		if(stack <= item.max_stack()) {
 			if(index == -1) {
 				item.changeStack(stack);
 				inventory.add(item);
 				return true;
 			} else {
 				Item itemToAdd = inventory.get(index);
-				if(itemToAdd.Stack() + stack <= itemToAdd.MAX_STACK()) {
+				if(itemToAdd.stack() + stack <= itemToAdd.max_stack()) {
 					inventory.set(index, itemToAdd.changeStack(stack));
 					return true;
 				}
 			}
 		}
-		StackOverflow(item);
+		stackOverflow(item);
 		return false;
 	}
 	
@@ -47,15 +47,15 @@ public class Inventory {
 	public boolean remove(Item item, int stack) {
 		int index = inventory.indexOf(item);
 		if(index != -1) {
-			if(stack < inventory.get(index).Stack()) {
+			if(stack < inventory.get(index).stack()) {
 				item.changeStack(-stack);
 				return true;
-			} else if(stack == inventory.get(index).Stack()) {
+			} else if(stack == inventory.get(index).stack()) {
 				inventory.remove(index);
 				return true;
 			}
 		}
-		StackUnderflow(inventory.get(index));
+		stackUnderflow(inventory.get(index));
 		return false;
 	}
 	
@@ -63,16 +63,16 @@ public class Inventory {
 	 * Display a message that says you can't take more item
 	 * @param item The item which is in overflow
 	 */
-	private void StackOverflow(Item item) {
-		System.out.println("You can't carry more than : " + item.MAX_STACK() + " " + item.Name());
+	private void stackOverflow(Item item) {
+		System.out.println("You can't carry more than : " + item.max_stack() + " " + item.name());
 	}
 	
 	/**
 	 * Display a message that says you can't remove more item
 	 * @param item The item which is in underflow
 	 */
-	private void StackUnderflow(Item item) {
-		System.out.println("You can't remove more than : " + item.Stack() + " " + item.Name());
+	private void stackUnderflow(Item item) {
+		System.out.println("You can't remove more than : " + item.stack() + " " + item.name());
 	}
 	
 	/**
@@ -83,8 +83,8 @@ public class Inventory {
 		Collections.sort(inventory, new Comparator<Item>(){
 			@Override
 			public int compare(Item item1, Item item2) {
-				if(sort >= 0) return item1.Name().compareTo(item2.Name());
-				else return item2.Name().compareTo(item1.Name());
+				if(sort >= 0) return item1.name().compareTo(item2.name());
+				else return item2.name().compareTo(item1.name());
 			}		
 		});
 	}
@@ -97,8 +97,8 @@ public class Inventory {
 		Collections.sort(inventory, new Comparator<Item>(){
 			@Override
 			public int compare(Item item1, Item item2) {
-				if(sort >= 0) return item1.Rarity().compareTo(item2.Rarity());
-				else return item2.Rarity().compareTo(item1.Rarity());
+				if(sort >= 0) return item1.rarity().compareTo(item2.rarity());
+				else return item2.rarity().compareTo(item1.rarity());
 			}		
 		});
 	}
@@ -111,8 +111,8 @@ public class Inventory {
 		Collections.sort(inventory, new Comparator<Item>(){
 			@Override
 			public int compare(Item item1, Item item2) {
-				if(sort >= 0) return item1.Value()*item1.Stack() - (item2.Value()*item2.Stack());
-				else return item2.Value()*item1.Stack() - (item1.Value()*item2.Stack());
+				if(sort >= 0) return item1.value()*item1.stack() - (item2.value()*item2.stack());
+				else return item2.value()*item1.stack() - (item1.value()*item2.stack());
 			}		
 		});
 	}
@@ -125,9 +125,9 @@ public class Inventory {
 		Collections.sort(inventory, new Comparator<Item>(){
 			@Override
 			public int compare(Item item1, Item item2) {
-				if(sort >= 0) return item1.Stack() - (item2.Stack());
-				else return item2.Stack() - (item1.Stack());
-			}		
+				if(sort >= 0) return item1.stack() - (item2.stack());
+				else return item2.stack() - (item1.stack());
+			}
 		});
 	}
 

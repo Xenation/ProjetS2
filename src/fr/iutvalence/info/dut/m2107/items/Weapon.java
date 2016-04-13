@@ -8,19 +8,22 @@ package fr.iutvalence.info.dut.m2107.items;
 
 public class Weapon extends Item {
 
-	
 	private int damage;
 	private int range;
+	private int use_time;
 	private int knockback;
+	private Effect effect;
 	
 	
-	Weapon(int _id, String _name, String _description, int _maxStack, int _value, Rarity _rarity, int _damage, int _knockback, int _range) {
+	Weapon(int id, String name, String description, int maxStack, int value, Rarity rarity, int damage, int knockback, int range, int use_time, Effect effect) {
 		
-		super( _id, _name, _description, _rarity, _maxStack, _value);
+		super( id, name, description, rarity, maxStack, value);
 		
-		this.damage = _damage;
-		this.knockback = _knockback;
-		this.range = _range;
+		this.damage = damage;
+		this.range = range;
+		this.use_time = use_time;
+		this.knockback = knockback;
+		this.effect = effect;
 	}
 	
 }

@@ -39,57 +39,57 @@ public class Item {
 	
 	/**
 	 * Create an item with basics attributes
-	 * @param _id of the item
-	 * @param _name of the item
-	 * @param _description of the item
-	 * @param _rarity of the item
-	 * @param _maxStack of the item
-	 * @param _value of the item
+	 * @param id of the item
+	 * @param name of the item
+	 * @param description of the item
+	 * @param rarity of the item
+	 * @param maxStack of the item
+	 * @param value of the item
 	 */
-	Item(int _id, String _name, String _description, Rarity _rarity, int _maxStack, int _value) {
-		this.id = _id;
-		this.name = _name;
-		this.description = _description;
-		this.rarity = _rarity;
-		this.MAX_STACK = _maxStack;
-		this.value = _value;
+	Item(int id, String name, String description, Rarity rarity, int maxStack, int value) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.rarity = rarity;
+		this.MAX_STACK = maxStack;
+		this.value = value;
 	}
 
 	/**
 	 * Return the current stack of the item
 	 * @return the current stack of the item
 	 */
-	public int Stack() { return stack; }
+	public int stack() { return stack; }
 	/**
 	 * Return the id of the item
 	 * @return the id of the item
 	 */
-	public int Id() { return id; }
+	public int id() { return id; }
 	/**
 	 * Return the name of the item
 	 * @return the name of the item
 	 */
-	public String Name() { return name; }
+	public String name() { return name; }
 	/**
 	 * Return the description of the item
 	 * @return the description of the item
 	 */
-	public String Description() { return description; }
+	public String description() { return description; }
 	/**
 	 * Return the rarity of the item
 	 * @return the rarity of the item
 	 */
-	public Rarity Rarity() { return rarity; }
+	public Rarity rarity() { return rarity; }
 	/**
 	 * Return the max stack of the item
 	 * @return the max stack of the item
 	 */
-	public int MAX_STACK() { return MAX_STACK; }
+	public int max_stack() { return MAX_STACK; }
 	/**
 	 * Return the value of the item
 	 * @return the value of the item
 	 */
-	public int Value() { return value; }
+	public int value() { return value; }
 
 	/**
 	 * Update the current stack of the item
