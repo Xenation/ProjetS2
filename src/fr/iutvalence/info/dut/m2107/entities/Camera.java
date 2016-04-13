@@ -5,6 +5,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
@@ -30,12 +31,16 @@ public class Camera {
 	 */
 	private float rotation;
 	
+	private GUIText debugText;
+	
 	/**
 	 * A new Camera at 0,0 and with a rotation of 0
 	 */
 	public Camera() {
 		this.position = new Vector2f();
 		this.rotation = 0;
+		this.debugText = new GUIText("", 1, 0, 0, .5f, false);
+		debugText.setColour(0, 1, 0);
 	}
 	
 	/**
@@ -46,16 +51,16 @@ public class Camera {
 		gameWorld.getChunkMap().generateSurroundingChunks(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, position);
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8)) {
-			this.position.y += 0.02 * DisplayManager.deltaTime();
+			this.position.y += 20 * DisplayManager.deltaTime();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD5)) {
-			this.position.y -= 0.02 * DisplayManager.deltaTime();
+			this.position.y -= 20 * DisplayManager.deltaTime();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD6)) {
-			this.position.x += 0.02 * DisplayManager.deltaTime();
+			this.position.x += 20 * DisplayManager.deltaTime();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4)) {
-			this.position.x -= 0.02 * DisplayManager.deltaTime();
+			this.position.x -= 20 * DisplayManager.deltaTime();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD0)) {
 			setPosition(0, 0);
@@ -68,12 +73,22 @@ public class Camera {
 			WorldLoader.loadWorld(gameWorld);
 		}
 		
+		if (Keyboard.isKeyDown(Keyboard.KEY_V)) {
+			Display.setVSyncEnabled(true);
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
+			Display.setVSyncEnabled(false);
+		}
+		
 		if (Mouse.isButtonDown(0)) {
 			gameWorld.getChunkMap().addTile(new Tile(TileType.Dirt, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
 		}
 		if (Mouse.isButtonDown(1)) {
 			gameWorld.getChunkMap().removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 		}
+		
+		debugText.updateText("Mouse: "+Maths.roundDecim(getMouseWorldX(), 3)+", "+Maths.roundDecim(getMouseWorldY(), 3));
+		
 	}
 	
 	/**

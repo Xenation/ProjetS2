@@ -7,7 +7,6 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
-import org.newdawn.slick.Color;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.models.*;
@@ -107,7 +106,6 @@ public class Renderer {
 				unbindSprite();
 			}
 		}
-		//gameWorld.getDebugFont().drawString(0, 0, "THIS IS A TEST", Color.white);
 		
 		shader.stop();
 	}

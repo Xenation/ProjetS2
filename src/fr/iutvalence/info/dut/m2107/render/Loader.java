@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -29,18 +31,20 @@ public class Loader {
 	
 	public static final Loader SPRITE_LOADER = new Loader();
 	
+	public static final Loader TEXT_LOADER = new Loader();
+	
 	/**
-	 * The list of IDs from the VAOs that have been loaded with this loader
+	 * The IDs of every loaded VAO and the linked VBO
 	 */
-	private List<Integer> vaos = new ArrayList<Integer>();
-	/**
-	 * The list of IDs from the VBOs that have been loaded with this loader
-	 */
-	private List<Integer> vbos = new ArrayList<Integer>();
+	private Map<Integer, Integer> vaoMap = new HashMap<Integer, Integer>();
 	/**
 	 * The list of IDs from the textures that have been loaded with this loader
 	 */
 	private List<Integer> textures = new ArrayList<Integer>();
+	
+	
+	
+	private int currentVao;
 	
 	/**
 	 * Loads the specified positions and textureUVs inside a new VAO
@@ -56,19 +60,29 @@ public class Loader {
 		return vaoID;
 	}
 	
+	public String debugValues() {
+		return "VAOs:"+vaoMap.size()+"  VBOs:"+vaoMap.size()+"  Tex:"+textures.size();
+	}
+	
 	/**
 	 * unloads all the VAOs, VBOs and Textures that loaded this Loader
 	 */
 	public void unloadAll() {
 		for (int texture : textures) {
-			GL11.glDeleteTextures(texture);			
+			GL11.glDeleteTextures(texture);
 		}
-		for (int vbo : vbos) {
-			GL15.glDeleteBuffers(vbo);			
-		}
-		for (int vao : vaos) {
+		textures.clear();
+		for (int vao : vaoMap.keySet()) {
+			GL15.glDeleteBuffers(vaoMap.get(vao));
 			GL30.glDeleteVertexArrays(vao);
 		}
+		vaoMap.clear();
+	}
+	
+	public void unloadVAO(int vao) {
+		GL15.glDeleteBuffers(vaoMap.get(vao));
+		GL30.glDeleteVertexArrays(vao);
+		vaoMap.remove(vao);
 	}
 	
 	/**
@@ -81,7 +95,7 @@ public class Loader {
 	 */
 	private void storeInterleavedDataInAttributeList(int attrib1, int attrib2, int coordinateSize, float[] data1, float[] data2) {
 		int vboID = GL15.glGenBuffers();
-		vbos.add(vboID);
+		vaoMap.put(currentVao, vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		FloatBuffer buffer = storeInterleavedDataInFloatBuffer(data1, data2);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
@@ -96,7 +110,7 @@ public class Loader {
 	 */
 	private int createVAO() {
 		int vaoID = GL30.glGenVertexArrays();
-		vaos.add(vaoID);
+		currentVao = vaoID;
 		GL30.glBindVertexArray(vaoID);
 		return vaoID;
 	}
