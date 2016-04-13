@@ -57,17 +57,7 @@ public class WorldLoader {
 				byte t = buffer.get();
 				int x = buffer.getInt();
 				int y = buffer.getInt();
-				switch (t) {
-				case 1:
-					typ = TileType.Dirt;
-					break;
-				case 2:
-					typ = TileType.Stone;
-					break;
-				default:
-					typ = TileType.Dirt;
-					break;
-				}
+				typ = TileType.getTypeById(t);
 				gameWorld.getChunkMap().setTilenChunk(new Tile(typ, x, y));
 			}
 			

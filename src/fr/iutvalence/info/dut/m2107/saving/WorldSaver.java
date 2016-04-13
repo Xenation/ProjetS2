@@ -49,17 +49,7 @@ public class WorldSaver {
 			buffer.rewind();
 			for (Chunk chk : gameWorld.getChunkMap()) {
 				for (Tile tile : chk) {
-					switch (tile.getType()) {
-					case Dirt:
-						buffer.put((byte) 1);
-						break;
-					case Stone:
-						buffer.put((byte) 2);
-						break;
-					default:
-						buffer.put((byte) 0);
-						break;
-					}
+					buffer.put(tile.getType().getId());
 					buffer.putInt(tile.x);
 					buffer.putInt(tile.y);
 				}
