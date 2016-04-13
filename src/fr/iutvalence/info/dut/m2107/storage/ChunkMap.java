@@ -34,6 +34,23 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 			chk.add(til);
 		}
 	}
+	public void setTile(Tile til) {
+		Chunk chk = get(Chunk.toChunkPosition(til.x, til.y));
+		if (chk != null) {
+			chk.set(til);
+		}
+	}
+	public void setTilenChunk(Tile til) {
+		Chunk chk = get(Chunk.toChunkPosition(til.x, til.y));
+		if (chk != null) {
+			chk.set(til);
+		} else {
+			Vector2i pos = Chunk.toChunkPosition(til.x, til.y);
+			chk = new Chunk(pos);
+			put(pos, chk);
+			chk.add(til);
+		}
+	}
 	public void removeTileAt(int x, int y) {
 		Chunk chk = get(Chunk.toChunkPosition(x, y));
 		if (chk != null) {
@@ -65,12 +82,29 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		return chks;
 	}
 	
+	public int getSurroundingTilesCount(float left, float right, float top, float bottom, Vector2f center) {
+		int count = 0;
+		for (int y = Chunk.toChunkPosition(Maths.fastFloor(bottom + center.y)); y <= Chunk.toChunkPosition(Maths.fastFloor(top + center.y)); y++) {
+			for (int x = Chunk.toChunkPosition(Maths.fastFloor(left + center.x)); x <= Chunk.toChunkPosition(Maths.fastFloor(right + center.x)); x++) {
+				Vector2i pos = new Vector2i(x, y);
+				if (this.containsKey(pos)) {
+					count += this.get(pos).getTilesCount();
+				}
+			}
+		}
+		return count;
+	}
+	
 	public int getTilesCount() {
 		int count = 0;
 		for (Chunk chk : this) {
 			count += chk.getTilesCount();
 		}
 		return count;
+	}
+	
+	public int getChunkCount() {
+		return this.size();
 	}
 	
 	

@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import org.lwjgl.BufferUtils;
 
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
@@ -40,25 +44,22 @@ public class WorldSaver {
 				return;
 			}
 			
-			byte[] data = new byte[GameWorld.chunkMap.getTilesCount()*4];
-			int index = 0;
+			ByteBuffer buffer = BufferUtils.createByteBuffer(GameWorld.chunkMap.getTilesCount()*9);
+			buffer.order(ByteOrder.BIG_ENDIAN);
+			buffer.rewind();
 			for (Chunk chk : GameWorld.chunkMap) {
 				for (Tile tile : chk) {
-					switch (tile.getType()) {
-					case Dirt:
-						data[index++] = 1;
-						break;
-					case Stone:
-						data[index++] = 2;
-						break;
-					default:
-						data[index++] = 0;
-						break;
-					}
-					data[index++] = (byte) tile.x;
-					data[index++] = (byte) tile.y;
-					data[index++] = 11;
+					buffer.put(tile.getType().getId());
+					buffer.putInt(tile.x);
+					buffer.putInt(tile.y);
 				}
+			}
+			
+			buffer.flip();
+			
+			byte[] data = new byte[buffer.capacity()];
+			for (int i = 0; i < data.length; i++) {
+				data[i] = buffer.get();
 			}
 			
 			try {

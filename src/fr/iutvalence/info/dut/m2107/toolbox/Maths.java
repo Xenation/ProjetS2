@@ -90,4 +90,22 @@ public class Maths {
 		return x<xi ? xi-1 : xi;
 	}
 	
+	public static float roundDecim(float f, int decimal) {
+		float pow = pow(10, decimal);
+		return ((int) (f*pow))/pow;
+	}
+	
+	public static float pow(double a, int b) {
+		float result = 1;
+		while(b > 0) {
+			if (b % 2 != 0) {
+				result *= a;
+				b--;
+			} 
+			a *= a;
+			b /= 2;
+		}
+		return result;
+	}
+	
 }
