@@ -8,6 +8,7 @@ public class TextMeshCreator {
 
 	protected static final double LINE_HEIGHT = 0.03f;
 	protected static final int SPACE_ASCII = 32;
+	protected static final int LF_ASCII = 10;
 
 	private MetaFile metaData;
 
@@ -33,6 +34,16 @@ public class TextMeshCreator {
 				if (!added) {
 					lines.add(currentLine);
 					currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+					currentLine.attemptToAddWord(currentWord);
+				}
+				currentWord = new Word(text.getFontSize());
+				continue;
+			}
+			if (ascii == LF_ASCII) {
+				boolean added = currentLine.attemptToAddWord(currentWord);
+				lines.add(currentLine);
+				currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+				if (!added) {
 					currentLine.attemptToAddWord(currentWord);
 				}
 				currentWord = new Word(text.getFontSize());
@@ -75,7 +86,7 @@ public class TextMeshCreator {
 				curserX += metaData.getSpaceWidth() * text.getFontSize();
 			}
 			curserX = 0;
-			curserY += LINE_HEIGHT * text.getFontSize();
+			curserY += text.getLineHeight() * text.getFontSize();
 		}		
 		return new TextMeshData(listToArray(vertices), listToArray(textureCoords));
 	}

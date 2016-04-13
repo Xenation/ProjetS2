@@ -33,6 +33,8 @@ public class Camera {
 	
 	private GUIText debugText;
 	
+	private TileType type;
+	
 	/**
 	 * A new Camera at 0,0 and with a rotation of 0
 	 */
@@ -41,6 +43,7 @@ public class Camera {
 		this.rotation = 0;
 		this.debugText = new GUIText("", 1, 0, 0, .5f, false);
 		debugText.setColour(0, 1, 0);
+		this.type = TileType.Dirt;
 	}
 	
 	/**
@@ -48,8 +51,10 @@ public class Camera {
 	 */
 	public void update(GameWorld gameWorld) {
 		
+		//// World gen
 		gameWorld.getChunkMap().generateSurroundingChunks(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, position);
 		
+		//// Movement
 		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8)) {
 			this.position.y += 20 * DisplayManager.deltaTime();
 		}
@@ -66,6 +71,7 @@ public class Camera {
 			setPosition(0, 0);
 		}
 		
+		//// Load/Save
 		if (Keyboard.isKeyDown(Keyboard.KEY_DIVIDE)) {
 			WorldSaver.writeWorld(gameWorld);
 		}
@@ -73,6 +79,7 @@ public class Camera {
 			WorldLoader.loadWorld(gameWorld);
 		}
 		
+		//// Vsync ON/OFF
 		if (Keyboard.isKeyDown(Keyboard.KEY_V)) {
 			Display.setVSyncEnabled(true);
 		}
@@ -80,11 +87,20 @@ public class Camera {
 			Display.setVSyncEnabled(false);
 		}
 		
+		//// Drawing
 		if (Mouse.isButtonDown(0)) {
-			gameWorld.getChunkMap().addTile(new Tile(TileType.Dirt, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
+			gameWorld.getChunkMap().setTile(new Tile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
 		}
 		if (Mouse.isButtonDown(1)) {
 			gameWorld.getChunkMap().removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+		}
+		
+		//// Tile Choice
+		if (Keyboard.isKeyDown(Keyboard.KEY_1)) {
+			this.type = TileType.Dirt;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_2)) {
+			this.type = TileType.Stone;
 		}
 		
 		debugText.updateText("Mouse: "+Maths.roundDecim(getMouseWorldX(), 3)+", "+Maths.roundDecim(getMouseWorldY(), 3));

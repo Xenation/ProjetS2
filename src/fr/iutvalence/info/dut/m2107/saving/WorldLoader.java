@@ -3,10 +3,9 @@ package fr.iutvalence.info.dut.m2107.saving;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
-import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
@@ -20,6 +19,7 @@ public class WorldLoader {
 	}
 	
 	public static void loadWorld(GameWorld gameWorld) {
+		
 		double start = System.currentTimeMillis();
 		
 		if (file != null) {
@@ -50,9 +50,14 @@ public class WorldLoader {
 				System.err.println("Failed to read from file");
 			}
 			
+			ByteBuffer buffer = ByteBuffer.wrap(data);
+			
 			TileType typ = TileType.Dirt;
-			for (int i = 0; i < data.length; i++) {
-				switch (data[i++]) {
+			while (buffer.hasRemaining()) {
+				byte t = buffer.get();
+				int x = buffer.getInt();
+				int y = buffer.getInt();
+				switch (t) {
 				case 1:
 					typ = TileType.Dirt;
 					break;
@@ -63,8 +68,7 @@ public class WorldLoader {
 					typ = TileType.Dirt;
 					break;
 				}
-				gameWorld.getChunkMap().addTilenChunk(new Tile(typ, data[i], data[i+1]));
-				i += 2;
+				gameWorld.getChunkMap().setTilenChunk(new Tile(typ, x, y));
 			}
 			
 			try {
@@ -76,6 +80,7 @@ public class WorldLoader {
 			}
 		}
 		
-		System.out.println("World Loaded ("+file.length()/4+" tiles) in: "+(System.currentTimeMillis()-start)+"ms");
+		System.out.println("World Loaded ("+file.length()/9+" tiles) in: "+(System.currentTimeMillis()-start)+"ms");
+		
 	}
 }

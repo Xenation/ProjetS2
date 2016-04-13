@@ -83,6 +83,28 @@ public class Chunk implements Iterable<Tile> {
 		return null;
 	}
 	
+	public Tile set(Tile til) {
+		Tile cur = getTileAt(til.x, til.y);
+		if (cur == null) {
+			add(til);
+		} else {
+			List<Tile> listAdd = tiles.get(til.getType());
+			if (listAdd == null) {
+				listAdd = new ArrayList<Tile>();
+				tiles.put(til.getType(), listAdd);
+				tiles.get(cur.getType()).remove(cur);
+				listAdd.add(til);
+			} else if (listAdd != tiles.get(cur.getType())) {
+				tiles.get(cur.getType()).remove(cur);
+				listAdd.add(til);
+			} else {
+				listAdd.set(listAdd.indexOf(cur), til);
+			}
+			return til;
+		}
+		return null;
+	}
+	
 	public void removeAt(int x, int y) {
 		TileType rTyp = null;
 		Tile rem = null;

@@ -34,6 +34,23 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 			chk.add(til);
 		}
 	}
+	public void setTile(Tile til) {
+		Chunk chk = get(Chunk.toChunkPosition(til.x, til.y));
+		if (chk != null) {
+			chk.set(til);
+		}
+	}
+	public void setTilenChunk(Tile til) {
+		Chunk chk = get(Chunk.toChunkPosition(til.x, til.y));
+		if (chk != null) {
+			chk.set(til);
+		} else {
+			Vector2i pos = Chunk.toChunkPosition(til.x, til.y);
+			chk = new Chunk(pos);
+			put(pos, chk);
+			chk.add(til);
+		}
+	}
 	public void removeTileAt(int x, int y) {
 		Chunk chk = get(Chunk.toChunkPosition(x, y));
 		if (chk != null) {

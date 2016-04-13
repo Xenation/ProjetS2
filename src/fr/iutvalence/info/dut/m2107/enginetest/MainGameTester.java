@@ -51,21 +51,15 @@ public class MainGameTester {
 		
 		GUIText chunks = new GUIText("Chunks :", 1, 0, .8f, 0.5f, false);
 		chunks.setColour(0, 1, 0);
-		GUIText chunkNb = new GUIText("", .8f, 0, .82f, 0.5f, false);
-		chunkNb.setColour(0, 1, 0);
-		GUIText tilesNb = new GUIText("", .8f, 0, .84f, 0.5f, false);
-		tilesNb.setColour(0, 1, 0);
-		GUIText tilesCur = new GUIText("", .8f, 0, .86f, 0.5f, false);
-		tilesCur.setColour(0, 1, 0);
+		GUIText chunkStats = new GUIText("", .8f, 0, .82f, 0.5f, false);
+		chunkStats.setColour(0, 1, 0);
+		chunkStats.setLineHeight(0.024);
 		
 		GUIText loaders = new GUIText("Loaders :", 1, 0, .92f, 0.5f, false);
 		loaders.setColour(0, 1, 0);
-		GUIText tilLoad = new GUIText("", .8f, 0, .94f, .5f, false);
-		tilLoad.setColour(0, 1, 0);
-		GUIText sprLoad = new GUIText("", .8f, 0, .96f, .5f, false);
-		sprLoad.setColour(0, 1, 0);
-		GUIText texLoad = new GUIText("", .8f, 0, .98f, .5f, false);
-		texLoad.setColour(0, 1, 0);
+		GUIText loaderStats = new GUIText("", .8f, 0, .94f, 0.5f, false);
+		loaderStats.setColour(0, 1, 0);
+		loaderStats.setLineHeight(0.024);
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {
@@ -79,13 +73,13 @@ public class MainGameTester {
 //			gameWorld.getLayerMap().getLayer(0).add(
 //					new MovableEntity(new Vector2f((float) (-10 + (Math.random()* 20)), (float) (-10 + (Math.random()* 20))), (float) (-360 + (Math.random()* 720)), new Sprite("item/sugar", new Vector2f(1, 1)), new Vector2f((float) (-10 + (Math.random()* 20)), (float) (-10 + (Math.random()* 20))), (float) (-10 + (Math.random()* 40))));
 			
-			chunkNb.updateText("Chunks: "+gameWorld.getChunkMap().getChunkCount());
-			tilesNb.updateText("Tiles: "+gameWorld.getChunkMap().getTilesCount());
-			tilesCur.updateText("Current Tiles: "+gameWorld.getChunkMap().getSurroundingTilesCount(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, gameWorld.getCamera().getPosition()));
+			chunkStats.updateText("Chunks: "+gameWorld.getChunkMap().getChunkCount()
+					+ "\nTiles: "+gameWorld.getChunkMap().getTilesCount()
+					+ "\nCurrent Tiles: "+gameWorld.getChunkMap().getSurroundingTilesCount(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, gameWorld.getCamera().getPosition()));
 			
-			tilLoad.updateText("TILES: "+Loader.TILE_LOADER.debugValues());
-			sprLoad.updateText("SPRITES: "+Loader.SPRITE_LOADER.debugValues());
-			texLoad.updateText("TEXT: "+Loader.TEXT_LOADER.debugValues());
+			loaderStats.updateText("TILES: "+Loader.TILE_LOADER.debugValues()
+					+ "\nSPRITES: "+Loader.SPRITE_LOADER.debugValues()
+					+ "\nTEXT: "+Loader.TEXT_LOADER.debugValues());
 			
 			gameWorld.update();
 			

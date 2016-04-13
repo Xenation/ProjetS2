@@ -42,8 +42,6 @@ public class Loader {
 	 */
 	private List<Integer> textures = new ArrayList<Integer>();
 	
-	
-	
 	private int currentVao;
 	
 	/**

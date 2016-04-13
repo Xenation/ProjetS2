@@ -23,6 +23,7 @@ public class GUIText {
 	private Vector2f position;
 	private float lineMaxSize;
 	private int numberOfLines;
+	private double lineHeight = TextMeshCreator.LINE_HEIGHT;
 
 	private FontType font;
 
@@ -74,9 +75,11 @@ public class GUIText {
 	}
 	
 	public void updateText(String str) {
-		remove();
-		this.textString = str;
-		TextMaster.loadText(this);
+		if (!textString.equals(str)) {
+			remove();
+			this.textString = str;
+			TextMaster.loadText(this);
+		}
 	}
 
 	/**
@@ -197,6 +200,14 @@ public class GUIText {
 	 */
 	protected String getTextString() {
 		return textString;
+	}
+
+	public double getLineHeight() {
+		return lineHeight;
+	}
+
+	public void setLineHeight(double lineHeight) {
+		this.lineHeight = lineHeight;
 	}
 
 }
