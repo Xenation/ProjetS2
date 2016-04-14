@@ -4,6 +4,8 @@ import fr.iutvalence.info.dut.m2107.storage.Chunk;
 
 public class Tile {
 	
+	public static final float TILE_SIZE = 1;
+	
 	public final int x, y;
 	private TileType type;
 	

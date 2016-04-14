@@ -54,7 +54,7 @@ public class Camera {
 	public void update() {
 		
 
-		GameWorld.chunkMap.generateSurroundingChunks(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, position);
+		GameWorld.chunkMap.generateSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, position);
 
 		this.position.x = Maths.lerp(this.position.x, target.pos.x, 0.1f);
 		this.position.y = Maths.lerp(this.position.y, target.pos.y, 0.1f);

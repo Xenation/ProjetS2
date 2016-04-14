@@ -25,10 +25,19 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
  */
 public class Renderer {
 	
+	
 	/**
 	 * The amount of Units in height in the screen
 	 */
 	public static final float UNITS_Y = 20;
+	
+	public static final float BOUNDARY_LEFT = -UNITS_Y/2*DisplayManager.aspectRatio;
+	
+	public static final float BOUNDARY_RIGHT = -BOUNDARY_LEFT;
+	
+	public static final float BOUNDARY_BOTTOM = -UNITS_Y/2;
+	
+	public static final float BOUNDARY_TOP = UNITS_Y/2;
 	
 	/**
 	 * the orthogonal projection matrix
@@ -47,7 +56,7 @@ public class Renderer {
 	 */
 	public Renderer() {
 		shader = new Shader();
-		createOrthoProjectionMatrix(-DisplayManager.aspectRatio*UNITS_Y/2, DisplayManager.aspectRatio*UNITS_Y/2, -UNITS_Y/2, UNITS_Y/2, 2, -5);
+		createOrthoProjectionMatrix(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_BOTTOM, BOUNDARY_TOP, 2, -5);
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
@@ -61,7 +70,7 @@ public class Renderer {
 		shader.start();
 		shader.loadViewMatrix(GameWorld.camera);
 		
-		for (Chunk chk : GameWorld.chunkMap.getSurroundingChunks(-UNITS_Y/2*DisplayManager.aspectRatio, UNITS_Y/2*DisplayManager.aspectRatio, UNITS_Y/2, -UNITS_Y/2, GameWorld.camera.getPosition())) {
+		for (Chunk chk : GameWorld.chunkMap.getSurroundingChunks(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_TOP, BOUNDARY_BOTTOM, GameWorld.camera.getPosition())) {
 			for (TileType typ : chk.types()) {
 				prepareSprite(typ.getSprite());
 				
