@@ -29,20 +29,7 @@ public class MainGameTester {
 		Renderer renderer = new Renderer();		
 		
 		GameWorld.camera.setTarget(GameWorld.player);
-		
-		Chunk chk = new Chunk(new Vector2i(0, 0));
-		GameWorld.chunkMap.put(chk.getPosition(), chk);
-		GameWorld.chunkMap.addTile(new Tile(TileType.Dirt, 0, 0));
-		GameWorld.chunkMap.addTile(new Tile(TileType.Dirt, 2, 0));
-		GameWorld.chunkMap.addTile(new Tile(TileType.Dirt, 4, 0));
-		GameWorld.chunkMap.addTile(new Tile(TileType.Dirt, 6, 0));
-		Chunk chk2 = new Chunk(new Vector2i(-1, 0));
-		GameWorld.chunkMap.put(chk2.getPosition(), chk2);
-		GameWorld.chunkMap.addTile(new Tile(TileType.Stone, -1, 0));
-		GameWorld.chunkMap.addTile(new Tile(TileType.Stone, -3, 0));
-		GameWorld.chunkMap.addTile(new Tile(TileType.Stone, -5, 0));
-		GameWorld.chunkMap.addTile(new Tile(TileType.Stone, -7, 0));
-		
+
 		GameWorld.layerMap.addEmpty(4);
 		GameWorld.layerMap.getLayer(0).add(GameWorld.player);
 		GameWorld.layerMap.getLayer(0).add(new LivingEntity(new Vector2f(-1, 1.5f), new Sprite("item/sugar", new Vector2f(1, 1)), GameWorld.layerMap.getLayer(0)));
@@ -66,6 +53,8 @@ public class MainGameTester {
 		GUIText loaderStats = new GUIText("", .8f, 0, .94f, 0.5f, false);
 		loaderStats.setColour(0, 1, 0);
 		loaderStats.setLineHeight(0.024);
+		
+		WorldLoader.loadWorld();
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {

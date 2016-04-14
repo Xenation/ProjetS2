@@ -3,6 +3,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
+import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 public class Collider {
@@ -31,23 +32,20 @@ public class Collider {
 		this.h = h;
 	}
 	
-	// ENTITY
+	/*// ENTITY
 	public void checkCollision(Player thisEntity, Entity entity) {
 		if (thisEntity.col.isCollidingNext(entity.col, new Vector2f(thisEntity.pos.x + thisEntity.vel.x * thisEntity.spd * DisplayManager.deltaTime(),
 				thisEntity.pos.y + thisEntity.vel.y * thisEntity.spd * DisplayManager.deltaTime()))) {
 			if(!this.isCollidingLeft(entity.col)) {
 				thisEntity.vel.x = 0;
 				thisEntity.pos.x = entity.pos.x + entity.col.getW();
-			}
-			if(!this.isCollidingRight(entity.col)) {
+			}else if(!this.isCollidingRight(entity.col)) {
 				thisEntity.vel.x = 0;
 				thisEntity.pos.x = entity.pos.x - this.getW();
-			}
-			if(!this.isCollidingTop(entity.col)) {
+			}else if(!this.isCollidingTop(entity.col)) {
 				thisEntity.vel.y = 0;
 				thisEntity.pos.y = entity.pos.y - this.getH();
-			}
-			if(!this.isCollidingBot(entity.col)) {
+			}else if(!this.isCollidingBot(entity.col)) {
 				thisEntity.vel.y = 0;
 				thisEntity.pos.y = entity.pos.y + entity.col.getH();
 				thisEntity.isGrounded = true;
@@ -84,59 +82,74 @@ public class Collider {
 		if (col.getWY() + col.h > this.getWY()) return true;
 		return false;
 	}
-	// <--
+	// <--*/
 	
 	// TILE
 	public void checkCollision(Player thisEntity, Tile tile) {
 		if (thisEntity.col.isCollidingNext(tile, new Vector2f(thisEntity.pos.x + thisEntity.vel.x * thisEntity.spd * DisplayManager.deltaTime(),
-				thisEntity.pos.y + thisEntity.vel.y * thisEntity.spd * DisplayManager.deltaTime()))) {
+																thisEntity.pos.y + thisEntity.vel.y * thisEntity.spd * DisplayManager.deltaTime()))) {	
+			float thisLeft = getWX() - this.w/2;
+			float thisRight = getWX() + this.w/2;
+			float thisTop = getWY() + this.h/2;
+			float thisBottom = getWY() - this.h/2;
+			
+			float tileLeft = tile.x;
+			float tileRight = tile.x + Tile.TILE_SIZE;
+			float tileTop = tile.y + Tile.TILE_SIZE;
+			float tileBottom = tile.y;
+			
 			if(!this.isCollidingLeft(tile)) {
-				thisEntity.vel.x = 0;
-				thisEntity.pos.x = tile.x + Tile.TILE_SIZE;
-			}
-			if(!this.isCollidingRight(tile)) {
-				thisEntity.vel.x = 0;
-				thisEntity.pos.x = tile.x - this.getW();
-			}
-			if(!this.isCollidingTop(tile)) {
-				thisEntity.vel.y = 0;
-				thisEntity.pos.y = tile.y - this.getH();
-			}
-			if(!this.isCollidingBot(tile)) {
-				thisEntity.vel.y = 0;
-				thisEntity.pos.y = tile.y + Tile.TILE_SIZE;
-				thisEntity.isGrounded = true;
+				if(GameWorld.chunkMap.getRightTile(tile) == null && !(thisBottom >= tileTop || thisTop <= tileBottom)) {
+					thisEntity.vel.x = 0;
+					thisEntity.pos.x = tile.x + Tile.TILE_SIZE + this.w/2;
+				}
+			}else if(!this.isCollidingRight(tile)) {
+				if(GameWorld.chunkMap.getLeftTile(tile) == null && !(thisBottom >= tileTop || thisTop <= tileBottom)) {
+					thisEntity.vel.x = 0;
+					thisEntity.pos.x = tile.x - this.getW()/2;
+				}
+			}else if(!this.isCollidingTop(tile)) {
+				if(GameWorld.chunkMap.getBottomTile(tile) == null && !(thisLeft >= tileRight || thisRight <= tileLeft)) {
+					thisEntity.vel.y = 0;
+					thisEntity.pos.y = tile.y - this.getH()/2;
+				}
+			}else if(!this.isCollidingBot(tile)) {
+				if(GameWorld.chunkMap.getTopTile(tile) == null && !(thisLeft >= tileRight || thisRight <= tileLeft)) {
+					thisEntity.vel.y = 0;
+					thisEntity.pos.y = tile.y + Tile.TILE_SIZE + this.h/2;
+					thisEntity.isGrounded = true;
+				}
 			}
 		}
 	}
 	
 	public boolean isCollidingNext(Tile tile, Vector2f nextThis){
-		if ((tile.getX() < nextThis.x + this.w)
-				&& (tile.getX() + Tile.TILE_SIZE > nextThis.x)
-					&& (tile.getY() < nextThis.y + this.h)
-						&& (tile.getY() + Tile.TILE_SIZE > nextThis.y)) {
+		if ((tile.getX() < nextThis.x + this.w/2)
+				&& (tile.getX() + Tile.TILE_SIZE > nextThis.x - this.w/2)
+					&& (tile.getY() < nextThis.y + this.h/2)
+						&& (tile.getY() + Tile.TILE_SIZE > nextThis.y - this.h/2)) {
 				return true;
 			}
 		return false;
 	}
 	
 	public boolean isCollidingLeft(Tile tile) {
-		if (tile.getX() + Tile.TILE_SIZE > this.getWX()) return true;
+		if (tile.getX() + Tile.TILE_SIZE > this.getWX() - this.w/2) return true;
 		return false;
 	}
 	
 	public boolean isCollidingRight(Tile tile) {
-		if (tile.getX() < this.getWX() + this.w) return true;
+		if (tile.getX() < this.getWX() + this.w/2) return true;
 		return false;
 	}
 	
 	public boolean isCollidingTop(Tile tile) {
-		if (tile.getY() < this.getWY() + this.h) return true;
+		if (tile.getY() < this.getWY() + this.h/2) return true;
 		return false;
 	}
 	
 	public boolean isCollidingBot(Tile tile) {
-		if (tile.getY() + Tile.TILE_SIZE > this.getWY()) return true;
+		if (tile.getY() + Tile.TILE_SIZE > this.getWY() - this.h/2) return true;
 		return false;
 	}
 	// <--

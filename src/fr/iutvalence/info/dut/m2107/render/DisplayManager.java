@@ -16,8 +16,7 @@ public class DisplayManager {
 	/**
 	 * The default displayMode to be used
 	 */
-	private static final DisplayMode DEF_DISPLAYMODE = new DisplayMode(1920, 1080);
-	
+	private static final DisplayMode DEF_DISPLAYMODE = new DisplayMode(1280, 720);
 	/**
 	 * the maximum number of frames per second
 	 */
