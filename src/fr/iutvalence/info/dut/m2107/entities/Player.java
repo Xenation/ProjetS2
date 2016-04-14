@@ -36,15 +36,15 @@ public class Player extends LivingEntity{
 	public void update(Layer layer) {
 		input();
 		
-		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, this.pos)) {
+		for (Chunk chunk : GameWorld.chunkMap.getScreenChunks()) {
 			for (Tile tile : chunk) {
-				System.out.println(tile);
+				this.col.checkCollision(this, tile);
 			}
 		}			
 		
-		for (Entity entity : layer) {
+		/*for (Entity entity : layer) {
 			if(entity != this) this.col.checkCollision(this, entity);
-		}
+		}*/
 		
 		super.update(layer);
 	}
@@ -74,15 +74,12 @@ public class Player extends LivingEntity{
 			this.vel.x += this.spd;
 		if (Keyboard.isKeyDown(Keyboard.KEY_Q))
 			this.vel.x -= this.spd;
-		
-		if(this.pos.y < 0 || this.pos.y + this.vel.y * this.spd * DisplayManager.deltaTime() < 0) {
-			this.vel.y = 0;
-			this.pos.y = 0;
-			isGrounded = true;
-		}
+
 		this.vel.x = Maths.lerp(this.vel.x, 0, 0.25f);
 		
 		if(vel.x < 0.0000001f && vel.x > -0.0000001f) vel.x = 0;
 		if(vel.y < 0.0000001f && vel.y > -0.0000001f) vel.y = 0;
+		
+		if(vel.y < -70) vel.y = -70;
 	}
 }

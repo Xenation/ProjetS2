@@ -16,7 +16,7 @@ public class DisplayManager {
 	/**
 	 * The default displayMode to be used
 	 */
-	private static final DisplayMode DEF_DISPLAYMODE = new DisplayMode(1920, 1080);
+	private static final DisplayMode DEF_DISPLAYMODE = new DisplayMode(1280, 720);
 	/**
 	 * the maximum number of frames per second
 	 */
@@ -67,7 +67,7 @@ public class DisplayManager {
 			
 			System.out.println(finalMode.getWidth() + "x" + finalMode.getHeight() + "x" + finalMode.getBitsPerPixel() + " " + finalMode.getFrequency() + "Hz");
 			
-			//fpsCap = finalMode.getFrequency();
+			fpsCap = finalMode.getFrequency();
 			aspectRatio = ((float) finalMode.getWidth() /(float) finalMode.getHeight());
 			
 			Display.setDisplayMode(DEF_DISPLAYMODE);
