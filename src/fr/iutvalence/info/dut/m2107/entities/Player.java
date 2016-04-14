@@ -19,13 +19,13 @@ public class Player extends LivingEntity{
 	
 	private Inventory inventory = new Inventory();
 	
-	public Player(Vector2f pos, float rotation, Sprite sprite, Layer layer, Collider col, Vector2f velocity, float speed, int health,
+	public Player(Vector2f pos, float rotation, Sprite sprite, Collider col, Vector2f velocity, float speed, int health,
 			int armor, int jumpHeight) {
-		super(pos, rotation, sprite, layer, col, velocity, speed, health, armor, jumpHeight);
+		super(pos, rotation, sprite, col, velocity, speed, health, armor, jumpHeight);
 	}
 
-	public Player(Vector2f pos, Sprite sprite, Layer layer) {
-		super(pos, sprite, layer);
+	public Player(Vector2f pos, Sprite sprite) {
+		super(pos, sprite);
 	}
 
 	public Player() {
@@ -77,9 +77,10 @@ public class Player extends LivingEntity{
 
 		this.vel.x = Maths.lerp(this.vel.x, 0, 0.25f);
 		
-		if(vel.x < 0.0000001f && vel.x > -0.0000001f) vel.x = 0;
-		if(vel.y < 0.0000001f && vel.y > -0.0000001f) vel.y = 0;
+		//if(vel.x < 0.0000001f && vel.x > -0.0000001f) vel.x = 0;
+		//if(vel.y < 0.0000001f && vel.y > -0.0000001f) vel.y = 0;
 		
 		if(vel.y < -70) vel.y = -70;
+		if(vel.y > 70) vel.y = 70;
 	}
 }

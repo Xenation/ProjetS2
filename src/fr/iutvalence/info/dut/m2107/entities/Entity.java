@@ -19,7 +19,7 @@ public abstract class Entity {
 	
 	protected Collider col;
 	
-	public Entity(Vector2f pos, float rot, Sprite spr, Layer lay, Collider col) {
+	public Entity(Vector2f pos, float rot, Sprite spr, Collider col) {
 		this.pos = pos;
 		this.rot = rot;
 		this.spr = spr;
@@ -27,7 +27,7 @@ public abstract class Entity {
 		col.setEnt(this);
 	}
 	
-	public Entity(Vector2f pos, Sprite spr, Layer lay) {
+	public Entity(Vector2f pos, Sprite spr) {
 		this.pos = pos;
 		this.rot = DEF_ROT;
 		this.spr = spr;
@@ -65,6 +65,5 @@ public abstract class Entity {
 
 	public void setRotation(float rot) {
 		this.rot = rot;
-	}
-	
+	}	
 }

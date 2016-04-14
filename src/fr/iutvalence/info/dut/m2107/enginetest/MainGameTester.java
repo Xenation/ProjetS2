@@ -32,8 +32,8 @@ public class MainGameTester {
 
 		GameWorld.layerMap.addEmpty(4);
 		GameWorld.layerMap.getLayer(0).add(GameWorld.player);
-		GameWorld.layerMap.getLayer(0).add(new LivingEntity(new Vector2f(-1, 1.5f), new Sprite("item/sugar", new Vector2f(1, 1)), GameWorld.layerMap.getLayer(0)));
-		GameWorld.layerMap.getLayer(0).add(new MovableEntity(new Vector2f(1, 1.5f), new Sprite("item/sugar", new Vector2f(1, 1)), GameWorld.layerMap.getLayer(0)));
+		GameWorld.layerMap.getLayer(0).add(new LivingEntity(new Vector2f(-1, 1.5f), new Sprite("item/sugar", new Vector2f(1, 1))));
+		GameWorld.layerMap.getLayer(0).add(new MovableEntity(new Vector2f(1, 1.5f), new Sprite("item/sugar", new Vector2f(1, 1))));
 		
 		// Debug for the whole chunk rendering 
 		//System.out.println(ChunkLoader.CHUNK_LOADER.debugBuffers());

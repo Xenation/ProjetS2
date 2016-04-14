@@ -15,14 +15,14 @@ public class MovableEntity extends Entity {
 	
 	protected float spd;
 
-	public MovableEntity(Vector2f pos, float rot, Sprite spr, Layer lay, Collider col, Vector2f vel, float spd) {
-		super(pos, rot, spr, lay, col);
+	public MovableEntity(Vector2f pos, float rot, Sprite spr, Collider col, Vector2f vel, float spd) {
+		super(pos, rot, spr, col);
 		this.vel = vel;
 		this.spd = spd;
 	}
 	
-	public MovableEntity(Vector2f pos, Sprite spr, Layer lay) {
-		super(pos, spr, lay);
+	public MovableEntity(Vector2f pos, Sprite spr) {
+		super(pos, spr);
 		this.vel = DEF_VEL;
 		this.spd = DEF_SPD;
 	}
@@ -32,7 +32,6 @@ public class MovableEntity extends Entity {
 		this.vel = DEF_VEL;
 		this.spd = DEF_SPD;
 	}
-	
 	@Override
 	public void update(Layer layer) {
 		this.pos.x += this.vel.x * DisplayManager.deltaTime();

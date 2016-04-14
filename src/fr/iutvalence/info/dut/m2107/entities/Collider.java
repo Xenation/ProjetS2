@@ -99,27 +99,42 @@ public class Collider {
 			float tileBottom = tile.y;
 			
 			if(!this.isCollidingLeft(tile)) {
-				if(GameWorld.chunkMap.getRightTile(tile) == null && !(thisBottom >= tileTop || thisTop <= tileBottom)) {
-					thisEntity.vel.x = 0;
-					thisEntity.pos.x = tile.x + Tile.TILE_SIZE + this.w/2;
+				if(GameWorld.chunkMap.getRightTile(tile) != null && (thisBottom >= tileTop || thisTop <= tileBottom)) {
+					thisEntity.vel.y = 0;
+				} else {
+					if(GameWorld.chunkMap.getTopTile(tile) == null && (thisBottom >= tileBottom && thisBottom <= tileTop)) {
+						thisEntity.pos.y += Tile.TILE_SIZE;
+					} else {
+						thisEntity.vel.x = 0;
+						thisEntity.pos.x = tile.x + Tile.TILE_SIZE + this.w/2;
+					}
 				}
-			}else if(!this.isCollidingRight(tile)) {
-				if(GameWorld.chunkMap.getLeftTile(tile) == null && !(thisBottom >= tileTop || thisTop <= tileBottom)) {
-					thisEntity.vel.x = 0;
-					thisEntity.pos.x = tile.x - this.getW()/2;
+			} if(!this.isCollidingRight(tile)) {
+				if(GameWorld.chunkMap.getLeftTile(tile) != null && (thisBottom >= tileTop || thisTop <= tileBottom)) {
+					thisEntity.vel.y = 0;
+				} else {
+					if(GameWorld.chunkMap.getTopTile(tile) == null && (thisBottom >= tileBottom && thisBottom <= tileTop)) {
+						System.out.println(thisEntity.pos + ", " + tile);
+						thisEntity.pos.y += Tile.TILE_SIZE;
+					} else {
+						thisEntity.vel.x = 0;
+						thisEntity.pos.x = tile.x - this.getW()/2;
+					}
 				}
-			}else if(!this.isCollidingTop(tile)) {
-				if(GameWorld.chunkMap.getBottomTile(tile) == null && !(thisLeft >= tileRight || thisRight <= tileLeft)) {
+			} if(!this.isCollidingTop(tile)) {
+				if(GameWorld.chunkMap.getBottomTile(tile) == null || !(thisLeft >= tileRight || thisRight <= tileLeft)) {
 					thisEntity.vel.y = 0;
 					thisEntity.pos.y = tile.y - this.getH()/2;
 				}
-			}else if(!this.isCollidingBot(tile)) {
-				if(GameWorld.chunkMap.getTopTile(tile) == null && !(thisLeft >= tileRight || thisRight <= tileLeft)) {
+			} if(!this.isCollidingBot(tile)) {
+				if(GameWorld.chunkMap.getTopTile(tile) == null || !(thisLeft >= tileRight || thisRight <= tileLeft)) {
 					thisEntity.vel.y = 0;
 					thisEntity.pos.y = tile.y + Tile.TILE_SIZE + this.h/2;
 					thisEntity.isGrounded = true;
 				}
 			}
+			
+			System.out.println(thisEntity.vel);
 		}
 	}
 	

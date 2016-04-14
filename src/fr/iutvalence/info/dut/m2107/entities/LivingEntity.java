@@ -17,15 +17,15 @@ public class LivingEntity extends MovableEntity {
 	
 
 	
-	public LivingEntity(Vector2f pos, float rot, Sprite spr, Layer lay, Collider col, Vector2f vel, float spd, int health, int armor, int jumpHeight) {
-		super(pos, rot, spr, lay, col, vel, spd);
+	public LivingEntity(Vector2f pos, float rot, Sprite spr, Collider col, Vector2f vel, float spd, int health, int armor, int jumpHeight) {
+		super(pos, rot, spr, col, vel, spd);
 		this.health = health;
 		this.armor = armor;
 		this.jumpHeight = jumpHeight;
 	}
 	
-	public LivingEntity(Vector2f pos, Sprite spr, Layer lay) {
-		super(pos, spr, lay);
+	public LivingEntity(Vector2f pos, Sprite spr) {
+		super(pos, spr);
 		this.health = DEF_HEALTH;
 		this.armor = DEF_ARMOR;
 		this.jumpHeight = DEF_JUMP_HEIGHT;
