@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
@@ -80,6 +81,10 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 			}
 		}
 		return chks;
+	}
+	
+	public List<Chunk> getScreenChunks() {
+		return getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, GameWorld.camera.getPosition());
 	}
 	
 	public int getSurroundingTilesCount(float left, float right, float top, float bottom, Vector2f center) {

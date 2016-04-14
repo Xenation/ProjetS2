@@ -52,13 +52,18 @@ public class Player extends LivingEntity{
 	private void input() {
 		this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
 
-		while(Keyboard.next()){
-			if (Keyboard.getEventKeyState()) {
-		        if (Keyboard.getEventKey() == Keyboard.KEY_SPACE && isGrounded) {
-		        	this.vel.y = this.jumpHeight;
-		        	isGrounded = false;
-		        }
-			}
+//		while(Keyboard.next()){
+//			if (Keyboard.getEventKeyState()) {
+//		        if (Keyboard.getEventKey() == Keyboard.KEY_SPACE && isGrounded) {
+//		        	this.vel.y = this.jumpHeight;
+//		        	isGrounded = false;
+//		        }
+//			}
+//		}
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && isGrounded) {
+			this.vel.y = this.jumpHeight;
+        	isGrounded = false;
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_Z))
