@@ -17,6 +17,7 @@ public class DisplayManager {
 	 * The default displayMode to be used
 	 */
 	private static final DisplayMode DEF_DISPLAYMODE = new DisplayMode(1920, 1080);
+	
 	/**
 	 * the maximum number of frames per second
 	 */
@@ -46,6 +47,10 @@ public class DisplayManager {
 	 */
 	private static int fps;
 	
+	public static int currentFPS;
+	
+	public static boolean vSyncTracker = true;
+	
 	/**
 	 * Creates a new display window
 	 */
@@ -67,11 +72,11 @@ public class DisplayManager {
 			
 			System.out.println(finalMode.getWidth() + "x" + finalMode.getHeight() + "x" + finalMode.getBitsPerPixel() + " " + finalMode.getFrequency() + "Hz");
 			
-			//fpsCap = finalMode.getFrequency();
+			fpsCap = finalMode.getFrequency();
 			aspectRatio = ((float) finalMode.getWidth() /(float) finalMode.getHeight());
 			
-			Display.setDisplayMode(DEF_DISPLAYMODE);
-			//Display.setDisplayModeAndFullscreen(finalMode);
+//			Display.setDisplayMode(DEF_DISPLAYMODE);
+			Display.setDisplayModeAndFullscreen(finalMode);
 			Display.setVSyncEnabled(true);
 			Display.create();
 		} catch (LWJGLException e) {
@@ -118,6 +123,7 @@ public class DisplayManager {
 	public static void updateFPS() {
 		if (getCurrentTime() - lastFPS > 1000) {
             Display.setTitle("FPS: " + fps);
+            currentFPS = fps;
             fps = 0;
             lastFPS += 1000;
         }
@@ -137,6 +143,10 @@ public class DisplayManager {
 	 */
 	public static void closeDisplay() {
 		Display.destroy();
+	}
+	
+	public static int getFPS() {
+		return currentFPS;
 	}
 	
 	/**

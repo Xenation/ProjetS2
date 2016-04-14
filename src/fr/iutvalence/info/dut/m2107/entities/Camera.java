@@ -11,6 +11,7 @@ import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Vector2i;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
@@ -37,6 +38,12 @@ public class Camera {
 	
 	private TileType type;
 	
+	private Vector2i drawStart;
+	private Vector2i drawEnd;
+	private boolean isSelecting = false;
+	
+	private Entity preview;
+	
 	/**
 	 * A new Camera at 0,0 and with a rotation of 0
 	 */
@@ -46,6 +53,7 @@ public class Camera {
 		this.debugText = new GUIText("", 1, 0, 0, .5f, false);
 		debugText.setColour(0, 1, 0);
 		this.type = TileType.Dirt;
+		//this.preview = new MovableEntity(this.position, new Sprite("item/sugar", new Vector2f(1, 1)), GameWorld.layerMap.getLayer(1));
 	}
 	
 	/**
@@ -55,59 +63,100 @@ public class Camera {
 		
 
 		GameWorld.chunkMap.generateSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, position);
-
-		this.position.x = Maths.lerp(this.position.x, target.pos.x, 0.1f);
-		this.position.y = Maths.lerp(this.position.y, target.pos.y, 0.1f);
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-			this.position.y += 20 * DisplayManager.deltaTime();
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-			this.position.y -= 20 * DisplayManager.deltaTime();
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-			this.position.x += 20 * DisplayManager.deltaTime();
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-			this.position.x -= 20 * DisplayManager.deltaTime();
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD0)) {
-			setPosition(0, 0);
+		//// Lerp to target
+		if (target != null) {
+			this.position.x = Maths.lerp(this.position.x, target.pos.x, 0.1f);
+			this.position.y = Maths.lerp(this.position.y, target.pos.y, 0.1f);
 		}
 		
-		//// Load/Save
-		if (Keyboard.isKeyDown(Keyboard.KEY_DIVIDE)) {
-			WorldSaver.writeWorld();
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_MULTIPLY)) {
-			WorldLoader.loadWorld();
+		//// Movement
+		if (target == null) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
+				this.position.y += 20 * DisplayManager.deltaTime();
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+				this.position.y -= 20 * DisplayManager.deltaTime();
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+				this.position.x += 20 * DisplayManager.deltaTime();
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
+				this.position.x -= 20 * DisplayManager.deltaTime();
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD0)) {
+				setPosition(0, 0);
+			}
 		}
 		
-		//// Vsync ON/OFF
-		if (Keyboard.isKeyDown(Keyboard.KEY_V)) {
-			Display.setVSyncEnabled(true);
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
-			Display.setVSyncEnabled(false);
+		//// Switches
+		while(Keyboard.next()){
+			if (Keyboard.getEventKeyState()) {
+				//// Player target bind/unbind
+				if (Keyboard.getEventKey() == Keyboard.KEY_TAB) {
+					if (target == null) {
+						target = GameWorld.player;
+						GameWorld.player.isInControl = true;
+					} else {
+						target = null;
+						GameWorld.player.isInControl = false;
+					}
+				}
+				//// VSync
+				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
+					if (DisplayManager.vSyncTracker) {
+						DisplayManager.vSyncTracker = false;
+					} else {
+						DisplayManager.vSyncTracker = true;
+					}
+					Display.setVSyncEnabled(DisplayManager.vSyncTracker);
+				}
+				//// Load/Save
+				if (Keyboard.getEventKey() == Keyboard.KEY_DIVIDE) {
+					WorldSaver.writeWorld();
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_MULTIPLY) {
+					WorldLoader.loadWorld();
+				}
+				//// Tile Choice
+				if (Keyboard.getEventKey() == Keyboard.KEY_1) {
+					this.type = TileType.Dirt;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_2) {
+					this.type = TileType.Stone;
+				}
+			}
 		}
 		
 		//// Drawing
-		if (Mouse.isButtonDown(0)) {
-			GameWorld.chunkMap.setTile(new Tile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Mouse.isButtonDown(0)) {
+			if (drawStart == null) {
+				drawStart = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+				isSelecting = true;
+			} else {
+				drawEnd = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+			}
+		} else if (isSelecting) {
+			isSelecting = false;
+			GameWorld.chunkMap.fillZone(type, drawStart, drawEnd);
+			drawStart = null;
 		}
-		if (Mouse.isButtonDown(1)) {
-			GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+		if (!isSelecting) {
+			if (Mouse.isButtonDown(0)) {
+				GameWorld.chunkMap.setTile(new Tile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
+			}
+			if (Mouse.isButtonDown(1)) {
+				GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+			}
 		}
 		
-		//// Tile Choice
-		if (Keyboard.isKeyDown(Keyboard.KEY_1)) {
-			this.type = TileType.Dirt;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_2)) {
-			this.type = TileType.Stone;
-		}
+//		this.preview.pos.x = Maths.fastFloor(getMouseWorldX()) + Tile.TILE_SIZE/2;
+//		this.preview.pos.y = Maths.fastFloor(getMouseWorldY()) + Tile.TILE_SIZE/2;
 		
-		debugText.updateText("Mouse: "+Maths.roundDecim(getMouseWorldX(), 3)+", "+Maths.roundDecim(getMouseWorldY(), 3));
+		debugText.updateText("Mouse: "+Maths.roundDecim(getMouseWorldX(), 3)+", "+Maths.roundDecim(getMouseWorldY(), 3) 
+				+ "\nFPS: "+DisplayManager.getFPS()
+				+ "\nVSync = "+DisplayManager.vSyncTracker
+				+ "\nSelect = "+isSelecting);
 		
 	}
 	
@@ -167,11 +216,11 @@ public class Camera {
 	}
 	
 	public float getMouseWorldX() {
-		return this.position.x + (Mouse.getX() - Display.getWidth()/2) / ((float) Display.getHeight() / Renderer.UNITS_Y);
+		return this.position.x + (Mouse.getX() - Display.getDisplayMode().getWidth()/2) / ((float) Display.getDisplayMode().getHeight() / Renderer.UNITS_Y);
 	}
 	
 	public float getMouseWorldY() {
-		return this.position.y + (Mouse.getY() - Display.getHeight()/2) / ((float) Display.getHeight() / Renderer.UNITS_Y);
+		return this.position.y + (Mouse.getY() - Display.getDisplayMode().getHeight()/2) / ((float) Display.getDisplayMode().getHeight() / Renderer.UNITS_Y);
 	}
 	
 }
