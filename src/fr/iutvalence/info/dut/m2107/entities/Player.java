@@ -6,8 +6,11 @@ import org.lwjgl.util.vector.Vector2f;
 import fr.iutvalence.info.dut.m2107.items.Inventory;
 import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
+import fr.iutvalence.info.dut.m2107.render.Renderer;
+import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Player extends LivingEntity{
@@ -32,6 +35,12 @@ public class Player extends LivingEntity{
 	@Override
 	public void update(Layer layer) {
 		input();
+		
+		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, this.pos)) {
+			for (Tile tile : chunk) {
+				System.out.println(tile);
+			}
+		}			
 		
 		for (Entity entity : layer) {
 			if(entity != this) this.col.checkCollision(this, entity);

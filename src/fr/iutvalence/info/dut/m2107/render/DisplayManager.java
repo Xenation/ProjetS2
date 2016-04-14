@@ -67,10 +67,11 @@ public class DisplayManager {
 			
 			System.out.println(finalMode.getWidth() + "x" + finalMode.getHeight() + "x" + finalMode.getBitsPerPixel() + " " + finalMode.getFrequency() + "Hz");
 			
-			fpsCap = finalMode.getFrequency();
+			//fpsCap = finalMode.getFrequency();
 			aspectRatio = ((float) finalMode.getWidth() /(float) finalMode.getHeight());
 			
-			Display.setDisplayModeAndFullscreen(finalMode);
+			Display.setDisplayMode(DEF_DISPLAYMODE);
+			//Display.setDisplayModeAndFullscreen(finalMode);
 			Display.setVSyncEnabled(true);
 			Display.create();
 		} catch (LWJGLException e) {

@@ -3,7 +3,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
-import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 public class Collider {
 
@@ -31,6 +31,7 @@ public class Collider {
 		this.h = h;
 	}
 	
+	// ENTITY
 	public void checkCollision(Player thisEntity, Entity entity) {
 		if (thisEntity.col.isCollidingNext(entity.col, new Vector2f(thisEntity.pos.x + thisEntity.vel.x * thisEntity.spd * DisplayManager.deltaTime(),
 				thisEntity.pos.y + thisEntity.vel.y * thisEntity.spd * DisplayManager.deltaTime()))) {
@@ -83,6 +84,62 @@ public class Collider {
 		if (col.getWY() + col.h > this.getWY()) return true;
 		return false;
 	}
+	// <--
+	
+	// TILE
+	public void checkCollision(Player thisEntity, Tile tile) {
+		if (thisEntity.col.isCollidingNext(tile, new Vector2f(thisEntity.pos.x + thisEntity.vel.x * thisEntity.spd * DisplayManager.deltaTime(),
+				thisEntity.pos.y + thisEntity.vel.y * thisEntity.spd * DisplayManager.deltaTime()))) {
+			if(!this.isCollidingLeft(tile)) {
+				thisEntity.vel.x = 0;
+				thisEntity.pos.x = tile.x + Tile.TILE_SIZE;
+			}
+			if(!this.isCollidingRight(tile)) {
+				thisEntity.vel.x = 0;
+				thisEntity.pos.x = tile.x - this.getW();
+			}
+			if(!this.isCollidingTop(tile)) {
+				thisEntity.vel.y = 0;
+				thisEntity.pos.y = tile.y - this.getH();
+			}
+			if(!this.isCollidingBot(tile)) {
+				thisEntity.vel.y = 0;
+				thisEntity.pos.y = tile.y + Tile.TILE_SIZE;
+				thisEntity.isGrounded = true;
+			}
+		}
+	}
+	
+	public boolean isCollidingNext(Tile tile, Vector2f nextThis){
+		if ((tile.getX() < nextThis.x + this.w)
+				&& (tile.getX() + Tile.TILE_SIZE > nextThis.x)
+					&& (tile.getY() < nextThis.y + this.h)
+						&& (tile.getY() + Tile.TILE_SIZE > nextThis.y)) {
+				return true;
+			}
+		return false;
+	}
+	
+	public boolean isCollidingLeft(Tile tile) {
+		if (tile.getX() + Tile.TILE_SIZE > this.getWX()) return true;
+		return false;
+	}
+	
+	public boolean isCollidingRight(Tile tile) {
+		if (tile.getX() < this.getWX() + this.w) return true;
+		return false;
+	}
+	
+	public boolean isCollidingTop(Tile tile) {
+		if (tile.getY() < this.getWY() + this.h) return true;
+		return false;
+	}
+	
+	public boolean isCollidingBot(Tile tile) {
+		if (tile.getY() + Tile.TILE_SIZE > this.getWY()) return true;
+		return false;
+	}
+	// <--
 	
 	public float getX() {return x;}
 
