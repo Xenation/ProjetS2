@@ -59,6 +59,36 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		}
 	}
 	
+	public Tile getTileAt(int x, int y) {
+		Chunk chk = getChunkAt(Chunk.toChunkPosition(x), Chunk.toChunkPosition(y));
+		if (chk != null) {
+			return chk.getTileAt(x, y);
+		}
+		return null;
+	}
+	
+	public Tile getLeftTile(Tile til) {
+		return getTileAt(til.x-1, til.y);
+	}
+	public Tile getRightTile(Tile til) {
+		return getTileAt(til.x+1, til.y);
+	}
+	public Tile getBottomTile(Tile til) {
+		return getTileAt(til.x, til.y-1);
+	}
+	public Tile getTopTile(Tile til) {
+		return getTileAt(til.x, til.y+1);
+	}
+	
+	public Chunk getChunkAt(int x, int y) {
+		for (Chunk chk : this) {
+			if (chk.getPosition().x == x && chk.getPosition().y == y) {
+				return chk;
+			}
+		}
+		return null;
+	}
+	
 	public void generateSurroundingChunks(float left, float right, float top, float bottom, Vector2f center) {
 		for (int y = Chunk.toChunkPosition(Maths.fastFloor(bottom + center.y)); y <= Chunk.toChunkPosition(Maths.fastFloor(top + center.y)); y++) {
 			for (int x = Chunk.toChunkPosition(Maths.fastFloor(left + center.x)); x <= Chunk.toChunkPosition(Maths.fastFloor(right + center.x)); x++) {
