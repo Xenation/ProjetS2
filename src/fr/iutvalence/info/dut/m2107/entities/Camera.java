@@ -93,7 +93,7 @@ public class Camera {
 		
 		//// Drawing
 		if (Mouse.isButtonDown(0)) {
-			GameWorld.chunkMap.setTile(new Tile(TileType.Dirt, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
+			GameWorld.chunkMap.setTile(new Tile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
 		}
 		if (Mouse.isButtonDown(1)) {
 			GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
