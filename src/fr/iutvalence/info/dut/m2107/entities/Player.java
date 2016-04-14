@@ -6,7 +6,6 @@ import org.lwjgl.util.vector.Vector2f;
 import fr.iutvalence.info.dut.m2107.items.Inventory;
 import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
-import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
@@ -15,7 +14,8 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Player extends LivingEntity{
 
-	boolean isGrounded = true;
+	protected boolean isGrounded = true;
+	protected boolean isInControl = true;
 	
 	private Inventory inventory = new Inventory();
 	
@@ -40,7 +40,7 @@ public class Player extends LivingEntity{
 			for (Tile tile : chunk) {
 				this.col.checkCollision(this, tile);
 			}
-		}			
+		}
 		
 		/*for (Entity entity : layer) {
 			if(entity != this) this.col.checkCollision(this, entity);
@@ -61,20 +61,22 @@ public class Player extends LivingEntity{
 //			}
 //		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && isGrounded) {
-			this.vel.y = this.jumpHeight;
-        	isGrounded = false;
+		if (isInControl) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && isGrounded) {
+				this.vel.y = this.jumpHeight;
+	        	isGrounded = false;
+			}
+			
+			if (Keyboard.isKeyDown(Keyboard.KEY_Z))
+				this.vel.y += this.spd;
+			if (Keyboard.isKeyDown(Keyboard.KEY_S))
+				this.vel.y -= this.spd;
+			if (Keyboard.isKeyDown(Keyboard.KEY_D))
+				this.vel.x += this.spd;
+			if (Keyboard.isKeyDown(Keyboard.KEY_Q))
+				this.vel.x -= this.spd;
 		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_Z))
-			this.vel.y += this.spd;
-		if (Keyboard.isKeyDown(Keyboard.KEY_S))
-			this.vel.y -= this.spd;
-		if (Keyboard.isKeyDown(Keyboard.KEY_D))
-			this.vel.x += this.spd;
-		if (Keyboard.isKeyDown(Keyboard.KEY_Q))
-			this.vel.x -= this.spd;
-
 		this.vel.x = Maths.lerp(this.vel.x, 0, 0.25f);
 		
 		//if(vel.x < 0.0000001f && vel.x > -0.0000001f) vel.x = 0;

@@ -13,6 +13,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
+import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
@@ -56,6 +57,24 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		Chunk chk = get(Chunk.toChunkPosition(x, y));
 		if (chk != null) {
 			chk.removeAt(x, y);
+		}
+	}
+	
+	public void fillZone(TileType type, Vector2i start, Vector2i end) {
+		if (start.x > end.x) {
+			int tmp = start.x;
+			start.x = end.x;
+			end.x = tmp;
+		}
+		if (start.y > end.y) {
+			int tmp = start.y;
+			start.y = end.y;
+			end.y = tmp;
+		}
+		for (int y = start.y; y <= end.y; y++) {
+			for (int x = start.x; x <= end.x; x++) {
+				setTilenChunk(new Tile(type, x, y));
+			}
 		}
 	}
 	
