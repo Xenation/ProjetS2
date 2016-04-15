@@ -1,5 +1,10 @@
 package fr.iutvalence.info.dut.m2107.render;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
@@ -31,10 +36,17 @@ public class DisplayManager {
 	 * the absolute time at which the last frame was loaded
 	 */
 	private static long lastFrameTime;
+	
+	private static long currentFrameTime;
+	
 	/**
 	 * the delta time
 	 */
 	private static float delta;
+	
+	private static Map<Long, Float> deltasMap = new HashMap<Long, Float>();
+	
+	private static float smoothDelta;
 	
 	/**
 	 * the last time the fps counter has been display
@@ -101,6 +113,7 @@ public class DisplayManager {
 	public static void updateDisplay() {
 		updateDelta();
 		updateFPS();
+		updateDeltaMap();
 		
 		// FPS syncing and screen update
 		Display.update();		
@@ -111,9 +124,28 @@ public class DisplayManager {
 	 * Updates delta
 	 */
     public static void updateDelta() {
-		long currentFrameTime = getCurrentTime();
+		currentFrameTime = getCurrentTime();
 		delta = currentFrameTime - lastFrameTime;
 		lastFrameTime = currentFrameTime;
+		deltasMap.put(currentFrameTime, delta);
+	}
+    
+	public static void updateDeltaMap() {
+		List<Long> toRemove = new LinkedList<Long>(); 
+		for (long time : deltasMap.keySet()) {
+			if (time < currentFrameTime - 1000) {
+				toRemove.add(time);
+			}
+		}
+		for (long time : toRemove) {
+			deltasMap.remove(time);
+		}
+		smoothDelta = 0;
+		for (float delt : deltasMap.values()) {
+			smoothDelta += delt;
+		}
+		smoothDelta /= deltasMap.size();
+		System.out.println(smoothDelta);
 	}
 
     /**
@@ -134,7 +166,7 @@ public class DisplayManager {
 	 * @return the current delta time
 	 */
 	public static float deltaTime() {
-		return (delta/1000);
+		return (smoothDelta/1000);
 	}
 	
 	/**
