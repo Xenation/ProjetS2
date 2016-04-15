@@ -13,6 +13,12 @@ import fr.iutvalence.info.dut.m2107.entities.Camera;
  */
 public class Maths {
 	
+	/**
+	 * Creates a transformation matrix using a position(translation) and rotation
+	 * @param translation the translation to apply (position)
+	 * @param rotation the rotation
+	 * @return a transformation matrix using a position(translation) and rotation
+	 */
 	public static Matrix4f createTransformationMatrix(Vector2f translation, float rotation) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
@@ -21,6 +27,12 @@ public class Maths {
 		return matrix;
 	}
 	
+	/**
+	 * Creates a transformation matrix using a position(translation) and scale
+	 * @param translation the translation to apply (position)
+	 * @param scale the scale
+	 * @return a transformation matrix using a position(translation) and scale
+	 */
 	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
@@ -29,6 +41,13 @@ public class Maths {
 		return matrix;
 	}
 	
+	/**
+	 * Creates a transformation matrix using a position(translation), scale and rotation
+	 * @param translation the translation to apply (position)
+	 * @param scale the scale
+	 * @param rotation the rotation
+	 * @return a transformation matrix using a position(translation), scale and rotation
+	 */
 	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale, float rotation) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
@@ -38,6 +57,14 @@ public class Maths {
 		return matrix;
 	}
 	
+	/**
+	 * Creates a transformation matrix using a position(translation), scale, rotation and depth
+	 * @param translation the translation to apply (position)
+	 * @param scale the scale
+	 * @param rotation the rotation
+	 * @param depth the depth
+	 * @return a transformation matrix using a position(translation), scale, rotation and depth
+	 */
 	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale, float rotation, float depth) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
@@ -47,6 +74,12 @@ public class Maths {
 		return matrix;
 	}
 	
+	/**
+	 * Creates a transformation matrix using x and y coordinates
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @return a transformation matrix using x and y coordinates
+	 */
 	public static Matrix4f createTransformationMatrix(int x, int y) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
@@ -90,6 +123,11 @@ public class Maths {
 		return x<xi ? xi-1 : xi;
 	}
 	
+	/**
+	 * Returns the absolute value of the specified float
+	 * @param x the float
+	 * @return the absolute value of the float
+	 */
 	public static float fastAbs(float x) {
 		if (x >= 0) {
 			return x;
@@ -98,12 +136,25 @@ public class Maths {
 		}
 	}
 	
+	/**
+	 * Returns a float rounded at a certain decimal after the comma
+	 * @param f the float to round
+	 * @param decimal the nth decimal to round at
+	 * @return a float rounded at the decimal after the comma
+	 */
 	public static float roundDecim(float f, int decimal) {
 		float pow = pow(10, decimal);
 		return ((int) (f*pow))/pow;
 	}
 	
-	public static float pow(double a, int b) {
+	/**
+	 * Returns a power b
+	 * This method is faster than Math.pow() because it doesn't handle double as power
+	 * @param a a float
+	 * @param b the power (integer)
+	 * @return a power b
+	 */
+	public static float pow(float a, int b) {
 		float result = 1;
 		while(b > 0) {
 			if (b % 2 != 0) {

@@ -31,12 +31,24 @@ public class Renderer {
 	 */
 	public static final float UNITS_Y = 20;
 	
+	/**
+	 * The left boundary of the screen
+	 */
 	public static final float BOUNDARY_LEFT = -UNITS_Y/2*DisplayManager.aspectRatio;
 	
+	/**
+	 * The right boundary of the screen
+	 */
 	public static final float BOUNDARY_RIGHT = -BOUNDARY_LEFT;
 	
+	/**
+	 * The bottom boundary of the screen
+	 */
 	public static final float BOUNDARY_BOTTOM = -UNITS_Y/2;
 	
+	/**
+	 * The top boundary of the screen
+	 */
 	public static final float BOUNDARY_TOP = UNITS_Y/2;
 	
 	/**
@@ -158,6 +170,9 @@ public class Renderer {
 		GL30.glBindVertexArray(0);
 	}
 	
+	/**
+	 * Cleans Up the shader
+	 */
 	public void cleanUp() {
 		shader.cleanUp();
 	}

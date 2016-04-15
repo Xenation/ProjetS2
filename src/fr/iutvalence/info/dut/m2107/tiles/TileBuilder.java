@@ -2,8 +2,21 @@ package fr.iutvalence.info.dut.m2107.tiles;
 
 import java.util.ArrayList;
 
+/**
+ * Used to easily build (instantiate) tiles
+ * @author Xenation
+ *
+ */
 public class TileBuilder {
 	
+	/**
+	 * Instantiates a new tile using the specified type and coordinates
+	 * Depending on the type the created tile will be a sub-class of Tile or Tile
+	 * @param type the type of the tile
+	 * @param x the x coordinate of the tile
+	 * @param y the y coordinate of the tile
+	 * @return the instantiated tile
+	 */
 	public static Tile buildTile(TileType type, int x, int y) {
 		switch (type) {
 		case Dirt:
@@ -21,6 +34,12 @@ public class TileBuilder {
 		}
 	}
 	
+	/**
+	 * Returns a list of strings that represent the specified tile's state
+	 * More or less and different stats will be returned depending on the tile's type
+	 * @param tile the tile to debug
+	 * @return a list of strings that contains the stats of the tile 
+	 */
 	public static ArrayList<String> getStats(Tile tile) {
 		ArrayList<String> stats = new ArrayList<String>();
 		stats.add("type = "+tile.type.name());

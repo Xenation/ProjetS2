@@ -36,15 +36,36 @@ public class Camera {
 	 */
 	private float rotation;
 	
+	/**
+	 * The target to follow
+	 */
 	private Entity target;
 	
+	/**
+	 * The Top-left debugText
+	 */
 	private GUIText debugText;
 	
+	/**
+	 * The type of tile to draw
+	 */
 	private TileType type;
 	
+	/**
+	 * The starting position of the selection
+	 */
 	private Vector2i drawStart;
+	/**
+	 * The ending position of the selection
+	 */
 	private Vector2i drawEnd;
+	/**
+	 * Whether the selection is in progress (true) or not (false)
+	 */
 	private boolean isSelecting = false;
+	/**
+	 * Whether the selection in progress is a removal (true) ro not (false)
+	 */
 	private boolean isRemoving = false;
 	
 	private Entity preview;
@@ -61,7 +82,22 @@ public class Camera {
 	}
 	
 	/**
-	 * Checks for inputs and moves the camera according to them
+	 * Updates the state of the camera.
+	 * Uses Inputs for movements when not bound to a target.
+	 * When bound uses lerp to follow the target.
+	 * Manages the position and scale of the preview entity.
+	 * Generates the chunks in screen.
+	 * Updates the debug display (fps, mouse pos, Vsync...)
+	 * Inputs :
+	 *  - ZQSD: movement
+	 *  - Tab: bind/unbind player as target
+	 *  - V: Vsync On/Off
+	 *  - Divide(/): Save current chunkMap
+	 *  - Multiply(*): Load saved chunkMap
+	 *  - 1-7: Select TileType to draw
+	 *  - LShift+Click (drag): Select a zone to draw(Left click) or delete (right click)
+	 *  - Left click: draw a single tile of the selected tile type
+	 *  - Right click: remove a single tile
 	 */
 	public void update() {
 		
@@ -208,6 +244,9 @@ public class Camera {
 		
 	}
 	
+	/**
+	 * Calcultes the position of the preview entity using drawStart and drawEnd
+	 */
 	private void calculateSelectionCenter() {
 		int absDifX = (int) Maths.fastAbs(drawEnd.x - drawStart.x);
 		int absDifY = (int) Maths.fastAbs(drawEnd.y - drawStart.y);
@@ -291,14 +330,26 @@ public class Camera {
 		this.rotation = rotation;
 	}
 	
+	/**
+	 * Binds the camera to the target
+	 * @param target the entity to follow
+	 */
 	public void setTarget(Entity target) {
 		this.target = target;
 	}
 	
+	/**
+	 * Returns the X coordinate of the mouse in the world
+	 * @return the X coordinate of the mouse in the world
+	 */
 	public float getMouseWorldX() {
 		return this.position.x + (Mouse.getX() - Display.getDisplayMode().getWidth()/2) / ((float) Display.getDisplayMode().getHeight() / Renderer.UNITS_Y);
 	}
 	
+	/**
+	 * Returns the Y coordinate of the mouse in the world
+	 * @return the Y coordinate of the mouse in the world
+	 */
 	public float getMouseWorldY() {
 		return this.position.y + (Mouse.getY() - Display.getDisplayMode().getHeight()/2) / ((float) Display.getDisplayMode().getHeight() / Renderer.UNITS_Y);
 	}

@@ -10,17 +10,39 @@ import java.util.Set;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
 
+/**
+ * Defines a chunk of tiles.
+ * All the tiles of the same type are in a same list.
+ * @author Xenation
+ *
+ */
 public class Chunk implements Iterable<Tile> {
 	
+	/**
+	 * The Size (in tiles) of a chunk
+	 */
 	public static final int CHUNK_SIZE = 16;
 	
+	/**
+	 * The position of the chunk
+	 */
 	private final Vector2i position;
+	/**
+	 * The Map that orders tiles by their type
+	 */
 	private Map<TileType, List<Tile>> tiles = new HashMap<TileType, List<Tile>>();
+	/**
+	 * The number of tiles in this chunk
+	 */
 	private int tilesCount = 0;
 	
 //	private final int vaoID;
 //	private final int textureID;
-
+	
+	/**
+	 * A chunk with the given position
+	 * @param pos
+	 */
 	public Chunk(Vector2i pos) {
 		this.position = pos;
 		// Creates the Chunk VAO
@@ -36,6 +58,9 @@ public class Chunk implements Iterable<Tile> {
 //		return textureID;
 //	}
 	
+	/**
+	 * Updates each tile of this chunk and deletes the tiles that have returned false for their update.
+	 */
 	public void update() {
 		List<Tile> toRemove = new ArrayList<Tile>();
 		for (Tile tile : this) {
@@ -48,30 +73,60 @@ public class Chunk implements Iterable<Tile> {
 		}
 	}
 	
+	/**
+	 * Returns the position of this chunk
+	 * @return the position of this chunk
+	 */
 	public Vector2i getPosition() {
 		return position;
 	}
 	
+	/**
+	 * Returns the x coordinate of the position of this chunk
+	 * @return the x coordinate of the position of this chunk
+	 */
 	public int getX() {
 		return position.x;
 	}
-
+	
+	/**
+	 * Returns the y coordinate of the position of this chunk
+	 * @return the y coordinate of the position of this chunk
+	 */
 	public int getY() {
 		return position.y;
 	}
 	
+	/**
+	 * Returns a set of all the types present in this chunk
+	 * @return a set of all the types present in this chunk
+	 */
 	public Set<TileType> types() {
 		return tiles.keySet();
 	}
 	
+	/**
+	 * Returns a list of all the tiles of the given type in this chunk
+	 * @param typ the type of tile to look for
+	 * @return a list of all the tiles of the given type
+	 */
 	public List<Tile> getTiles(TileType typ) {
 		return tiles.get(typ);
 	}
 	
+	/**
+	 * Returns the number of tiles in this chunk
+	 * @return the number of tiles in this chunk
+	 */
 	public int getTilesCount() {
 		return tilesCount;
 	}
-
+	
+	/**
+	 * A chunk is considered equal to another if its position is the same as the other
+	 * @param obj needs to be a chunk
+	 * @return true if the position is equal, false otherwise 
+	 */
 	public boolean equals(Object obj) {
 		Chunk chk = (Chunk) obj;
 		if (position.equals(chk.position))
@@ -79,6 +134,11 @@ public class Chunk implements Iterable<Tile> {
 		return false;
 	}
 	
+	/**
+	 * Adds a tile to this chunk.
+	 * @param til the tile to add
+	 * @return if no tile exists at the position of the new tile the new tile is returned otherwise null
+	 */
 	public Tile add(Tile til) {
 		if (getTileAt(til.x, til.y) == null) {
 			List<Tile> listAdd = tiles.get(til.getType());
@@ -95,6 +155,11 @@ public class Chunk implements Iterable<Tile> {
 		return null;
 	}
 	
+	/**
+	 * Sets a tile in the chunk deleting the one that has the same position
+	 * @param til the tile to set
+	 * @return the tile that has been set
+	 */
 	public Tile set(Tile til) {
 		Tile cur = getTileAt(til.x, til.y);
 		if (cur == null) {
@@ -117,6 +182,11 @@ public class Chunk implements Iterable<Tile> {
 		return null;
 	}
 	
+	/**
+	 * Removes a tile at the given coordinates
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 */
 	public void removeAt(int x, int y) {
 		TileType rTyp = null;
 		Tile rem = null;
@@ -137,6 +207,12 @@ public class Chunk implements Iterable<Tile> {
 		}
 	}
 	
+	/**
+	 * Returns the tile at the given coordinates
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @return the tile at the given coordinates
+	 */
 	public Tile getTileAt(int x, int y) {
 		for (TileType typ : tiles.keySet()) {
 			for (Tile til : tiles.get(typ)) {
@@ -147,12 +223,28 @@ public class Chunk implements Iterable<Tile> {
 		return null;
 	}
 	
+	/**
+	 * Converts a world position to a chunk position
+	 * @param worldPos the world position to convert
+	 * @return the converted position
+	 */
 	public static Vector2i toChunkPosition(Vector2i worldPos) {
 		return new Vector2i(toChunkPosition(worldPos.x), toChunkPosition(worldPos.y));
 	}
+	/**
+	 * Converts world coordinates to a chunk position
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @return the converted position
+	 */
 	public static Vector2i toChunkPosition(int x, int y) {
 		return new Vector2i(toChunkPosition(x), toChunkPosition(y));
 	}
+	/**
+	 * Converts a given world coordinate to a chunk coordinate
+	 * @param i the coordinate to convert
+	 * @return the converted coordinate
+	 */
 	public static int toChunkPosition(int i) {
 		int n;
 		if (i < 0 && i % CHUNK_SIZE != 0) {

@@ -29,8 +29,14 @@ public class Loader {
 	 */
 	public static final Loader TILE_LOADER = new Loader();
 	
+	/**
+	 * The default loader used by the sprites
+	 */
 	public static final Loader SPRITE_LOADER = new Loader();
 	
+	/**
+	 * The default loader used by the texts
+	 */
 	public static final Loader TEXT_LOADER = new Loader();
 	
 	/**
@@ -42,6 +48,9 @@ public class Loader {
 	 */
 	private List<Integer> textures = new ArrayList<Integer>();
 	
+	/**
+	 * The ID of the vao currently created
+	 */
 	private int currentVao;
 	
 	/**
@@ -58,6 +67,10 @@ public class Loader {
 		return vaoID;
 	}
 	
+	/**
+	 * Returns a String representing the state of the loader
+	 * @return a String representing the state of the loader
+	 */
 	public String debugValues() {
 		return "VAOs:"+vaoMap.size()+"  VBOs:"+vaoMap.size()+"  Tex:"+textures.size();
 	}
@@ -77,6 +90,10 @@ public class Loader {
 		vaoMap.clear();
 	}
 	
+	/**
+	 * Unloads a VAO using the given VAO ID
+	 * @param vao the ID of the VAO to unload
+	 */
 	public void unloadVAO(int vao) {
 		GL15.glDeleteBuffers(vaoMap.get(vao));
 		GL30.glDeleteVertexArrays(vao);

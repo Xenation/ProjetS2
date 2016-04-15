@@ -10,14 +10,29 @@ import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
 
+/**
+ * Used to load data from a save file to the world
+ * @author Xenation
+ *
+ */
 public class WorldLoader {
 	
+	/**
+	 * The file from which to load data
+	 */
 	private static File file;
 	
+	/**
+	 * Sets the path of the new save file
+	 * @param path the path of the new save file
+	 */
 	public static void setFilePath(String path) {
 		file = new File(path);
 	}
 	
+	/**
+	 * Loads the data from the save file to the world
+	 */
 	public static void loadWorld() {
 		double start = System.currentTimeMillis();
 		

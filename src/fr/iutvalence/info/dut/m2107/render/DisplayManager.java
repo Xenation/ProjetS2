@@ -37,6 +37,9 @@ public class DisplayManager {
 	 */
 	private static long lastFrameTime;
 	
+	/**
+	 * The time at the current frame
+	 */
 	private static long currentFrameTime;
 	
 	/**
@@ -44,8 +47,15 @@ public class DisplayManager {
 	 */
 	private static float delta;
 	
+	/**
+	 * The deltas recorded during the last second linked to the time of their calculation
+	 */
 	private static Map<Long, Float> deltasMap = new HashMap<Long, Float>();
 	
+	/**
+	 * A smooth version of the delta (average of deltasMap)
+	 * Used to avoid the non-constant movements in-game
+	 */
 	private static float smoothDelta;
 	
 	/**
@@ -58,8 +68,15 @@ public class DisplayManager {
 	 */
 	private static int fps;
 	
+	/**
+	 * The current fps (calculated every second)
+	 */
 	public static int currentFPS;
 	
+	/**
+	 * Allows to track the activation of Vsync since there is no getVSyncEnabled() method in Display.
+	 * Do not change until you use setVSyncEnable().
+	 */
 	public static boolean vSyncTracker = true;
 	
 	/**
@@ -130,6 +147,9 @@ public class DisplayManager {
 		deltasMap.put(currentFrameTime, delta);
 	}
     
+    /**
+     * Updates the deltasMap and calculates smoothDelta
+     */
 	public static void updateDeltaMap() {
 		List<Long> toRemove = new LinkedList<Long>(); 
 		for (long time : deltasMap.keySet()) {
@@ -176,6 +196,10 @@ public class DisplayManager {
 		Display.destroy();
 	}
 	
+	/**
+	 * Returns the current FPS
+	 * @return the current FPS
+	 */
 	public static int getFPS() {
 		return currentFPS;
 	}

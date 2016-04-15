@@ -5,6 +5,11 @@ import org.lwjgl.util.vector.Matrix4f;
 import fr.iutvalence.info.dut.m2107.entities.Camera;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
+/**
+ * Defines a Shader
+ * @author Xenation
+ *
+ */
 public class Shader extends ShaderProgram {
 	
 	/**
@@ -28,7 +33,9 @@ public class Shader extends ShaderProgram {
 	 * The location of the view matrix uniform variable in the Shader
 	 */
 	private int location_viewMatrix;
-	
+	/**
+	 * The location of the alpha uniform variable in the Shader
+	 */
 	private int location_alpha;
 	
 	/**
@@ -61,7 +68,10 @@ public class Shader extends ShaderProgram {
 	public void loadViewMatrix(Camera camera) {
 		super.loadMatrix(location_viewMatrix, Maths.createViewMatrix(camera));
 	}
-	
+	/**
+	 * Loads the specified alpha to the shader
+	 * @param alph the alpha to load
+	 */
 	public void loadAlpha(float alph) {
 		super.loadFloat(location_alpha, alph);
 	}
