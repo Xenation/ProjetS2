@@ -13,12 +13,19 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
+import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	
 	//// CHUNKMAP \\\\
+	public void update() {
+		for (Chunk chk : this) {
+			chk.update();
+		}
+	}
+	
 	public void addTile(Tile til) {
 		Chunk chk = get(Chunk.toChunkPosition(til.x, til.y));
 		if (chk != null) {
@@ -73,7 +80,25 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		}
 		for (int y = start.y; y <= end.y; y++) {
 			for (int x = start.x; x <= end.x; x++) {
-				setTilenChunk(new Tile(type, x, y));
+				setTilenChunk(TileBuilder.buildTile(type, x, y));
+			}
+		}
+	}
+	
+	public void emptyZone(Vector2i start, Vector2i end) {
+		if (start.x > end.x) {
+			int tmp = start.x;
+			start.x = end.x;
+			end.x = tmp;
+		}
+		if (start.y > end.y) {
+			int tmp = start.y;
+			start.y = end.y;
+			end.y = tmp;
+		}
+		for (int y = start.y; y <= end.y; y++) {
+			for (int x = start.x; x <= end.x; x++) {
+				removeTileAt(x, y);
 			}
 		}
 	}

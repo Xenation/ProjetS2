@@ -16,6 +16,8 @@ public abstract class AbstractSprite {
 	 */
 	protected int textureID;
 	
+	protected float alpha = 1;
+	
 	/**
 	 * A Sprite with the specified VBO and texture
 	 * @param vaoID the ID of the VBO
@@ -53,6 +55,14 @@ public abstract class AbstractSprite {
 
 	protected void setTextureID(int texID) {
 		this.textureID = texID;
+	}
+
+	public float getAlpha() {
+		return alpha;
+	}
+
+	public void setAlpha(float alpha) {
+		this.alpha = alpha;
 	}
 	
 }

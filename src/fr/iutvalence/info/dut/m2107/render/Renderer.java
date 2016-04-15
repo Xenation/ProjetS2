@@ -106,8 +106,10 @@ public class Renderer {
 				prepareSprite(spr);
 				
 				for (Entity ent : layer.getEntities(spr)) {
-					Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
+//					Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
+					Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getScale(), ent.getRotation());
 					shader.loadTransformation(matrix);
+					shader.loadAlpha(spr.getAlpha());
 					
 					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 				}

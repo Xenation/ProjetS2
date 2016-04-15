@@ -36,6 +36,18 @@ public class Chunk implements Iterable<Tile> {
 //		return textureID;
 //	}
 	
+	public void update() {
+		List<Tile> toRemove = new ArrayList<Tile>();
+		for (Tile tile : this) {
+			if (!tile.update()) {
+				toRemove.add(tile);
+			}
+		}
+		for (Tile tile : toRemove) {
+			removeAt(tile.x, tile.y);
+		}
+	}
+	
 	public Vector2i getPosition() {
 		return position;
 	}

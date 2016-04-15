@@ -7,12 +7,16 @@ public class Tile {
 	public static final float TILE_SIZE = 1;
 	
 	public final int x, y;
-	private TileType type;
+	protected TileType type;
 	
 	public Tile(TileType type, int x, int y) {
 		this.type = type;
 		this.x = x;
 		this.y = y;
+	}
+	
+	public boolean update() {
+		return type.updateBehaviors(this);
 	}
 
 	public TileType getType() {

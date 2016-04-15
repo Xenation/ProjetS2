@@ -30,13 +30,23 @@ public class Sprite extends AbstractSprite {
 		super.setVaoID(Loader.SPRITE_LOADER.loadtoVao(pos, tex));
 		super.setTextureID(Loader.SPRITE_LOADER.loadTexture(textureFile));
 	}
+	
+	public Sprite(String textureFile, Vector2f size, float alpha) {
+		super();
+		this.size = size;
+		float pos[] = {-this.size.x/2, this.size.y/2,
+				this.size.x/2, this.size.y/2,
+				-this.size.x/2, -this.size.y/2,
+				this.size.x/2, -this.size.y/2};
+		float tex[] = {0,0, 1,0, 0,1, 1,1};
+		
+		super.setVaoID(Loader.SPRITE_LOADER.loadtoVao(pos, tex));
+		super.setTextureID(Loader.SPRITE_LOADER.loadTexture(textureFile));
+		this.alpha = alpha;
+	}
 
 	public Vector2f getSize() {
 		return size;
-	}
-
-	public void setSize(Vector2f size) {
-		this.size = size;
 	}
 	
 }

@@ -11,11 +11,7 @@ import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
 import fr.iutvalence.info.dut.m2107.render.*;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
-import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
-import fr.iutvalence.info.dut.m2107.storage.Vector2i;
-import fr.iutvalence.info.dut.m2107.tiles.Tile;
-import fr.iutvalence.info.dut.m2107.tiles.TileType;
 
 public class MainGameTester {
 	

@@ -1,13 +1,14 @@
 #version 140
 
 in vec2 textureCoords;
+in float alphaPass;
 
 out vec4 out_Color;
 
-uniform sampler2D guiTexture;
+uniform sampler2D textur;
 
 void main(void) {
 
-	out_Color = texture(guiTexture,textureCoords);
+	out_Color = texture(textur,textureCoords) * vec4(1.0, 1.0, 1.0, alphaPass);
 
 }

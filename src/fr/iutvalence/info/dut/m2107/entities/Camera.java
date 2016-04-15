@@ -1,11 +1,14 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
+import java.util.ArrayList;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
+import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
@@ -13,6 +16,7 @@ import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Vector2i;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
+import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
@@ -41,6 +45,7 @@ public class Camera {
 	private Vector2i drawStart;
 	private Vector2i drawEnd;
 	private boolean isSelecting = false;
+	private boolean isRemoving = false;
 	
 	private Entity preview;
 	
@@ -50,10 +55,9 @@ public class Camera {
 	public Camera() {
 		this.position = new Vector2f();
 		this.rotation = 0;
-		this.debugText = new GUIText("", 1, 0, 0, .5f, false);
+		this.debugText = new GUIText("", .8f, 0, 0, .5f, false);
 		debugText.setColour(0, 1, 0);
 		this.type = TileType.Dirt;
-		//this.preview = new MovableEntity(this.position, new Sprite("item/sugar", new Vector2f(1, 1)), GameWorld.layerMap.getLayer(1));
 	}
 	
 	/**
@@ -61,7 +65,12 @@ public class Camera {
 	 */
 	public void update() {
 		
-
+		if (this.preview == null) {
+			Sprite spr = new Sprite("entities/selection", new Vector2f(1, 1));
+			spr.setAlpha(0.5f);
+			this.preview = new MovableEntity(new Vector2f(0, 0), spr);
+			GameWorld.layerMap.getLayer(1).add(preview);
+		}
 		GameWorld.chunkMap.generateSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, position);
 		
 		//// Lerp to target
@@ -125,39 +134,110 @@ public class Camera {
 				if (Keyboard.getEventKey() == Keyboard.KEY_2) {
 					this.type = TileType.Stone;
 				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_3) {
+					this.type = TileType.Grass;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_4) {
+					this.type = TileType.Log;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_5) {
+					this.type = TileType.Leaves;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_6) {
+					this.type = TileType.Fader;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_7) {
+					this.type = TileType.Spikes;
+				}
 			}
 		}
 		
+		this.preview.pos.x = Maths.fastFloor(getMouseWorldX()) + Tile.TILE_SIZE/2;
+		this.preview.pos.y = Maths.fastFloor(getMouseWorldY()) + Tile.TILE_SIZE/2;
+		
 		//// Drawing
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Mouse.isButtonDown(0)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1))) {
 			if (drawStart == null) {
+				if (Mouse.isButtonDown(0)) {
+					isRemoving = false;
+				} else if (Mouse.isButtonDown(1)) {
+					isRemoving = true;
+				}
 				drawStart = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 				isSelecting = true;
 			} else {
 				drawEnd = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+				calculateSelectionCenter();
 			}
 		} else if (isSelecting) {
 			isSelecting = false;
-			GameWorld.chunkMap.fillZone(type, drawStart, drawEnd);
+			if (!isRemoving) {
+				GameWorld.chunkMap.fillZone(type, drawStart, drawEnd);
+			} else {
+				GameWorld.chunkMap.emptyZone(drawStart, drawEnd);
+			}
+			preview.setScale(1, 1);
+			isRemoving = false;
 			drawStart = null;
 		}
 		if (!isSelecting) {
 			if (Mouse.isButtonDown(0)) {
-				GameWorld.chunkMap.setTile(new Tile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
+				GameWorld.chunkMap.setTile(TileBuilder.buildTile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
 			}
 			if (Mouse.isButtonDown(1)) {
 				GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 			}
 		}
 		
-//		this.preview.pos.x = Maths.fastFloor(getMouseWorldX()) + Tile.TILE_SIZE/2;
-//		this.preview.pos.y = Maths.fastFloor(getMouseWorldY()) + Tile.TILE_SIZE/2;
 		
-		debugText.updateText("Mouse: "+Maths.roundDecim(getMouseWorldX(), 3)+", "+Maths.roundDecim(getMouseWorldY(), 3) 
-				+ "\nFPS: "+DisplayManager.getFPS()
-				+ "\nVSync = "+DisplayManager.vSyncTracker
-				+ "\nSelect = "+isSelecting);
+		String updateStr = "Mouse: "+Maths.roundDecim(getMouseWorldX(), 3)+", "+Maths.roundDecim(getMouseWorldY(), 3) 
+		+ "\nFPS: "+DisplayManager.getFPS()
+		+ "\nVSync = "+DisplayManager.vSyncTracker
+		+ "\nSelecting = "+isSelecting;
 		
+		Tile pointed = GameWorld.chunkMap.getTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+		if (pointed != null) {
+			updateStr += "\nTile:";
+			ArrayList<String> stats = TileBuilder.getStats(pointed);
+			for (String stat : stats) {
+				updateStr += "\n"+stat;
+			}
+		}
+		
+		debugText.updateText(updateStr);
+		
+	}
+	
+	private void calculateSelectionCenter() {
+		int absDifX = (int) Maths.fastAbs(drawEnd.x - drawStart.x);
+		int absDifY = (int) Maths.fastAbs(drawEnd.y - drawStart.y);
+		preview.setScale(absDifX + 1, absDifY + 1);
+		float addX = 0;
+		float addY = 0;
+		if (drawStart.x <= drawEnd.x) {
+			addX += 0.5f;
+		}
+		if (drawStart.y <= drawEnd.y) {
+			addY += 0.5f;
+		}
+		if (absDifX % 2 == 0) {
+			addX -= Tile.TILE_SIZE/2;
+			if (drawStart.x > drawEnd.x) {
+				addX += 0.5f;
+			}
+		} else if (drawStart.x > drawEnd.x) {
+			addX -= 0.5f;
+		}
+		if (absDifY % 2 == 0) {
+			addY -= Tile.TILE_SIZE/2;
+			if (drawStart.y > drawEnd.y) {
+				addY += 0.5f;
+			}
+		} else if (drawStart.y > drawEnd.y) {
+			addY -= 0.5f;
+		}
+		this.preview.pos.x -= (drawEnd.x - drawStart.x)/2 + addX;
+		this.preview.pos.y -= (drawEnd.y - drawStart.y)/2 + addY;
 	}
 	
 	/**

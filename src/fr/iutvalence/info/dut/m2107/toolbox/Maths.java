@@ -90,6 +90,14 @@ public class Maths {
 		return x<xi ? xi-1 : xi;
 	}
 	
+	public static float fastAbs(float x) {
+		if (x >= 0) {
+			return x;
+		} else {
+			return -x;
+		}
+	}
+	
 	public static float roundDecim(float f, int decimal) {
 		float pow = pow(10, decimal);
 		return ((int) (f*pow))/pow;

@@ -29,6 +29,8 @@ public class Shader extends ShaderProgram {
 	 */
 	private int location_viewMatrix;
 	
+	private int location_alpha;
+	
 	/**
 	 * Creates a new ShaderProgram using the vertex and fragment files
 	 */
@@ -60,6 +62,10 @@ public class Shader extends ShaderProgram {
 		super.loadMatrix(location_viewMatrix, Maths.createViewMatrix(camera));
 	}
 	
+	public void loadAlpha(float alph) {
+		super.loadFloat(location_alpha, alph);
+	}
+	
 	/**
 	 * Gets the location of all the uniform variables of the shader
 	 */
@@ -68,6 +74,7 @@ public class Shader extends ShaderProgram {
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
+		location_alpha = super.getUniformLocation("alpha");
 	}
 	
 	/**
