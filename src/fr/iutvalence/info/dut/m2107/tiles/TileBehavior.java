@@ -70,7 +70,9 @@ public enum TileBehavior {
 	 * @return false if the tile has no tile under it
 	 */
 	private boolean updateSupported(Tile tile) {
-		if (GameWorld.chunkMap.getTileAt(tile.x, tile.y-1) == null) return false;
+		Tile support = GameWorld.chunkMap.getTileAt(tile.x, tile.y-1);
+		if (support == null) return false;
+		if (!support.getType().isSolid()) return false;
 		return true;
 	}
 	

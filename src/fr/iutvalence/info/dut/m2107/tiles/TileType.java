@@ -16,8 +16,8 @@ public enum TileType {
 	Grass(3, new TileSprite("tile/grass")),
 	Log(4, new TileSprite("tile/log")),
 	Leaves(5, new TileSprite("tile/leaves")),
-	Fader(6, new TileSprite("tile/fader"), TileBehavior.FADING),
-	Spikes(7, new TileSprite("tile/spikes"), TileBehavior.DAMAGING, TileBehavior.SUPPORTED);
+	Fader(6, new TileSprite("tile/fader"), true, TileBehavior.FADING),
+	Spikes(7, new TileSprite("tile/spikes"), false, TileBehavior.DAMAGING, TileBehavior.SUPPORTED);
 	
 	/**
 	 * The id of the type (used for saving/loading)
@@ -27,6 +27,10 @@ public enum TileType {
 	 * The sprite of this type
 	 */
 	private final TileSprite sprite;
+	/**
+	 * Whether this type is solid (entities collide with it)
+	 */
+	private final boolean isSolid;
 	/**
 	 * The behaviors of this type
 	 */
@@ -40,6 +44,7 @@ public enum TileType {
 	private TileType(int id, TileSprite spr) {
 		this.id = (byte) id;
 		this.sprite = spr;
+		this.isSolid = true;
 		this.behaviors.add(TileBehavior.NORMAL);
 	}
 	
@@ -49,9 +54,10 @@ public enum TileType {
 	 * @param spr the sprite of the type
 	 * @param behaviors the behaviors of the type
 	 */
-	private TileType(int id, TileSprite spr, TileBehavior... behaviors) {
+	private TileType(int id, TileSprite spr, boolean solid, TileBehavior... behaviors) {
 		this.id = (byte) id;
 		this.sprite = spr;
+		this.isSolid = solid;
 		for (TileBehavior behavior : behaviors) {
 			this.behaviors.add(behavior);
 		}
@@ -71,6 +77,10 @@ public enum TileType {
 	 */
 	public TileSprite getSprite() {
 		return this.sprite;
+	}
+	
+	public boolean isSolid() {
+		return isSolid;
 	}
 	
 	/**

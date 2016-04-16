@@ -41,8 +41,8 @@ public class GameWorld {
 	 * Updates the camera and every entity and tiles of the world
 	 */
 	public static void update() {
+		camera.update();
 		layerMap.update();
 		chunkMap.update();
-		camera.update();
 	}
 }

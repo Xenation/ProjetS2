@@ -165,7 +165,7 @@ public class DisplayManager {
 			smoothDelta += delt;
 		}
 		smoothDelta /= deltasMap.size();
-		System.out.println(smoothDelta);
+//		System.out.println(smoothDelta);
 	}
 
     /**
