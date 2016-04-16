@@ -11,14 +11,29 @@ import org.lwjgl.opengl.GL30;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.FontType;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 
+/**
+ * Defines a FontRenderer
+ * @author Xenation
+ *
+ */
 public class FontRenderer {
-
+	
+	/**
+	 * The shader used by this renderer
+	 */
 	private FontShader shader;
-
+	
+	/**
+	 * A FontRenderer that uses a new FontShader
+	 */
 	public FontRenderer() {
 		shader = new FontShader();
 	}
 	
+	/**
+	 * Renders a map of GUITexts
+	 * @param texts the map of the GUITexts to render
+	 */
 	public void render(Map<FontType, List<GUIText>> texts) {
 		prepare();
 		for (FontType font : texts.keySet()) {
@@ -31,14 +46,24 @@ public class FontRenderer {
 		endRendering();
 	}
 	
+	/**
+	 * Cleans Up the Shader
+	 */
 	public void cleanUp(){
 		shader.cleanUp();
 	}
 	
+	/**
+	 * Starts the shader
+	 */
 	private void prepare() {
 		shader.start();
 	}
 	
+	/**
+	 * Renders a single text
+	 * @param text the GUIText to render
+	 */
 	private void renderText(GUIText text) {
 		GL30.glBindVertexArray(text.getMesh());
 		GL20.glEnableVertexAttribArray(0);
@@ -51,6 +76,9 @@ public class FontRenderer {
 		GL30.glBindVertexArray(0);
 	}
 	
+	/**
+	 * Stops the shader
+	 */
 	private void endRendering() {
 		shader.stop();
 	}

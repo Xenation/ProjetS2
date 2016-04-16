@@ -7,7 +7,6 @@ import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
 
 /**
  * Represents a piece of text in the game.
- * 
  * @author Karl
  *
  */

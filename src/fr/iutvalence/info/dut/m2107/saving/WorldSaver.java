@@ -13,14 +13,30 @@ import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
+/**
+ * Used to Save a world.
+ * Only chunkMap for now.
+ * @author Xenation
+ *
+ */
 public class WorldSaver {
 	
+	/**
+	 * The save file
+	 */
 	private static File file;
 	
+	/**
+	 * Sets the path to the new save file
+	 * @param path the path to the new save file
+	 */
 	public static void setFilePath(String path) {
 		file = new File(path);
 	}
 	
+	/**
+	 * Writes the save file with the data from the chunkMap of GameWorld
+	 */
 	public static void writeWorld() {
 		
 		double start = System.currentTimeMillis()/1000;
@@ -80,45 +96,6 @@ public class WorldSaver {
 		
 		System.out.println("World Saved ("+GameWorld.chunkMap.getTilesCount()+" tiles) in: "+(System.currentTimeMillis()-start)+"ms");
 		
-	}
-	
-	public static void writeTest() {
-		if (file != null) {
-			if (!file.exists()) {
-				try {
-					file.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-					System.err.println("Failed to create file");
-					return;
-				}
-			}
-			FileOutputStream fs;
-			try {
-				fs = new FileOutputStream(file);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				System.err.println("Failed to create output stream");
-				return;
-			}
-			
-			byte[] txt = {16, 17, 18};
-			
-			try {
-				fs.write(txt);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				System.err.println("Failed to write to file");
-			}
-			
-			try {
-				fs.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.err.println("Failed to close strem");
-				return;
-			}
-		}
 	}
 	
 }

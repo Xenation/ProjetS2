@@ -10,16 +10,32 @@ import java.util.Set;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.models.Sprite;
 
+/**
+ * Defines a layer that contains entities.
+ * The entities are ordered by Sprite.
+ * @author Xenation
+ *
+ */
 public class Layer implements Iterable<Entity> {
 	
+	/**
+	 * the map that gathers all the entities that have the same sprite under a same list
+	 */
 	private Map<Sprite, List<Entity>> layer = new HashMap<Sprite, List<Entity>>();
 	
+	/**
+	 * Updates every entity of this layer
+	 */
 	public void update() {
 		for (Entity ent : this) {
 			ent.update(this);
 		}
 	}
 	
+	/**
+	 * Adds an entity to this layer
+	 * @param ent the entity to add
+	 */
 	public void add(Entity ent) {
 		List<Entity> newList = layer.get(ent.getSprite());
 		if (newList == null) {
@@ -29,12 +45,20 @@ public class Layer implements Iterable<Entity> {
 		newList.add(ent);
 	}
 	
+	/**
+	 * Adds a list of entities to this layer
+	 * @param entities the list of entities to add
+	 */
 	public void addAll(List<Entity> entities) {
 		for (Entity entity : entities) {
 			add(entity);
 		}
 	}
 	
+	/**
+	 * remove a given entity from this layer
+	 * @param ent the entity to remove
+	 */
 	public void remove(Entity ent) {
 		List<Entity> ents = layer.get(ent.getSprite());
 		if (ents != null) {
@@ -45,10 +69,19 @@ public class Layer implements Iterable<Entity> {
 		}
 	}
 	
+	/**
+	 * Returns a set of all sprites present in this layer
+	 * @return a set of all sprites present in this layer
+	 */
 	public Set<Sprite> sprites() {
 		return this.layer.keySet();
 	}
 	
+	/**
+	 * Returns a list of entities that have the given sprite in his layer
+	 * @param spr the sprite to look for
+	 * @return a list of entities that have the given sprite in his layer
+	 */
 	public List<Entity> getEntities(Sprite spr) {
 		return this.layer.get(spr);
 	}

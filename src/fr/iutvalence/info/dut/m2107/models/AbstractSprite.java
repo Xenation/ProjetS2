@@ -17,6 +17,11 @@ public abstract class AbstractSprite {
 	protected int textureID;
 	
 	/**
+	 * the alpha to apply over the texture
+	 */
+	protected float alpha = 1;
+	
+	/**
 	 * A Sprite with the specified VBO and texture
 	 * @param vaoID the ID of the VBO
 	 * @param texID the ID of the Texture
@@ -26,6 +31,10 @@ public abstract class AbstractSprite {
 		this.textureID = texID;
 	}
 	
+	/**
+	 * A Sprite with VAO and Texture IDs unspecified yet.
+	 * Used by Sprite class to generate the vertices in the constructor
+	 */
 	public AbstractSprite() {
 		this.vaoID = 0;
 		this.textureID = 0;
@@ -47,12 +56,36 @@ public abstract class AbstractSprite {
 		return vaoID;
 	}
 	
+	/**
+	 * Sets a new ID for the VAO
+	 * @param vaoID the ID of the new VAO
+	 */
 	protected void setVaoID(int vaoID) {
 		this.vaoID = vaoID;
 	}
-
+	
+	/**
+	 * Sets a new ID for the Texture
+	 * @param vaoID the ID of the new Texture
+	 */
 	protected void setTextureID(int texID) {
 		this.textureID = texID;
+	}
+	
+	/**
+	 * Returns the alpha of this sprite
+	 * @return the alpha of this sprite
+	 */
+	public float getAlpha() {
+		return alpha;
+	}
+	
+	/**
+	 * Sets the alpha of this sprite
+	 * @param alpha the new alpha
+	 */
+	public void setAlpha(float alpha) {
+		this.alpha = alpha;
 	}
 	
 }

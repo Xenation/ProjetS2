@@ -1,11 +1,14 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
+import java.util.ArrayList;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
+import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
@@ -13,6 +16,7 @@ import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Vector2i;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
+import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
@@ -32,15 +36,37 @@ public class Camera {
 	 */
 	private float rotation;
 	
+	/**
+	 * The target to follow
+	 */
 	private Entity target;
 	
+	/**
+	 * The Top-left debugText
+	 */
 	private GUIText debugText;
 	
+	/**
+	 * The type of tile to draw
+	 */
 	private TileType type;
 	
+	/**
+	 * The starting position of the selection
+	 */
 	private Vector2i drawStart;
+	/**
+	 * The ending position of the selection
+	 */
 	private Vector2i drawEnd;
+	/**
+	 * Whether the selection is in progress (true) or not (false)
+	 */
 	private boolean isSelecting = false;
+	/**
+	 * Whether the selection in progress is a removal (true) ro not (false)
+	 */
+	private boolean isRemoving = false;
 	
 	private Entity preview;
 	
@@ -50,18 +76,37 @@ public class Camera {
 	public Camera() {
 		this.position = new Vector2f();
 		this.rotation = 0;
-		this.debugText = new GUIText("", 1, 0, 0, .5f, false);
+		this.debugText = new GUIText("", .8f, 0, 0, .5f, false);
 		debugText.setColour(0, 1, 0);
 		this.type = TileType.Dirt;
-		//this.preview = new MovableEntity(this.position, new Sprite("item/sugar", new Vector2f(1, 1)), GameWorld.layerMap.getLayer(1));
 	}
 	
 	/**
-	 * Checks for inputs and moves the camera according to them
+	 * Updates the state of the camera.
+	 * Uses Inputs for movements when not bound to a target.
+	 * When bound uses lerp to follow the target.
+	 * Manages the position and scale of the preview entity.
+	 * Generates the chunks in screen.
+	 * Updates the debug display (fps, mouse pos, Vsync...)
+	 * Inputs :
+	 *  - ZQSD: movement
+	 *  - Tab: bind/unbind player as target
+	 *  - V: Vsync On/Off
+	 *  - Divide(/): Save current chunkMap
+	 *  - Multiply(*): Load saved chunkMap
+	 *  - 1-7: Select TileType to draw
+	 *  - LShift+Click (drag): Select a zone to draw(Left click) or delete (right click)
+	 *  - Left click: draw a single tile of the selected tile type
+	 *  - Right click: remove a single tile
 	 */
 	public void update() {
 		
-
+		if (this.preview == null) {
+			Sprite spr = new Sprite("entities/selection", new Vector2f(1, 1));
+			spr.setAlpha(0.5f);
+			this.preview = new MovableEntity(new Vector2f(0, 0), spr);
+			GameWorld.layerMap.getLayer(1).add(preview);
+		}
 		GameWorld.chunkMap.generateSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, position);
 		
 		//// Lerp to target
@@ -125,39 +170,113 @@ public class Camera {
 				if (Keyboard.getEventKey() == Keyboard.KEY_2) {
 					this.type = TileType.Stone;
 				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_3) {
+					this.type = TileType.Grass;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_4) {
+					this.type = TileType.Log;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_5) {
+					this.type = TileType.Leaves;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_6) {
+					this.type = TileType.Fader;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_7) {
+					this.type = TileType.Spikes;
+				}
 			}
 		}
 		
+		this.preview.pos.x = Maths.fastFloor(getMouseWorldX()) + Tile.TILE_SIZE/2;
+		this.preview.pos.y = Maths.fastFloor(getMouseWorldY()) + Tile.TILE_SIZE/2;
+		
 		//// Drawing
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Mouse.isButtonDown(0)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1))) {
 			if (drawStart == null) {
+				if (Mouse.isButtonDown(0)) {
+					isRemoving = false;
+				} else if (Mouse.isButtonDown(1)) {
+					isRemoving = true;
+				}
 				drawStart = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 				isSelecting = true;
 			} else {
 				drawEnd = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+				calculateSelectionCenter();
 			}
 		} else if (isSelecting) {
 			isSelecting = false;
-			GameWorld.chunkMap.fillZone(type, drawStart, drawEnd);
+			if (!isRemoving) {
+				GameWorld.chunkMap.fillZone(type, drawStart, drawEnd);
+			} else {
+				GameWorld.chunkMap.emptyZone(drawStart, drawEnd);
+			}
+			preview.setScale(1, 1);
+			isRemoving = false;
 			drawStart = null;
 		}
 		if (!isSelecting) {
 			if (Mouse.isButtonDown(0)) {
-				GameWorld.chunkMap.setTile(new Tile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
+				GameWorld.chunkMap.setTile(TileBuilder.buildTile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
 			}
 			if (Mouse.isButtonDown(1)) {
 				GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 			}
 		}
 		
-//		this.preview.pos.x = Maths.fastFloor(getMouseWorldX()) + Tile.TILE_SIZE/2;
-//		this.preview.pos.y = Maths.fastFloor(getMouseWorldY()) + Tile.TILE_SIZE/2;
 		
-		debugText.updateText("Mouse: "+Maths.roundDecim(getMouseWorldX(), 3)+", "+Maths.roundDecim(getMouseWorldY(), 3) 
-				+ "\nFPS: "+DisplayManager.getFPS()
-				+ "\nVSync = "+DisplayManager.vSyncTracker
-				+ "\nSelect = "+isSelecting);
+		String updateStr = "Mouse: "+Maths.roundDecim(getMouseWorldX(), 3)+", "+Maths.roundDecim(getMouseWorldY(), 3) 
+		+ "\nFPS: "+DisplayManager.getFPS()
+		+ "\nVSync = "+DisplayManager.vSyncTracker
+		+ "\nSelecting = "+isSelecting;
 		
+		Tile pointed = GameWorld.chunkMap.getTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+		if (pointed != null) {
+			updateStr += "\nTile:";
+			ArrayList<String> stats = TileBuilder.getStats(pointed);
+			for (String stat : stats) {
+				updateStr += "\n"+stat;
+			}
+		}
+		
+		debugText.updateText(updateStr);
+		
+	}
+	
+	/**
+	 * Calcultes the position of the preview entity using drawStart and drawEnd
+	 */
+	private void calculateSelectionCenter() {
+		int absDifX = (int) Maths.fastAbs(drawEnd.x - drawStart.x);
+		int absDifY = (int) Maths.fastAbs(drawEnd.y - drawStart.y);
+		preview.setScale(absDifX + 1, absDifY + 1);
+		float addX = 0;
+		float addY = 0;
+		if (drawStart.x <= drawEnd.x) {
+			addX += 0.5f;
+		}
+		if (drawStart.y <= drawEnd.y) {
+			addY += 0.5f;
+		}
+		if (absDifX % 2 == 0) {
+			addX -= Tile.TILE_SIZE/2;
+			if (drawStart.x > drawEnd.x) {
+				addX += 0.5f;
+			}
+		} else if (drawStart.x > drawEnd.x) {
+			addX -= 0.5f;
+		}
+		if (absDifY % 2 == 0) {
+			addY -= Tile.TILE_SIZE/2;
+			if (drawStart.y > drawEnd.y) {
+				addY += 0.5f;
+			}
+		} else if (drawStart.y > drawEnd.y) {
+			addY -= 0.5f;
+		}
+		this.preview.pos.x -= (drawEnd.x - drawStart.x)/2 + addX;
+		this.preview.pos.y -= (drawEnd.y - drawStart.y)/2 + addY;
 	}
 	
 	/**
@@ -211,14 +330,26 @@ public class Camera {
 		this.rotation = rotation;
 	}
 	
+	/**
+	 * Binds the camera to the target
+	 * @param target the entity to follow
+	 */
 	public void setTarget(Entity target) {
 		this.target = target;
 	}
 	
+	/**
+	 * Returns the X coordinate of the mouse in the world
+	 * @return the X coordinate of the mouse in the world
+	 */
 	public float getMouseWorldX() {
 		return this.position.x + (Mouse.getX() - Display.getDisplayMode().getWidth()/2) / ((float) Display.getDisplayMode().getHeight() / Renderer.UNITS_Y);
 	}
 	
+	/**
+	 * Returns the Y coordinate of the mouse in the world
+	 * @return the Y coordinate of the mouse in the world
+	 */
 	public float getMouseWorldY() {
 		return this.position.y + (Mouse.getY() - Display.getDisplayMode().getHeight()/2) / ((float) Display.getDisplayMode().getHeight() / Renderer.UNITS_Y);
 	}
