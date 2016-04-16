@@ -100,6 +100,13 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		}
 	}
 	
+	public void removeTile(Tile tile) {
+		Chunk chk = get(Chunk.toChunkPosition(tile.x, tile.y));
+		if (chk != null) {
+			chk.remove(tile);
+		}
+	}
+	
 	/**
 	 * Sets the orientation of the tile at the given coordinates to the given orientation
 	 * @param x the x coordinate

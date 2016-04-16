@@ -33,6 +33,10 @@ public class TileBuilder {
 			return new FallingTile(type, x, y);
 		case Creator:
 			return new CreatingTile(type, x, y, TileType.Sand);
+		case Piston:
+			return new PushingTile(type, x, y);
+		case PistonArm:
+			return new Tile(type, x, y);
 		default:
 			return new Tile(type, x, y);
 		}
@@ -68,6 +72,12 @@ public class TileBuilder {
 		case Creator:
 			stats.add("created = "+((CreatingTile)tile).createdType);
 			stats.add("time = "+((CreatingTile)tile).creatingTime);
+			break;
+		case Piston:
+			stats.add("pushing = "+((PushingTile)tile).isPushing);
+			stats.add("time = "+((PushingTile)tile).pushinginterval);
+			break;
+		case PistonArm:
 			break;
 		default:
 			break;

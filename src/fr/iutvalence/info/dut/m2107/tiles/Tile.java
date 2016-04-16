@@ -24,7 +24,10 @@ public class Tile {
 	 */
 	protected TileType type;
 	
-	protected TileVariant variant;
+	/**
+	 * The variant of this tile
+	 */
+	private TileVariant variant;
 	
 	/**
 	 * The orientation of this tile

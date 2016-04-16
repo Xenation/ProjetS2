@@ -17,11 +17,14 @@ public enum TileType {
 	Fader(6, TileVariant.Fader, true, TileBehavior.FADING),
 	Spikes(7, TileVariant.Spikes, false, TileBehavior.DAMAGING, TileBehavior.SUPPORTED),
 	Sand(8, TileVariant.Sand, true, TileBehavior.FALLING),
-	Creator(9, TileVariant.Creator, true, TileBehavior.CREATOR);
+	Creator(9, TileVariant.Creator, true, TileBehavior.CREATOR),
+	Piston(10, TileVariant.Piston_retracted, true, TileBehavior.PISTON),
+	PistonArm(11, TileVariant.Piston_arm);
 	
 	static {
-		// Add variants here
-		
+		//// Add variants here
+		// Piston
+		Piston.variants.add(TileVariant.Piston_retracted);
 	}
 	
 	/**

@@ -16,7 +16,10 @@ public enum TileVariant {
 	Fader(new TileSprite("tile/fader")),
 	Spikes(new TileSprite("tile/spikes")),
 	Sand(new TileSprite("tile/sand")),
-	Creator(new TileSprite("tile/creator"));
+	Creator(new TileSprite("tile/creator")),
+	Piston_retracted(new TileSprite("tile/piston_retracted")),
+	Piston_extended(new TileSprite("tile/piston_extended")),
+	Piston_arm(new TileSprite("tile/piston_arm"));
 	
 	/**
 	 * The sprite of this variant

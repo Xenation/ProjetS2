@@ -14,7 +14,8 @@ public enum TileBehavior {
 	DAMAGING,
 	SUPPORTED,
 	FALLING,
-	CREATOR;
+	CREATOR,
+	PISTON;
 	
 	/**
 	 * Updates the specified tile using this behavior
@@ -35,6 +36,8 @@ public enum TileBehavior {
 			return updateFalling(tile);
 		case CREATOR:
 			return updateCreator(tile);
+		case PISTON:
+			return updatePiston(tile);
 		default:
 			return updateNormal(tile);
 		}
@@ -123,6 +126,31 @@ public enum TileBehavior {
 			GameWorld.chunkMap.addTile(TileBuilder.buildTile(creating.createdType, tile.getFrontX(), tile.getFrontY()));
 		} else {
 			creating.creatingTime -= DisplayManager.deltaTime();
+		}
+		return true;
+	}
+	
+	private boolean updatePiston(Tile tile) {
+		PushingTile pushing = (PushingTile) tile;
+		if (pushing.pushinginterval < 0 && !pushing.isPushing) {
+			pushing.pushinginterval = PushingTile.DEF_INTERVAL;
+			pushing.isPushing = true;
+			Tile front = GameWorld.chunkMap.getTileFront(tile);
+			if (front != null) {
+				GameWorld.chunkMap.pushTiles(front.x, front.y, pushing.orientation);
+			}
+			GameWorld.chunkMap.addTile(TileBuilder.buildTile(TileType.PistonArm, tile.getFrontX(), tile.getFrontY()));
+			pushing.setVariant(TileVariant.Piston_extended);
+		} else if (pushing.pushinginterval < 0 && pushing.isPushing) {
+			pushing.pushinginterval = PushingTile.DEF_INTERVAL;
+			pushing.isPushing = false;
+			Tile front = GameWorld.chunkMap.getTileFront(tile);
+			if (front != null && front.type == TileType.PistonArm) {
+				GameWorld.chunkMap.removeTile(front);
+			}
+			pushing.setVariant(TileVariant.Piston_retracted);
+		} else {
+			pushing.pushinginterval -= DisplayManager.deltaTime();
 		}
 		return true;
 	}

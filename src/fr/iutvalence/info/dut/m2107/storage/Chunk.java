@@ -226,6 +226,7 @@ public class Chunk implements Iterable<Tile> {
 		if (tiles.get(tile.getVariant()).size() == 0) {
 			tiles.remove(tile.getVariant());
 		}
+		tilesCount--;
 	}
 	
 	/**

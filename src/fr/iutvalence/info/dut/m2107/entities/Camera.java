@@ -94,7 +94,7 @@ public class Camera {
 	 *  - V: Vsync On/Off
 	 *  - Divide(/): Save current chunkMap
 	 *  - Multiply(*): Load saved chunkMap
-	 *  - 1-7: Select TileType to draw
+	 *  - 1-0: Select TileType to draw
 	 *  - LShift+Click (drag): Select a zone to draw(Left click) or delete (right click)
 	 *  - Left click: draw a single tile of the selected tile type
 	 *  - Right click: remove a single tile
@@ -192,6 +192,9 @@ public class Camera {
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_9) {
 					this.type = TileType.Creator;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_0) {
+					this.type = TileType.Piston;
 				}
 				
 				//// Tile Rotation

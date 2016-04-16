@@ -9,7 +9,8 @@
  * ![](res/tile/fader.png) **Fader**: fades after 5 seconds
  * ![](res/tile/spikes.png) **Spikes**: not solid, needs support
  * ![](res/tile/sand.png) **Sand**: falls after 0.1 seconds
- * ![](res/tile/creator.png) **Creator**: pushes a new block of the selected type in front of it
+ * ![](res/tile/creator.png) **Creator**: pushes a new tile of the selected type in front of it (currently using an interval for tests)
+ * ![](res/tile/piston_retracted.png) **Piston**: pushes tiles in front of it when activated (currently using an interval for tests)
 
 ### Tile Ideas
  * ![](res/tile/empty.png) **Trigger**: not solid, activated when entity inside (or other condition)
