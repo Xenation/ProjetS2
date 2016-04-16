@@ -109,6 +109,8 @@ public class Camera {
 		}
 		GameWorld.chunkMap.generateSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, position);
 		
+		Tile pointed = GameWorld.chunkMap.getTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+		
 		//// Lerp to target
 		if (target != null) {
 			this.position.x = Maths.lerp(this.position.x, target.pos.x, 0.1f);
@@ -185,6 +187,14 @@ public class Camera {
 				if (Keyboard.getEventKey() == Keyboard.KEY_7) {
 					this.type = TileType.Spikes;
 				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_8) {
+					this.type = TileType.Sand;
+				}
+				
+				//// Tile Rotation
+				if (Keyboard.getEventKey() == Keyboard.KEY_R && pointed != null) {
+					GameWorld.chunkMap.rotateTileAt(pointed.x, pointed.y, pointed.getOrientation().getNext());
+				}
 			}
 		}
 		
@@ -231,7 +241,6 @@ public class Camera {
 		+ "\nVSync = "+DisplayManager.vSyncTracker
 		+ "\nSelecting = "+isSelecting;
 		
-		Tile pointed = GameWorld.chunkMap.getTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 		if (pointed != null) {
 			updateStr += "\nTile:";
 			ArrayList<String> stats = TileBuilder.getStats(pointed);

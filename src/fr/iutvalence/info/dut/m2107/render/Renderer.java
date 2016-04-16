@@ -88,7 +88,7 @@ public class Renderer {
 				
 				for (Tile tile : chk.getTiles(typ)) {
 					
-					Matrix4f matrix = Maths.createTransformationMatrix(tile.x, tile.y);
+					Matrix4f matrix = Maths.createTransformationMatrix(tile.x, tile.y, tile.getOrientation());
 					shader.loadTransformation(matrix);
 					
 					// Draws the sprite

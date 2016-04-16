@@ -29,6 +29,8 @@ public class TileBuilder {
 			return new FadingTile(type, x, y);
 		case Spikes:
 			return new DamagingTile(type, x, y);
+		case Sand:
+			return new FallingTile(type, x, y);
 		default:
 			return new Tile(type, x, y);
 		}
@@ -57,6 +59,9 @@ public class TileBuilder {
 			break;
 		case Spikes:
 			stats.add("dmg = "+((DamagingTile)tile).damage);
+			break;
+		case Sand:
+			stats.add("fallTime = "+((FallingTile)tile).fallingTime);
 			break;
 		default:
 			break;

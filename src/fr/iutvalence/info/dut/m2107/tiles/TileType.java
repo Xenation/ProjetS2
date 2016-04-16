@@ -17,7 +17,8 @@ public enum TileType {
 	Log(4, new TileSprite("tile/log")),
 	Leaves(5, new TileSprite("tile/leaves")),
 	Fader(6, new TileSprite("tile/fader"), true, TileBehavior.FADING),
-	Spikes(7, new TileSprite("tile/spikes"), false, TileBehavior.DAMAGING, TileBehavior.SUPPORTED);
+	Spikes(7, new TileSprite("tile/spikes"), false, TileBehavior.DAMAGING, TileBehavior.SUPPORTED),
+	Sand(8, new TileSprite("tile/sand"), true, TileBehavior.FALLING);
 	
 	/**
 	 * The id of the type (used for saving/loading)

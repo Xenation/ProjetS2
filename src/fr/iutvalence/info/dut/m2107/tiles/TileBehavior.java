@@ -12,7 +12,8 @@ public enum TileBehavior {
 	NORMAL,
 	FADING,
 	DAMAGING,
-	SUPPORTED;
+	SUPPORTED,
+	FALLING;
 	
 	/**
 	 * Updates the specified tile using this behavior
@@ -29,11 +30,14 @@ public enum TileBehavior {
 			return updateDamaging(tile);
 		case SUPPORTED:
 			return updateSupported(tile);
+		case FALLING:
+			return updateFalling(tile);
 		default:
 			return updateNormal(tile);
 		}
 	}
 	
+
 	/**
 	 * Updates a normal tile (always returns true)
 	 * @param tile the tile to update
@@ -73,6 +77,25 @@ public enum TileBehavior {
 		Tile support = GameWorld.chunkMap.getTileAt(tile.x, tile.y-1);
 		if (support == null) return false;
 		if (!support.getType().isSolid()) return false;
+		return true;
+	}
+	
+	private boolean updateFalling(Tile tile) {
+		FallingTile falling = (FallingTile) tile;
+		if (falling.fallingTime < 0) {
+			Tile support = GameWorld.chunkMap.getTileAt(tile.x, tile.y-1);
+			if (support == null) {
+				GameWorld.chunkMap.addTile(TileBuilder.buildTile(tile.type, tile.x, tile.y-1));
+				return false;
+			}
+			if (!support.getType().isSolid()) {
+				GameWorld.chunkMap.removeTileAt(support.x, support.y);
+				GameWorld.chunkMap.addTile(TileBuilder.buildTile(tile.type, tile.x, tile.y-1));
+				return false;
+			}
+		} else {
+			falling.fallingTime -= DisplayManager.deltaTime();
+		}
 		return true;
 	}
 	

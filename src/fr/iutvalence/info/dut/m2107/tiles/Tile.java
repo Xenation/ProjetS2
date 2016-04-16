@@ -24,6 +24,11 @@ public class Tile {
 	protected TileType type;
 	
 	/**
+	 * The orientation of this tile
+	 */
+	protected TileOrientation orientation;
+	
+	/**
 	 * A Tile with the specified type and coordinates
 	 * @param type the type of the tile
 	 * @param x the x coordinate of the tile
@@ -33,6 +38,21 @@ public class Tile {
 		this.type = type;
 		this.x = x;
 		this.y = y;
+		this.orientation = TileOrientation.RIGHT;
+	}
+	
+	/**
+	 * A Tile with the specified type, coordinates and orientation
+	 * @param type the type of the tile
+	 * @param x the x coordinate of the tile
+	 * @param y the y coordinate of the tile
+	 * @param orientation the orientation of the tile
+	 */
+	public Tile(TileType type, int x, int y, TileOrientation orientation) {
+		this.type = type;
+		this.x = x;
+		this.y = y;
+		this.orientation = orientation;
 	}
 	
 	/**
@@ -67,6 +87,22 @@ public class Tile {
 		return y;
 	}
 	
+	/**
+	 * Returns the orientation of this tile
+	 * @return the orientation of this tile
+	 */
+	public TileOrientation getOrientation() {
+		return orientation;
+	}
+	
+	/**
+	 * Sets the orientation of this tile
+	 * @param orientation the new orientation of this tile
+	 */
+	public void setOrientation(TileOrientation orientation) {
+		this.orientation = orientation;
+	}
+
 	/**
 	 * Returns the x coordinate of this tile relative to a specified chunk
 	 * @param chk the chunk to use to get the relative position

@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Camera;
+import fr.iutvalence.info.dut.m2107.tiles.TileOrientation;
 
 /**
  * Contains Various static methods to do general calculations
@@ -84,6 +85,51 @@ public class Maths {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(new Vector2f(x, y), matrix, matrix);
+		return matrix;
+	}
+	
+	/**
+	 * Creates a transformation matrix using x and y coordinates and an orientation
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @param orientation the orientation to apply
+	 * @return a transformation matrix using x and y coordinates
+	 */
+	public static Matrix4f createTransformationMatrix(int x, int y, TileOrientation orientation) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity();
+		switch (orientation) {
+		case DOWN:
+			y++;
+			break;
+		case LEFT:
+			x++;
+			break;
+		case RIGHT:
+			break;
+		case UP:
+			x++;
+			break;
+		default:
+			break;
+		}
+		Matrix4f.translate(new Vector2f(x, y), matrix, matrix);
+		switch (orientation) {
+		case DOWN:
+			Matrix4f.rotate(-orientation.getRadians(), new Vector3f(0, 0, 1), matrix, matrix);
+			break;
+		case LEFT:
+			Matrix4f.scale(new Vector3f(-1f, 1f, 1f), matrix, matrix);
+			break;
+		case RIGHT:
+			break;
+		case UP:
+			Matrix4f.rotate(-orientation.getRadians(), new Vector3f(0, 0, 1), matrix, matrix);
+			break;
+		default:
+			break;
+		}
+		
 		return matrix;
 	}
 	

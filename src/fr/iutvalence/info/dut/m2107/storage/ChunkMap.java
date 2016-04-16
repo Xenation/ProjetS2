@@ -14,6 +14,7 @@ import org.lwjgl.util.vector.Vector2f;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
+import fr.iutvalence.info.dut.m2107.tiles.TileOrientation;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
@@ -97,6 +98,10 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		if (chk != null) {
 			chk.removeAt(x, y);
 		}
+	}
+	
+	public void rotateTileAt(int x, int y, TileOrientation orientation) {
+		getTileAt(x, y).setOrientation(orientation);
 	}
 	
 	/**
