@@ -17,7 +17,7 @@ public class Tile {
 	/**
 	 * the x and y coordinates of the tile
 	 */
-	public final int x, y;
+	public int x, y;
 	/**
 	 * the type of the tile
 	 */
@@ -119,6 +119,44 @@ public class Tile {
 	 */
 	public int getRelY(Chunk chk) {
 		return y-chk.getY()*Chunk.CHUNK_SIZE;
+	}
+	
+	/**
+	 * Returns the x coordinate of the tile in front
+	 * @return the x coordinate of the tile in front
+	 */
+	public int getFrontX() {
+		switch (orientation) {
+		case DOWN:
+			return x;
+		case LEFT:
+			return x-1;
+		case RIGHT:
+			return x+1;
+		case UP:
+			return x;
+		default:
+			return x;
+		}
+	}
+	
+	/**
+	 * Returns the y coordinate of the tile in front
+	 * @return the y coordinate of the tile in front
+	 */
+	public int getFrontY() {
+		switch (orientation) {
+		case DOWN:
+			return y-1;
+		case LEFT:
+			return y;
+		case RIGHT:
+			return y;
+		case UP:
+			return y+1;
+		default:
+			return y;
+		}
 	}
 	
 }

@@ -190,6 +190,9 @@ public class Camera {
 				if (Keyboard.getEventKey() == Keyboard.KEY_8) {
 					this.type = TileType.Sand;
 				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_9) {
+					this.type = TileType.Creator;
+				}
 				
 				//// Tile Rotation
 				if (Keyboard.getEventKey() == Keyboard.KEY_R && pointed != null) {

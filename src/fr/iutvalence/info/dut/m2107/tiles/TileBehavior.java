@@ -13,7 +13,8 @@ public enum TileBehavior {
 	FADING,
 	DAMAGING,
 	SUPPORTED,
-	FALLING;
+	FALLING,
+	CREATOR;
 	
 	/**
 	 * Updates the specified tile using this behavior
@@ -32,6 +33,8 @@ public enum TileBehavior {
 			return updateSupported(tile);
 		case FALLING:
 			return updateFalling(tile);
+		case CREATOR:
+			return updateCreator(tile);
 		default:
 			return updateNormal(tile);
 		}
@@ -95,6 +98,21 @@ public enum TileBehavior {
 			}
 		} else {
 			falling.fallingTime -= DisplayManager.deltaTime();
+		}
+		return true;
+	}
+	
+	private boolean updateCreator(Tile tile) {
+		CreatingTile creating = (CreatingTile) tile;
+		if (creating.creatingTime < 0) {
+			creating.creatingTime = 1;
+			Tile front = GameWorld.chunkMap.getTileFront(tile);
+			if (front != null) {
+				GameWorld.chunkMap.pushTiles(front.x, front.y, creating.getOrientation());
+			}
+			GameWorld.chunkMap.addTile(TileBuilder.buildTile(creating.createdType, tile.getFrontX(), tile.getFrontY()));
+		} else {
+			creating.creatingTime -= DisplayManager.deltaTime();
 		}
 		return true;
 	}

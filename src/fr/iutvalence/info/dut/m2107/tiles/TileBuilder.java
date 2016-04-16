@@ -31,6 +31,8 @@ public class TileBuilder {
 			return new DamagingTile(type, x, y);
 		case Sand:
 			return new FallingTile(type, x, y);
+		case Creator:
+			return new CreatingTile(type, x, y, TileType.Sand);
 		default:
 			return new Tile(type, x, y);
 		}
@@ -62,6 +64,10 @@ public class TileBuilder {
 			break;
 		case Sand:
 			stats.add("fallTime = "+((FallingTile)tile).fallingTime);
+			break;
+		case Creator:
+			stats.add("created = "+((CreatingTile)tile).createdType);
+			stats.add("time = "+((CreatingTile)tile).creatingTime);
 			break;
 		default:
 			break;

@@ -207,6 +207,13 @@ public class Chunk implements Iterable<Tile> {
 		}
 	}
 	
+	public void remove(Tile tile) {
+		tiles.get(tile.getType()).remove(tile);
+		if (tiles.get(tile.getType()).size() == 0) {
+			tiles.remove(tile.getType());
+		}
+	}
+	
 	/**
 	 * Returns the tile at the given coordinates
 	 * @param x the x coordinate

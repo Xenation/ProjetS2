@@ -100,8 +100,118 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		}
 	}
 	
+	/**
+	 * Sets the orientation of the tile at the given coordinates to the given orientation
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @param orientation the new orientation of the tile
+	 */
 	public void rotateTileAt(int x, int y, TileOrientation orientation) {
 		getTileAt(x, y).setOrientation(orientation);
+	}
+	
+	/**
+	 * Moves the given tile to the given coordinates
+	 * @param tile the tile to move
+	 * @param nx the new x coordinate
+	 * @param ny the new y coordinate
+	 */
+	public void moveTile(Tile tile, int nx, int ny) {
+		Chunk curChk = getChunkAt(Chunk.toChunkPosition(tile.x), Chunk.toChunkPosition(tile.y));
+		Chunk nchk = getChunkAt(Chunk.toChunkPosition(nx), Chunk.toChunkPosition(ny));
+		if (getTileAt(nx, ny) != null) {
+			removeTileAt(nx, ny);
+		}
+		if (nchk != curChk) {
+			curChk.removeAt(tile.x, tile.y);
+			nchk.add(tile);
+		}
+		tile.x = nx;
+		tile.y = ny;
+	}
+	
+	/**
+	 * Moves the given tile to the given coordinates. Doesn't remove the tile at the new position.
+	 * @param tile the tile to move
+	 * @param nx the new x coordinate
+	 * @param ny the new y coordinate
+	 */
+	private void moveTileUnsafe(Tile tile, int nx, int ny) {
+		Chunk curChk = getChunkAt(Chunk.toChunkPosition(tile.x), Chunk.toChunkPosition(tile.y));
+		Chunk nchk = getChunkAt(Chunk.toChunkPosition(nx), Chunk.toChunkPosition(ny));
+		if (nchk != curChk) {
+			curChk.remove(tile);
+			nchk.add(tile);
+		}
+		tile.x = nx;
+		tile.y = ny;
+	}
+	
+	/**
+	 * Moves the given tile by one in the given direction
+	 * @param tile the tile to move
+	 * @param orientation the direction
+	 */
+	public void moveTile(Tile tile, TileOrientation orientation) {
+		switch (orientation) {
+		case DOWN:
+			moveTile(tile, tile.x, tile.y-1);
+			break;
+		case LEFT:
+			moveTile(tile, tile.x-1, tile.y);
+			break;
+		case RIGHT:
+			moveTile(tile, tile.x+1, tile.y);
+			break;
+		case UP:
+			moveTile(tile, tile.x, tile.y+1);
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/**
+	 * Moves the given tile by one in the given direction. Doesn't remove the tile at the new position.
+	 * @param tile the tile to move
+	 * @param orientation the direction
+	 */
+	private void moveTileUnsafe(Tile tile, TileOrientation orientation) {
+		switch (orientation) {
+		case DOWN:
+			moveTileUnsafe(tile, tile.x, tile.y-1);
+			break;
+		case LEFT:
+			moveTileUnsafe(tile, tile.x-1, tile.y);
+			break;
+		case RIGHT:
+			moveTileUnsafe(tile, tile.x+1, tile.y);
+			break;
+		case UP:
+			moveTileUnsafe(tile, tile.x, tile.y+1);
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/**
+	 * pushes all consecutive tiles starting at the given coordinates and in direction of the given orientation
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @param orientation the direction in which to push the tiles
+	 */
+	public void pushTiles(int x, int y, TileOrientation orientation) {
+		Tile prev = getTileAt(x, y);
+		if (prev != null) {
+			Tile current = getAdjacentTile(prev, orientation);
+			while (current != null) {
+				moveTileUnsafe(prev, orientation);
+				prev = current;
+				current = getAdjacentTile(current, orientation);
+			}
+			moveTileUnsafe(prev, orientation);
+		}
 	}
 	
 	/**
@@ -196,6 +306,36 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	 */
 	public Tile getTopTile(Tile til) {
 		return getTileAt(til.x, til.y+1);
+	}
+	
+	/**
+	 * Returns the tile in front of the given one (using its orientation)
+	 * @param til the reference tile
+	 * @return the tile in front of the reference tile
+	 */
+	public Tile getTileFront(Tile til) {
+		return getAdjacentTile(til, til.getOrientation());
+	}
+	
+	/**
+	 * Returns the adjacent tile at the given orientation
+	 * @param til the reference tile
+	 * @param orientation the orientation indicates which adjacent to return
+	 * @return the tile adjacent to the orientation
+	 */
+	public Tile getAdjacentTile(Tile til, TileOrientation orientation) {
+		switch (orientation) {
+		case DOWN:
+			return getBottomTile(til);
+		case LEFT:
+			return getLeftTile(til);
+		case RIGHT:
+			return getRightTile(til);
+		case UP:
+			return getTopTile(til);
+		default:
+			return getRightTile(til);
+		}
 	}
 	
 	/**
