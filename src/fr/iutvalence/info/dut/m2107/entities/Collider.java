@@ -1,6 +1,7 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.lwjgl.Sys;
@@ -30,16 +31,19 @@ public class Collider {
 	}
 	
 	////////////temporary player parameter ////////////
-	public void update(Collider surroundMove, Player player) {
+	public boolean update(Collider surroundMove, Player player) {
 		updateColPos();
+		
+		List<Tile> surroundTile = generateSurroundingTiles(surroundMove);
+//		System.out.println(surroundTile.size());
+//		Collections.reverse(surroundTile);
 		
 		player.isGrounded = false;
 		
-		List<Tile> surroundTile = generateSurroundingTiles(surroundMove);
-		
 		for (Tile tile : surroundTile) {
-			if(isCollidingLeft(this, tile)) {
-				if(GameWorld.chunkMap.getRightTile(tile) == null && !(this.minY >= tile.y + Tile.TILE_SIZE || this.maxY <= tile.y)) {
+			if(isCollidingLeft(this, tile)) { // if the tile is on my left
+				if(this.minY <= tile.y + Tile.TILE_SIZE && this.maxY >= tile.y) {
+					// I'm on the right of the tile
 					if((this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) &&
 							GameWorld.chunkMap.getTopTile(tile) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x, tile.y+2) == null &&
@@ -47,21 +51,28 @@ public class Collider {
 							GameWorld.chunkMap.getTileAt(tile.x, tile.y+4) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x+1, tile.y+4) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x+2, tile.y+4) == null) {
+						// My bottom is between the tile height and there is no block to prevent the StepUp
 						ent.vel.y = 0;
 						ent.pos.y += tile.y + Tile.TILE_SIZE - this.minY + cautionDistance*2;
-					//	System.out.println("Step Up Left");
+//						System.out.println("Step Up Left\t\t" + Sys.getTime());
 					} else {
+						// I can't StepUp so I block the x movement and I stick to the tile
 						ent.vel.x = 0;
 						ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2 + cautionDistance;
-						//System.out.println("Left");
+//						System.out.println("Left\t\t" + Sys.getTime());
 					}
-				}/* else {
-					ent.vel.y = 0;
-					System.out.println("Slide Left");
-				}*/
-			}
-			if(isCollidingRight(this, tile)) {
-				if(GameWorld.chunkMap.getLeftTile(tile) == null && !(this.minY >= tile.y + Tile.TILE_SIZE || this.maxY <= tile.y)) {
+				} else {
+					//I'm above or under the tile
+					if(GameWorld.chunkMap.getTopTile(tile) == null || GameWorld.chunkMap.getBottomTile(tile) == null) {
+						ent.vel.y = 0;
+//						System.out.println("Slide Right\t\t" + Sys.getTime());
+					}
+//					else System.out.println("???");
+				}
+			}else
+			if(isCollidingRight(this, tile)) { // if the tile is on my right
+				if(this.minY <= tile.y + Tile.TILE_SIZE && this.maxY >= tile.y) {
+					// I'm on the left of the tile
 					if((this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) &&
 							GameWorld.chunkMap.getTopTile(tile) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x, tile.y+2) == null &&
@@ -69,41 +80,51 @@ public class Collider {
 							GameWorld.chunkMap.getTileAt(tile.x, tile.y+4) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x-1, tile.y+4) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x-2, tile.y+4) == null) {
+						// My bottom is between the tile height and there is no block to prevent the StepUp
 						ent.vel.y = 0;
 						ent.pos.y += tile.y + Tile.TILE_SIZE - this.minY + cautionDistance*2;
-						//System.out.println("Step Up Right");
+//						System.out.println("Step Up Right\t\t" + Sys.getTime());
 					} else {
+						// I can't StepUp so I block the x movement and I stick to the tile
 						ent.vel.x = 0;
 						ent.pos.x = tile.x - this.getW()/2 - cautionDistance;
-						//System.out.println("Right");
+//						System.out.println("Right\t\t" + Sys.getTime());
 					}
-				} /*else {
+				} else {
+					if(GameWorld.chunkMap.getTopTile(tile) == null || GameWorld.chunkMap.getBottomTile(tile) == null) {
+						//I'm above or under the tile
+						ent.vel.y = 0;
+//					System.out.println("Slide Right\t\t" + Sys.getTime());
+					} 
+//					else System.out.println("???");
+				}
+			}else
+			if(isCollidingUp(this, tile)) { //if the tile is above me
+				if(this.minX <= tile.x + Tile.TILE_SIZE && this.maxX >= tile.x) {
+					// I'm under the tile
 					ent.vel.y = 0;
-					System.out.println("Slide Right");
-				}*/
-			}
-			if(isCollidingUp(this, tile)) {
-				if(GameWorld.chunkMap.getBottomTile(tile) == null && !(this.minX >= tile.x + Tile.TILE_SIZE || this.maxX <= tile.x)) {
+					ent.pos.y = tile.y - this.getH()/2 - cautionDistance;
+//					System.out.println("Up\t\t" + Sys.getTime());
+//				} else {
+//					ent.vel.x = 0;
+//					System.out.println("Slide Up");
+				}
+			}else
+			if(isCollidingDown(this, tile)) { // if the tile is under me
+				if(this.minX <= tile.x + Tile.TILE_SIZE && this.maxX >= tile.x) {
+					// I'm above the tile
 					ent.vel.y = 0;
-					//ent.pos.y = tile.y - this.getH()/2 - cautionDistance;
-					//System.out.println("Up");
-				} /*else {
-					ent.vel.x = 0;
-					System.out.println("Slide Up");
-				}*/
-			}
-			if(isCollidingDown(this, tile)) {
-				if(GameWorld.chunkMap.getTopTile(tile) == null && !(this.minX >= tile.x + Tile.TILE_SIZE || this.maxX <= tile.x)) {
-					ent.vel.y = 0;
-					//ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2 + cautionDistance;
+//					ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2 + cautionDistance;
 					player.isGrounded = true;
-				} /*else {
-					ent.vel.x = 0;
-					System.out.println("Slide Down");
-				}*/
+//					System.out.println("Down\t\t" + Sys.getTime());
+				} 
+//				else {
+//					ent.vel.x = 0;
+//					System.out.println("Slide Down");
+//				}
 			}
 		}
-		
+		return true;
 	}
 	
 	public boolean isColliding(Collider col, Tile tile) {
