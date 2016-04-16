@@ -9,7 +9,7 @@ public class LivingEntity extends MovableEntity {
 
 	private final int DEF_HEALTH = 10;
 	private final int DEF_ARMOR = 10;
-	private final int DEF_JUMP_HEIGHT = 20;
+	private final int DEF_JUMP_HEIGHT = 15;
 	
 	protected int health;
 	protected int armor;

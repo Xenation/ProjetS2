@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -62,6 +63,8 @@ public class DisplayManager {
 	
 	public static boolean vSyncTracker = true;
 	
+	public static boolean isPaused = false;
+	
 	/**
 	 * Creates a new display window
 	 */
@@ -115,8 +118,13 @@ public class DisplayManager {
 		updateFPS();
 		updateDeltaMap();
 		
+		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) closeDisplay();
+		
+		if(Keyboard.isKeyDown(Keyboard.KEY_O)) isPaused = true;
+		if(Keyboard.isKeyDown(Keyboard.KEY_P)) isPaused = false;
+		
 		// FPS syncing and screen update
-		Display.update();		
+		Display.update();
 		Display.sync(fpsCap);
 	}
 	
@@ -145,7 +153,6 @@ public class DisplayManager {
 			smoothDelta += delt;
 		}
 		smoothDelta /= deltasMap.size();
-		System.out.println(smoothDelta);
 	}
 
     /**
@@ -166,7 +173,8 @@ public class DisplayManager {
 	 * @return the current delta time
 	 */
 	public static float deltaTime() {
-		return (smoothDelta/1000);
+		if(isPaused) return 0;
+		else return (smoothDelta/1000);
 	}
 	
 	/**
@@ -174,6 +182,7 @@ public class DisplayManager {
 	 */
 	public static void closeDisplay() {
 		Display.destroy();
+		System.exit(0);
 	}
 	
 	public static int getFPS() {

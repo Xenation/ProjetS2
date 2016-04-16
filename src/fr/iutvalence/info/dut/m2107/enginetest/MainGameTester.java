@@ -59,8 +59,6 @@ public class MainGameTester {
 		// Game Loop
 		while (!Display.isCloseRequested()) {
 
-			GameWorld.update();
-			
 			chunkStats.updateText("Chunks: "+GameWorld.chunkMap.getChunkCount()
 					+ "\nTiles: "+GameWorld.chunkMap.getTilesCount()
 					+ "\nCurrent Tiles: "+GameWorld.chunkMap.getSurroundingTilesCount(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, GameWorld.camera.getPosition()));
@@ -72,6 +70,7 @@ public class MainGameTester {
 			renderer.prepare();
 			renderer.render();
 
+			GameWorld.update();
 			TextMaster.render();
 			
 			DisplayManager.updateDisplay();

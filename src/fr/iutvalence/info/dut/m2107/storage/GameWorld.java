@@ -1,11 +1,12 @@
 package fr.iutvalence.info.dut.m2107.storage;
 
+
 import fr.iutvalence.info.dut.m2107.entities.Camera;
 import fr.iutvalence.info.dut.m2107.entities.Player;
 
 public class GameWorld {
 	
-	public static float modGravity = 7.5f;
+	public static float modGravity = 2;
 	public static float gravity = 9.81f * modGravity;
 	
 	public static final Player player = new Player();
@@ -14,7 +15,7 @@ public class GameWorld {
 	public static final LayerMap layerMap = new LayerMap();
 	
 	public static void update() {
-		camera.update();
 		layerMap.update();
+		camera.update();
 	}
 }
