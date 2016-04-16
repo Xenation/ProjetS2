@@ -83,6 +83,11 @@ public enum TileBehavior {
 		return true;
 	}
 	
+	/**
+	 * Updates a falling tile
+	 * @param tile the tile to update
+	 * @return false if the tile has no tile under it
+	 */
 	private boolean updateFalling(Tile tile) {
 		FallingTile falling = (FallingTile) tile;
 		if (falling.fallingTime < 0) {
@@ -102,6 +107,11 @@ public enum TileBehavior {
 		return true;
 	}
 	
+	/**
+	 * Updates a creating tile
+	 * @param tile the tile to update
+	 * @return false if the tile has no tile under it
+	 */
 	private boolean updateCreator(Tile tile) {
 		CreatingTile creating = (CreatingTile) tile;
 		if (creating.creatingTime < 0) {

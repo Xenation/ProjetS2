@@ -1,6 +1,7 @@
 package fr.iutvalence.info.dut.m2107.tiles;
 
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
+import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 
 /**
  * Defines a Tile
@@ -23,6 +24,8 @@ public class Tile {
 	 */
 	protected TileType type;
 	
+	protected TileVariant variant;
+	
 	/**
 	 * The orientation of this tile
 	 */
@@ -36,6 +39,22 @@ public class Tile {
 	 */
 	public Tile(TileType type, int x, int y) {
 		this.type = type;
+		this.variant = type.getBaseVariant();
+		this.x = x;
+		this.y = y;
+		this.orientation = TileOrientation.RIGHT;
+	}
+	
+	/**
+	 * A Tile with the specified type, variant and coordinates
+	 * @param type the type of the tile
+	 * @param variant the variant of the tile
+	 * @param x the x coordinate of the tile
+	 * @param y the y coordinate of the tile
+	 */
+	public Tile(TileType type, TileVariant variant, int x, int y) {
+		this.type = type;
+		this.variant = variant;
 		this.x = x;
 		this.y = y;
 		this.orientation = TileOrientation.RIGHT;
@@ -50,6 +69,23 @@ public class Tile {
 	 */
 	public Tile(TileType type, int x, int y, TileOrientation orientation) {
 		this.type = type;
+		this.variant = type.getBaseVariant();
+		this.x = x;
+		this.y = y;
+		this.orientation = orientation;
+	}
+	
+	/**
+	 * A Tile with the specified type, variant, coordinates and orientation
+	 * @param type the type of the tile
+	 * @param variant the variant of the tile
+	 * @param x the x coordinate of the tile
+	 * @param y the y coordinate of the tile
+	 * @param orientation the orientation of the tile
+	 */
+	public Tile(TileType type, TileVariant variant, int x, int y, TileOrientation orientation) {
+		this.type = type;
+		this.variant = variant;
 		this.x = x;
 		this.y = y;
 		this.orientation = orientation;
@@ -69,6 +105,16 @@ public class Tile {
 	 */
 	public TileType getType() {
 		return type;
+	}
+	
+	public TileVariant getVariant() {
+		return variant;
+	}
+	
+	public void setVariant(TileVariant var) {
+		TileVariant old = this.variant;
+		this.variant = var;
+		GameWorld.chunkMap.get(Chunk.toChunkPosition(x, y)).updateVariant(this, old);
 	}
 
 	/**

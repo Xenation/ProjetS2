@@ -63,10 +63,11 @@ public class MainGameTester {
 					+ "\nSPRITES: "+Loader.SPRITE_LOADER.debugValues()
 					+ "\nTEXT: "+Loader.TEXT_LOADER.debugValues());
 			
+			GameWorld.update();
+			
 			renderer.prepare();
 			renderer.render();
 
-			GameWorld.update();
 			TextMaster.render();
 			
 			DisplayManager.updateDisplay();

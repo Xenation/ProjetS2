@@ -3,32 +3,39 @@ package fr.iutvalence.info.dut.m2107.tiles;
 import java.util.HashSet;
 import java.util.Set;
 
-import fr.iutvalence.info.dut.m2107.models.TileSprite;
-
 /**
  * Defines the available types of tiles
  * @author Xenation
  *
  */
 public enum TileType {
-	Dirt(1, new TileSprite("tile/dirt")),
-	Stone(2, new TileSprite("tile/stone")),
-	Grass(3, new TileSprite("tile/grass")),
-	Log(4, new TileSprite("tile/log")),
-	Leaves(5, new TileSprite("tile/leaves")),
-	Fader(6, new TileSprite("tile/fader"), true, TileBehavior.FADING),
-	Spikes(7, new TileSprite("tile/spikes"), false, TileBehavior.DAMAGING, TileBehavior.SUPPORTED),
-	Sand(8, new TileSprite("tile/sand"), true, TileBehavior.FALLING),
-	Creator(9, new TileSprite("tile/creator"), true, TileBehavior.CREATOR);
+	Dirt(1, TileVariant.Dirt),
+	Stone(2, TileVariant.Stone),
+	Grass(3, TileVariant.Grass),
+	Log(4, TileVariant.Log),
+	Leaves(5, TileVariant.Leaves),
+	Fader(6, TileVariant.Fader, true, TileBehavior.FADING),
+	Spikes(7, TileVariant.Spikes, false, TileBehavior.DAMAGING, TileBehavior.SUPPORTED),
+	Sand(8, TileVariant.Sand, true, TileBehavior.FALLING),
+	Creator(9, TileVariant.Creator, true, TileBehavior.CREATOR);
+	
+	static {
+		// Add variants here
+		
+	}
 	
 	/**
 	 * The id of the type (used for saving/loading)
 	 */
 	private final byte id;
 	/*
-	 * The sprite of this type
+	 * The base variant of this type
 	 */
-	private final TileSprite sprite;
+	private final TileVariant baseVariant;
+	/**
+	 * All the variants available for this type (including base)
+	 */
+	private final Set<TileVariant> variants = new HashSet<TileVariant>();
 	/**
 	 * Whether this type is solid (entities collide with it)
 	 */
@@ -43,9 +50,10 @@ public enum TileType {
 	 * @param id the id of the type
 	 * @param spr the sprite of the type
 	 */
-	private TileType(int id, TileSprite spr) {
+	private TileType(int id, TileVariant variant) {
 		this.id = (byte) id;
-		this.sprite = spr;
+		this.baseVariant = variant;
+		this.variants.add(variant);
 		this.isSolid = true;
 		this.behaviors.add(TileBehavior.NORMAL);
 	}
@@ -56,9 +64,10 @@ public enum TileType {
 	 * @param spr the sprite of the type
 	 * @param behaviors the behaviors of the type
 	 */
-	private TileType(int id, TileSprite spr, boolean solid, TileBehavior... behaviors) {
+	private TileType(int id, TileVariant variant, boolean solid, TileBehavior... behaviors) {
 		this.id = (byte) id;
-		this.sprite = spr;
+		this.baseVariant = variant;
+		this.variants.add(variant);
 		this.isSolid = solid;
 		for (TileBehavior behavior : behaviors) {
 			this.behaviors.add(behavior);
@@ -77,10 +86,22 @@ public enum TileType {
 	 * Returns the sprite of this type
 	 * @return the sprite of this type
 	 */
-	public TileSprite getSprite() {
-		return this.sprite;
+	public Set<TileVariant> getVariants() {
+		return this.variants;
 	}
 	
+	/**
+	 * Returns the base variant for this type.
+	 * @return the base variant for this type.
+	 */
+	public TileVariant getBaseVariant() {
+		return baseVariant;
+	}
+	
+	/**
+	 * Returns whether this type is solid
+	 * @return whether this type is solid
+	 */
 	public boolean isSolid() {
 		return isSolid;
 	}

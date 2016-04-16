@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
-import fr.iutvalence.info.dut.m2107.tiles.TileType;
+import fr.iutvalence.info.dut.m2107.tiles.TileVariant;
 
 /**
  * Defines a chunk of tiles.
@@ -30,7 +30,7 @@ public class Chunk implements Iterable<Tile> {
 	/**
 	 * The Map that orders tiles by their type
 	 */
-	private Map<TileType, List<Tile>> tiles = new HashMap<TileType, List<Tile>>();
+	private Map<TileVariant, List<Tile>> tiles = new HashMap<TileVariant, List<Tile>>();
 	/**
 	 * The number of tiles in this chunk
 	 */
@@ -69,8 +69,18 @@ public class Chunk implements Iterable<Tile> {
 			}
 		}
 		for (Tile tile : toRemove) {
-			removeAt(tile.x, tile.y);
+			remove(tile);
 		}
+	}
+	
+	/**
+	 * Changes the list in which this tile is stored
+	 * @param tile the tile that changed its variant
+	 * @param oldVariant the old variant of the tile
+	 */
+	public void updateVariant(Tile tile, TileVariant oldVariant) {
+		tiles.get(oldVariant).remove(tile);
+		add(tile);
 	}
 	
 	/**
@@ -101,7 +111,7 @@ public class Chunk implements Iterable<Tile> {
 	 * Returns a set of all the types present in this chunk
 	 * @return a set of all the types present in this chunk
 	 */
-	public Set<TileType> types() {
+	public Set<TileVariant> variants() {
 		return tiles.keySet();
 	}
 	
@@ -110,8 +120,8 @@ public class Chunk implements Iterable<Tile> {
 	 * @param typ the type of tile to look for
 	 * @return a list of all the tiles of the given type
 	 */
-	public List<Tile> getTiles(TileType typ) {
-		return tiles.get(typ);
+	public List<Tile> getTiles(TileVariant var) {
+		return tiles.get(var);
 	}
 	
 	/**
@@ -141,10 +151,10 @@ public class Chunk implements Iterable<Tile> {
 	 */
 	public Tile add(Tile til) {
 		if (getTileAt(til.x, til.y) == null) {
-			List<Tile> listAdd = tiles.get(til.getType());
+			List<Tile> listAdd = tiles.get(til.getVariant());
 			if (listAdd == null) {
 				listAdd = new ArrayList<Tile>();
-				tiles.put(til.getType(), listAdd);
+				tiles.put(til.getVariant(), listAdd);
 			}
 			listAdd.add(til);
 			// To update the chunk VAO (not complete)
@@ -165,14 +175,14 @@ public class Chunk implements Iterable<Tile> {
 		if (cur == null) {
 			add(til);
 		} else {
-			List<Tile> listAdd = tiles.get(til.getType());
+			List<Tile> listAdd = tiles.get(til.getVariant());
 			if (listAdd == null) {
 				listAdd = new ArrayList<Tile>();
-				tiles.put(til.getType(), listAdd);
-				tiles.get(cur.getType()).remove(cur);
+				tiles.put(til.getVariant(), listAdd);
+				tiles.get(cur.getVariant()).remove(cur);
 				listAdd.add(til);
-			} else if (listAdd != tiles.get(cur.getType())) {
-				tiles.get(cur.getType()).remove(cur);
+			} else if (listAdd != tiles.get(cur.getVariant())) {
+				tiles.get(cur.getVariant()).remove(cur);
 				listAdd.add(til);
 			} else {
 				listAdd.set(listAdd.indexOf(cur), til);
@@ -188,29 +198,33 @@ public class Chunk implements Iterable<Tile> {
 	 * @param y the y coordinate
 	 */
 	public void removeAt(int x, int y) {
-		TileType rTyp = null;
+		TileVariant rVar = null;
 		Tile rem = null;
-		for (TileType typ : tiles.keySet()) {
-			for (Tile til : tiles.get(typ)) {
+		for (TileVariant var : tiles.keySet()) {
+			for (Tile til : tiles.get(var)) {
 				if (til.x == x && til.y == y) {
-					rTyp = typ;
+					rVar = var;
 					rem = til;
 				}
 			}
 		}
-		if (rTyp != null) {
-			tiles.get(rTyp).remove(rem);
-			if (tiles.get(rTyp).size() == 0) {
-				tiles.remove(rTyp);
+		if (rVar != null) {
+			tiles.get(rVar).remove(rem);
+			if (tiles.get(rVar).size() == 0) {
+				tiles.remove(rVar);
 			}
 			tilesCount--;
 		}
 	}
 	
+	/**
+	 * Removes a tile by reference
+	 * @param tile the tile to remove
+	 */
 	public void remove(Tile tile) {
-		tiles.get(tile.getType()).remove(tile);
-		if (tiles.get(tile.getType()).size() == 0) {
-			tiles.remove(tile.getType());
+		tiles.get(tile.getVariant()).remove(tile);
+		if (tiles.get(tile.getVariant()).size() == 0) {
+			tiles.remove(tile.getVariant());
 		}
 	}
 	
@@ -221,8 +235,8 @@ public class Chunk implements Iterable<Tile> {
 	 * @return the tile at the given coordinates
 	 */
 	public Tile getTileAt(int x, int y) {
-		for (TileType typ : tiles.keySet()) {
-			for (Tile til : tiles.get(typ)) {
+		for (TileVariant var : tiles.keySet()) {
+			for (Tile til : tiles.get(var)) {
 				if (til.x == x && til.y == y)
 					return til;
 			}
@@ -266,8 +280,8 @@ public class Chunk implements Iterable<Tile> {
 	@Override
 	public Iterator<Tile> iterator() {
 		List<Tile> tils = new ArrayList<Tile>();
-		for (TileType typ : tiles.keySet()) {
-			for (Tile tile : tiles.get(typ)) {
+		for (TileVariant var : tiles.keySet()) {
+			for (Tile tile : tiles.get(var)) {
 				tils.add(tile);
 			}
 		}

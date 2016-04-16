@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
+import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
 
 /**
@@ -72,7 +73,7 @@ public class WorldLoader {
 				int x = buffer.getInt();
 				int y = buffer.getInt();
 				typ = TileType.getTypeById(t);
-				GameWorld.chunkMap.setTilenChunk(new Tile(typ, x, y));
+				GameWorld.chunkMap.setTilenChunk(TileBuilder.buildTile(typ, x, y));
 			}
 			
 			try {

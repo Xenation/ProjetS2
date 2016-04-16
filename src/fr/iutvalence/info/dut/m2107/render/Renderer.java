@@ -15,7 +15,7 @@ import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
-import fr.iutvalence.info.dut.m2107.tiles.TileType;
+import fr.iutvalence.info.dut.m2107.tiles.TileVariant;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 /**
@@ -83,10 +83,10 @@ public class Renderer {
 		shader.loadViewMatrix(GameWorld.camera);
 		
 		for (Chunk chk : GameWorld.chunkMap.getSurroundingChunks(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_TOP, BOUNDARY_BOTTOM, GameWorld.camera.getPosition())) {
-			for (TileType typ : chk.types()) {
-				prepareSprite(typ.getSprite());
+			for (TileVariant var : chk.variants()) {
+				prepareSprite(var.sprite);
 				
-				for (Tile tile : chk.getTiles(typ)) {
+				for (Tile tile : chk.getTiles(var)) {
 					
 					Matrix4f matrix = Maths.createTransformationMatrix(tile.x, tile.y, tile.getOrientation());
 					shader.loadTransformation(matrix);
