@@ -115,18 +115,20 @@ public class Renderer {
 		for (int i = GameWorld.layerMap.getLayersCount()-1; i >= 0; i--) {
 			Layer layer = GameWorld.layerMap.getLayer(i);
 			for (Sprite spr : layer.sprites()) {
-				prepareSprite(spr);
-				
-				for (Entity ent : layer.getEntities(spr)) {
-//					Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
-					Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getScale(), ent.getRotation());
-					shader.loadTransformation(matrix);
-					shader.loadAlpha(spr.getAlpha());
+				if (spr != null) {
+					prepareSprite(spr);
 					
-					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+					for (Entity ent : layer.getEntities(spr)) {
+	//					Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
+						Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getScale(), ent.getRotation());
+						shader.loadTransformation(matrix);
+						shader.loadAlpha(spr.getAlpha());
+						
+						glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+					}
+					
+					unbindSprite();
 				}
-				
-				unbindSprite();
 			}
 		}
 		
