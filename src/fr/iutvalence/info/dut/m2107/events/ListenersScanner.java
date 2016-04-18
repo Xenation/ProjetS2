@@ -9,16 +9,42 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Utility used to scan all classes and detect which ones are listeners and which ones are events.
+ * @author Xenation
+ *
+ */
 public class ListenersScanner {
 	
+	/**
+	 * The package name separator
+	 */
 	private static final char PKG_SEPARATOR = '.';
+	/**
+	 * The directory separator
+	 */
 	private static final char DIR_SEPARATOR = '/';
+	/**
+	 * The suffix of a class file
+	 */
 	private static final String CLASS_FILE_SUFFIX = ".class";
+	/**
+	 * The string to display in case of an invalid package name
+	 */
 	private static final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
 	
+	/**
+	 * The list of classes that are event listeners
+	 */
 	public static final List<Class<?>> listenersClasses = new ArrayList<Class<?>>();
+	/**
+	 * The list of classes that are events
+	 */
 	public static final List<Class<?>> eventClasses = new ArrayList<Class<?>>();
 	
+	/**
+	 * Scans all the packages to find listener and event classes
+	 */
 	public static void init() {
 		List<Class<?>> classes = find("fr.iutvalence.info.dut.m2107.entities");
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.events"));
@@ -51,6 +77,11 @@ public class ListenersScanner {
 		}
 	}
 	
+	/**
+	 * Gets the classes that can handle the specified type of event
+	 * @param eventClass the class of the event to be handled
+	 * @return A map that links each handling class to its method that handles the event
+	 */
 	public static Map<Class<?>, Method> getHandlers(Class<?> eventClass) {
 		System.out.println("REQUESTING HANDLER CLASSES");
 		Map<Class<?>, Method> handlers = new HashMap<Class<?>, Method>();
@@ -67,6 +98,11 @@ public class ListenersScanner {
 		return handlers;
 	}
 	
+	/**
+	 * Returns a list of classes that are contained by the given package
+	 * @param scannedPackage the full name of the package
+	 * @return a list of classes that are contained by the package
+	 */
 	public static List<Class<?>> find(String scannedPackage) {
 		String scannedPath = scannedPackage.replace(PKG_SEPARATOR, DIR_SEPARATOR);
 		URL scannedUrl = Thread.currentThread().getContextClassLoader().getResource(scannedPath);

@@ -3,9 +3,19 @@ package fr.iutvalence.info.dut.m2107.events;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
+/**
+ * Utility class to Manage events.
+ * Run init() before using events.
+ * @author Xenation
+ *
+ */
 public class EventManager {
 	
+	/**
+	 * Initialises The ListenerScanner and every detected events
+	 */
 	public static void init() {
 		ListenersScanner.init();
 		for (Class<?> eventClass : ListenersScanner.eventClasses) {
@@ -25,18 +35,49 @@ public class EventManager {
 		}
 	}
 	
+	/**
+	 * Sends an event to all listeners of this event
+	 * @param event the event to send
+	 */
 	public static void sendEvent(TileActivatedEvent event) {
-		for (Class<?> cla : TileActivatedEvent.handlerClasses.keySet()) {
-			for (Listener listener : TileActivatedEvent.handlers.getListeners()) {
-				try {
-					TileActivatedEvent.handlerClasses.get(cla).invoke(listener, event);
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					e.printStackTrace();
+		sendEvent(event.getClass(), event);
+	}
+	
+	/**
+	 * Sends an event to all listeners of the given event.
+	 * @param eventClass the class of the event to send
+	 * @param event the event to send
+	 */
+	private static void sendEvent(Class<?> eventClass, Event event) {
+		try {
+			@SuppressWarnings("unchecked")
+			Map<Class<?>, Method> handlerClasses = (Map<Class<?>, Method>) eventClass.getField("handlerClasses").get(null);
+			HandlerList handlers = (HandlerList) eventClass.getField("handlers").get(null);
+			for (Class<?> cla : handlerClasses.keySet()) {
+				for (Listener listener : handlers.getListeners()) {
+					try {
+						TileActivatedEvent.handlerClasses.get(cla).invoke(listener, event);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						e.printStackTrace();
+					}
 				}
 			}
+		} catch (IllegalArgumentException e1) {
+			// Ignored
+		} catch (IllegalAccessException e1) {
+			// Ignored
+		} catch (NoSuchFieldException e1) {
+			// Ignored
+		} catch (SecurityException e1) {
+			// Ignored
 		}
 	}
 	
+	/**
+	 * Registers an instance of a listener into the events that it handles
+	 * @param baseClass the Class of the listener (used to detect which events are listened)
+	 * @param listener the listener itself
+	 */
 	public static void register(Class<?> baseClass, Listener listener) {
 		if (ListenersScanner.listenersClasses.contains(baseClass)) {
 			Method[] baseMethods = baseClass.getMethods();
@@ -65,6 +106,10 @@ public class EventManager {
 		}
 	}
 	
+	/**
+	 * Unregisters an instance of a listener from all the events that had it registered
+	 * @param listener the listener to unregister
+	 */
 	public static void unregister(Listener listener) {
 		for (Class<?> cla : ListenersScanner.eventClasses) {
 			Field handlersField;

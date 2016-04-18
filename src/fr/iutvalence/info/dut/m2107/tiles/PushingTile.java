@@ -28,7 +28,7 @@ public class PushingTile extends Tile implements Listener {
 	}
 	
 	public void getTileActivated(TileActivatedEvent event) {
-		System.out.println("TILE ACTIVATED! (on "+this+")");
+		System.out.println("TILE ACTIVATED! (on "+this+" from "+event.getTile()+")");
 	}
 
 }
