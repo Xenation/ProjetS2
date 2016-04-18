@@ -12,6 +12,10 @@ public class HandlerList implements Iterable<Listener> {
 		listeners.add(listener);
 	}
 	
+	public void remove(Listener listener) {
+		listeners.remove(listener);
+	}
+	
 	public List<Listener> getListeners() {
 		return this.listeners;
 	}

@@ -2,6 +2,8 @@ package fr.iutvalence.info.dut.m2107.tiles;
 
 import java.util.ArrayList;
 
+import fr.iutvalence.info.dut.m2107.events.EventManager;
+
 /**
  * Used to easily build (instantiate) tiles
  * @author Xenation
@@ -34,13 +36,58 @@ public class TileBuilder {
 		case Creator:
 			return new CreatingTile(type, x, y, TileType.Sand);
 		case Piston:
-			return new PushingTile(type, x, y);
+			PushingTile t = new PushingTile(type, x, y);
+			EventManager.register(t.getClass(), t);
+			return t;
 		case PistonArm:
 			return new DependantTile(type, x, y);
 		case Water:
 			return new LiquidTile(type, x, y);
 		default:
 			return new Tile(type, x, y);
+		}
+	}
+	
+	public static void destroyTile(Tile tile) {
+		switch (tile.type) {
+		case Dirt:
+		case Stone:
+		case Grass:
+		case Log:
+		case Leaves:
+//			EventManager.unregister(tile);
+			break;
+		case Fader:
+			FadingTile fading = (FadingTile) tile;
+//			EventManager.unregister(t);
+			break;
+		case Spikes:
+			DamagingTile damaging = (DamagingTile) tile;
+//			EventManager.unregister(damaging);
+			break;
+		case Sand:
+			FallingTile falling = (FallingTile) tile;
+//			EventManager.unregister(falling);
+			break;
+		case Creator:
+			CreatingTile creating = (CreatingTile) tile;
+//			EventManager.unregister(creating);
+			break;
+		case Piston:
+			PushingTile pushing = (PushingTile) tile;
+			EventManager.unregister(pushing);
+			break;
+		case PistonArm:
+			DependantTile dependant = (DependantTile) tile;
+//			EventManager.unregister(dependant);
+			break;
+		case Water:
+			LiquidTile liquid = (LiquidTile) tile;
+//			EventManager.unregister(liquid);
+			break;
+		default:
+//			EventManager.unregister(tile);
+			break;
 		}
 	}
 	

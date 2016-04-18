@@ -4,6 +4,8 @@ import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 public class TileEvent extends Event {
 	
+	public static final HandlerList handlers = new HandlerList();
+	
 	protected Tile tile;
 	
 	public TileEvent(Tile tile) {
@@ -12,13 +14,6 @@ public class TileEvent extends Event {
 	
 	public Tile getTile() {
 		return tile;
-	}
-	
-	
-	public class TileRotatedEvent extends TileEvent {
-		public TileRotatedEvent(Tile tile) {
-			super(tile);
-		}
 	}
 	
 }

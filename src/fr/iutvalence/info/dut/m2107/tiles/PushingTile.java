@@ -1,6 +1,6 @@
 package fr.iutvalence.info.dut.m2107.tiles;
 
-import fr.iutvalence.info.dut.m2107.events.EventSender;
+import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.Listener;
 import fr.iutvalence.info.dut.m2107.events.TileActivatedEvent;
 
@@ -24,11 +24,11 @@ public class PushingTile extends Tile implements Listener {
 	public void setPushing(boolean isPushing) {
 		this.isPushing = isPushing;
 		if (isPushing)
-			EventSender.sendEvent(new TileActivatedEvent(this, this));
+			EventManager.sendEvent(new TileActivatedEvent(this));
 	}
 	
 	public void getTileActivated(TileActivatedEvent event) {
-		System.out.println("TILE ACTIVATED!");
+		System.out.println("TILE ACTIVATED! (on "+this+")");
 	}
 
 }

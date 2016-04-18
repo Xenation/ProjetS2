@@ -2,6 +2,7 @@ package fr.iutvalence.info.dut.m2107.events;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,9 +17,11 @@ public class ListenersScanner {
 	private static final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
 	
 	public static final List<Class<?>> listenersClasses = new ArrayList<Class<?>>();
+	public static final List<Class<?>> eventClasses = new ArrayList<Class<?>>();
 	
 	public static void init() {
 		List<Class<?>> classes = find("fr.iutvalence.info.dut.m2107.entities");
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.events"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.fontMeshCreator"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.fontRendering"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.items"));
@@ -29,6 +32,17 @@ public class ListenersScanner {
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.storage"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.tiles"));
 		for (Class<?> cla : classes) {
+			try {
+				cla.getMethod("init");
+				if (cla.getName().contains("fr.iutvalence.info.dut.m2107.events") && cla.getSimpleName().contains("Event") && !Modifier.isAbstract(cla.getModifiers()) && !cla.getSimpleName().contains("Manager")) {
+					eventClasses.add(cla);
+					continue;
+				}
+			} catch (NoSuchMethodException e) {
+				// Ignored if init method isn't here just don't add it to eventClasses
+			} catch (SecurityException e) {
+				// Ignored
+			}
 			for (Class<?> interf : cla.getInterfaces()) {
 				if (interf.getName().contains("fr.iutvalence.info.dut.m2107.events.Listener")) {
 					listenersClasses.add(cla);
@@ -38,10 +52,12 @@ public class ListenersScanner {
 	}
 	
 	public static Map<Class<?>, Method> getHandlers(Class<?> eventClass) {
+		System.out.println("REQUESTING HANDLER CLASSES");
 		Map<Class<?>, Method> handlers = new HashMap<Class<?>, Method>();
 		for (Class<?> cla : listenersClasses) {
 			try {
 				handlers.put(cla, cla.getMethod("get"+eventClass.getSimpleName().substring(0, eventClass.getSimpleName().length()-5), eventClass));
+				System.out.println("ADDED: "+cla.getName());
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			} catch (SecurityException e) {

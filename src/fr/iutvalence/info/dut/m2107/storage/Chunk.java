@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
+import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.tiles.TileVariant;
 
 /**
@@ -187,6 +188,7 @@ public class Chunk implements Iterable<Tile> {
 			} else {
 				listAdd.set(listAdd.indexOf(cur), til);
 			}
+			TileBuilder.destroyTile(cur);
 			return til;
 		}
 		return null;
@@ -214,6 +216,7 @@ public class Chunk implements Iterable<Tile> {
 				tiles.remove(rVar);
 			}
 			tilesCount--;
+			TileBuilder.destroyTile(rem);
 		}
 	}
 	
@@ -227,6 +230,7 @@ public class Chunk implements Iterable<Tile> {
 			tiles.remove(tile.getVariant());
 		}
 		tilesCount--;
+		TileBuilder.destroyTile(tile);
 	}
 	
 	/**

@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.entities.MovableEntity;
+import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.ListenersScanner;
 import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
@@ -55,7 +56,7 @@ public class MainGameTester {
 		
 		WorldLoader.loadWorld();
 		
-		ListenersScanner.init();
+		EventManager.init();
 		for (Class<?> cla : ListenersScanner.listenersClasses) {
 			System.out.println("LISTENER: "+cla.getSimpleName());
 		}

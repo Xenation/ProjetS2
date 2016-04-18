@@ -7,11 +7,15 @@ import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 public class TileActivatedEvent extends TileEvent {
 	
-	protected static final Map<Class<?>, Method> handlerClasses = ListenersScanner.getHandlers(TileActivatedEvent.class);
+	protected static Map<Class<?>, Method> handlerClasses;
 	
-	public TileActivatedEvent(Tile tile, Listener list) {
+	public static HandlerList handlers = new HandlerList();
+	
+	public static void init() {
+		handlerClasses = ListenersScanner.getHandlers(TileActivatedEvent.class);
+	}
+	
+	public TileActivatedEvent(Tile tile) {
 		super(tile);
-		this.handlers = new HandlerList();
-		this.handlers.add(list);
 	}
 }
