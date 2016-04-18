@@ -6,46 +6,6 @@ public enum TileOrientation {
 	DOWN,
 	LEFT;
 	
-	public static final float[] UVS_UP = {
-			0, 1,
-			0, 0,
-			1, 1,
-			1, 0
-	};
-	public static final float[] UVS_RIGHT = {
-			0, 0,
-			1, 0,
-			0, 1,
-			1, 1
-	};
-	public static final float[] UVS_DOWN = {
-			1, 0,
-			1, 1,
-			0, 0,
-			0, 1
-	};
-	public static final float[] UVS_LEFT = {
-			1, 0,
-			0, 0,
-			1, 1,
-			0, 1
-	};
-	
-	public float[] getTexureUVs() {
-		switch (this) {
-		case UP:
-			return UVS_UP;
-		case RIGHT:
-			return UVS_RIGHT;
-		case DOWN:
-			return UVS_DOWN;
-		case LEFT:
-			return UVS_LEFT;
-		default:
-			return UVS_RIGHT;
-		}
-	}
-	
 	public float getRadians() {
 		float deg = 0;
 		switch (this) {
@@ -79,6 +39,21 @@ public enum TileOrientation {
 			return RIGHT;
 		default:
 			return RIGHT;
+		}
+	}
+	
+	public TileOrientation getOpposite() {
+		switch (this) {
+		case DOWN:
+			return UP;
+		case LEFT:
+			return RIGHT;
+		case RIGHT:
+			return LEFT;
+		case UP:
+			return DOWN;
+		default:
+			return LEFT;
 		}
 	}
 	

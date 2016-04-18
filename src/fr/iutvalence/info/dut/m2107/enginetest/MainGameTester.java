@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.entities.MovableEntity;
+import fr.iutvalence.info.dut.m2107.events.ListenersScanner;
 import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
@@ -22,14 +23,16 @@ public class MainGameTester {
 		
 		TextMaster.init();
 		
-		Renderer renderer = new Renderer();		
+		Renderer renderer = new Renderer();
 		
 		GameWorld.camera.setTarget(GameWorld.player);
-
+		
+		Sprite spr = new Sprite("item/sugar", new Vector2f(1, 1));
+		
 		GameWorld.layerMap.addEmpty(4);
 		GameWorld.layerMap.getLayer(0).add(GameWorld.player);
-		GameWorld.layerMap.getLayer(0).add(new LivingEntity(new Vector2f(-1, 1.5f), new Sprite("item/sugar", new Vector2f(1, 1))));
-		GameWorld.layerMap.getLayer(0).add(new MovableEntity(new Vector2f(1, 1.5f), new Sprite("item/sugar", new Vector2f(1, 1))));
+		GameWorld.layerMap.getLayer(0).add(new LivingEntity(new Vector2f(-1, 1.5f), spr));
+		GameWorld.layerMap.getLayer(0).add(new MovableEntity(new Vector2f(1, 1.5f), spr));
 		
 		// Debug for the whole chunk rendering 
 		//System.out.println(ChunkLoader.CHUNK_LOADER.debugBuffers());
@@ -51,6 +54,11 @@ public class MainGameTester {
 		loaderStats.setLineHeight(0.024);
 		
 		WorldLoader.loadWorld();
+		
+		ListenersScanner.init();
+		for (Class<?> cla : ListenersScanner.listenersClasses) {
+			System.out.println("LISTENER: "+cla.getSimpleName());
+		}
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {

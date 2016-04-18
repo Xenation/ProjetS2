@@ -1,0 +1,86 @@
+package fr.iutvalence.info.dut.m2107.events;
+
+import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ListenersScanner {
+	
+	private static final char PKG_SEPARATOR = '.';
+	private static final char DIR_SEPARATOR = '/';
+	private static final String CLASS_FILE_SUFFIX = ".class";
+	private static final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
+	
+	public static final List<Class<?>> listenersClasses = new ArrayList<Class<?>>();
+	
+	public static void init() {
+		List<Class<?>> classes = find("fr.iutvalence.info.dut.m2107.entities");
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.fontMeshCreator"));
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.fontRendering"));
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.items"));
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.models"));
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.render"));
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.saving"));
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.shaders"));
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.storage"));
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.tiles"));
+		for (Class<?> cla : classes) {
+			for (Class<?> interf : cla.getInterfaces()) {
+				if (interf.getName().contains("fr.iutvalence.info.dut.m2107.events.Listener")) {
+					listenersClasses.add(cla);
+				}
+			}
+		}
+	}
+	
+	public static Map<Class<?>, Method> getHandlers(Class<?> eventClass) {
+		Map<Class<?>, Method> handlers = new HashMap<Class<?>, Method>();
+		for (Class<?> cla : listenersClasses) {
+			try {
+				handlers.put(cla, cla.getMethod("get"+eventClass.getSimpleName().substring(0, eventClass.getSimpleName().length()-5), eventClass));
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		return handlers;
+	}
+	
+	public static List<Class<?>> find(String scannedPackage) {
+		String scannedPath = scannedPackage.replace(PKG_SEPARATOR, DIR_SEPARATOR);
+		URL scannedUrl = Thread.currentThread().getContextClassLoader().getResource(scannedPath);
+		if (scannedUrl == null) {
+			throw new IllegalArgumentException(String.format(BAD_PACKAGE_ERROR, scannedPath, scannedPackage));
+		}
+		File scannedDir = new File(scannedUrl.getFile());
+		List<Class<?>> classes = new ArrayList<Class<?>>();
+		for (File file : scannedDir.listFiles()) {
+			classes.addAll(find(file, scannedPackage));
+		}
+		return classes;
+	}
+	
+	private static List<Class<?>> find(File file, String scannedPackage) {
+		List<Class<?>> classes = new ArrayList<Class<?>>();
+		String resource = scannedPackage + PKG_SEPARATOR + file.getName();
+		if (file.isDirectory()) {
+			for (File child : file.listFiles()) {
+				classes.addAll(find(child, resource));
+			}
+		} else if (resource.endsWith(CLASS_FILE_SUFFIX)) {
+			int endIndex = resource.length() - CLASS_FILE_SUFFIX.length();
+			String className = resource.substring(0, endIndex);
+			try {
+				classes.add(Class.forName(className));
+			} catch (ClassNotFoundException ignore) {
+			}
+		}
+		return classes;
+	}
+	
+}

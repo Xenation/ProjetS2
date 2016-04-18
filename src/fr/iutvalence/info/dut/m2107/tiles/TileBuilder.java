@@ -36,7 +36,9 @@ public class TileBuilder {
 		case Piston:
 			return new PushingTile(type, x, y);
 		case PistonArm:
-			return new Tile(type, x, y);
+			return new DependantTile(type, x, y);
+		case Water:
+			return new LiquidTile(type, x, y);
 		default:
 			return new Tile(type, x, y);
 		}
@@ -74,7 +76,7 @@ public class TileBuilder {
 			stats.add("time = "+((CreatingTile)tile).creatingTime);
 			break;
 		case Piston:
-			stats.add("pushing = "+((PushingTile)tile).isPushing);
+			stats.add("pushing = "+((PushingTile)tile).isPushing());
 			stats.add("time = "+((PushingTile)tile).pushinginterval);
 			break;
 		case PistonArm:

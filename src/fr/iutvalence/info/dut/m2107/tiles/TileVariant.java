@@ -19,7 +19,8 @@ public enum TileVariant {
 	Creator(new TileSprite("tile/creator")),
 	Piston_retracted(new TileSprite("tile/piston_retracted")),
 	Piston_extended(new TileSprite("tile/piston_extended")),
-	Piston_arm(new TileSprite("tile/piston_arm"));
+	Piston_arm(new TileSprite("tile/piston_arm")),
+	Water(new TileSprite("tile/water"));
 	
 	/**
 	 * The sprite of this variant

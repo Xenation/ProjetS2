@@ -196,6 +196,9 @@ public class Camera {
 				if (Keyboard.getEventKey() == Keyboard.KEY_0) {
 					this.type = TileType.Piston;
 				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_W) {
+					this.type = TileType.Water;
+				}
 				
 				//// Tile Rotation
 				if (Keyboard.getEventKey() == Keyboard.KEY_R && pointed != null) {
@@ -240,7 +243,6 @@ public class Camera {
 				GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 			}
 		}
-		
 		
 		String updateStr = "Mouse: "+Maths.roundDecim(getMouseWorldX(), 3)+", "+Maths.roundDecim(getMouseWorldY(), 3) 
 		+ "\nFPS: "+DisplayManager.getFPS()

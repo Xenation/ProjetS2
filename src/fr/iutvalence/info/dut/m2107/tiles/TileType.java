@@ -2,6 +2,8 @@ package fr.iutvalence.info.dut.m2107.tiles;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Defines the available types of tiles
@@ -19,7 +21,8 @@ public enum TileType {
 	Sand(8, TileVariant.Sand, true, TileBehavior.FALLING),
 	Creator(9, TileVariant.Creator, true, TileBehavior.CREATOR),
 	Piston(10, TileVariant.Piston_retracted, true, TileBehavior.PISTON),
-	PistonArm(11, TileVariant.Piston_arm);
+	PistonArm(11, TileVariant.Piston_arm, true, TileBehavior.DEPENDANT),
+	Water(12, TileVariant.Water, false, TileBehavior.LIQUID);
 	
 	static {
 		//// Add variants here
@@ -46,7 +49,7 @@ public enum TileType {
 	/**
 	 * The behaviors of this type
 	 */
-	private final Set<TileBehavior> behaviors = new HashSet<TileBehavior>();
+	private final SortedSet<TileBehavior> behaviors = new TreeSet<TileBehavior>(TileBehavior.COMPARATOR);
 	
 	/**
 	 * A type of tile with a normal behavior

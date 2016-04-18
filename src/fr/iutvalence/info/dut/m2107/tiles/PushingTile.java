@@ -1,16 +1,34 @@
 package fr.iutvalence.info.dut.m2107.tiles;
 
-public class PushingTile extends Tile {
+import fr.iutvalence.info.dut.m2107.events.EventSender;
+import fr.iutvalence.info.dut.m2107.events.Listener;
+import fr.iutvalence.info.dut.m2107.events.TileActivatedEvent;
+
+public class PushingTile extends Tile implements Listener {
 	
 	public static float DEF_INTERVAL = .5f;
 	
-	protected boolean isPushing;
+	private boolean isPushing;
 	protected float pushinginterval;
 	
 	public PushingTile(TileType type, int x, int y) {
 		super(type, x, y);
 		this.isPushing = false;
 		this.pushinginterval = DEF_INTERVAL;
+	}
+
+	public boolean isPushing() {
+		return isPushing;
+	}
+
+	public void setPushing(boolean isPushing) {
+		this.isPushing = isPushing;
+		if (isPushing)
+			EventSender.sendEvent(new TileActivatedEvent(this, this));
+	}
+	
+	public void getTileActivated(TileActivatedEvent event) {
+		System.out.println("TILE ACTIVATED!");
 	}
 
 }
