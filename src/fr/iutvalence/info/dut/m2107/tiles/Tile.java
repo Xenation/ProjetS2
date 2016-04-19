@@ -1,5 +1,7 @@
 package fr.iutvalence.info.dut.m2107.tiles;
 
+import fr.iutvalence.info.dut.m2107.events.EventManager;
+import fr.iutvalence.info.dut.m2107.events.TileVariantChangedEvent;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 
@@ -118,6 +120,7 @@ public class Tile {
 		TileVariant old = this.variant;
 		this.variant = var;
 		GameWorld.chunkMap.get(Chunk.toChunkPosition(x, y)).updateVariant(this, old);
+		EventManager.sendEvent(new TileVariantChangedEvent(this, old));
 	}
 
 	/**

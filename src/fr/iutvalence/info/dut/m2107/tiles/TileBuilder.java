@@ -3,6 +3,7 @@ package fr.iutvalence.info.dut.m2107.tiles;
 import java.util.ArrayList;
 
 import fr.iutvalence.info.dut.m2107.events.EventManager;
+import fr.iutvalence.info.dut.m2107.events.TileDestroyedEvent;
 
 /**
  * Used to easily build (instantiate) tiles
@@ -37,7 +38,7 @@ public class TileBuilder {
 			return new CreatingTile(type, x, y, TileType.Sand);
 		case Piston:
 			PushingTile t = new PushingTile(type, x, y);
-			EventManager.register(t.getClass(), t);
+			EventManager.register(t);
 			return t;
 		case PistonArm:
 			return new DependantTile(type, x, y);
@@ -48,6 +49,10 @@ public class TileBuilder {
 		}
 	}
 	
+	/**
+	 * Destroys a tile in the right way
+	 * @param tile the tile to destroy
+	 */
 	public static void destroyTile(Tile tile) {
 		switch (tile.type) {
 		case Dirt:
@@ -55,34 +60,42 @@ public class TileBuilder {
 		case Grass:
 		case Log:
 		case Leaves:
+			EventManager.sendEvent(new TileDestroyedEvent(tile));
 //			EventManager.unregister(tile);
 			break;
 		case Fader:
 			FadingTile fading = (FadingTile) tile;
+			EventManager.sendEvent(new TileDestroyedEvent(fading));
 //			EventManager.unregister(t);
 			break;
 		case Spikes:
 			DamagingTile damaging = (DamagingTile) tile;
+			EventManager.sendEvent(new TileDestroyedEvent(damaging));
 //			EventManager.unregister(damaging);
 			break;
 		case Sand:
 			FallingTile falling = (FallingTile) tile;
+			EventManager.sendEvent(new TileDestroyedEvent(falling));
 //			EventManager.unregister(falling);
 			break;
 		case Creator:
 			CreatingTile creating = (CreatingTile) tile;
+			EventManager.sendEvent(new TileDestroyedEvent(creating));
 //			EventManager.unregister(creating);
 			break;
 		case Piston:
 			PushingTile pushing = (PushingTile) tile;
+			EventManager.sendEvent(new TileDestroyedEvent(pushing));
 			EventManager.unregister(pushing);
 			break;
 		case PistonArm:
 			DependantTile dependant = (DependantTile) tile;
+			EventManager.sendEvent(new TileDestroyedEvent(dependant));
 //			EventManager.unregister(dependant);
 			break;
 		case Water:
 			LiquidTile liquid = (LiquidTile) tile;
+			EventManager.sendEvent(new TileDestroyedEvent(liquid));
 //			EventManager.unregister(liquid);
 			break;
 		default:

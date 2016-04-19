@@ -12,6 +12,7 @@ import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
 import fr.iutvalence.info.dut.m2107.guiRendering.GUIElement;
 import fr.iutvalence.info.dut.m2107.guiRendering.GUIMaster;
+import fr.iutvalence.info.dut.m2107.listeners.TileListener;
 import fr.iutvalence.info.dut.m2107.render.*;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
@@ -63,6 +64,7 @@ public class MainGameTester {
 		for (Class<?> cla : ListenersScanner.listenersClasses) {
 			System.out.println("LISTENER: "+cla.getSimpleName());
 		}
+		EventManager.register(new TileListener());
 		
 		GUIElement gui = new GUIElement("gui/frame", new Vector2f(0, 0), 0.1f, 0.1f);
 		

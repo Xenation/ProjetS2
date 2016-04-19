@@ -50,7 +50,9 @@ public class ListenersScanner {
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.events"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.fontMeshCreator"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.fontRendering"));
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.guiRendering"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.items"));
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.listeners"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.models"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.render"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.saving"));
@@ -83,16 +85,17 @@ public class ListenersScanner {
 	 * @return A map that links each handling class to its method that handles the event
 	 */
 	public static Map<Class<?>, Method> getHandlers(Class<?> eventClass) {
-		System.out.println("REQUESTING HANDLER CLASSES");
+//		System.out.println("REQUESTING HANDLER CLASSES FOR: "+eventClass.getSimpleName());
 		Map<Class<?>, Method> handlers = new HashMap<Class<?>, Method>();
 		for (Class<?> cla : listenersClasses) {
 			try {
-				handlers.put(cla, cla.getMethod("get"+eventClass.getSimpleName().substring(0, eventClass.getSimpleName().length()-5), eventClass));
-				System.out.println("ADDED: "+cla.getName());
+				Method meth = cla.getMethod("get"+eventClass.getSimpleName().substring(0, eventClass.getSimpleName().length()-5), eventClass);
+				handlers.put(cla, meth);
+//				System.out.println("\tADDED: "+cla.getName()+"\n\t\tMETHOD: "+meth.getName());
 			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
+				// Ignored
 			} catch (SecurityException e) {
-				e.printStackTrace();
+				// Ignored
 			}
 		}
 		return handlers;
