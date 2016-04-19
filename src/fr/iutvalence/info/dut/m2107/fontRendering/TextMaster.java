@@ -76,7 +76,7 @@ public class TextMaster {
 		List<GUIText> textBatch = texts.get(text.getFont());
 		if (textBatch != null) {
 			textBatch.remove(text);
-			Loader.TEXT_LOADER.unloadVAO(text.getMesh());
+			loader.unloadVAO(text.getMesh());
 			if (textBatch.isEmpty()) {
 				texts.remove(textBatch);
 			}
