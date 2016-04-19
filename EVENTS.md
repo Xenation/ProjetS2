@@ -3,7 +3,7 @@
 ### How to Listen
  * Listening class must implement Listener (fr.iutvalence.info.dut.m2107.events.Listener)
  * Listening class must possess a method with a name as `get{EventName}(EventClass event)` where {EventName} is {EventClass} without "Event" in the end
- * Listener must register itself using `EventManager.register(Class<?> baseClass, Listener listener)` where `baseClass` is the class of the listener and `listener` the listener itself
+ * Listener must register itself using `EventManager.register(Listener listener)` where `listener` the listener itself
  * When the listener is destroyed it must be unregistered using `EventManager.unregister(Listener listener)` where `listener` is the listener itself
 
 
