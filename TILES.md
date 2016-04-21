@@ -11,11 +11,11 @@
  * ![](res/tile/sand.png) **Sand**: falls after 0.1 seconds
  * ![](res/tile/creator.png) **Creator**: pushes a new tile of the selected type in front of it (currently using an interval for tests)
  * ![](res/tile/piston_retracted.png) **Piston**: pushes tiles in front of it when activated (currently using an interval for tests)
+ * ![](res/tile/water.png) **Water**: falls but also spreads
 
 ### Tile Ideas
  * ![](res/tile/empty.png) **Trigger**: not solid, activated when entity inside (or other condition)
  * ![](res/tile/empty.png) **ArrowTrap**: shoots an arrow when the linked trigger is activated
- * ![](res/tile/water.png) **Water**: falls but also spreads
  * ![](res/tile/empty.png) **Spawner**: spawn an entity when triggered
  * ![](res/tile/empty.png) **Checkpoint**: allows the player to respawn at it when triggered
  * ![](res/tile/unstable.png) **Unstable**: destroys itself soon after being walked on
