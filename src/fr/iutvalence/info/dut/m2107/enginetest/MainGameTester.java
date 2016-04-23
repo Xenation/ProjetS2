@@ -6,11 +6,16 @@ import org.lwjgl.util.vector.Vector2f;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.EntityDatabase;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
+import fr.iutvalence.info.dut.m2107.events.EventManager;
+import fr.iutvalence.info.dut.m2107.events.ListenersScanner;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
 import fr.iutvalence.info.dut.m2107.items.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.items.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.items.WeaponItem;
+import fr.iutvalence.info.dut.m2107.guiRendering.GUIElement;
+import fr.iutvalence.info.dut.m2107.guiRendering.GUIMaster;
+import fr.iutvalence.info.dut.m2107.listeners.TileListener;
 import fr.iutvalence.info.dut.m2107.render.*;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
@@ -31,6 +36,7 @@ public class MainGameTester {
 		DisplayManager.updateDisplay();
 		
 		TextMaster.init();
+		GUIMaster.init();
 		
 		Renderer renderer = new Renderer();
 		
@@ -52,9 +58,9 @@ public class MainGameTester {
 		chunkStats.setColour(0, 1, 0);
 		chunkStats.setLineHeight(0.024);
 		
-		GUIText loaders = new GUIText("Loaders :", 1, 0, .92f, 0.5f, false);
+		GUIText loaders = new GUIText("Loaders :", 1, 0, .90f, 0.5f, false);
 		loaders.setColour(0, 1, 0);
-		GUIText loaderStats = new GUIText("", .8f, 0, .94f, 0.5f, false);
+		GUIText loaderStats = new GUIText("", .8f, 0, .92f, 0.5f, false);
 		loaderStats.setColour(0, 1, 0);
 		loaderStats.setLineHeight(0.024);
 		
@@ -73,10 +79,14 @@ public class MainGameTester {
 		strInventory = GameWorld.player.getInventory().toString();
 		System.out.println(strInventory);
 		
-		/*EventManager.init();
+		EventManager.init();
 		for (Class<?> cla : ListenersScanner.listenersClasses) {
 			System.out.println("LISTENER: "+cla.getSimpleName());
-		}*/
+		}
+
+		EventManager.register(new TileListener());
+		
+		GUIElement gui = new GUIElement("gui/frame", new Vector2f(0, 0), 0.1f, 0.1f);
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {
@@ -99,13 +109,15 @@ public class MainGameTester {
 			
 			loaderStats.updateText("TILES: "+Loader.TILE_LOADER.debugValues()
 					+ "\nSPRITES: "+Loader.SPRITE_LOADER.debugValues()
-					+ "\nTEXT: "+Loader.TEXT_LOADER.debugValues());
+					+ "\nTEXT: "+Loader.TEXT_LOADER.debugValues()
+					+ "\nGUI: "+Loader.GUI_LOADER.debugValues());
 			
 			GameWorld.update();
 			
 			renderer.prepare();
 			renderer.render();
-
+			
+			GUIMaster.render();
 			TextMaster.render();
 			
 			DisplayManager.updateDisplay();
@@ -113,9 +125,11 @@ public class MainGameTester {
 		
 		renderer.cleanUp();
 		TextMaster.cleanUp();
+		GUIMaster.cleanUp();
 		Loader.TILE_LOADER.unloadAll();
 		Loader.SPRITE_LOADER.unloadAll();
 		Loader.TEXT_LOADER.unloadAll();
+		Loader.GUI_LOADER.unloadAll();
 		// Code to clean the whole chunk loader
 		//ChunkLoader.CHUNK_LOADER.unloadAll();
 		DisplayManager.closeDisplay();

@@ -36,19 +36,12 @@ public class EventManager {
 	}
 	
 	/**
-	 * Sends an event to all listeners of this event
-	 * @param event the event to send
-	 */
-	public static void sendEvent(TileActivatedEvent event) {
-		sendEvent(event.getClass(), event);
-	}
-	
-	/**
 	 * Sends an event to all listeners of the given event.
 	 * @param eventClass the class of the event to send
 	 * @param event the event to send
 	 */
-	private static void sendEvent(Class<?> eventClass, Event event) {
+	public static void sendEvent(Event event) {
+		Class<?> eventClass = event.getClass();
 		try {
 			@SuppressWarnings("unchecked")
 			Map<Class<?>, Method> handlerClasses = (Map<Class<?>, Method>) eventClass.getField("handlerClasses").get(null);
@@ -56,7 +49,7 @@ public class EventManager {
 			for (Class<?> cla : handlerClasses.keySet()) {
 				for (Listener listener : handlers.getListeners()) {
 					try {
-						TileActivatedEvent.handlerClasses.get(cla).invoke(listener, event);
+						handlerClasses.get(cla).invoke(listener, event);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 						e.printStackTrace();
 					}
@@ -78,7 +71,8 @@ public class EventManager {
 	 * @param baseClass the Class of the listener (used to detect which events are listened)
 	 * @param listener the listener itself
 	 */
-	public static void register(Class<?> baseClass, Listener listener) {
+	public static void register(Listener listener) {
+		Class<?> baseClass = listener.getClass();
 		if (ListenersScanner.listenersClasses.contains(baseClass)) {
 			Method[] baseMethods = baseClass.getMethods();
 			for (Class<?> cla : ListenersScanner.eventClasses) {

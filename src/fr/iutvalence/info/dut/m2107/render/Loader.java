@@ -40,6 +40,11 @@ public class Loader {
 	public static final Loader TEXT_LOADER = new Loader();
 	
 	/**
+	 * The default loader used by the GUI
+	 */
+	public static final Loader GUI_LOADER = new Loader();
+	
+	/**
 	 * The IDs of every loaded VAO and the linked VBO
 	 */
 	private Map<Integer, Integer> vaoMap = new HashMap<Integer, Integer>();
@@ -95,9 +100,22 @@ public class Loader {
 	 * @param vao the ID of the VAO to unload
 	 */
 	public void unloadVAO(int vao) {
-		GL15.glDeleteBuffers(vaoMap.get(vao));
-		GL30.glDeleteVertexArrays(vao);
-		vaoMap.remove(vao);
+		if (vaoMap.containsKey(vao)) {
+			GL15.glDeleteBuffers(vaoMap.get(vao));
+			GL30.glDeleteVertexArrays(vao);
+			vaoMap.remove(vao);
+		}
+	}
+	
+	/**
+	 * Unloads a Texture using the given texture ID
+	 * @param texID the ID of the texture to unload
+	 */
+	public void unloadTexture(int texID) {
+		if (textures.contains(new Integer(texID))) {
+			GL11.glDeleteTextures(texID);
+			textures.remove(new Integer(texID));
+		}
 	}
 	
 	/**

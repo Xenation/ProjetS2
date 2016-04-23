@@ -7,8 +7,8 @@ import java.util.List;
 public class TextMeshCreator {
 
 	protected static final double LINE_HEIGHT = 0.03f;
-	protected static final int SPACE_ASCII = 32;
-	protected static final int LF_ASCII = 10;
+	protected static final int SPACE_ASCII = 32; // Space
+	protected static final int LF_ASCII = 10; // Line Feed
 
 	private MetaFile metaData;
 

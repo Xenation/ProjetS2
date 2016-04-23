@@ -1,5 +1,7 @@
 package fr.iutvalence.info.dut.m2107.tiles;
 
+import fr.iutvalence.info.dut.m2107.events.EventManager;
+import fr.iutvalence.info.dut.m2107.events.TileTouchGroundEvent;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 
@@ -118,6 +120,7 @@ public enum TileBehavior {
 				GameWorld.chunkMap.addTile(TileBuilder.buildTile(tile.type, tile.x, tile.y-1));
 				return false;
 			}
+			EventManager.sendEvent(new TileTouchGroundEvent(tile, support));
 		} else {
 			falling.fallingTime -= DisplayManager.deltaTime();
 		}
