@@ -1,8 +1,9 @@
 package fr.iutvalence.info.dut.m2107.items;
 
-import java.io.*;
 import java.util.*;
-import org.json.*;
+
+import fr.iutvalence.info.dut.m2107.items.AmmunitionItem.AmmoType;
+import fr.iutvalence.info.dut.m2107.items.WeaponItem.WeaponType;
 
 /**
  * This class create and initialize a List of item which is the ItemDatabase of the game
@@ -21,15 +22,11 @@ public class ItemDatabase {
 	 * Create the ItemDatabase
 	 */
 	public static void create() {
-		double start = (double)System.currentTimeMillis();
-		
-		itemDatabase.add(new Item(0,	"Fire Plant",	"A plant who shoots fire !",	Rarity.POOR,	50,	1));
-		itemDatabase.add(new Item(1,	"Bed",			"Sleepy ?",						Rarity.COMMON,	1,	15));
-		itemDatabase.add(new Item(2,	"Unicorn",		"A fabulous mount.",			Rarity.RAINBOW,	99,	999));
-		itemDatabase.add(new Item(3,	"Sunglasses",	"It will give you cool.",		Rarity.RARE,	5,	100));
-		
-		double end = (double)System.currentTimeMillis();
-		System.out.print("Create : " + (end - start) + '\t');
+		//						  ID	NAME				DESCRIPTION					 	RARITY	 		MAX 	VALUE
+		itemDatabase.add(new AmmunitionItem(0, SpriteDatabase.getArrowSpr(), AmmoType.ARROW, "Arrow", "A basic arrow", 1, 30, Rarity.POOR, 50, 1));
+		itemDatabase.add(new AmmunitionItem(1, SpriteDatabase.getSpectralArrowSpr(), AmmoType.ARROW, "Spectral Arrow", "A spectral arrow", 3, 100, Rarity.COMMON, 25, 1));
+		itemDatabase.add(new WeaponItem(2, SpriteDatabase.getBowSpr(), WeaponType.BOW, "Bow", "A simple bow", 1, 10, Rarity.POOR, 5, 3, 0, 1, null));
+		itemDatabase.add(new WeaponItem(3, SpriteDatabase.getSwordSpr(), WeaponType.SWORD, "Sword", "A simple sword", 1, 10, Rarity.POOR, 5, 3, 3, 1, null));
 	}
 	
 	/**
@@ -37,7 +34,7 @@ public class ItemDatabase {
 	 * @throws JSONException
 	 * @throws IOException
 	 */
-	public static void createItemDatabase() throws JSONException, IOException {
+	/*public static void createItemDatabase() throws JSONException, IOException {
 		//
 		double start = (double)System.currentTimeMillis();
 		
@@ -91,7 +88,7 @@ public class ItemDatabase {
 		double endWrite = (double)System.currentTimeMillis();
 		System.out.println("Write : " + (endWrite - startWrite));
 		
-	}
+	}*/
 	
 	/**
 	 * Return an item from the ItemDatabase with a certain name

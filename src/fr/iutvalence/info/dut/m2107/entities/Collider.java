@@ -1,15 +1,16 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 public class Collider {
@@ -17,32 +18,81 @@ public class Collider {
 	private float minX, minY;
 	private float maxX, maxY;
 	
+	private float localMinX, localMinY;
+	private float localMaxX, localMaxY;
+	
 	private MovableEntity ent;
 	
-	private float cautionDistance = 0.01f;
+	private boolean hasStepUp;
 
-	public Collider() {}
-	
-	public Collider(Vector2f min, Vector2f max) {
-		this.minX = min.x;
-		this.minY = min.y;
-		this.maxX = max.x;
-		this.maxY = max.y;
+	public Collider(Sprite spr) {
+		this.localMinX = -spr.getSize().x/2;
+		this.localMinY = -spr.getSize().y/2;
+		this.localMaxX = spr.getSize().x/2;
+		this.localMaxY = spr.getSize().y/2;
+		updateLocPos();
 	}
 	
-	////////////temporary player parameter ////////////
-	public boolean update(Collider surroundMove, Player player) {
+	public Collider(Vector2f min, Vector2f max) {
+		this.localMinX = min.x;
+		this.localMinY = min.y;
+		this.localMaxX = max.x;
+		this.localMaxY = max.y;
+		updateLocPos();
+	}
+	
+	public Collider(float minX, float minY, float maxX, float maxY) {
+		this.localMinX = minX;
+		this.localMinY = minY;
+		this.localMaxX = maxX;
+		this.localMaxY = maxY;
+		updateLocPos();
+	}
+	
+	public void checkCharacterContinuousCollision() {
 		updateColPos();
 		
-		List<Tile> surroundTile = generateSurroundingTiles(surroundMove);
-//		System.out.println(surroundTile.size());
-//		Collections.reverse(surroundTile);
+		hasStepUp = false;
+		((Character)ent).isGrounded = false;
 		
-		player.isGrounded = false;
+		int continuousStep = (int) ((Math.abs(this.ent.vel.x) + Math.abs(this.ent.vel.y))/8+1);
+
+		float stepXtoAdd = this.ent.vel.x * DisplayManager.deltaTime() / continuousStep;
+		float stepYtoAdd = this.ent.vel.y * DisplayManager.deltaTime() / continuousStep;
+		float stepX = this.ent.pos.x;
+		float stepY = this.ent.pos.y;
+		
+		for (int step = continuousStep; step > 0; step--) {
+			if(this.ent.vel.x != 0) stepX += stepXtoAdd;
+			if(this.ent.vel.y != 0) stepY += stepYtoAdd;
+			Vector2f nextPos = new Vector2f(stepX, stepY);
+			
+			Collider encompassCol = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2), nextPos);
+			encompassCol.extendAll(this.getW()/2, this.getH()/2);
+			
+			checkCharacterCollision(encompassCol);
+			
+			updateColPos();
+			if(this.ent.vel.x != 0) {
+				this.minX += stepXtoAdd;
+				this.maxX += stepXtoAdd;
+			}
+			if(this.ent.vel.y != 0) {
+				this.minY += stepYtoAdd;
+				this.maxY += stepYtoAdd;
+			}
+		}
+	}
+	
+	public void checkCharacterCollision(Collider encompassCol) {
+		List<Tile> surroundTile = generateSurroundingTiles(encompassCol);
+		if(surroundTile.size() == 0) return;
+		
+		Vector2f modVel = new Vector2f(1, 1);
 		
 		for (Tile tile : surroundTile) {
 			if(isCollidingLeft(this, tile)) { // if the tile is on my left
-				if(this.minY <= tile.y + Tile.TILE_SIZE && this.maxY >= tile.y) {
+				if(this.minY <= tile.y + Tile.TILE_SIZE && this.maxY >= tile.y && GameWorld.chunkMap.getRightTile(tile) == null) {
 					// I'm on the right of the tile
 					if((this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) &&
 							GameWorld.chunkMap.getTopTile(tile) == null &&
@@ -52,26 +102,28 @@ public class Collider {
 							GameWorld.chunkMap.getTileAt(tile.x+1, tile.y+4) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x+2, tile.y+4) == null) {
 						// My bottom is between the tile height and there is no block to prevent the StepUp
-						ent.vel.y = 0;
-						ent.pos.y += tile.y + Tile.TILE_SIZE - this.minY + cautionDistance*2;
-//						System.out.println("Step Up Left\t\t" + Sys.getTime());
+						modVel.y = 0;
+						ent.pos.y += tile.y + Tile.TILE_SIZE - this.minY;
+						((Character)ent).isGrounded = true;
+						hasStepUp = true;
 					} else {
 						// I can't StepUp so I block the x movement and I stick to the tile
-						ent.vel.x = 0;
-						ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2 + cautionDistance;
-//						System.out.println("Left\t\t" + Sys.getTime());
+						modVel.x = 0;
+						ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 					}
 				} else {
 					//I'm above or under the tile
-					if(GameWorld.chunkMap.getTopTile(tile) == null || GameWorld.chunkMap.getBottomTile(tile) == null) {
-						ent.vel.y = 0;
-//						System.out.println("Slide Right\t\t" + Sys.getTime());
+					if(ent.vel.y <= 0) {
+						if(GameWorld.chunkMap.getTopTile(tile) == null) modVel.y = 0;
+						else modVel.x = 0;
+					} else {
+						if(GameWorld.chunkMap.getBottomTile(tile) == null) modVel.y = 0;
+						else modVel.x = 0;
 					}
-//					else System.out.println("???");
 				}
 			}else
 			if(isCollidingRight(this, tile)) { // if the tile is on my right
-				if(this.minY <= tile.y + Tile.TILE_SIZE && this.maxY >= tile.y) {
+				if(this.minY <= tile.y + Tile.TILE_SIZE && this.maxY >= tile.y && GameWorld.chunkMap.getLeftTile(tile) == null) {
 					// I'm on the left of the tile
 					if((this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) &&
 							GameWorld.chunkMap.getTopTile(tile) == null &&
@@ -81,50 +133,117 @@ public class Collider {
 							GameWorld.chunkMap.getTileAt(tile.x-1, tile.y+4) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x-2, tile.y+4) == null) {
 						// My bottom is between the tile height and there is no block to prevent the StepUp
-						ent.vel.y = 0;
-						ent.pos.y += tile.y + Tile.TILE_SIZE - this.minY + cautionDistance*2;
-//						System.out.println("Step Up Right\t\t" + Sys.getTime());
+						modVel.y = 0;
+						ent.pos.y += tile.y + Tile.TILE_SIZE - this.minY;
+						((Character)ent).isGrounded = true;
+						hasStepUp = true;
 					} else {
 						// I can't StepUp so I block the x movement and I stick to the tile
-						ent.vel.x = 0;
-						ent.pos.x = tile.x - this.getW()/2 - cautionDistance;
-//						System.out.println("Right\t\t" + Sys.getTime());
+						modVel.x = 0;
+						ent.pos.x = tile.x - this.getW()/2;
 					}
 				} else {
-					if(GameWorld.chunkMap.getTopTile(tile) == null || GameWorld.chunkMap.getBottomTile(tile) == null) {
-						//I'm above or under the tile
-						ent.vel.y = 0;
-//					System.out.println("Slide Right\t\t" + Sys.getTime());
-					} 
-//					else System.out.println("???");
+					//I'm above or under the tile
+					if(ent.vel.y <= 0) {
+						if(GameWorld.chunkMap.getTopTile(tile) == null) modVel.y = 0;
+						else modVel.x = 0;
+					} else {
+						if(GameWorld.chunkMap.getBottomTile(tile) == null) modVel.y = 0;
+						else modVel.x = 0;
+					}
 				}
 			}else
 			if(isCollidingUp(this, tile)) { //if the tile is above me
-				if(this.minX <= tile.x + Tile.TILE_SIZE && this.maxX >= tile.x) {
+				if(this.minX <= tile.x + Tile.TILE_SIZE && this.maxX >= tile.x && GameWorld.chunkMap.getBottomTile(tile) == null) {
 					// I'm under the tile
-					ent.vel.y = 0;
-					ent.pos.y = tile.y - this.getH()/2 - cautionDistance;
-//					System.out.println("Up\t\t" + Sys.getTime());
-//				} else {
-//					ent.vel.x = 0;
-//					System.out.println("Slide Up");
+					modVel.y = 0;
+					ent.pos.y = tile.y - this.getH()/2;
 				}
 			}else
 			if(isCollidingDown(this, tile)) { // if the tile is under me
-				if(this.minX <= tile.x + Tile.TILE_SIZE && this.maxX >= tile.x) {
+				if(this.minX <= tile.x + Tile.TILE_SIZE && this.maxX >= tile.x && GameWorld.chunkMap.getTopTile(tile) == null) {
 					// I'm above the tile
-					ent.vel.y = 0;
-//					ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2 + cautionDistance;
-					player.isGrounded = true;
-//					System.out.println("Down\t\t" + Sys.getTime());
-				} 
-//				else {
-//					ent.vel.x = 0;
-//					System.out.println("Slide Down");
-//				}
+					modVel.y = 0;
+					((Character)ent).isGrounded = true;
+					if(!hasStepUp) ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
+				}
 			}
 		}
-		return true;
+		
+		if(!hasStepUp) this.ent.vel.x *= modVel.x;
+		this.ent.vel.y *= modVel.y;
+	}
+	
+	public boolean isContinuousCollidingWithMap() {
+		int continuousStep = (int) ((Math.abs(this.ent.vel.x) + Math.abs(this.ent.vel.y))/8+1);
+		float stepXtoAdd = this.ent.vel.x * DisplayManager.deltaTime() / continuousStep;
+		float stepYtoAdd = this.ent.vel.y * DisplayManager.deltaTime() / continuousStep;
+		float stepX = this.ent.pos.x;
+		float stepY = this.ent.pos.y;
+		
+		for (int step = continuousStep; step > 0; step--) {
+			stepX += stepXtoAdd;
+			stepY += stepYtoAdd;
+			Vector2f nextPos = new Vector2f(stepX, stepY);
+			
+			Collider encompassCol = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2), nextPos);
+			encompassCol.extendAll(this.getW()/2, this.getH()/2);
+			
+			Tile tileColliding = isCollidingWithMap(encompassCol);
+			if(tileColliding != null) {
+				this.ent.pos = nextPos;
+				this.ent.vel = new Vector2f(0, 0);
+				return true;
+			}
+			
+			this.minX += stepXtoAdd;
+			this.minY += stepYtoAdd;
+			this.maxX += stepXtoAdd;
+			this.maxY += stepYtoAdd;
+		}
+		return false;
+	}
+	
+	public Collider encompassTrajectory(Vector2f actualPos, Vector2f nextPos) {
+		Collider encompassCol;
+		if(actualPos.getX() <= nextPos.getX()) {
+			if(actualPos.getY() <= nextPos.getY())
+				encompassCol = new Collider(new Vector2f(actualPos.x , actualPos.y), new Vector2f(nextPos.x , nextPos.y));
+			else
+				encompassCol = new Collider(new Vector2f(actualPos.x , nextPos.y), new Vector2f(nextPos.x , actualPos.y));
+		} else {
+			if(actualPos.getY() <= nextPos.getY())
+				encompassCol = new Collider(new Vector2f(nextPos.x , actualPos.y), new Vector2f(actualPos.x , nextPos.y));
+			else
+				encompassCol = new Collider(new Vector2f(nextPos.x, nextPos.y), new Vector2f(actualPos.x, actualPos.y));
+		}
+		return encompassCol;
+	}
+	
+	public Tile isCollidingWithMap(Collider encompassCol) {
+		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(this.minX, this.minY))) 
+			for (Tile tile : chunk)
+				if(!isColliding(encompassCol, tile))
+					return tile;
+		return null;
+	}
+	
+	public Entity isCollidingWithEntity(Layer layer) {
+		for (Entity ent : layer){
+			if(ent.col != ((AmmunitionEntity) this.ent).ownWeapon.owner.col)
+				if(!isColliding(this, ent.col))
+					return ent;
+		}
+		return null;
+	}
+	
+	public List<Tile> generateSurroundingTiles(Collider col) {
+		List<Tile> tiles = new ArrayList<Tile>();
+		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, ent.pos)) 
+			for (Tile tile : chunk)
+				if(!isColliding(col, tile))
+					tiles.add(tile);
+		return tiles;
 	}
 	
 	public boolean isColliding(Collider col, Tile tile) {
@@ -152,34 +271,50 @@ public class Collider {
 		return tileMaxY <= col.minY;
 	}
 	
-	public List<Tile> generateSurroundingTiles(Collider col) {
-		List<Tile> tiles = new ArrayList<Tile>();
-		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, ent.pos)) 
-			for (Tile tile : chunk)
-				if(!isColliding(col, tile))
-					tiles.add(tile);
-		return tiles;
+	public boolean isColliding(Collider col, Collider other) {
+		return isCollidingLeft(col, other) || isCollidingRight(col, other) ||
+				isCollidingUp(col, other) || isCollidingDown(col, other);
 	}
 	
-	public Tile isCollindingWithMap() {
-		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(this.minX, this.minY))) 
-			for (Tile tile : chunk)
-				if(!isColliding(this, tile))
-					return tile;
-		return null;
+	public boolean isCollidingLeft(Collider col, Collider other) {
+		float otherMaxX = other.maxX;
+		return otherMaxX <= col.minX;
 	}
 	
+	public boolean isCollidingRight(Collider col, Collider other) {
+		float otherMinX = other.minX;
+		return col.maxX <= otherMinX;
+	}
+	
+	public boolean isCollidingUp(Collider col, Collider other) {
+		float otherMinY = other.minY;
+		return col.maxY <= otherMinY;
+	}
+	
+	public boolean isCollidingDown(Collider col, Collider other) {
+		float otherMaxY = other.maxY;
+		return otherMaxY <= col.minY;
+	}
+
 	public void updateColPos() {
-		this.minX = ent.pos.x - ent.spr.getSize().x/2 +.1f;
-		this.minY = ent.pos.y - ent.spr.getSize().y/2 +.1f;
+		this.minX = ent.pos.x + localMinX;
+		this.minY = ent.pos.y + localMinY;
 		
-		this.maxX = ent.pos.x + ent.spr.getSize().x/2 -.1f;
-		this.maxY = ent.pos.y + ent.spr.getSize().y/2 -.1f;
+		this.maxX = ent.pos.x + localMaxX;
+		this.maxY = ent.pos.y + localMaxY;
+	}
+	
+	private void updateLocPos() {
+		this.minX = localMinX;
+		this.minY = localMinY;
+		
+		this.maxX = localMaxX;
+		this.maxY = localMaxY;
 	}
 	
 	public void extendAll(float width, float height) {
-		extendWidth(width -.1f);
-		extendHeight(height -.1f);
+		extendWidth(width);
+		extendHeight(height);
 	}
 	
 	public void extendWidth(float width) {
@@ -198,6 +333,8 @@ public class Collider {
 	public void extendUp  (float up)   {this.maxY += up;}
 	public void extendDown(float down) {this.minY -= down;}
 	
+	public Vector2f getMin() {return new Vector2f(minX, minY);}
+	public Vector2f getMax() {return new Vector2f(maxX, maxY);}
 	
 	public float getMinX() {return minX;}
 	public float getMinY() {return minY;}
@@ -205,9 +342,11 @@ public class Collider {
 	public float getMaxX() {return maxX;}
 	public float getMaxY() {return maxY;}
 
+	public float getActualW() {return maxX - minX;}
+	public float getActualH() {return maxY - minY;}
 	
-	public float getW() {return maxX - minX;}
-	public float getH() {return maxY - minY;}
+	public float getW() {return localMaxX - localMinX;}
+	public float getH() {return localMaxY - localMinY;}
 	
 	
 	public void setEnt(MovableEntity ent) {this.ent = ent;}
@@ -215,152 +354,9 @@ public class Collider {
 
 	@Override
 	public String toString() {
-		return "Collider [minX=" + minX + ", minY=" + minY + ", maxX=" + maxX + ", maxY=" + maxY + ", getW()=" + getW()
-				+ ", getH()=" + getH() + "]";
+		return "Collider [minX=" + minX + ", minY=" + minY + ", maxX=" + maxX + ", maxY=" + maxY + ", W="
+				+ getActualW() + ", H=" + getActualH() + "]";
 	}
-}
 
-/*// ENTITY
-public void checkCollision(Player thisEntity, Entity entity) {
-	if (thisEntity.col.isCollidingNext(entity.col, new Vector2f(thisEntity.pos.x + thisEntity.vel.x * thisEntity.spd * DisplayManager.deltaTime(),
-			thisEntity.pos.y + thisEntity.vel.y * thisEntity.spd * DisplayManager.deltaTime()))) {
-		if(!this.isCollidingLeft(entity.col)) {
-			thisEntity.vel.x = 0;
-			thisEntity.pos.x = entity.pos.x + entity.col.getW();
-		}else if(!this.isCollidingRight(entity.col)) {
-			thisEntity.vel.x = 0;
-			thisEntity.pos.x = entity.pos.x - this.getW();
-		}else if(!this.isCollidingTop(entity.col)) {
-			thisEntity.vel.y = 0;
-			thisEntity.pos.y = entity.pos.y - this.getH();
-		}else if(!this.isCollidingBot(entity.col)) {
-			thisEntity.vel.y = 0;
-			thisEntity.pos.y = entity.pos.y + entity.col.getH();
-			thisEntity.isGrounded = true;
-		}
-	}
-}
 
-public boolean isCollidingNext(Collider col, Vector2f nextThis){
-	if ((col.getWX() < nextThis.x + this.w)
-			&& (col.getWX() + col.w > nextThis.x)
-				&& (col.getWY() < nextThis.y + this.h)
-					&& (col.getWY() + col.h > nextThis.y)) {
-			return true;
-		}
-	return false;
 }
-
-public boolean isCollidingLeft(Collider col) {
-	if (col.getWX() + col.w > this.getWX()) return true;
-	return false;
-}
-
-public boolean isCollidingRight(Collider col) {
-	if (col.getWX() < this.getWX() + this.w) return true;
-	return false;
-}
-
-public boolean isCollidingTop(Collider col) {
-	if (col.getWY() < this.getWY() + this.h) return true;
-	return false;
-}
-
-public boolean isCollidingBot(Collider col) {
-	if (col.getWY() + col.h > this.getWY()) return true;
-	return false;
-}
-// <--*/
-
-// TILE
-/*public void checkCollision(Player thisEntity, Tile tile) {
-	if (thisEntity.col.isCollidingNext(tile, new Vector2f(thisEntity.pos.x + thisEntity.vel.x * thisEntity.spd * DisplayManager.deltaTime(),
-															thisEntity.pos.y + thisEntity.vel.y * thisEntity.spd * DisplayManager.deltaTime()))) {	
-		float thisLeft = getWX() - this.w/2;
-		float thisRight = getWX() + this.w/2;
-		float thisTop = getWY() + this.h/2;
-		float thisBottom = getWY() - this.h/2;
-		
-		float tileLeft = tile.x;
-		float tileRight = tile.x + Tile.TILE_SIZE;
-		float tileTop = tile.y + Tile.TILE_SIZE;
-		float tileBottom = tile.y;
-		
-		if(!this.isCollidingLeft(tile)) {
-			if(GameWorld.chunkMap.getRightTile(tile) != null && (thisBottom >= tileTop || thisTop <= tileBottom)) {
-				thisEntity.vel.y = 0;
-				System.out.println("1");
-			} else {
-				if(GameWorld.chunkMap.getTopTile(tile) == null && GameWorld.chunkMap.getTileAt(tile.x+1, tile.y+1) == null && (thisBottom >= tileBottom && thisBottom <= tileTop)) {
-					thisEntity.pos.y += Tile.TILE_SIZE;
-					System.out.println("2");
-				} else {
-					thisEntity.vel.x = 0;
-					thisEntity.pos.x = tile.x + Tile.TILE_SIZE + this.w/2;
-					System.out.println("3");
-				}
-			}
-		}
-		if(!this.isCollidingRight(tile)) {
-			if(GameWorld.chunkMap.getLeftTile(tile) != null && (thisBottom >= tileTop || thisTop <= tileBottom)) {
-				thisEntity.vel.y = 0;
-				System.out.println("4");
-			} else {
-				if(GameWorld.chunkMap.getTopTile(tile) == null && GameWorld.chunkMap.getTileAt(tile.x-1, tile.y+1) == null && (thisBottom >= tileBottom && thisBottom <= tileTop)) {
-					thisEntity.pos.y += Tile.TILE_SIZE;
-					System.out.println("5");
-				} else {
-					thisEntity.vel.x = 0;
-					thisEntity.pos.x = tile.x - this.getW()/2;
-					System.out.println("6");
-				}
-			}
-		}
-		if(!this.isCollidingTop(tile)) {
-			if(GameWorld.chunkMap.getBottomTile(tile) == null || !(thisLeft >= tileRight || thisRight <= tileLeft)) {
-				thisEntity.vel.y = 0;
-				thisEntity.pos.y = tile.y - this.getH()/2;
-				System.out.println("top");
-			}
-		}
-		if(!this.isCollidingBot(tile)) {
-			if(GameWorld.chunkMap.getTopTile(tile) == null || !(thisLeft >= tileRight || thisRight <= tileLeft)) {
-				thisEntity.vel.y = 0;
-				thisEntity.pos.y = tile.y + Tile.TILE_SIZE + this.h/2;
-				thisEntity.isGrounded = true;
-				System.out.println("bot");
-			}
-		}
-	}
-}
-
-public boolean isCollidingNext(Tile tile, Vector2f nextThis){
-	if ((tile.getX() < nextThis.x + this.w/2)
-			&& (tile.getX() + Tile.TILE_SIZE > nextThis.x - this.w/2)
-				&& (tile.getY() < nextThis.y + this.h/2)
-					&& (tile.getY() + Tile.TILE_SIZE > nextThis.y - this.h/2)) {
-			return true;
-		}
-	return false;
-}
-
-public boolean isCollidingLeft(Tile tile) {
-	if (tile.getX() + Tile.TILE_SIZE > this.getWX() - this.w/2) return true;
-	return false;
-}
-
-public boolean isCollidingRight(Tile tile) {
-	if (tile.getX() < this.getWX() + this.w/2) return true;
-	return false;
-}
-
-public boolean isCollidingTop(Tile tile) {
-	if (tile.getY() < this.getWY() + this.h/2) return true;
-	return false;
-}
-
-public boolean isCollidingBot(Tile tile) {
-	if (tile.getY() + Tile.TILE_SIZE > this.getWY() - this.h/2) return true;
-	return false;
-}*/
-// <--

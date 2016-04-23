@@ -5,11 +5,11 @@ import org.lwjgl.util.vector.Vector2f;
 import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
-public abstract class Entity {
-
-	private final Vector2f DEF_POS = new Vector2f(0, 0);
-	private final float DEF_ROT = 0;
-	protected final Sprite DEF_SPR = new Sprite("item/default", new Vector2f(2, 4));
+public class Entity {
+	
+	private static final Vector2f DEF_POS = new Vector2f(0, 0);
+	private static final float DEF_ROT = 0;
+	private static final Sprite DEF_SPR = new Sprite("item/default", new Vector2f(1, 1));
 	
 	protected Vector2f pos;
 	
@@ -19,11 +19,28 @@ public abstract class Entity {
 	
 	protected Sprite spr;
 	
+	protected Collider col;
+	
 	public Entity(Vector2f pos, float rot, Sprite spr) {
 		this.pos = pos;
 		this.rot = rot;
 		this.spr = spr;
 		this.scale = new Vector2f(1, 1);
+		this.col = new Collider(spr);
+		col.setEnt((MovableEntity)this);
+		col.updateColPos();
+	}
+
+	public Entity(Vector2f pos, float rot, Sprite spr, Collider col) {
+		this.pos = pos;
+		this.rot = rot;
+		this.spr = spr;
+		this.scale = new Vector2f(1, 1);
+		this.col = col;
+		if(col != null) {
+			col.setEnt((MovableEntity)this);
+			col.updateColPos();
+		}
 	}
 	
 	public Entity(Vector2f pos, Vector2f scale, Sprite spr) {
@@ -31,6 +48,9 @@ public abstract class Entity {
 		this.rot = DEF_ROT;
 		this.spr = spr;
 		this.scale = scale;
+		this.col = new Collider(spr);
+		col.setEnt((MovableEntity)this);
+		col.updateColPos();
 	}
 	
 	public Entity(Vector2f pos, Sprite spr) {
@@ -38,6 +58,9 @@ public abstract class Entity {
 		this.rot = DEF_ROT;
 		this.spr = spr;
 		this.scale = new Vector2f(1, 1);
+		this.col = new Collider(spr);
+		col.setEnt((MovableEntity)this);
+		col.updateColPos();
 	}
 	
 	
@@ -46,6 +69,9 @@ public abstract class Entity {
 		this.rot = DEF_ROT;
 		this.spr = DEF_SPR;
 		this.scale = new Vector2f(1, 1);
+		this.col = new Collider(spr);
+		col.setEnt((MovableEntity)this);
+		col.updateColPos();
 	}
 	
 	public void update(Layer layer) {

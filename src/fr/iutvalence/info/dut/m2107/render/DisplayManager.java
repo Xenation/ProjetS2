@@ -7,10 +7,11 @@ import java.util.Map;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+
+import fr.iutvalence.info.dut.m2107.storage.Input;
 
 /**
  * Static class which controls the Display
@@ -106,8 +107,8 @@ public class DisplayManager {
 			fpsCap = finalMode.getFrequency();
 			aspectRatio = ((float) finalMode.getWidth() /(float) finalMode.getHeight());
 			
-//			Display.setDisplayMode(DEF_DISPLAYMODE);
-			Display.setDisplayModeAndFullscreen(finalMode);
+			Display.setDisplayMode(DEF_DISPLAYMODE);
+//			Display.setDisplayModeAndFullscreen(finalMode);
 			Display.setVSyncEnabled(true);
 			Display.create();
 		} catch (LWJGLException e) {
@@ -135,10 +136,9 @@ public class DisplayManager {
 		updateFPS();
 		updateDeltaMap();
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) closeDisplay();
+		if(Input.isEscape()) closeDisplay();
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_O)) isPaused = true;
-		if(Keyboard.isKeyDown(Keyboard.KEY_P)) isPaused = false;
+		isPaused = Input.isPaused();
 		
 		// FPS syncing and screen update
 		Display.update();

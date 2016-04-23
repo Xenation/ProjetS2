@@ -1,0 +1,44 @@
+package fr.iutvalence.info.dut.m2107.items;
+
+import fr.iutvalence.info.dut.m2107.models.Sprite;
+
+/**
+ * A specification class of the item class
+ * @author boureaue
+ *
+ */
+
+public class WeaponItem extends Item {
+
+	public enum WeaponType {
+		SWORD,
+		BOW;
+	}
+	
+	protected int damage;
+	protected int range;
+	protected int use_time;
+	protected int knockback;
+	protected Effect effect;
+	
+	protected WeaponType subtype;
+	
+	
+	WeaponItem(int id, Sprite spr, WeaponType subtype, String name, String description, int maxStack, int value, Rarity rarity, int damage, int knockback, int range, int use_time, Effect effect) {
+		super(id, spr, ItemType.WEAPON, name, description, rarity, maxStack, value);
+		
+		this.damage = damage;
+		this.range = range;
+		this.use_time = use_time;
+		this.knockback = knockback;
+		this.effect = effect;
+		this.subtype = subtype;
+	}
+
+	public int getDamage() {return damage;}
+	public int getRange() {return range;}
+	public int getUse_time() {return use_time;}
+	public int getKnockback() {return knockback;}
+	public Effect getEffect() {return effect;}
+	public WeaponType getSubtype() {return subtype;}
+}

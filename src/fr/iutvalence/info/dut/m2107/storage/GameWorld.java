@@ -1,6 +1,8 @@
 package fr.iutvalence.info.dut.m2107.storage;
 
 
+import org.lwjgl.util.vector.Vector2f;
+
 import fr.iutvalence.info.dut.m2107.entities.Camera;
 import fr.iutvalence.info.dut.m2107.entities.Player;
 
@@ -24,7 +26,7 @@ public class GameWorld {
 	/**
 	 * The player
 	 */
-	public static final Player player = new Player();
+	public static final Player player = new Player(new Vector2f());
 	/**
 	 * The camera
 	 */

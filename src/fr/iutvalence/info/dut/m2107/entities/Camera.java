@@ -2,7 +2,6 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import java.util.ArrayList;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
@@ -14,6 +13,7 @@ import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Vector2i;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
@@ -119,105 +119,65 @@ public class Camera {
 		
 		//// Movement
 		if (target == null) {
-			if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
-				this.position.y += 20 * DisplayManager.deltaTime();
-			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-				this.position.y -= 20 * DisplayManager.deltaTime();
-			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-				this.position.x += 20 * DisplayManager.deltaTime();
-			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-				this.position.x -= 20 * DisplayManager.deltaTime();
-			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD0)) {
-				setPosition(0, 0);
-			}
+			if (Input.isMoveUp()) 	this.position.y += 20 * DisplayManager.deltaTime();
+			if (Input.isMoveDown()) this.position.y -= 20 * DisplayManager.deltaTime();
+			if (Input.isMoveRight())this.position.x += 20 * DisplayManager.deltaTime();
+			if (Input.isMoveLeft())	this.position.x -= 20 * DisplayManager.deltaTime();
+			
+			if (Input.isNumPad0()) setPosition(0, 0);
 		}
 		
 		//// Switches
-		while(Keyboard.next()){
-			if (Keyboard.getEventKeyState()) {
-				//// Player target bind/unbind
-				if (Keyboard.getEventKey() == Keyboard.KEY_TAB) {
-					if (target == null) {
-						target = GameWorld.player;
-						GameWorld.player.isInControl = true;
-					} else {
-						target = null;
-						GameWorld.player.isInControl = false;
-					}
-				}
-				//// VSync
-				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
-					if (DisplayManager.vSyncTracker) {
-						DisplayManager.vSyncTracker = false;
-					} else {
-						DisplayManager.vSyncTracker = true;
-					}
-					Display.setVSyncEnabled(DisplayManager.vSyncTracker);
-				}
-				//// Load/Save
-				if (Keyboard.getEventKey() == Keyboard.KEY_DIVIDE) {
-					WorldSaver.writeWorld();
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_MULTIPLY) {
-					WorldLoader.loadWorld();
-				}
-				//// Tile Choice
-				if (Keyboard.getEventKey() == Keyboard.KEY_1) {
-					this.type = TileType.Dirt;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_2) {
-					this.type = TileType.Stone;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_3) {
-					this.type = TileType.Grass;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_4) {
-					this.type = TileType.Log;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_5) {
-					this.type = TileType.Leaves;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_6) {
-					this.type = TileType.Fader;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_7) {
-					this.type = TileType.Spikes;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_8) {
-					this.type = TileType.Sand;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_9) {
-					this.type = TileType.Creator;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_0) {
-					this.type = TileType.Piston;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_W) {
-					this.type = TileType.Water;
-				}
-				
-				//// Tile Rotation
-				if (Keyboard.getEventKey() == Keyboard.KEY_R && pointed != null) {
-					GameWorld.chunkMap.rotateTileAt(pointed.x, pointed.y, pointed.getOrientation().getNext());
-				}
+
+		//// Player target bind/unbind
+		if (Input.isFocusOnPlayer()) {
+			if (target == null) {
+				target = GameWorld.player;
+				GameWorld.player.isInControl = true;
+			} else {
+				target = null;
+				GameWorld.player.isInControl = false;
 			}
 		}
+		
+		//// VSync
+		if (Input.isVSync()) {
+			if (DisplayManager.vSyncTracker) DisplayManager.vSyncTracker = false;
+			else DisplayManager.vSyncTracker = true;
+			
+			Display.setVSyncEnabled(DisplayManager.vSyncTracker);
+		}
+		
+		//// Load/Save
+		if (Input.isWriteWorld()) WorldSaver.writeWorld();
+		if (Input.isLoadWorld())  WorldLoader.loadWorld();
+		
+		//// Tile Choice
+		if (Input.isKey1())	this.type = TileType.Dirt;
+		if (Input.isKey2())	this.type = TileType.Stone;
+		if (Input.isKey3()) this.type = TileType.Grass;
+		if (Input.isKey4()) this.type = TileType.Log;
+		if (Input.isKey5())	this.type = TileType.Leaves;
+		if (Input.isKey6())	this.type = TileType.Fader;
+		if (Input.isKey7())	this.type = TileType.Spikes;
+		if (Input.isKey8())	this.type = TileType.Sand;
+		if (Input.isKey9())	this.type = TileType.Creator;
+		if (Input.isKey0())	this.type = TileType.Piston;
+		if (Input.isKeyWater()) this.type = TileType.Water;
+		
+		//// Tile Rotation
+		if (Input.isTileRotate() && pointed != null)
+			GameWorld.chunkMap.rotateTileAt(pointed.x, pointed.y, pointed.getOrientation().getNext());
 		
 		this.preview.pos.x = Maths.fastFloor(getMouseWorldX()) + Tile.TILE_SIZE/2;
 		this.preview.pos.y = Maths.fastFloor(getMouseWorldY()) + Tile.TILE_SIZE/2;
 		
 		//// Drawing
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1))) {
+		if (Input.isLShift() && (Input.isMouseLeft() || Input.isMouseRight())) {
 			if (drawStart == null) {
-				if (Mouse.isButtonDown(0)) {
-					isRemoving = false;
-				} else if (Mouse.isButtonDown(1)) {
-					isRemoving = true;
-				}
+				if (Input.isMouseLeft()) isRemoving = false;
+				else if (Input.isMouseRight()) isRemoving = true;
+				
 				drawStart = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 				isSelecting = true;
 			} else {
@@ -236,10 +196,10 @@ public class Camera {
 			drawStart = null;
 		}
 		if (!isSelecting) {
-			if (Mouse.isButtonDown(0)) {
+			if (Input.isMouseLeft()) {
 				GameWorld.chunkMap.setTile(TileBuilder.buildTile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
 			}
-			if (Mouse.isButtonDown(1)) {
+			if (Input.isMouseRight()) {
 				GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 			}
 		}

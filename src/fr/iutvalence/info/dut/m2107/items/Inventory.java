@@ -2,6 +2,9 @@ package fr.iutvalence.info.dut.m2107.items;
 
 import java.util.*;
 
+import fr.iutvalence.info.dut.m2107.items.AmmunitionItem.AmmoType;
+import fr.iutvalence.info.dut.m2107.items.Item.ItemType;
+
 /**
  * An inventory system which contain item
  * @author boureaue
@@ -35,7 +38,6 @@ public class Inventory {
 				}
 			}
 		}
-		stackOverflow(item);
 		return false;
 	}
 	
@@ -55,24 +57,7 @@ public class Inventory {
 				return true;
 			}
 		}
-		stackUnderflow(inventory.get(index));
 		return false;
-	}
-	
-	/**
-	 * Display a message that says you can't take more item
-	 * @param item The item which is in overflow
-	 */
-	private void stackOverflow(Item item) {
-		System.out.println("You can't carry more than : " + item.max_stack() + " " + item.name());
-	}
-	
-	/**
-	 * Display a message that says you can't remove more item
-	 * @param item The item which is in underflow
-	 */
-	private void stackUnderflow(Item item) {
-		System.out.println("You can't remove more than : " + item.stack() + " " + item.name());
 	}
 	
 	/**
@@ -129,6 +114,20 @@ public class Inventory {
 				else return item2.stack() - (item1.stack());
 			}
 		});
+	}
+	
+	public AmmunitionItem getArrow() {
+		for (Item item : inventory)
+			if(item.type() == ItemType.AMMO && (((AmmunitionItem) item).getSubtype() == AmmoType.ARROW))
+				return (AmmunitionItem)item;
+		return null;
+	}
+	
+	public AmmunitionItem getBullet() {
+		for (Item item : inventory)
+			if(item.type() == ItemType.AMMO)
+				return (AmmunitionItem)item;
+		return null;
 	}
 
 	@Override

@@ -7,9 +7,9 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
 
 public class LivingEntity extends MovableEntity {
 
-	private final int DEF_HEALTH = 10;
-	private final int DEF_ARMOR = 10;
-	private final int DEF_JUMP_HEIGHT = 15;
+	private static final int DEF_HEALTH = 10;
+	private static final int DEF_ARMOR = 10;
+	private static final int DEF_JUMP_HEIGHT = 15;
 	
 	protected int health;
 	protected int armor;
@@ -43,6 +43,10 @@ public class LivingEntity extends MovableEntity {
 	public void update(Layer layer) {
 		super.update(layer);
 		if(this.health <= 0) layer.remove(this);
+	}
+
+	public void takeDamage(int damage) {
+		this.health -= damage;
 	}
 
 }

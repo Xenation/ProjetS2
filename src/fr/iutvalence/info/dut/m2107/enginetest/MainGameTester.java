@@ -3,19 +3,27 @@ package fr.iutvalence.info.dut.m2107.enginetest;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.entities.Collider;
+import fr.iutvalence.info.dut.m2107.entities.EntityDatabase;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
-import fr.iutvalence.info.dut.m2107.entities.MovableEntity;
-import fr.iutvalence.info.dut.m2107.events.EventManager;
-import fr.iutvalence.info.dut.m2107.events.ListenersScanner;
-import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
+import fr.iutvalence.info.dut.m2107.items.ItemDatabase;
+import fr.iutvalence.info.dut.m2107.items.SpriteDatabase;
+import fr.iutvalence.info.dut.m2107.items.WeaponItem;
 import fr.iutvalence.info.dut.m2107.render.*;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Input;
 
 public class MainGameTester {
+	
+	public static float degreeShoot = 0;
+	public static float shootX;
+	public static float shootY;
+	
+	static String strInventory;
 	
 	public static void main(String[] args) {
 		// Display Window initialization
@@ -28,12 +36,8 @@ public class MainGameTester {
 		
 		GameWorld.camera.setTarget(GameWorld.player);
 		
-		Sprite spr = new Sprite("item/sugar", new Vector2f(1, 1));
-		
 		GameWorld.layerMap.addEmpty(4);
-		GameWorld.layerMap.getLayer(0).add(GameWorld.player);
-		GameWorld.layerMap.getLayer(0).add(new LivingEntity(new Vector2f(-1, 1.5f), spr));
-		GameWorld.layerMap.getLayer(0).add(new MovableEntity(new Vector2f(1, 1.5f), spr));
+		GameWorld.layerMap.getLayer(1).add(GameWorld.player);
 		
 		// Debug for the whole chunk rendering 
 		//System.out.println(ChunkLoader.CHUNK_LOADER.debugBuffers());
@@ -56,13 +60,38 @@ public class MainGameTester {
 		
 		WorldLoader.loadWorld();
 		
-		EventManager.init();
+		ItemDatabase.create();
+		
+		GameWorld.player.setWeapon(EntityDatabase.weapon((WeaponItem)ItemDatabase.itemDatabase.get(2), degreeShoot, GameWorld.player));
+		GameWorld.layerMap.getLayer(0).add(GameWorld.player.getWeapon());
+		
+		GameWorld.layerMap.getLayer(1).add(new LivingEntity(new Vector2f(4, -6), 45, SpriteDatabase.getSwordSpr(), new Collider(SpriteDatabase.getSwordSpr()), new Vector2f(), 0, 10, 0, 0));
+		
+		//GameWorld.player.getInventory().add(ItemDatabase.itemDatabase.get(0), 10);
+		GameWorld.player.getInventory().add(ItemDatabase.itemDatabase.get(0), 20);
+		
+		strInventory = GameWorld.player.getInventory().toString();
+		System.out.println(strInventory);
+		
+		/*EventManager.init();
 		for (Class<?> cla : ListenersScanner.listenersClasses) {
 			System.out.println("LISTENER: "+cla.getSimpleName());
-		}
+		}*/
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {
+			if(!strInventory.equals(GameWorld.player.getInventory().toString())) {
+				strInventory = GameWorld.player.getInventory().toString();
+				System.out.println(strInventory);
+			}
+			
+			Input.input();
+			
+			shootX = GameWorld.camera.getMouseWorldX() - GameWorld.player.getPosition().x;
+			shootY = GameWorld.camera.getMouseWorldY() - GameWorld.player.getPosition().y;
+			
+			if (shootY > 0) degreeShoot = (float) (Math.atan(shootX / shootY)*180/Math.PI-90);
+			else degreeShoot = (float) (Math.atan(shootX / shootY)*180/Math.PI+90);
 
 			chunkStats.updateText("Chunks: "+GameWorld.chunkMap.getChunkCount()
 					+ "\nTiles: "+GameWorld.chunkMap.getTilesCount()
