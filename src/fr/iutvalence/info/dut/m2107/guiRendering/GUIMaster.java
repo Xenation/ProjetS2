@@ -20,9 +20,17 @@ public class GUIMaster {
 	}
 	
 	public static void loadElement(GUIElement elem, String textureName) {
-		GUIMeshData data = GUIMeshCreator.generateQuad(elem.width, elem.height);
+		GUIMeshData data = GUIMeshCreator.generateQuad(elem.width, -elem.height);
 		elem.vaoID = Loader.GUI_LOADER.loadtoVao(data.getPositions(), data.getTextureUVs());
 		elem.textureID = Loader.GUI_LOADER.loadTexture(textureName);
+		elem.vertexCount = data.getVertexCount();
+		elements.add(elem);
+	}
+	
+	public static void loadElement(GUIElement elem, int textureID) {
+		GUIMeshData data = GUIMeshCreator.generateQuad(elem.width, -elem.height);
+		elem.vaoID = Loader.GUI_LOADER.loadtoVao(data.getPositions(), data.getTextureUVs());
+		elem.textureID = textureID;
 		elem.vertexCount = data.getVertexCount();
 		elements.add(elem);
 	}

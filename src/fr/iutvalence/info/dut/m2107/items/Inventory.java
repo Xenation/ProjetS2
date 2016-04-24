@@ -25,14 +25,14 @@ public class Inventory {
 	 */
 	public boolean add(Item item, int stack) {
 		int index = inventory.indexOf(item);
-		if(stack <= item.max_stack()) {
+		if(stack <= item.getMaxStack()) {
 			if(index == -1) {
 				item.changeStack(stack);
 				inventory.add(item);
 				return true;
 			} else {
 				Item itemToAdd = inventory.get(index);
-				if(itemToAdd.stack() + stack <= itemToAdd.max_stack()) {
+				if(itemToAdd.getStack() + stack <= itemToAdd.getMaxStack()) {
 					inventory.set(index, itemToAdd.changeStack(stack));
 					return true;
 				}
@@ -49,10 +49,10 @@ public class Inventory {
 	public boolean remove(Item item, int stack) {
 		int index = inventory.indexOf(item);
 		if(index != -1) {
-			if(stack < inventory.get(index).stack()) {
+			if(stack < inventory.get(index).getStack()) {
 				item.changeStack(-stack);
 				return true;
-			} else if(stack == inventory.get(index).stack()) {
+			} else if(stack == inventory.get(index).getStack()) {
 				inventory.remove(index);
 				return true;
 			}
@@ -68,8 +68,8 @@ public class Inventory {
 		Collections.sort(inventory, new Comparator<Item>(){
 			@Override
 			public int compare(Item item1, Item item2) {
-				if(sort >= 0) return item1.name().compareTo(item2.name());
-				else return item2.name().compareTo(item1.name());
+				if(sort >= 0) return item1.getName().compareTo(item2.getName());
+				else return item2.getName().compareTo(item1.getName());
 			}		
 		});
 	}
@@ -82,8 +82,8 @@ public class Inventory {
 		Collections.sort(inventory, new Comparator<Item>(){
 			@Override
 			public int compare(Item item1, Item item2) {
-				if(sort >= 0) return item1.rarity().compareTo(item2.rarity());
-				else return item2.rarity().compareTo(item1.rarity());
+				if(sort >= 0) return item1.getRarity().compareTo(item2.getRarity());
+				else return item2.getRarity().compareTo(item1.getRarity());
 			}		
 		});
 	}
@@ -96,8 +96,8 @@ public class Inventory {
 		Collections.sort(inventory, new Comparator<Item>(){
 			@Override
 			public int compare(Item item1, Item item2) {
-				if(sort >= 0) return item1.value()*item1.stack() - (item2.value()*item2.stack());
-				else return item2.value()*item1.stack() - (item1.value()*item2.stack());
+				if(sort >= 0) return item1.getValue()*item1.getStack() - (item2.getValue()*item2.getStack());
+				else return item2.getValue()*item1.getStack() - (item1.getValue()*item2.getStack());
 			}		
 		});
 	}
@@ -110,22 +110,22 @@ public class Inventory {
 		Collections.sort(inventory, new Comparator<Item>(){
 			@Override
 			public int compare(Item item1, Item item2) {
-				if(sort >= 0) return item1.stack() - (item2.stack());
-				else return item2.stack() - (item1.stack());
+				if(sort >= 0) return item1.getStack() - (item2.getStack());
+				else return item2.getStack() - (item1.getStack());
 			}
 		});
 	}
 	
 	public AmmunitionItem getArrow() {
 		for (Item item : inventory)
-			if(item.type() == ItemType.AMMO && (((AmmunitionItem) item).getSubtype() == AmmoType.ARROW))
+			if(item.getType() == ItemType.AMMO && (((AmmunitionItem) item).getSubtype() == AmmoType.ARROW))
 				return (AmmunitionItem)item;
 		return null;
 	}
 	
 	public AmmunitionItem getBullet() {
 		for (Item item : inventory)
-			if(item.type() == ItemType.AMMO)
+			if(item.getType() == ItemType.AMMO)
 				return (AmmunitionItem)item;
 		return null;
 	}

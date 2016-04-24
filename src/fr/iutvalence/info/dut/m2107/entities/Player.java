@@ -2,6 +2,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.enginetest.MainGameTester;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.items.Inventory;
 import fr.iutvalence.info.dut.m2107.items.Item;
@@ -31,7 +32,11 @@ public class Player extends Character{
 	public void update(Layer layer) {
 		input();
 		
-		if(Input.isUseWeapon()) this.weapon.use();
+		if(this.itemToUse != null) this.itemToUse.setRotation(MainGameTester.degreeShoot+45);
+		
+		if(Input.isUseWeapon() && this.itemToUse != null)
+			if(this.itemToUse instanceof WeaponEntity)
+				((WeaponEntity) this.itemToUse).use();
 		
 		playerGUI.updateText("IsGrounded : " + this.isGrounded +
 							"\nIsInAir : " + !this.isGrounded);
@@ -60,4 +65,6 @@ public class Player extends Character{
 	}
 	
 	public Inventory getInventory() {return this.inventory;}
+	
+	public Item[] getQuickBar() {return this.quick_Bar;}
 }

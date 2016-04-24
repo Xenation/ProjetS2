@@ -43,6 +43,8 @@ public class Input {
 	
 	private static boolean isPaused;
 	
+	private static int wheelScrolling;
+	
 	public static void input() {
 		
 		isJumping = false;
@@ -117,6 +119,8 @@ public class Input {
 		    	// Do ... when released
 		    }
 		}
+		
+		wheelScrolling = Mouse.getDWheel()/120;
 	}
 
 	public static boolean isJumping() {return isJumping;}
@@ -158,4 +162,6 @@ public class Input {
 	public static boolean isEscape() {return isEscape;}
 
 	public static boolean isPaused() {return isPaused;}
+	
+	public static int WheelScrolling() {return wheelScrolling;}
 }

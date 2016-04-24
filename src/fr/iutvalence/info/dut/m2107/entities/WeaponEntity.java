@@ -49,14 +49,13 @@ public class WeaponEntity extends Entity {
 					this.useSword();
 					break;
 			}
-		}
+		} else System.out.println((useTime - remainingTime) + "seconds left to use");
 	}
 
 	@Override
 	public void update(Layer layer) {
 		this.remainingTime += DisplayManager.deltaTime();
 		this.pos = this.owner.pos;
-		this.rot = MainGameTester.degreeShoot +45;
 	}
 	
 	private void bowUse() {
@@ -67,7 +66,7 @@ public class WeaponEntity extends Entity {
 				arrowEnt.addWeaponStats(this);
 				GameWorld.layerMap.getLayer(0).add(arrowEnt);
 				GameWorld.player.getInventory().remove(arrow, 1);
-			}
+			} else System.out.println("No more arrow in inventory");
 		}
 	}
 	
@@ -76,8 +75,10 @@ public class WeaponEntity extends Entity {
 		tmpCol.extendRight(range);
 		Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getLayer(1));
 		if(ent != this.owner)
-			if(ent instanceof LivingEntity)
-				((LivingEntity) ent).takeDamage(this.damage);		
+			if(ent instanceof LivingEntity) {
+				((LivingEntity) ent).takeDamage(this.damage);
+				System.out.println(this.damage + " damage to " + ent + "\t" + ((LivingEntity) ent).health + " hp left");
+			}
 	}
 	
 	public int getDamage() {return damage;}
@@ -85,5 +86,5 @@ public class WeaponEntity extends Entity {
 	public float getUseTime() {return useTime;}
 	public int getKnockback() {return knockback;}
 	public Effect getEffect() {return effect;}
-	
+	public Character getOwner() {return owner;}
 }

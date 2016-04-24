@@ -3,7 +3,6 @@ package fr.iutvalence.info.dut.m2107.entities;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.models.Sprite;
-import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
@@ -19,7 +18,7 @@ public class Character extends LivingEntity{
 	
 	protected CharacterType type;
 	
-	protected WeaponEntity weapon;
+	protected Entity itemToUse;
 	
 	public Character() {
 		super();
@@ -47,7 +46,7 @@ public class Character extends LivingEntity{
 		this.col.checkCharacterContinuousCollision();
 		
 		// STEP DOWN
-		/*if(isGrounded == false && prevGrounded == true && this.vel.y < 0) {
+		if(isGrounded == false && prevGrounded == true && this.vel.y < 0) {
 			
 			Collider tmp = new Collider(new Vector2f(this.col.getMinX(), this.col.getMinY()), new Vector2f(this.col.getMaxX(), this.col.getMaxY()));
 			tmp.extendDown(Tile.TILE_SIZE + 0.1f);
@@ -56,10 +55,9 @@ public class Character extends LivingEntity{
 				this.vel.y = 0;
 				this.pos.y = tmpTile.y + Tile.TILE_SIZE + this.spr.getSize().y/2;
 				this.isGrounded = true;
-				System.out.println("StepDown");
 			}
 		}
-		prevGrounded = isGrounded;*/
+		prevGrounded = isGrounded;
 		
 		/*for (Entity entity : layer) {
 			if(entity != this) this.col.checkCollision(this, entity);
@@ -67,8 +65,8 @@ public class Character extends LivingEntity{
 		super.update(layer);
 	}
 	
-	public void setWeapon(WeaponEntity weapon) {this.weapon = weapon;}
-	public WeaponEntity getWeapon() {return this.weapon;}
+	public void setItemToUse(Entity itemToUse) {this.itemToUse = itemToUse;}
+	public Entity getItemToUse() {return this.itemToUse;}
 	public CharacterType getType() {return this.type;}
 
 }

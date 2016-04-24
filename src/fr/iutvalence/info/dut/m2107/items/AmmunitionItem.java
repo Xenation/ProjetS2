@@ -24,6 +24,14 @@ public class AmmunitionItem extends Item {
 		this.subtype = subtype;
 	}
 	
+	public AmmunitionItem(AmmunitionItem item) {
+		super(item);
+		this.damage = item.damage;
+		this.speed = item.speed;
+		this.knockback = item.knockback;
+		this.subtype = item.subtype;
+	}
+
 	public int getDamage() {return damage;}
 	public float getSpeed() {return speed;}
 	public int getKnockback() {return knockback;}

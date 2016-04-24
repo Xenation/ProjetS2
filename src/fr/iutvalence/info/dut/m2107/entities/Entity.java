@@ -78,36 +78,36 @@ public class Entity {
 		return;
 	}
 
-	public Sprite getSprite() {
-		return this.spr;
-	}
+	public Sprite getSprite() {return this.spr;}
 
-	public Vector2f getPosition() {
-		return pos;
-	}
+	public Vector2f getPosition() {return pos;}
 
-	public void setPosition(Vector2f pos) {
-		this.pos = pos;
-	}
+	public void setPosition(Vector2f pos) {this.pos = pos;}
 
-	public Vector2f getScale() {
-		return scale;
-	}
+	public Vector2f getScale() {return scale;}
 
-	public void setScale(Vector2f scale) {
-		this.scale = scale;
-	}
+	public void setScale(Vector2f scale) {this.scale = scale;}
 	
 	public void setScale(float w, float h) {
 		this.scale.x = w;
 		this.scale.y = h;
 	}
 
-	public float getRotation() {
-		return rot;
+	public float getRotation() {return rot;}
+
+	public void setRotation(float rot) {this.rot = rot;}
+
+	public boolean equals(Entity obj ) {
+		if(this.pos == obj.pos &&
+				//this.rot == obj.rot &&
+				this.spr == obj.spr)
+			return true;
+		return false;
 	}
 
-	public void setRotation(float rot) {
-		this.rot = rot;
+	@Override
+	public String toString() {
+		return "Entity [pos=" + pos + ", rot=" + rot + "]";
 	}	
+	
 }

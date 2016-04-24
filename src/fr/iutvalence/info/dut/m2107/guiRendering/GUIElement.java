@@ -18,6 +18,13 @@ public class GUIElement {
 		this.height = height;
 		GUIMaster.loadElement(this, textureName);
 	}
+	
+	public GUIElement(int textureID, Vector2f pos, float width, float height) {
+		this.position = pos;
+		this.width = width;
+		this.height = height;
+		GUIMaster.loadElement(this, textureID);
+	}
 
 	public int getVaoID() {
 		return vaoID;

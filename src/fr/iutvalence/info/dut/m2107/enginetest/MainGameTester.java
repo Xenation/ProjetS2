@@ -68,13 +68,10 @@ public class MainGameTester {
 		
 		ItemDatabase.create();
 		
-		GameWorld.player.setWeapon(EntityDatabase.weapon((WeaponItem)ItemDatabase.itemDatabase.get(2), degreeShoot, GameWorld.player));
-		GameWorld.layerMap.getLayer(0).add(GameWorld.player.getWeapon());
-		
 		GameWorld.layerMap.getLayer(1).add(new LivingEntity(new Vector2f(4, -6), 45, SpriteDatabase.getSwordSpr(), new Collider(SpriteDatabase.getSwordSpr()), new Vector2f(), 0, 10, 0, 0));
 		
-		//GameWorld.player.getInventory().add(ItemDatabase.itemDatabase.get(0), 10);
-		GameWorld.player.getInventory().add(ItemDatabase.itemDatabase.get(0), 20);
+		GameWorld.player.getInventory().add(ItemDatabase.get(0), 20);
+		GameWorld.player.getInventory().add(ItemDatabase.get(1), 10);
 		
 		strInventory = GameWorld.player.getInventory().toString();
 		System.out.println(strInventory);
@@ -86,7 +83,41 @@ public class MainGameTester {
 
 		EventManager.register(new TileListener());
 		
-		GUIElement gui = new GUIElement("gui/frame", new Vector2f(0, 0), 0.1f, 0.1f);
+		GameWorld.player.getQuickBar()[0] = ItemDatabase.get(2);
+		GameWorld.player.getQuickBar()[1] = ItemDatabase.get(3);
+		GameWorld.player.getQuickBar()[2] = ItemDatabase.get(0);
+		GameWorld.player.getQuickBar()[3] = ItemDatabase.get(1);
+		
+		if(GameWorld.player.getQuickBar()[0] != null) {
+			switch (GameWorld.player.getQuickBar()[0].getType()) {
+				case WEAPON:
+					GameWorld.player.setItemToUse(EntityDatabase.weapon((WeaponItem) GameWorld.player.getQuickBar()[0], GameWorld.player));
+					break;
+				case AMMO:
+				case ARMOR:
+					GameWorld.player.setItemToUse(EntityDatabase.item(GameWorld.player.getQuickBar()[0], GameWorld.player));
+					break;
+				default:
+					break;
+			}
+			GameWorld.layerMap.getLayer(0).add(GameWorld.player.getItemToUse());
+		}
+		
+		// GUI
+		float width = 0.05f;
+		float height = 0.05f;
+		float posX = .5f - width/2;
+		float posY = height;
+		float offsetX = width;
+		for (int slotNumber = 0; slotNumber < 8; slotNumber++) {
+			GUIElement quickBar = new GUIElement("gui/quick_bar_slot", new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber, 1-posY), width, height*DisplayManager.aspectRatio);
+			if(GameWorld.player.getQuickBar()[slotNumber] != null) {
+				GUIElement quickBarItem = new GUIElement(GameWorld.player.getQuickBar()[slotNumber].getSpr().getTextureID(), new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber + 0.01f, 1-posY - 0.02f), width-0.02f, (height-0.02f)*DisplayManager.aspectRatio);
+			}
+		}
+		int selectSlot = 0;
+		GUIElement selectQuickBar = new GUIElement("gui/select_quick_bar_slot", new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, 1-posY), width, height*DisplayManager.aspectRatio);
+		//
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {
@@ -116,6 +147,33 @@ public class MainGameTester {
 			
 			renderer.prepare();
 			renderer.render();
+			
+			// GUI
+			selectSlot += Input.WheelScrolling();
+			if(selectSlot > 7) selectSlot -= 8;
+			if(selectSlot < 0) selectSlot += 8;
+			selectQuickBar.setPosition(new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, selectQuickBar.getPosition().y));
+			//
+			if(GameWorld.player.getQuickBar()[selectSlot] != null) {
+				if(GameWorld.player.getItemToUse() == null || !GameWorld.player.getItemToUse().equals(EntityDatabase.item(GameWorld.player.getQuickBar()[selectSlot], GameWorld.player))) {
+					if(GameWorld.player.getItemToUse() != null) GameWorld.layerMap.getLayer(0).remove(GameWorld.player.getItemToUse());	
+					switch (GameWorld.player.getQuickBar()[selectSlot].getType()) {
+						case WEAPON:
+							GameWorld.player.setItemToUse(EntityDatabase.weapon((WeaponItem) GameWorld.player.getQuickBar()[selectSlot], GameWorld.player));
+							break;
+						case AMMO:
+						case ARMOR:
+							GameWorld.player.setItemToUse(EntityDatabase.item(GameWorld.player.getQuickBar()[selectSlot], GameWorld.player));
+							break;
+						default:
+							break;
+					}
+					GameWorld.layerMap.getLayer(0).add(GameWorld.player.getItemToUse());
+				}
+			} else if(GameWorld.player.getItemToUse() != null) {
+					GameWorld.layerMap.getLayer(0).remove(GameWorld.player.getItemToUse());
+					GameWorld.player.setItemToUse(null);
+			}
 			
 			GUIMaster.render();
 			TextMaster.render();

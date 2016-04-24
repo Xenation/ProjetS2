@@ -19,39 +19,39 @@ public class Item {
 	/**
 	 * The id of the item
 	 */
-	private int id;
+	protected int id;
 	/**
 	 * The sprite of the item
 	 */
-	private Sprite spr;
+	protected Sprite spr;
 	/**
 	 * The type of the item
 	 */
-	private ItemType type;
+	protected ItemType type;
 	/**
 	 * The name of the item
 	 */
-	private String name;
+	protected String name;
 	/**
 	 * The description of the item
 	 */
-	private String description;
+	protected String description;
 	/**
 	 * The rarity of the item
 	 */
-	private Rarity rarity;
+	protected Rarity rarity;
 	/**
 	 * The max stack of the item
 	 */
-	private final int MAX_STACK;
+	protected final int MAX_STACK;
 	/**
 	 * The current stack of the item
 	 */
-	private int stack = 0;
+	protected int stack = 0;
 	/**
 	 * The value of the item
 	 */
-	private int value;
+	protected int value;
 	
 	/**
 	 * Create an item with basics attributes
@@ -63,7 +63,7 @@ public class Item {
 	 * @param maxStack of the item
 	 * @param value of the item
 	 */
-	Item(int id, Sprite spr, ItemType type, String name, String description, Rarity rarity, int maxStack, int value) {
+	public Item(int id, Sprite spr, ItemType type, String name, String description, Rarity rarity, int maxStack, int value) {
 		this.id = id;
 		this.spr = spr;
 		this.type = type;
@@ -74,51 +74,62 @@ public class Item {
 		this.value = value;
 	}
 
+	public Item(Item item) {
+		this.id = item.id;
+		this.spr = item.spr;
+		this.type = item.type;
+		this.name = item.name;
+		this.description = item.description;
+		this.rarity = item.rarity;
+		this.MAX_STACK = item.MAX_STACK;
+		this.value = item.value;
+	}
+
 	/**
 	 * Return the current stack of the item
 	 * @return the current stack of the item
 	 */
-	public int stack() {return this.stack;}
+	public int getStack() {return stack;}
 	/**
 	 * Return the id of the item
 	 * @return the id of the item
 	 */
-	public int id() {return this.id; }
+	public int getId() {return id; }
 	/**
 	 * Return the sprite of the item
 	 * @return the sprite of the item
 	 */
-	public Sprite spr() {return this.spr;}
+	public Sprite getSpr() {return spr;}
 	/**
 	 * Return the type of the item
 	 * @return the type of the item
 	 */
-	public ItemType type() {return this.type;}
+	public ItemType getType() {return type;}
 	/**
 	 * Return the name of the item
 	 * @return the name of the item
 	 */
-	public String name() {return this.name;}
+	public String getName() {return name;}
 	/**
 	 * Return the description of the item
 	 * @return the description of the item
 	 */
-	public String description() {return this.description;}
+	public String getDescription() {return description;}
 	/**
 	 * Return the rarity of the item
 	 * @return the rarity of the item
 	 */
-	public Rarity rarity() {return this.rarity;}
+	public Rarity getRarity() {return rarity;}
 	/**
 	 * Return the max stack of the item
 	 * @return the max stack of the item
 	 */
-	public int max_stack() {return this.MAX_STACK;}
+	public int getMaxStack() {return MAX_STACK;}
 	/**
 	 * Return the value of the item
 	 * @return the value of the item
 	 */
-	public int value() {return this.value;}
+	public int getValue() {return value;}
 
 	/**
 	 * Update the current stack of the item
@@ -139,6 +150,5 @@ public class Item {
 		return "Item [id=" + id + ", type=" + type + ", name=" + name + ", description=" + description
 				+ ", stack=" + stack + ", MAX_STACK=" + MAX_STACK + ", rarity=" + rarity + ", value=" + value + "]";
 	}
-	
 	
 }

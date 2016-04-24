@@ -70,7 +70,7 @@ public class Collider {
 			Collider encompassCol = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2), nextPos);
 			encompassCol.extendAll(this.getW()/2, this.getH()/2);
 			
-			checkCharacterCollision(encompassCol);
+			checkCharacterCollision(encompassCol, stepX);
 			
 			updateColPos();
 			if(this.ent.vel.x != 0) {
@@ -84,7 +84,7 @@ public class Collider {
 		}
 	}
 	
-	public void checkCharacterCollision(Collider encompassCol) {
+	public void checkCharacterCollision(Collider encompassCol, float stepX) {
 		List<Tile> surroundTile = generateSurroundingTiles(encompassCol);
 		if(surroundTile.size() == 0) return;
 		
@@ -103,7 +103,7 @@ public class Collider {
 							GameWorld.chunkMap.getTileAt(tile.x+2, tile.y+4) == null) {
 						// My bottom is between the tile height and there is no block to prevent the StepUp
 						modVel.y = 0;
-						ent.pos.y += tile.y + Tile.TILE_SIZE - this.minY;
+						ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 						((Character)ent).isGrounded = true;
 						hasStepUp = true;
 					} else {
@@ -134,7 +134,7 @@ public class Collider {
 							GameWorld.chunkMap.getTileAt(tile.x-2, tile.y+4) == null) {
 						// My bottom is between the tile height and there is no block to prevent the StepUp
 						modVel.y = 0;
-						ent.pos.y += tile.y + Tile.TILE_SIZE - this.minY;
+						ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 						((Character)ent).isGrounded = true;
 						hasStepUp = true;
 					} else {
@@ -230,7 +230,6 @@ public class Collider {
 	
 	public Entity isCollidingWithEntity(Layer layer) {
 		for (Entity ent : layer){
-			if(ent.col != ((AmmunitionEntity) this.ent).ownWeapon.owner.col)
 				if(!isColliding(this, ent.col))
 					return ent;
 		}

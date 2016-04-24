@@ -16,7 +16,7 @@ public class ItemDatabase {
 	/**
 	 * A list of Item which contain all the items of the game
 	 */
-	public static List<Item> itemDatabase = new ArrayList<Item>();
+	private static List<Item> itemDatabase = new ArrayList<Item>();
 
 	/**
 	 * Create the ItemDatabase
@@ -97,7 +97,7 @@ public class ItemDatabase {
 	 */
 	public static Item findItemName(String name) {
 		for (Item item : itemDatabase) {
-			if(item.name().equals(name))
+			if(item.getName().equals(name))
 				return item;
 		}
 		return null;
@@ -111,9 +111,17 @@ public class ItemDatabase {
 	public static List<Item> findRarity(Rarity rarity) {
 		List<Item> rarityList = new ArrayList<Item>();
 		for (Item item : itemDatabase) {
-			if(item.rarity() == rarity)
+			if(item.getRarity() == rarity)
 				rarityList.add(item);
 		}
 		return rarityList;
+	}
+	
+	public static Item get(int index) {
+		if(itemDatabase.get(index) instanceof AmmunitionItem)
+			return new AmmunitionItem((AmmunitionItem)itemDatabase.get(index));
+		if(itemDatabase.get(index) instanceof WeaponItem)
+			return new WeaponItem((WeaponItem)itemDatabase.get(index));
+		return null;
 	}
 }

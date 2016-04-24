@@ -14,7 +14,7 @@ public class ArmorItem extends Item{
 	
 	protected ArmorType subtype;
 	
-	ArmorItem(int id, Sprite spr, ArmorType subtype, String name, String description, Rarity rarity, int maxStack, int value, int defense) {
+	public ArmorItem(int id, Sprite spr, ArmorType subtype, String name, String description, Rarity rarity, int maxStack, int value, int defense) {
 		super(id, spr, ItemType.ARMOR, name, description, rarity, maxStack, value);
 		this.defense = defense;
 		this.subtype = subtype;
