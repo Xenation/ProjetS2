@@ -53,6 +53,10 @@ public class GUIElement {
 	public Vector2f getPosition() {
 		return position;
 	}
+	
+	public Vector2f getRealPosition() {
+		return new Vector2f(position.x, position.y);
+	}
 
 	public void setPosition(Vector2f position) {
 		this.position = position;

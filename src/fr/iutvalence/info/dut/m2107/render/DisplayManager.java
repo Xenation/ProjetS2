@@ -23,7 +23,7 @@ public class DisplayManager {
 	/**
 	 * The default displayMode to be used
 	 */
-	private static final DisplayMode DEF_DISPLAYMODE = new DisplayMode(1280, 720);
+	private static final DisplayMode DEF_DISPLAYMODE = new DisplayMode(1280, 960);
 	/**
 	 * the maximum number of frames per second
 	 */
@@ -97,6 +97,7 @@ public class DisplayManager {
 			
 			for (int i = 0; i < modes.length; i++) {
 				DisplayMode current = modes[i];
+				System.out.println(current.getWidth()+"x"+current.getHeight()+" "+current.getFrequency());
 				if (current.getWidth() >= finalMode.getWidth() && current.getHeight() >= finalMode.getHeight() && current.getBitsPerPixel() >= finalMode.getBitsPerPixel()) {
 					finalMode = current;
 				}
@@ -107,8 +108,8 @@ public class DisplayManager {
 			fpsCap = finalMode.getFrequency();
 			aspectRatio = ((float) finalMode.getWidth() /(float) finalMode.getHeight());
 			
-			Display.setDisplayMode(DEF_DISPLAYMODE);
-//			Display.setDisplayModeAndFullscreen(finalMode);
+//			Display.setDisplayMode(DEF_DISPLAYMODE);
+			Display.setDisplayModeAndFullscreen(finalMode);
 			Display.setVSyncEnabled(true);
 			Display.create();
 		} catch (LWJGLException e) {

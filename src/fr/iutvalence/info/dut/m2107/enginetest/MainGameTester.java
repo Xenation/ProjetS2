@@ -104,19 +104,19 @@ public class MainGameTester {
 		}
 		
 		// GUI
-		float width = 0.05f;
-		float height = 0.05f;
-		float posX = .5f - width/2;
-		float posY = height;
+		float width = 0.1f;
+		float height = 0.1f;
+		float posX = width/2;
+		float posY = -1+height;
 		float offsetX = width;
 		for (int slotNumber = 0; slotNumber < 8; slotNumber++) {
-			GUIElement quickBar = new GUIElement("gui/quick_bar_slot", new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber, 1-posY), width, height*DisplayManager.aspectRatio);
+			new GUIElement("gui/quick_bar_slot", new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber, posY), width, height);
 			if(GameWorld.player.getQuickBar()[slotNumber] != null) {
-				GUIElement quickBarItem = new GUIElement(GameWorld.player.getQuickBar()[slotNumber].getSpr().getTextureID(), new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber + 0.01f, 1-posY - 0.02f), width-0.02f, (height-0.02f)*DisplayManager.aspectRatio);
+				new GUIElement(GameWorld.player.getQuickBar()[slotNumber].getSpr().getTextureID(), new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber, posY), width-0.02f, height-0.02f);
 			}
 		}
 		int selectSlot = 0;
-		GUIElement selectQuickBar = new GUIElement("gui/select_quick_bar_slot", new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, 1-posY), width, height*DisplayManager.aspectRatio);
+		GUIElement selectQuickBar = new GUIElement("gui/select_quick_bar_slot", new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, posY), width, height);
 		//
 		
 		// Game Loop
@@ -149,7 +149,7 @@ public class MainGameTester {
 			renderer.render();
 			
 			// GUI
-			selectSlot += Input.WheelScrolling();
+			selectSlot -= Input.WheelScrolling();
 			if(selectSlot > 7) selectSlot -= 8;
 			if(selectSlot < 0) selectSlot += 8;
 			selectQuickBar.setPosition(new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, selectQuickBar.getPosition().y));
