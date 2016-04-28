@@ -7,26 +7,18 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 public class Character extends LivingEntity{
-
-	public enum CharacterType{
-		PLAYER,
-		MOB,
-	}
 	
 	protected boolean isGrounded = true;
 	protected boolean prevGrounded = isGrounded;
 	
-	protected CharacterType type;
-	
-	protected Entity itemToUse;
+	protected Item itemToUse;
 	
 	public Character() {
 		super();
 	}
 	
-	public Character(CharacterType type, Vector2f pos, Sprite spr) {
+	public Character(Vector2f pos, Sprite spr) {
 		super(pos, spr);
-		this.type = type;
 	}
 
 	public Character(Vector2f pos, float rot, Sprite spr, Collider col, Vector2f vel, float spd, int health, int armor,
@@ -65,8 +57,6 @@ public class Character extends LivingEntity{
 		super.update(layer);
 	}
 	
-	public void setItemToUse(Entity itemToUse) {this.itemToUse = itemToUse;}
-	public Entity getItemToUse() {return this.itemToUse;}
-	public CharacterType getType() {return this.type;}
-
+	public void setItemToUse(Item itemToUse) {this.itemToUse = itemToUse;}
+	public Item getItemToUse() {return this.itemToUse;}
 }

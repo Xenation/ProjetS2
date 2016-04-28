@@ -4,16 +4,13 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
-import fr.iutvalence.info.dut.m2107.entities.EntityDatabase;
+import fr.iutvalence.info.dut.m2107.entities.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
+import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.ListenersScanner;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
-import fr.iutvalence.info.dut.m2107.items.ItemDatabase;
-import fr.iutvalence.info.dut.m2107.items.SpriteDatabase;
-import fr.iutvalence.info.dut.m2107.items.WeaponItem;
-import fr.iutvalence.info.dut.m2107.guiRendering.GUIElement;
 import fr.iutvalence.info.dut.m2107.guiRendering.GUIMaster;
 import fr.iutvalence.info.dut.m2107.listeners.TileListener;
 import fr.iutvalence.info.dut.m2107.render.*;
@@ -24,12 +21,6 @@ import fr.iutvalence.info.dut.m2107.storage.Input;
 
 public class MainGameTester {
 	
-	public static float degreeShoot = 0;
-	public static float shootX;
-	public static float shootY;
-	
-	static String strInventory;
-	
 	public static void main(String[] args) {
 		// Display Window initialization
 		DisplayManager.createDisplay();
@@ -37,6 +28,8 @@ public class MainGameTester {
 		
 		TextMaster.init();
 		GUIMaster.init();
+		
+		ItemDatabase.create();
 		
 		Renderer renderer = new Renderer();
 		
@@ -66,15 +59,7 @@ public class MainGameTester {
 		
 		WorldLoader.loadWorld();
 		
-		ItemDatabase.create();
-		
 		GameWorld.layerMap.getLayer(1).add(new LivingEntity(new Vector2f(4, -6), 45, SpriteDatabase.getSwordSpr(), new Collider(SpriteDatabase.getSwordSpr()), new Vector2f(), 0, 10, 0, 0));
-		
-		GameWorld.player.getInventory().add(ItemDatabase.get(0), 20);
-		GameWorld.player.getInventory().add(ItemDatabase.get(1), 10);
-		
-		strInventory = GameWorld.player.getInventory().toString();
-		System.out.println(strInventory);
 		
 		EventManager.init();
 		for (Class<?> cla : ListenersScanner.listenersClasses) {
@@ -83,56 +68,10 @@ public class MainGameTester {
 
 		EventManager.register(new TileListener());
 		
-		GameWorld.player.getQuickBar()[0] = ItemDatabase.get(2);
-		GameWorld.player.getQuickBar()[1] = ItemDatabase.get(3);
-		GameWorld.player.getQuickBar()[2] = ItemDatabase.get(0);
-		GameWorld.player.getQuickBar()[3] = ItemDatabase.get(1);
-		
-		if(GameWorld.player.getQuickBar()[0] != null) {
-			switch (GameWorld.player.getQuickBar()[0].getType()) {
-				case WEAPON:
-					GameWorld.player.setItemToUse(EntityDatabase.weapon((WeaponItem) GameWorld.player.getQuickBar()[0], GameWorld.player));
-					break;
-				case AMMO:
-				case ARMOR:
-					GameWorld.player.setItemToUse(EntityDatabase.item(GameWorld.player.getQuickBar()[0], GameWorld.player));
-					break;
-				default:
-					break;
-			}
-			GameWorld.layerMap.getLayer(0).add(GameWorld.player.getItemToUse());
-		}
-		
-		// GUI
-		float width = 0.1f;
-		float height = 0.1f;
-		float posX = width/2;
-		float posY = -1+height;
-		float offsetX = width;
-		for (int slotNumber = 0; slotNumber < 8; slotNumber++) {
-			new GUIElement("gui/quick_bar_slot", new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber, posY), width, height);
-			if(GameWorld.player.getQuickBar()[slotNumber] != null) {
-				new GUIElement(GameWorld.player.getQuickBar()[slotNumber].getSpr().getTextureID(), new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber, posY), width-0.02f, height-0.02f);
-			}
-		}
-		int selectSlot = 0;
-		GUIElement selectQuickBar = new GUIElement("gui/select_quick_bar_slot", new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, posY), width, height);
-		//
-		
 		// Game Loop
 		while (!Display.isCloseRequested()) {
-			if(!strInventory.equals(GameWorld.player.getInventory().toString())) {
-				strInventory = GameWorld.player.getInventory().toString();
-				System.out.println(strInventory);
-			}
 			
 			Input.input();
-			
-			shootX = GameWorld.camera.getMouseWorldX() - GameWorld.player.getPosition().x;
-			shootY = GameWorld.camera.getMouseWorldY() - GameWorld.player.getPosition().y;
-			
-			if (shootY > 0) degreeShoot = (float) (Math.atan(shootX / shootY)*180/Math.PI-90);
-			else degreeShoot = (float) (Math.atan(shootX / shootY)*180/Math.PI+90);
 
 			chunkStats.updateText("Chunks: "+GameWorld.chunkMap.getChunkCount()
 					+ "\nTiles: "+GameWorld.chunkMap.getTilesCount()
@@ -147,33 +86,6 @@ public class MainGameTester {
 			
 			renderer.prepare();
 			renderer.render();
-			
-			// GUI
-			selectSlot -= Input.WheelScrolling();
-			if(selectSlot > 7) selectSlot -= 8;
-			if(selectSlot < 0) selectSlot += 8;
-			selectQuickBar.setPosition(new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, selectQuickBar.getPosition().y));
-			//
-			if(GameWorld.player.getQuickBar()[selectSlot] != null) {
-				if(GameWorld.player.getItemToUse() == null || !GameWorld.player.getItemToUse().equals(EntityDatabase.item(GameWorld.player.getQuickBar()[selectSlot], GameWorld.player))) {
-					if(GameWorld.player.getItemToUse() != null) GameWorld.layerMap.getLayer(0).remove(GameWorld.player.getItemToUse());	
-					switch (GameWorld.player.getQuickBar()[selectSlot].getType()) {
-						case WEAPON:
-							GameWorld.player.setItemToUse(EntityDatabase.weapon((WeaponItem) GameWorld.player.getQuickBar()[selectSlot], GameWorld.player));
-							break;
-						case AMMO:
-						case ARMOR:
-							GameWorld.player.setItemToUse(EntityDatabase.item(GameWorld.player.getQuickBar()[selectSlot], GameWorld.player));
-							break;
-						default:
-							break;
-					}
-					GameWorld.layerMap.getLayer(0).add(GameWorld.player.getItemToUse());
-				}
-			} else if(GameWorld.player.getItemToUse() != null) {
-					GameWorld.layerMap.getLayer(0).remove(GameWorld.player.getItemToUse());
-					GameWorld.player.setItemToUse(null);
-			}
 			
 			GUIMaster.render();
 			TextMaster.render();

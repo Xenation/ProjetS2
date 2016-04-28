@@ -1,9 +1,6 @@
-package fr.iutvalence.info.dut.m2107.items;
+package fr.iutvalence.info.dut.m2107.entities;
 
 import java.util.*;
-
-import fr.iutvalence.info.dut.m2107.items.AmmunitionItem.AmmoType;
-import fr.iutvalence.info.dut.m2107.items.WeaponItem.WeaponType;
 
 /**
  * This class create and initialize a List of item which is the ItemDatabase of the game
@@ -17,16 +14,30 @@ public class ItemDatabase {
 	 * A list of Item which contain all the items of the game
 	 */
 	private static List<Item> itemDatabase = new ArrayList<Item>();
+	
+	private static List<Ammunition> ammunitionDatabase = new ArrayList<Ammunition>();
+	//private static List<Armor> armorDatabase = new ArrayList<Armor>();
+	private static List<Weapon> weaponDatabase = new ArrayList<Weapon>();
 
 	/**
 	 * Create the ItemDatabase
 	 */
 	public static void create() {
-		//						  ID	NAME				DESCRIPTION					 	RARITY	 		MAX 	VALUE
-		itemDatabase.add(new AmmunitionItem(0, SpriteDatabase.getArrowSpr(), AmmoType.ARROW, "Arrow", "A basic arrow", 1, 30, Rarity.POOR, 50, 1));
-		itemDatabase.add(new AmmunitionItem(1, SpriteDatabase.getSpectralArrowSpr(), AmmoType.ARROW, "Spectral Arrow", "A spectral arrow", 3, 100, Rarity.COMMON, 25, 1));
-		itemDatabase.add(new WeaponItem(2, SpriteDatabase.getBowSpr(), WeaponType.BOW, "Bow", "A simple bow", 1, 10, Rarity.POOR, 5, 3, 0, 1, null));
-		itemDatabase.add(new WeaponItem(3, SpriteDatabase.getSwordSpr(), WeaponType.SWORD, "Sword", "A simple sword", 1, 10, Rarity.POOR, 5, 3, 3, 1, null));
+		// AMMUNIITON
+		//							TYPE	SPR							 			ID	NAME				DESC				RARITY			MAX		VAL		DMG		KNO		SPD
+		ammunitionDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			0, 	"Arrow",			"A basic arrow", 	Rarity.POOR,	50,		1,		1,		1,		25));
+		ammunitionDatabase.add(new Arrow	(SpriteDatabase.getSpectralArrowSpr(),	1,	"Spectral Arrow", 	"A spectral arrow",	Rarity.COMMON,	25,		5,		2,		1,		100));
+		
+		// WEAPON
+		//						TYPE	SPR								ID	NAME		DESC				RARITY			MAX		VAL		DMG 	RNG		USE		KNOC
+		weaponDatabase.add(new Bow		(SpriteDatabase.getBowSpr(),	0,	"Bow",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		1,		1));
+		weaponDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	1,	"Sword",	"A simple Sword",	Rarity.POOR,	1,		3, 		5, 		2, 		1,		1));
+		
+		itemDatabase.addAll(ammunitionDatabase);
+		itemDatabase.addAll(weaponDatabase);
+		for (Item item : itemDatabase) {
+			System.out.println(item);
+		}
 	}
 	
 	/**
@@ -118,10 +129,16 @@ public class ItemDatabase {
 	}
 	
 	public static Item get(int index) {
-		if(itemDatabase.get(index) instanceof AmmunitionItem)
-			return new AmmunitionItem((AmmunitionItem)itemDatabase.get(index));
-		if(itemDatabase.get(index) instanceof WeaponItem)
-			return new WeaponItem((WeaponItem)itemDatabase.get(index));
+		Item item = itemDatabase.get(index);
+		if(item instanceof Arrow)
+			return new Arrow((Arrow)item);
+		if(item instanceof Bullet)
+			return new Bullet((Bullet)item);
+		
+		if(item instanceof Bow)
+			return new Bow((Bow)item);
+		if(item instanceof Sword)
+			return new Sword((Sword)item);
 		return null;
 	}
 }

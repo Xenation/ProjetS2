@@ -18,10 +18,10 @@ public class Collider {
 	private float minX, minY;
 	private float maxX, maxY;
 	
-	private float localMinX, localMinY;
-	private float localMaxX, localMaxY;
+	private final float localMinX, localMinY;
+	private final float localMaxX, localMaxY;
 	
-	private MovableEntity ent;
+	private Entity ent;
 	
 	private boolean hasStepUp;
 
@@ -55,16 +55,16 @@ public class Collider {
 		hasStepUp = false;
 		((Character)ent).isGrounded = false;
 		
-		int continuousStep = (int) ((Math.abs(this.ent.vel.x) + Math.abs(this.ent.vel.y))/8+1);
+		int continuousStep = (int) ((Math.abs(((Character)this.ent).vel.x) + Math.abs(((Character)this.ent).vel.y))/8+1);
 
-		float stepXtoAdd = this.ent.vel.x * DisplayManager.deltaTime() / continuousStep;
-		float stepYtoAdd = this.ent.vel.y * DisplayManager.deltaTime() / continuousStep;
+		float stepXtoAdd = ((Character)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
+		float stepYtoAdd = ((Character)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
 		float stepX = this.ent.pos.x;
 		float stepY = this.ent.pos.y;
 		
 		for (int step = continuousStep; step > 0; step--) {
-			if(this.ent.vel.x != 0) stepX += stepXtoAdd;
-			if(this.ent.vel.y != 0) stepY += stepYtoAdd;
+			if(((Character)this.ent).vel.x != 0) stepX += stepXtoAdd;
+			if(((Character)this.ent).vel.y != 0) stepY += stepYtoAdd;
 			Vector2f nextPos = new Vector2f(stepX, stepY);
 			
 			Collider encompassCol = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2), nextPos);
@@ -73,11 +73,11 @@ public class Collider {
 			checkCharacterCollision(encompassCol, stepX);
 			
 			updateColPos();
-			if(this.ent.vel.x != 0) {
+			if(((Character)this.ent).vel.x != 0) {
 				this.minX += stepXtoAdd;
 				this.maxX += stepXtoAdd;
 			}
-			if(this.ent.vel.y != 0) {
+			if(((Character)this.ent).vel.y != 0) {
 				this.minY += stepYtoAdd;
 				this.maxY += stepYtoAdd;
 			}
@@ -113,7 +113,7 @@ public class Collider {
 					}
 				} else {
 					//I'm above or under the tile
-					if(ent.vel.y <= 0) {
+					if(((Character)this.ent).vel.y <= 0) {
 						if(GameWorld.chunkMap.getTopTile(tile) == null) modVel.y = 0;
 						else modVel.x = 0;
 					} else {
@@ -144,7 +144,7 @@ public class Collider {
 					}
 				} else {
 					//I'm above or under the tile
-					if(ent.vel.y <= 0) {
+					if(((Character)this.ent).vel.y <= 0) {
 						if(GameWorld.chunkMap.getTopTile(tile) == null) modVel.y = 0;
 						else modVel.x = 0;
 					} else {
@@ -170,14 +170,14 @@ public class Collider {
 			}
 		}
 		
-		if(!hasStepUp) this.ent.vel.x *= modVel.x;
-		this.ent.vel.y *= modVel.y;
+		if(!hasStepUp) ((Character)this.ent).vel.x *= modVel.x;
+		((Character)this.ent).vel.y *= modVel.y;
 	}
 	
 	public boolean isContinuousCollidingWithMap() {
-		int continuousStep = (int) ((Math.abs(this.ent.vel.x) + Math.abs(this.ent.vel.y))/8+1);
-		float stepXtoAdd = this.ent.vel.x * DisplayManager.deltaTime() / continuousStep;
-		float stepYtoAdd = this.ent.vel.y * DisplayManager.deltaTime() / continuousStep;
+		int continuousStep = (int) ((Math.abs(((Ammunition)this.ent).vel.x) + Math.abs(((Ammunition)this.ent).vel.y))/8+1);
+		float stepXtoAdd = ((Ammunition)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
+		float stepYtoAdd = ((Ammunition)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
 		float stepX = this.ent.pos.x;
 		float stepY = this.ent.pos.y;
 		
@@ -192,7 +192,7 @@ public class Collider {
 			Tile tileColliding = isCollidingWithMap(encompassCol);
 			if(tileColliding != null) {
 				this.ent.pos = nextPos;
-				this.ent.vel = new Vector2f(0, 0);
+				((Ammunition)this.ent).vel = new Vector2f(0, 0);
 				return true;
 			}
 			
@@ -348,8 +348,8 @@ public class Collider {
 	public float getH() {return localMaxY - localMinY;}
 	
 	
-	public void setEnt(MovableEntity ent) {this.ent = ent;}
-	public MovableEntity getEnt() {return this.ent;}
+	public void setEnt(Entity ent) {this.ent = ent;}
+	public Entity getEnt() {return this.ent;}
 
 	@Override
 	public String toString() {

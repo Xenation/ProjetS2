@@ -1,4 +1,4 @@
-package fr.iutvalence.info.dut.m2107.items;
+package fr.iutvalence.info.dut.m2107.entities;
 
 /**
  * An enumeration for the degree of rarity for the item
