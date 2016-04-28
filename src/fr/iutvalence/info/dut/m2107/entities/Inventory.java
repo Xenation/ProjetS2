@@ -1,9 +1,6 @@
-package fr.iutvalence.info.dut.m2107.items;
+package fr.iutvalence.info.dut.m2107.entities;
 
 import java.util.*;
-
-import fr.iutvalence.info.dut.m2107.items.AmmunitionItem.AmmoType;
-import fr.iutvalence.info.dut.m2107.items.Item.ItemType;
 
 /**
  * An inventory system which contain item
@@ -25,14 +22,14 @@ public class Inventory {
 	 */
 	public boolean add(Item item, int stack) {
 		int index = inventory.indexOf(item);
-		if(stack <= item.getMaxStack()) {
+		if(stack <= item.getMAX_STACK()) {
 			if(index == -1) {
 				item.changeStack(stack);
 				inventory.add(item);
 				return true;
 			} else {
 				Item itemToAdd = inventory.get(index);
-				if(itemToAdd.getStack() + stack <= itemToAdd.getMaxStack()) {
+				if(itemToAdd.getStack() + stack <= itemToAdd.getMAX_STACK()) {
 					inventory.set(index, itemToAdd.changeStack(stack));
 					return true;
 				}
@@ -50,7 +47,7 @@ public class Inventory {
 		int index = inventory.indexOf(item);
 		if(index != -1) {
 			if(stack < inventory.get(index).getStack()) {
-				item.changeStack(-stack);
+				inventory.get(index).changeStack(-stack);
 				return true;
 			} else if(stack == inventory.get(index).getStack()) {
 				inventory.remove(index);
@@ -116,17 +113,17 @@ public class Inventory {
 		});
 	}
 	
-	public AmmunitionItem getArrow() {
+	public Arrow getArrow() {
 		for (Item item : inventory)
-			if(item.getType() == ItemType.AMMO && (((AmmunitionItem) item).getSubtype() == AmmoType.ARROW))
-				return (AmmunitionItem)item;
+			if(item instanceof Arrow)
+				return new Arrow((Arrow)item);
 		return null;
 	}
 	
-	public AmmunitionItem getBullet() {
+	public Bullet getBullet() {
 		for (Item item : inventory)
-			if(item.getType() == ItemType.AMMO)
-				return (AmmunitionItem)item;
+			if(item instanceof Bullet)
+				return new Bullet((Bullet)item);
 		return null;
 	}
 

@@ -7,20 +7,31 @@ import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
-public class ArrowEntity extends AmmunitionEntity {
-	
+public class Arrow extends Ammunition {
+
 	protected boolean isPierce = false;
 	
-	public ArrowEntity(Vector2f pos, float rot, Sprite spr, Collider col, Vector2f vel, int dmg, float spd, int knockback, WeaponEntity ownWeapon) {
-		super(pos, rot, spr, col, vel, dmg, spd, knockback, ownWeapon);
+	public Arrow(Vector2f pos, float rot, Sprite spr,
+				int id, String name, String description, Rarity rarity, int maxStack, int value,
+				int damage, int knockback, Vector2f vel, int speed) {
+		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, knockback, vel, speed);
+	}
+	
+	public Arrow(Sprite spr,
+				int id, String name, String description, Rarity rarity, int maxStack, int value,
+				int damage, int knockback, int speed) {
+		super(spr, id, name, description, rarity, maxStack, value, damage, knockback, speed);
+	}
+
+	public Arrow(Arrow arrow) {
+		super(arrow);
 	}
 
 	@Override
 	public void update(Layer layer) {
-		
 		if(!isPierce) {
 			this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
-		
+			
 			if(this.vel.y >= 0) this.rot = (float) (Math.atan(this.vel.x / this.vel.y)*180/Math.PI-45);
 			else this.rot = (float) (Math.atan(this.vel.x / this.vel.y)*180/Math.PI+135);
 			
@@ -35,8 +46,14 @@ public class ArrowEntity extends AmmunitionEntity {
 				}
 			}*/
 		}
-		
 		super.update(layer);
 	}
-	
+
+	public void initLaunch(Weapon weapon) {
+		this.pos = new Vector2f(weapon.pos.x, weapon.pos.y);
+		this.rot = weapon.rot;
+		this.vel = new Vector2f(GameWorld.player.getShoot().x, GameWorld.player.getShoot().y);
+		this.vel.scale(this.speed);
+	}
+
 }
