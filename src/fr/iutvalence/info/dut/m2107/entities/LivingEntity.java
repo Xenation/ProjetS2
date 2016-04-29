@@ -28,6 +28,13 @@ public class LivingEntity extends MovableEntity {
 		this.armor = DEF_ARMOR;
 		this.jumpHeight = DEF_JUMP_HEIGHT;
 	}
+	
+	public LivingEntity(Vector2f pos, Sprite spr, Collider col) {
+		super(pos, spr, col);
+		this.health = DEF_HEALTH;
+		this.armor = DEF_ARMOR;
+		this.jumpHeight = DEF_JUMP_HEIGHT;
+	}
 
 
 	public LivingEntity() {

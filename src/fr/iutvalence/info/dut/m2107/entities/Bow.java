@@ -25,14 +25,17 @@ public class Bow extends Weapon {
 
 	@Override
 	public void use(Character owner) {
-		if(owner instanceof Player) {
-			Arrow arrow = GameWorld.player.getInventory().getArrow();
-			if(arrow != null) {
-				GameWorld.player.getInventory().remove(arrow, 1);
-				arrow.addWeaponStats(this);
-				arrow.initLaunch(this);
-				GameWorld.layerMap.getLayer(0).add(arrow);
-			} else System.out.println("No more arrow in inventory");
+		if(this.remainingTime <= 0) {
+			if(owner instanceof Player) {
+				Arrow arrow = GameWorld.player.getInventory().getArrow();
+				if(arrow != null) {
+					GameWorld.player.getInventory().remove(arrow, 1);
+					arrow.addWeaponStats(this);
+					arrow.initLaunch(this);
+					GameWorld.layerMap.getLayer(0).add(arrow);
+				} else System.out.println("No more arrow in inventory");
+			}
+			this.remainingTime = this.useTime;
 		}
 		super.use(owner);
 	}

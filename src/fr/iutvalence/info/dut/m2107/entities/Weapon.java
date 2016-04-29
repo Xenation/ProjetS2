@@ -3,6 +3,8 @@ package fr.iutvalence.info.dut.m2107.entities;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.render.DisplayManager;
+import fr.iutvalence.info.dut.m2107.storage.Layer;
 
 public abstract class Weapon extends Item {
 	
@@ -10,6 +12,8 @@ public abstract class Weapon extends Item {
 	protected final int range;
 	protected final float useTime;
 	protected final int knockback;
+	
+	protected float remainingTime = 0;
 
 	public Weapon(Vector2f pos, float rot, Sprite spr,
 				int id, String name, String description, Rarity rarity, int maxStack, int value,
@@ -42,9 +46,16 @@ public abstract class Weapon extends Item {
 	public void use(Character owner) {
 		return;
 	}
+	
+	@Override
+	public void update(Layer layer) {
+		this.remainingTime -= DisplayManager.deltaTime();
+		super.update(layer);
+	}
 
 	public int getDamage() {return damage;}
 	public int getRange() {return range;}
 	public float getUseTime() {return useTime;}
 	public int getKnockback() {return knockback;}
+	public float getRemainingTime() {return remainingTime;}
 }

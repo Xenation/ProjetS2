@@ -19,28 +19,30 @@ public class MovableEntity extends Entity {
 		super(pos, rot, spr, col);
 		this.vel = vel;
 		this.spd = spd;
-
 	}
 	
 	public MovableEntity(Vector2f pos, Sprite spr) {
 		super(pos, spr);
 		this.vel = DEF_VEL;
 		this.spd = DEF_SPD;
-
+	}
+	
+	public MovableEntity(Vector2f pos, Sprite spr, Collider col) {
+		super(pos, spr, col);
+		this.vel = DEF_VEL;
+		this.spd = DEF_SPD;
 	}
 	
 	public MovableEntity(Vector2f pos, float rot, Sprite spr, Vector2f vel) {
 		super(pos, rot, spr);
 		this.vel = vel;
 		this.spd = DEF_SPD;
-
 	}
 	
 	public MovableEntity() {
 		super();
 		this.vel = DEF_VEL;
 		this.spd = DEF_SPD;
-
 	}
 	
 	@Override

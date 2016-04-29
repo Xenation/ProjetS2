@@ -24,6 +24,10 @@ public class Sword extends Weapon {
 
 	@Override
 	public void use(Character owner) {
+		if(remainingTime <= 0) {
+			System.out.println("swoosh");
+			this.remainingTime = this.useTime;
+		}
 //		Collider tmpCol = new Collider(owner.col.getMin(), owner.col.getMax());
 //		tmpCol.extendRight(range);
 //		Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getLayer(1));

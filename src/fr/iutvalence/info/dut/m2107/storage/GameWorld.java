@@ -26,7 +26,7 @@ public class GameWorld {
 	/**
 	 * The player
 	 */
-	public static final Player player = new Player(new Vector2f());
+	public static final Player player = new Player();
 	/**
 	 * The camera
 	 */

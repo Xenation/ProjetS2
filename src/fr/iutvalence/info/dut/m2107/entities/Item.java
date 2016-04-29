@@ -47,6 +47,17 @@ public class Item extends Entity {
 		this.value = value;
 	}
 	
+	public Item(Sprite spr, Collider col,
+				int id, String name, String description, Rarity rarity, int maxStack, int value) {
+		super(spr, col);
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.rarity = rarity;
+		this.MAX_STACK = maxStack;
+		this.value = value;
+	}
+	
 	public Item(Sprite spr,
 				int id, String name, String description, Rarity rarity, int maxStack, int value) {
 		super(spr);
@@ -59,7 +70,7 @@ public class Item extends Entity {
 	}
 	
 	public Item(Item item) {
-		super(item.spr);
+		super(item.spr, item.col);
 		this.id = item.id;
 		this.name = item.name;
 		this.description = item.description;

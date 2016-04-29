@@ -28,10 +28,10 @@ public abstract class Ammunition extends Item {
 		this.vel.scale(speed);
 	}
 	
-	public Ammunition(Sprite spr,
+	public Ammunition(Sprite spr, Collider col,
 					int id, String name, String description, Rarity rarity, int maxStack, int value,
 					int damage, int knockback, int speed) {
-		super(spr, id, name, description, rarity, maxStack, value);
+		super(spr, col, id, name, description, rarity, maxStack, value);
 		this.damage = damage;
 		this.knockback = knockback;
 		this.vel = DEF_VEL;

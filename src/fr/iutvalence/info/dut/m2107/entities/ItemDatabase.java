@@ -24,9 +24,9 @@ public class ItemDatabase {
 	 */
 	public static void create() {
 		// AMMUNIITON
-		//							TYPE	SPR							 			ID	NAME				DESC				RARITY			MAX		VAL		DMG		KNO		SPD
-		ammunitionDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			0, 	"Arrow",			"A basic arrow", 	Rarity.POOR,	50,		1,		1,		1,		25));
-		ammunitionDatabase.add(new Arrow	(SpriteDatabase.getSpectralArrowSpr(),	1,	"Spectral Arrow", 	"A spectral arrow",	Rarity.COMMON,	25,		5,		2,		1,		100));
+		//							TYPE	SPR							 			COL											ID	NAME				DESC				RARITY			MAX		VAL		DMG		KNO		SPD
+		ammunitionDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			new Collider(-.05f, -.05f, .05f, .05f),		0, 	"Arrow",			"A basic arrow", 	Rarity.POOR,	50,		1,		1,		1,		25));
+		ammunitionDatabase.add(new Arrow	(SpriteDatabase.getSpectralArrowSpr(),	new Collider(-.05f, -.05f, .05f, .05f),		1,	"Spectral Arrow", 	"A spectral arrow",	Rarity.COMMON,	25,		5,		2,		1,		100));
 		
 		// WEAPON
 		//						TYPE	SPR								ID	NAME		DESC				RARITY			MAX		VAL		DMG 	RNG		USE		KNOC

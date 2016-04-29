@@ -20,19 +20,19 @@ public class Player extends Character{
 	private String strInventory;
 	
 	private Item[] quick_Bar = new Item[8];
-	float width = 0.05f;
-	float height = 0.05f*DisplayManager.aspectRatio;
-	float posX = .5f - width/2;
-	float posY = height;
-	float offsetX = width;
-	int selectSlot = 0;
-	GUIElement selectQuickBar;
+	private float width = 0.05f;
+	private float height = 0.05f*DisplayManager.aspectRatio;
+	private float posX = .5f - width/2;
+	private float posY = height;
+	private float offsetX = width;
+	private int selectSlot = 0;
+	private GUIElement selectQuickBar;
 	
 	private float degreeShoot = 0;
 	private Vector2f shoot;
 
-	public Player(Vector2f pos) {
-		super(pos, SpriteDatabase.getPlayerSpr());
+	public Player() {
+		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.5f, -1.8f, .5f, 1.8f));
 		playerGUI.setColour(0, 1, 0);
 		playerGUI.setLineHeight(0.024);
 		initQuickBar();
@@ -64,7 +64,7 @@ public class Player extends Character{
 	}
 
 	@Override
-	public void update(Layer layer) {
+	public void update(Layer layer) {		
 		if(!strInventory.equals(this.inventory.toString())) {
 			strInventory = this.inventory.toString();
 			System.out.println(strInventory);
@@ -81,12 +81,13 @@ public class Player extends Character{
 			this.itemToUse.pos = this.pos;
 		}
 		
-		if(Input.isUseWeapon() && this.itemToUse != null)
+		if(Input.isUseWeapon() && this.itemToUse != null) {
 			if(this.itemToUse instanceof Bow)
 				((Bow) this.itemToUse).use(this);
 			if(this.itemToUse instanceof Sword)
 				((Sword) this.itemToUse).use(this);
-	
+		}
+		
 		playerGUI.updateText("IsGrounded : " + this.isGrounded +
 							"\nIsInAir : " + !this.isGrounded);
 		super.update(layer);
@@ -98,7 +99,6 @@ public class Player extends Character{
 
 		if (shoot.y > 0) degreeShoot = (float) (Math.atan(shoot.x / shoot.y)*180/Math.PI-90);
 		else degreeShoot = (float) (Math.atan(shoot.x / shoot.y)*180/Math.PI+90);
-		
 	}
 
 	private void updateQuickBar() {
@@ -107,7 +107,7 @@ public class Player extends Character{
 		if(selectSlot < 0) selectSlot += 8;
 		selectQuickBar.setPosition(new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, selectQuickBar.getPosition().y));			
 		
-		if(this.itemToUse != this.quick_Bar[selectSlot]) {				
+		if(this.itemToUse != this.quick_Bar[selectSlot]) {
 			if(this.quick_Bar[selectSlot] != null) {
 				if(this.itemToUse == null) {
 					if(!(this.quick_Bar[selectSlot] instanceof Weapon))

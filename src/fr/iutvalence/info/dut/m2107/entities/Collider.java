@@ -12,6 +12,7 @@ import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
+import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Collider {
 
@@ -296,11 +297,11 @@ public class Collider {
 	}
 
 	public void updateColPos() {
-		this.minX = ent.pos.x + localMinX;
-		this.minY = ent.pos.y + localMinY;
+		this.minX = Maths.round(ent.pos.x + localMinX, 5);
+		this.minY = Maths.round(ent.pos.y + localMinY, 5);
 		
-		this.maxX = ent.pos.x + localMaxX;
-		this.maxY = ent.pos.y + localMaxY;
+		this.maxX = Maths.round(ent.pos.x + localMaxX, 5);
+		this.maxY = Maths.round(ent.pos.y + localMaxY, 5);
 	}
 	
 	private void updateLocPos() {
@@ -329,8 +330,8 @@ public class Collider {
 	public void extendLeft (float left)  {this.minX -= left;}
 	public void extendRight(float right) {this.maxX += right;}
 	
-	public void extendUp  (float up)   {this.maxY += up;}
 	public void extendDown(float down) {this.minY -= down;}
+	public void extendUp  (float up)   {this.maxY += up;}
 	
 	public Vector2f getMin() {return new Vector2f(minX, minY);}
 	public Vector2f getMax() {return new Vector2f(maxX, maxY);}
@@ -354,7 +355,7 @@ public class Collider {
 	@Override
 	public String toString() {
 		return "Collider [minX=" + minX + ", minY=" + minY + ", maxX=" + maxX + ", maxY=" + maxY + ", W="
-				+ getActualW() + ", H=" + getActualH() + "]";
+				+ getW() + ", H=" + getH() + "]";
 	}
 
 

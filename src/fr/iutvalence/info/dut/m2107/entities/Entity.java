@@ -26,7 +26,7 @@ public class Entity {
 		this.pos = pos;
 		this.rot = rot;
 		this.spr = spr;
-		this.scale = DEF_SCALE;
+		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = new Collider(spr);
 		col.setEnt(this);
 		col.updateColPos();
@@ -36,7 +36,7 @@ public class Entity {
 		this.pos = pos;
 		this.rot = rot;
 		this.spr = spr;
-		this.scale = DEF_SCALE;
+		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = col;
 		if(col != null) {
 			col.setEnt(this);
@@ -58,28 +58,48 @@ public class Entity {
 		this.pos = pos;
 		this.rot = DEF_ROT;
 		this.spr = spr;
-		this.scale = DEF_SCALE;
+		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = new Collider(spr);
 		col.setEnt(this);
 		col.updateColPos();
 	}
 	
-	public Entity(Sprite spr) {
-		this.pos = DEF_POS;
+	public Entity(Vector2f pos, Sprite spr, Collider col) {
+		this.pos = pos;
 		this.rot = DEF_ROT;
 		this.spr = spr;
-		this.scale = DEF_SCALE;
+		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
+		this.col = col;
+		col.setEnt(this);
+		col.updateColPos();
+	}
+	
+	public Entity(Sprite spr) {
+		this.pos = new Vector2f(DEF_POS.x, DEF_POS.y);
+		this.rot = DEF_ROT;
+		this.spr = spr;
+		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = new Collider(spr);
+		col.setEnt(this);
+		col.updateColPos();
+	}
+	
+	public Entity(Sprite spr, Collider col) {
+		this.pos = new Vector2f(DEF_POS.x, DEF_POS.y);
+		this.rot = DEF_ROT;
+		this.spr = spr;
+		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
+		this.col = col;
 		col.setEnt(this);
 		col.updateColPos();
 	}
 	
 	
 	public Entity() {
-		this.pos = DEF_POS;
+		this.pos = new Vector2f(DEF_POS.x, DEF_POS.y);
 		this.rot = DEF_ROT;
 		this.spr = DEF_SPR;
-		this.scale = DEF_SCALE;
+		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = new Collider(spr);
 		col.setEnt(this);
 		col.updateColPos();

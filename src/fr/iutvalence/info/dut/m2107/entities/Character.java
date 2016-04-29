@@ -3,15 +3,19 @@ package fr.iutvalence.info.dut.m2107.entities;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
+import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Character extends LivingEntity{
 	
 	protected boolean isGrounded = true;
-	protected boolean prevGrounded = isGrounded;
+	protected boolean prevGrounded = true;
 	
 	protected Item itemToUse;
+	
+	protected boolean isFacingRight = true;
 	
 	public Character() {
 		super();
@@ -19,6 +23,10 @@ public class Character extends LivingEntity{
 	
 	public Character(Vector2f pos, Sprite spr) {
 		super(pos, spr);
+	}
+	
+	public Character(Vector2f pos, Sprite spr, Collider col) {
+		super(pos, spr, col);
 	}
 
 	public Character(Vector2f pos, float rot, Sprite spr, Collider col, Vector2f vel, float spd, int health, int armor,
@@ -45,11 +53,17 @@ public class Character extends LivingEntity{
 			Tile tmpTile = tmp.isCollidingWithMap(tmp);
 			if(tmpTile != null) {
 				this.vel.y = 0;
-				this.pos.y = tmpTile.y + Tile.TILE_SIZE + this.spr.getSize().y/2;
+				this.pos.y = tmpTile.y + Tile.TILE_SIZE + this.col.getH()/2;
 				this.isGrounded = true;
 			}
 		}
 		prevGrounded = isGrounded;
+		
+		if(GameWorld.player.getShoot().x > 0) isFacingRight = true;
+		if(GameWorld.player.getShoot().x < 0) isFacingRight = false;
+		
+		if(isFacingRight) this.scale.setX(Maths.fastAbs(this.scale.x));
+		else this.scale.setX(-Maths.fastAbs(this.scale.x));
 		
 		/*for (Entity entity : layer) {
 			if(entity != this) this.col.checkCollision(this, entity);
