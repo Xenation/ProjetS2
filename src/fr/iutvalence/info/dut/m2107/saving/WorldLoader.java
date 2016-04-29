@@ -10,6 +10,7 @@ import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
+import fr.iutvalence.info.dut.m2107.tiles.TileVariant;
 
 /**
  * Used to load data from a save file to the world
@@ -70,10 +71,13 @@ public class WorldLoader {
 			TileType typ = TileType.Dirt;
 			while (buffer.hasRemaining()) {
 				byte t = buffer.get();
+				byte v = buffer.get();
 				int x = buffer.getInt();
 				int y = buffer.getInt();
 				typ = TileType.getTypeById(t);
-				GameWorld.chunkMap.setTilenChunk(TileBuilder.buildTile(typ, x, y));
+				Tile tile = TileBuilder.buildTile(typ, x, y);
+				tile.setVariantUnsafe(TileVariant.getVariantById(v));
+				GameWorld.chunkMap.setTilenChunk(tile);
 			}
 			
 			try {

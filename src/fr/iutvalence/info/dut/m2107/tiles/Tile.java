@@ -122,6 +122,14 @@ public class Tile {
 		GameWorld.chunkMap.get(Chunk.toChunkPosition(x, y)).updateVariant(this, old);
 		EventManager.sendEvent(new TileVariantChangedEvent(this, old));
 	}
+	
+	/**
+	 * Only meant to be used on world loading
+	 * @param var
+	 */
+	public void setVariantUnsafe(TileVariant var) {
+		this.variant = var;
+	}
 
 	/**
 	 * Returns the x coordinate of this tile

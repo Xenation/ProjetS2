@@ -204,7 +204,7 @@ public class Camera {
 			}
 		}
 		
-		String updateStr = "Mouse: "+Maths.roundDecim(getMouseWorldX(), 3)+", "+Maths.roundDecim(getMouseWorldY(), 3) 
+		String updateStr = "Mouse: "+Maths.round(getMouseWorldX(), 3)+", "+Maths.round(getMouseWorldY(), 3) 
 		+ "\nFPS: "+DisplayManager.getFPS()
 		+ "\nVSync = "+DisplayManager.vSyncTracker
 		+ "\nSelecting = "+isSelecting;
