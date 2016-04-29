@@ -27,6 +27,11 @@ public class WorldSaver {
 	private static File file;
 	
 	/**
+	 * The size of a tile in the save file
+	 */
+	private static final int tileByteSize = 10;
+	
+	/**
 	 * Sets the path to the new save file
 	 * @param path the path to the new save file
 	 */
@@ -60,12 +65,13 @@ public class WorldSaver {
 				return;
 			}
 			
-			ByteBuffer buffer = BufferUtils.createByteBuffer(GameWorld.chunkMap.getTilesCount()*9);
+			ByteBuffer buffer = BufferUtils.createByteBuffer(GameWorld.chunkMap.getTilesCount()*tileByteSize);
 			buffer.order(ByteOrder.BIG_ENDIAN);
 			buffer.rewind();
 			for (Chunk chk : GameWorld.chunkMap) {
 				for (Tile tile : chk) {
 					buffer.put(tile.getType().getId());
+					buffer.put(tile.getVariant().id);
 					buffer.putInt(tile.x);
 					buffer.putInt(tile.y);
 				}

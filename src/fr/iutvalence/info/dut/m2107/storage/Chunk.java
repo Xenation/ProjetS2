@@ -81,6 +81,7 @@ public class Chunk implements Iterable<Tile> {
 	 */
 	public void updateVariant(Tile tile, TileVariant oldVariant) {
 		tiles.get(oldVariant).remove(tile);
+		tilesCount--;
 		add(tile);
 	}
 	

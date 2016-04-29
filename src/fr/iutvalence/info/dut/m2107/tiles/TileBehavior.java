@@ -194,7 +194,7 @@ public enum TileBehavior {
 				GameWorld.chunkMap.pushTiles(front.x, front.y, pushing.orientation);
 			}
 			DependantTile arm = (DependantTile) TileBuilder.buildTile(TileType.PistonArm, tile.getFrontX(), tile.getFrontY());
-			arm.setDepending(tile);
+			arm.setDepending(pushing);
 			arm.setOrientation(pushing.orientation.getOpposite());
 			GameWorld.chunkMap.addTile(arm);
 			pushing.setVariant(TileVariant.Piston_extended);
