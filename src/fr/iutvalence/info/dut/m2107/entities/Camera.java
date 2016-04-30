@@ -70,6 +70,8 @@ public class Camera {
 	
 	private Entity preview;
 	
+	private boolean isFree = true;
+	
 	/**
 	 * A new Camera at 0,0 and with a rotation of 0
 	 */
@@ -133,10 +135,10 @@ public class Camera {
 		if (Input.isFocusOnPlayer()) {
 			if (target == null) {
 				target = GameWorld.player;
-				GameWorld.player.isInControl = true;
+				this.isFree = true;
 			} else {
 				target = null;
-				GameWorld.player.isInControl = false;
+				this.isFree = false;
 			}
 		}
 		
@@ -330,5 +332,11 @@ public class Camera {
 	public float getMouseWorldY() {
 		return this.position.y + (Mouse.getY() - Display.getDisplayMode().getHeight()/2) / ((float) Display.getDisplayMode().getHeight() / Renderer.UNITS_Y);
 	}
+	
+	/**
+	 * Return whether the camera is free or not
+	 * @return whether the camera is free or not
+	 */
+	public boolean isFree() {return isFree;}
 	
 }

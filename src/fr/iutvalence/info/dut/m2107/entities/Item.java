@@ -2,40 +2,64 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
+
 import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
+/**
+ * Class which represent an item
+ * @author Voxelse
+ *
+ */
 public class Item extends Entity {
 
 	/**
 	 * The id of the item
 	 */
 	protected final int id;
+	
 	/**
 	 * The name of the item
 	 */
 	protected final String name;
+	
 	/**
 	 * The description of the item
 	 */
 	protected final String description;
+	
 	/**
 	 * The rarity of the item
 	 */
 	protected final Rarity rarity;
+	
 	/**
 	 * The max stack of the item
 	 */
 	protected final int MAX_STACK;
+	
 	/**
 	 * The current stack of the item
 	 */
 	protected int stack = 0;
+	
 	/**
 	 * The value of the item
 	 */
 	protected final int value;
 
+	/**
+	 * Constructor of an Item
+	 * @param pos The position of the item
+	 * @param rot The rotation of the item
+	 * @param spr The sprite of the item
+	 * @param id The id of the item
+	 * @param name The name of the item
+	 * @param description The description of the item
+	 * @param rarity The rarity of the item
+	 * @param maxStack The maximum stack of the item
+	 * @param value The value of the item
+	 */
 	public Item(Vector2f pos, float rot, Sprite spr,
 				int id, String name, String description, Rarity rarity, int maxStack, int value) {
 		super(pos, rot, spr);
@@ -47,6 +71,17 @@ public class Item extends Entity {
 		this.value = value;
 	}
 	
+	/**
+	 * Constructor of an Item
+	 * @param spr The sprite of the item
+	 * @param col The collider of the item
+	 * @param id The id of the item
+	 * @param name The name of the item
+	 * @param description The description of the item
+	 * @param rarity The rarity of the item
+	 * @param maxStack The maximum stack of the item
+	 * @param value The value of the item
+	 */
 	public Item(Sprite spr, Collider col,
 				int id, String name, String description, Rarity rarity, int maxStack, int value) {
 		super(spr, col);
@@ -58,6 +93,16 @@ public class Item extends Entity {
 		this.value = value;
 	}
 	
+	/**
+	 * Constructor of an Item
+	 * @param spr The sprite of the item
+	 * @param id The id of the item
+	 * @param name The name of the item
+	 * @param description The description of the item
+	 * @param rarity The rarity of the item
+	 * @param maxStack The maximum stack of the item
+	 * @param value The value of the item
+	 */
 	public Item(Sprite spr,
 				int id, String name, String description, Rarity rarity, int maxStack, int value) {
 		super(spr);
@@ -69,6 +114,10 @@ public class Item extends Entity {
 		this.value = value;
 	}
 	
+	/**
+	 * Constructor of an Item
+	 * @param item The item to copy
+	 */
 	public Item(Item item) {
 		super(item.spr, item.col);
 		this.id = item.id;
@@ -79,24 +128,69 @@ public class Item extends Entity {
 		this.value = item.value;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.iutvalence.info.dut.m2107.entities.Entity#update(fr.iutvalence.info.dut.m2107.storage.Layer)
+	 */
 	@Override
 	public void update(Layer layer) {
 		super.update(layer);
 	}
 
+	/**
+	 * Add a number of stack to the current stack of the item
+	 * @param stackToAdd The number of stack to add
+	 * @return
+	 */
 	public Item changeStack(int stackToAdd) {
 		this.stack += stackToAdd;
 		return this;
 	}	
 
+	/**
+	 * Return the id of the item
+	 * @return the id of the item
+	 */
 	public int getId() {return id;}
+	
+	/**
+	 * Return the name of the item
+	 * @return the name of the item
+	 */
 	public String getName() {return name;}
+	
+	/**
+	 * Return the description of the item
+	 * @return the description of the item
+	 */
 	public String getDescription() {return description;}
+	
+	/**
+	 * Return the rarity of the item
+	 * @return the rarity of the item
+	 */
 	public Rarity getRarity() {return rarity;}
+	
+	/**
+	 * Return the maximum stack of the item
+	 * @return the maximum stack of the item
+	 */
 	public int getMAX_STACK() {return MAX_STACK;}
+	
+	/**
+	 * Return the current stack of the item
+	 * @return the current stack of the item
+	 */
 	public int getStack() {return stack;}
+	
+	/**
+	 * Return the value of the item
+	 * @return the value of the item
+	 */
 	public int getValue() {return value;}
 
+	/* (non-Javadoc)
+	 * @see fr.iutvalence.info.dut.m2107.entities.Entity#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -111,6 +205,9 @@ public class Item extends Entity {
 		return true;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Item [id=" + id + ", name=" + name + ", description=" + description + ", rarity=" + rarity

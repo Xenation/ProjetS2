@@ -11,15 +11,26 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Player extends Character{
-
-	protected boolean isInControl = true;
 	
+	// Temporary
 	private GUIText playerGUI = new GUIText("", .8f, 0.82f, 0, 0.5f, false);
+	// Temporary
 	
+	/**
+	 * The inventory of the player
+	 */
 	private Inventory inventory = new Inventory();
-	private String strInventory;
 	
+	// Temporary
+	private String strInventory;
+	// Temporary
+	
+	/**
+	 * The quick bar of the player
+	 */
 	private Item[] quick_Bar = new Item[8];
+	
+	// Temporary
 	private float width = 0.05f;
 	private float height = 0.05f*DisplayManager.aspectRatio;
 	private float posX = .5f - width/2;
@@ -27,10 +38,21 @@ public class Player extends Character{
 	private float offsetX = width;
 	private int selectSlot = 0;
 	private GUIElement selectQuickBar;
+	// Temporary
 	
+	/**
+	 * The angle between the player and the camera
+	 */
 	private float degreeShoot = 0;
+	
+	/**
+	 * The normalized vector between the player and the camera
+	 */
 	private Vector2f shoot;
 
+	/**
+	 * Constructor of a player
+	 */
 	public Player() {
 		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.5f, -1.8f, .5f, 1.8f));
 		playerGUI.setColour(0, 1, 0);
@@ -39,8 +61,12 @@ public class Player extends Character{
 		initInventory();
 	}
 	
+	/**
+	 * Initialize the inventory
+	 */
 	private void initInventory() {
 		// TODO Take the item saved from a file save
+		
 		this.inventory.add(ItemDatabase.get(0), 10);
 		this.inventory.add(ItemDatabase.get(1), 5);
 		
@@ -48,6 +74,9 @@ public class Player extends Character{
 		System.out.println(strInventory);
 	}
 	
+	/**
+	 * Initialize the quick bar
+	 */
 	private void initQuickBar() {
 		this.quick_Bar[0] = ItemDatabase.get(2);
 		this.quick_Bar[1] = ItemDatabase.get(3);
@@ -63,6 +92,9 @@ public class Player extends Character{
 		selectQuickBar = new GUIElement("gui/select_quick_bar_slot", new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, 1-posY), width, height);
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.iutvalence.info.dut.m2107.entities.Character#update(fr.iutvalence.info.dut.m2107.storage.Layer)
+	 */
 	@Override
 	public void update(Layer layer) {		
 		if(!strInventory.equals(this.inventory.toString())) {
@@ -76,16 +108,16 @@ public class Player extends Character{
 		
 		updateQuickBar();
 		
-		if(this.itemToUse != null) {
-			this.itemToUse.rot = this.degreeShoot+45;
-			this.itemToUse.pos = this.pos;
+		if(this.itemOnHand != null) {
+			this.itemOnHand.rot = this.degreeShoot+45;
+			this.itemOnHand.pos = this.pos;
 		}
 		
-		if(Input.isUseWeapon() && this.itemToUse != null) {
-			if(this.itemToUse instanceof Bow)
-				((Bow) this.itemToUse).use(this);
-			if(this.itemToUse instanceof Sword)
-				((Sword) this.itemToUse).use(this);
+		if(Input.isUseWeapon() && this.itemOnHand != null) {
+			if(this.itemOnHand instanceof Bow)
+				((Bow) this.itemOnHand).use(this);
+			if(this.itemOnHand instanceof Sword)
+				((Sword) this.itemOnHand).use(this);
 		}
 		
 		playerGUI.updateText("IsGrounded : " + this.isGrounded +
@@ -93,6 +125,9 @@ public class Player extends Character{
 		super.update(layer);
 	}
 
+	/**
+	 * Update the shoot values
+	 */
 	private void updateShootVal() {
 		shoot = (Vector2f) new Vector2f(GameWorld.camera.getMouseWorldX() - this.pos.x,
 				GameWorld.camera.getMouseWorldY() - this.pos.y).normalise();
@@ -101,37 +136,43 @@ public class Player extends Character{
 		else degreeShoot = (float) (Math.atan(shoot.x / shoot.y)*180/Math.PI+90);
 	}
 
+	/**
+	 * Update the quick bar
+	 */
 	private void updateQuickBar() {
 		selectSlot += Input.WheelScrolling();
 		if(selectSlot > 7) selectSlot -= 8;
 		if(selectSlot < 0) selectSlot += 8;
 		selectQuickBar.setPosition(new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, selectQuickBar.getPosition().y));			
 		
-		if(this.itemToUse != this.quick_Bar[selectSlot]) {
+		if(this.itemOnHand != this.quick_Bar[selectSlot]) {
 			if(this.quick_Bar[selectSlot] != null) {
-				if(this.itemToUse == null) {
+				if(this.itemOnHand == null) {
 					if(!(this.quick_Bar[selectSlot] instanceof Weapon))
-						this.itemToUse = new Item(this.quick_Bar[selectSlot]);
-					else this.itemToUse = this.quick_Bar[selectSlot];
-						GameWorld.layerMap.getLayer(0).add(this.itemToUse);
+						this.itemOnHand = new Item(this.quick_Bar[selectSlot]);
+					else this.itemOnHand = this.quick_Bar[selectSlot];
+						GameWorld.layerMap.getLayer(0).add(this.itemOnHand);
 				} else {
-					GameWorld.layerMap.getLayer(0).remove(this.itemToUse);
+					GameWorld.layerMap.getLayer(0).remove(this.itemOnHand);
 					if(!(this.quick_Bar[selectSlot] instanceof Weapon))
-						this.itemToUse =  new Item(this.quick_Bar[selectSlot]);
-					else this.itemToUse = this.quick_Bar[selectSlot];
-					GameWorld.layerMap.getLayer(0).add(GameWorld.player.getItemToUse());						
+						this.itemOnHand =  new Item(this.quick_Bar[selectSlot]);
+					else this.itemOnHand = this.quick_Bar[selectSlot];
+					GameWorld.layerMap.getLayer(0).add(this.itemOnHand);						
 				}
 			} else {
-				GameWorld.layerMap.getLayer(0).remove(GameWorld.player.getItemToUse());
-				this.itemToUse = null;
+				GameWorld.layerMap.getLayer(0).remove(this.itemOnHand);
+				this.itemOnHand = null;
 			}
 		}
 	}
 	
+	/**
+	 * Update the player velocity with inputs
+	 */
 	private void input() {
 		this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
 		
-		if (isInControl) {
+		if (GameWorld.camera.isFree()) {
 			if (Input.isJumping() && this.isGrounded) this.vel.y = this.jumpHeight;
 			
 			//if (Input.isMoveUp())	this.vel.y += this.spd/2;
@@ -149,10 +190,27 @@ public class Player extends Character{
 		if(this.vel.x > 70) this.vel.x = 70;
 	}
 	
+	/**
+	 * Return the inventory of the player
+	 * @return the inventory of the player
+	 */
 	public Inventory getInventory() {return this.inventory;}
 	
+	/**
+	 * Return the quick bar of the player
+	 * @return the quick bar of the player
+	 */
 	public Item[] getQuickBar() {return this.quick_Bar;}
 
+	/**
+	 * Return the angle of shot
+	 * @return the angle of shot
+	 */
 	public float getDegreeShoot() {return degreeShoot;}
+	
+	/**
+	 * Return the vector of shot
+	 * @return the vector of shot
+	 */
 	public Vector2f getShoot() {return shoot;}
 }

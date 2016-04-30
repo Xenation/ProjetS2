@@ -128,6 +128,11 @@ public class ItemDatabase {
 		return rarityList;
 	}
 	
+	/**
+	 * Get an item from the itemDatabase
+	 * @param index The index of the item
+	 * @return A new instance of the item desired
+	 */
 	public static Item get(int index) {
 		Item item = itemDatabase.get(index);
 		if(item instanceof Arrow)

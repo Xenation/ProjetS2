@@ -16,44 +16,94 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Collider {
 
+	/**
+	 * The minimum x and y of the collider
+	 */
 	private float minX, minY;
+	
+	/**
+	 * The maximum x and y of the collider
+	 */
 	private float maxX, maxY;
 	
+	/**
+	 * The local minimum x and y of the collider
+	 */
 	private final float localMinX, localMinY;
+	
+	/**
+	 * The local maximum x and y of the collider
+	 */
 	private final float localMaxX, localMaxY;
 	
+	/**
+	 * The entity the collider is set to
+	 */
 	private Entity ent;
-	
-	private boolean hasStepUp;
 
+	/**
+	 * Constructor of a collider
+	 * @param spr The sprite to fit
+	 */
 	public Collider(Sprite spr) {
 		this.localMinX = -spr.getSize().x/2;
 		this.localMinY = -spr.getSize().y/2;
 		this.localMaxX = spr.getSize().x/2;
 		this.localMaxY = spr.getSize().y/2;
-		updateLocPos();
+		initPos();
 	}
 	
+	/**
+	 * Constructor of a collider
+	 * @param min The minimum Vector2f
+	 * @param max The maximum Vector2f
+	 */
 	public Collider(Vector2f min, Vector2f max) {
 		this.localMinX = min.x;
 		this.localMinY = min.y;
 		this.localMaxX = max.x;
 		this.localMaxY = max.y;
-		updateLocPos();
+		initPos();
 	}
 	
+	/**
+	 * Constructor of a collider
+	 * @param minX The minimum x
+	 * @param minY The minimum y
+	 * @param maxX The maximum x
+	 * @param maxY The maximum y
+	 */
 	public Collider(float minX, float minY, float maxX, float maxY) {
 		this.localMinX = minX;
 		this.localMinY = minY;
 		this.localMaxX = maxX;
 		this.localMaxY = maxY;
-		updateLocPos();
+		initPos();
 	}
 	
+	/**
+	 * Check the discrete collision of a character
+	 */
+	public void checkCharacterDiscreteCollision() {
+		updateColPos();
+		
+		((Character)ent).hasStepUp = false;
+		((Character)ent).isGrounded = false;
+		
+		Vector2f nextPos = new Vector2f(((Character)this.ent).pos.x + (((Character)this.ent).vel.x * DisplayManager.deltaTime()), ((Character)this.ent).pos.y + (((Character)this.ent).vel.y * DisplayManager.deltaTime()));
+		Collider encompassCol = ((Character)this.ent).col.encompassTrajectory(((Character)this.ent).pos, nextPos);
+		encompassCol.extendAll(((Character)this.ent).col.getW()/2, ((Character)this.ent).col.getH()/2);
+		
+		checkCharacterCollision(encompassCol);
+	}
+	
+	/**
+	 * Check the continuous collision of a character
+	 */
 	public void checkCharacterContinuousCollision() {
 		updateColPos();
 		
-		hasStepUp = false;
+		((Character)ent).hasStepUp = false;
 		((Character)ent).isGrounded = false;
 		
 		int continuousStep = (int) ((Math.abs(((Character)this.ent).vel.x) + Math.abs(((Character)this.ent).vel.y))/8+1);
@@ -71,7 +121,7 @@ public class Collider {
 			Collider encompassCol = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2), nextPos);
 			encompassCol.extendAll(this.getW()/2, this.getH()/2);
 			
-			checkCharacterCollision(encompassCol, stepX);
+			checkCharacterCollision(encompassCol);
 			
 			updateColPos();
 			if(((Character)this.ent).vel.x != 0) {
@@ -85,7 +135,11 @@ public class Collider {
 		}
 	}
 	
-	public void checkCharacterCollision(Collider encompassCol, float stepX) {
+	/**
+	 * Check the collision of character
+	 * @param encompassCol The collider which encompass the current position and the next position
+	 */
+	private void checkCharacterCollision(Collider encompassCol) {
 		List<Tile> surroundTile = generateSurroundingTiles(encompassCol);
 		if(surroundTile.size() == 0) return;
 		
@@ -106,7 +160,7 @@ public class Collider {
 						modVel.y = 0;
 						ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 						((Character)ent).isGrounded = true;
-						hasStepUp = true;
+						((Character)ent).hasStepUp = true;
 					} else {
 						// I can't StepUp so I block the x movement and I stick to the tile
 						modVel.x = 0;
@@ -137,7 +191,7 @@ public class Collider {
 						modVel.y = 0;
 						ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 						((Character)ent).isGrounded = true;
-						hasStepUp = true;
+						((Character)ent).hasStepUp = true;
 					} else {
 						// I can't StepUp so I block the x movement and I stick to the tile
 						modVel.x = 0;
@@ -166,15 +220,36 @@ public class Collider {
 					// I'm above the tile
 					modVel.y = 0;
 					((Character)ent).isGrounded = true;
-					if(!hasStepUp) ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
+					if(!((Character)ent).hasStepUp) ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 				}
 			}
 		}
 		
-		if(!hasStepUp) ((Character)this.ent).vel.x *= modVel.x;
+		if(!((Character)ent).hasStepUp) ((Character)this.ent).vel.x *= modVel.x;
 		((Character)this.ent).vel.y *= modVel.y;
 	}
 	
+	/**
+	 * Check the step down of a character
+	 */
+	public void checkStepDown() {
+		if(((Character) this.ent).isGrounded == false && ((Character) this.ent).prevGrounded == true && ((Character) this.ent).vel.y < 0) {
+			Collider tmp = new Collider(new Vector2f(((Character) this.ent).col.getMinX(), ((Character) this.ent).col.getMinY()), new Vector2f(((Character) this.ent).col.getMaxX(), ((Character) this.ent).col.getMaxY()));
+			tmp.extendDown(Tile.TILE_SIZE + 0.1f);
+			Tile tmpTile = tmp.isCollidingWithMap(tmp);
+			if(tmpTile != null) {
+				((Character) this.ent).vel.y = 0;
+				((Character) this.ent).pos.y = tmpTile.y + Tile.TILE_SIZE + ((Character) this.ent).col.getH()/2;
+				((Character) this.ent).isGrounded = true;
+			}
+		}
+		((Character) this.ent).prevGrounded = ((Character) this.ent).isGrounded;
+	}
+	
+	/**
+	 * Check the continuous collision with the map
+	 * @return true when colliding otherwise false
+	 */
 	public boolean isContinuousCollidingWithMap() {
 		int continuousStep = (int) ((Math.abs(((Ammunition)this.ent).vel.x) + Math.abs(((Ammunition)this.ent).vel.y))/8+1);
 		float stepXtoAdd = ((Ammunition)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
@@ -205,6 +280,12 @@ public class Collider {
 		return false;
 	}
 	
+	/**
+	 * Encompass the current position and the next position in a new collider
+	 * @param actualPos The actual position
+	 * @param nextPos The next position
+	 * @return The new collider which encompass the both position
+	 */
 	public Collider encompassTrajectory(Vector2f actualPos, Vector2f nextPos) {
 		Collider encompassCol;
 		if(actualPos.getX() <= nextPos.getX()) {
@@ -221,6 +302,11 @@ public class Collider {
 		return encompassCol;
 	}
 	
+	/**
+	 * Check if the collider collide with a tile on the map
+	 * @param encompassCol the collider to check with
+	 * @return The tile colliding with the collider
+	 */
 	public Tile isCollidingWithMap(Collider encompassCol) {
 		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(this.minX, this.minY))) 
 			for (Tile tile : chunk)
@@ -229,6 +315,11 @@ public class Collider {
 		return null;
 	}
 	
+	/**
+	 * Check if this entity collide with an other
+	 * @param layer The layer to check in
+	 * @return The entity colliding
+	 */
 	public Entity isCollidingWithEntity(Layer layer) {
 		for (Entity ent : layer){
 				if(!isColliding(this, ent.col))
@@ -237,6 +328,11 @@ public class Collider {
 		return null;
 	}
 	
+	/**
+	 * Generate all the tiles colliding with a specific collider
+	 * @param col The collider generation based on
+	 * @return A list of tiles colliding with
+	 */
 	public List<Tile> generateSurroundingTiles(Collider col) {
 		List<Tile> tiles = new ArrayList<Tile>();
 		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, ent.pos)) 
@@ -246,56 +342,119 @@ public class Collider {
 		return tiles;
 	}
 	
+	/**
+	 * Check the collision between a collider and a tile
+	 * @param col The collider to check
+	 * @param tile The tile to check
+	 * @return true if colliding otherwise false
+	 */
 	public boolean isColliding(Collider col, Tile tile) {
 		return isCollidingLeft(col, tile) || isCollidingRight(col, tile) ||
 				isCollidingUp(col, tile) || isCollidingDown(col, tile);
 	}
 	
+	/**
+	 * Check the left collision between a collider and a tile
+	 * @param col The collider to check
+	 * @param tile The tile to check
+	 * @return true if colliding otherwise false
+	 */
 	public boolean isCollidingLeft(Collider col, Tile tile) {
 		float tileMaxX = tile.x + Tile.TILE_SIZE;
 		return tileMaxX <= col.minX;
 	}
 	
+	/**
+	 * Check the right collision between a collider and a tile
+	 * @param col The collider to check
+	 * @param tile The tile to check
+	 * @return true if colliding otherwise false
+	 */
 	public boolean isCollidingRight(Collider col, Tile tile) {
 		float tileMinX = tile.x;
 		return col.maxX <= tileMinX;
 	}
 	
+	/**
+	 * Check the up collision between a collider and a tile
+	 * @param col The collider to check
+	 * @param tile The tile to check
+	 * @return true if colliding otherwise false
+	 */
 	public boolean isCollidingUp(Collider col, Tile tile) {
 		float tileMinY = tile.y;
 		return col.maxY <= tileMinY;
 	}
 	
+	/**
+	 * Check the down collision between a collider and a tile
+	 * @param col The collider to check
+	 * @param tile The tile to check
+	 * @return true if colliding otherwise false
+	 */
 	public boolean isCollidingDown(Collider col, Tile tile) {
 		float tileMaxY = tile.y + Tile.TILE_SIZE;
 		return tileMaxY <= col.minY;
 	}
 	
+	/**
+	 * Check the collision between a collider and an other collider
+	 * @param col The collider to check
+	 * @param other The other collider to check
+	 * @return true if colliding otherwise false
+	 */
 	public boolean isColliding(Collider col, Collider other) {
 		return isCollidingLeft(col, other) || isCollidingRight(col, other) ||
 				isCollidingUp(col, other) || isCollidingDown(col, other);
 	}
 	
+	/**
+	 * Check the left collision between a collider and an other collider
+	 * @param col The collider to check
+	 * @param other The other collider to check
+	 * @return true if colliding otherwise false
+	 */
 	public boolean isCollidingLeft(Collider col, Collider other) {
 		float otherMaxX = other.maxX;
 		return otherMaxX <= col.minX;
 	}
 	
+	/**
+	 * Check the right collision between a collider and an other collider
+	 * @param col The collider to check
+	 * @param other The other collider to check
+	 * @return true if colliding otherwise false
+	 */
 	public boolean isCollidingRight(Collider col, Collider other) {
 		float otherMinX = other.minX;
 		return col.maxX <= otherMinX;
 	}
 	
+	/**
+	 * Check the up collision between a collider and an other collider
+	 * @param col The collider to check
+	 * @param other The other collider to check
+	 * @return true if colliding otherwise false
+	 */
 	public boolean isCollidingUp(Collider col, Collider other) {
 		float otherMinY = other.minY;
 		return col.maxY <= otherMinY;
 	}
 	
+	/**
+	 * Check the down collision between a collider and an other collider
+	 * @param col The collider to check
+	 * @param other The other collider to check
+	 * @return true if colliding otherwise false
+	 */
 	public boolean isCollidingDown(Collider col, Collider other) {
 		float otherMaxY = other.maxY;
 		return otherMaxY <= col.minY;
 	}
 
+	/**
+	 * Update the collider position
+	 */
 	public void updateColPos() {
 		this.minX = Maths.round(ent.pos.x + localMinX, 5);
 		this.minY = Maths.round(ent.pos.y + localMinY, 5);
@@ -304,7 +463,10 @@ public class Collider {
 		this.maxY = Maths.round(ent.pos.y + localMaxY, 5);
 	}
 	
-	private void updateLocPos() {
+	/**
+	 * Initialize the collider position
+	 */
+	private void initPos() {
 		this.minX = localMinX;
 		this.minY = localMinY;
 		
@@ -312,51 +474,136 @@ public class Collider {
 		this.maxY = localMaxY;
 	}
 	
+	/**
+	 * Extend the collider by a width and a height
+	 * @param width The width to extend
+	 * @param height The height to extend
+	 */
 	public void extendAll(float width, float height) {
 		extendWidth(width);
 		extendHeight(height);
 	}
 	
+	/**
+	 * Extend the collider by a width
+	 * @param width The width to extend
+	 */
 	public void extendWidth(float width) {
 		extendLeft(width);
 		extendRight(width);
 	}
 	
+	/**
+	 * Extend the collider by a height
+	 * @param height The height to extend
+	 */
 	public void extendHeight(float height) {
 		extendUp(height);
 		extendDown(height);
 	}
 	
+	/**
+	 * Extend the left of the collider
+	 * @param left The amount to extend
+	 */
 	public void extendLeft (float left)  {this.minX -= left;}
+	
+	/**
+	 * Extend the right of the collider
+	 * @param right The amount to extend
+	 */
 	public void extendRight(float right) {this.maxX += right;}
 	
+	/**
+	 * Extend the down of the collider
+	 * @param down The amount to extend
+	 */
 	public void extendDown(float down) {this.minY -= down;}
+	
+	/**
+	 * Extend the up of the collider
+	 * @param up The amount to extend
+	 */
 	public void extendUp  (float up)   {this.maxY += up;}
 	
+	/**
+	 * Return the minimum position of the collider
+	 * @return the minimum position of the collider
+	 */
 	public Vector2f getMin() {return new Vector2f(minX, minY);}
+	
+	/**
+	 * Return the maximum position of the collider
+	 * @return the maximum position of the collider
+	 */
 	public Vector2f getMax() {return new Vector2f(maxX, maxY);}
 	
+	/**
+	 * Return the minimum x position of the collider
+	 * @return the minimum x position of the collider
+	 */
 	public float getMinX() {return minX;}
+	
+	/**
+	 * Return the minimum y position of the collider
+	 * @return the minimum y position of the collider
+	 */
 	public float getMinY() {return minY;}
 
+	/**
+	 * Return the maximum x position of the collider
+	 * @return the maximum x position of the collider
+	 */
 	public float getMaxX() {return maxX;}
+	
+	/**
+	 * Return the maximum y position of the collider
+	 * @return the maximum y position of the collider
+	 */
 	public float getMaxY() {return maxY;}
 
+	/**
+	 * Return the actual width of the collider
+	 * @return the actual width of the collider
+	 */
 	public float getActualW() {return maxX - minX;}
+	
+	/**
+	 * Return the actual height of the collider
+	 * @return the actual height of the collider
+	 */
 	public float getActualH() {return maxY - minY;}
 	
+	/**
+	 * Return the width of the collider
+	 * @return the width of the collider
+	 */
 	public float getW() {return localMaxX - localMinX;}
+	
+	/**
+	 * Return the height of the collider
+	 * @return the height of the collider
+	 */
 	public float getH() {return localMaxY - localMinY;}
 	
-	
+	/**
+	 * Set the entity owner of the collider
+	 * @param ent The entity to set
+	 */
 	public void setEnt(Entity ent) {this.ent = ent;}
+	
+	/**
+	 * Return the entity owner of the collider
+	 * @return the entity owner of the collider
+	 */
 	public Entity getEnt() {return this.ent;}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Collider [minX=" + minX + ", minY=" + minY + ", maxX=" + maxX + ", maxY=" + maxY + ", W="
 				+ getW() + ", H=" + getH() + "]";
 	}
-
-
 }
