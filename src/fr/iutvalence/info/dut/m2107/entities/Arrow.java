@@ -77,15 +77,14 @@ public class Arrow extends Ammunition {
 		if(!isPierce) {
 			this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
 			
-			if(this.vel.y >= 0) this.rot = (float) (Math.atan(this.vel.x / this.vel.y)*180/Math.PI-45);
-			else this.rot = (float) (Math.atan(this.vel.x / this.vel.y)*180/Math.PI+135);
-			System.out.println(this.rot-45);
+			if(this.vel.y >= 0) this.rot = (float) (Math.atan(this.vel.x / this.vel.y)*180/Math.PI-90);
+			else this.rot = (float) (Math.atan(this.vel.x / this.vel.y)*180/Math.PI+90);
 			
 			this.col.updateColPos();
-			this.col.extendRight((float) (Math.cos((rot-45)*Math.PI/180)*this.spr.getSize().x/2.5f));
-			this.col.extendLeft(-(float) (Math.cos((rot-45)*Math.PI/180)*this.spr.getSize().x/2.5f));
-			this.col.extendUp(-(float) (Math.sin((rot-45)*Math.PI/180)*this.spr.getSize().y/2.5f));
-			this.col.extendDown((float) (Math.sin((rot-45)*Math.PI/180)*this.spr.getSize().y/2.5f));
+			this.col.extendRight((float) (Math.cos((rot)*Math.PI/180)*this.spr.getSize().x/2.5f));
+			this.col.extendLeft(-(float) (Math.cos((rot)*Math.PI/180)*this.spr.getSize().x/2.5f));
+			this.col.extendUp(-(float) (Math.sin((rot)*Math.PI/180)*this.spr.getSize().y/2.5f));
+			this.col.extendDown((float) (Math.sin((rot)*Math.PI/180)*this.spr.getSize().y/2.5f));
 			if(this.col.isContinuousCollidingWithMap()) this.isPierce = true;
 			
 			// temporary code for entity collision detection

@@ -40,7 +40,7 @@ public class Entity {
 	/**
 	 * The collider of the entity
 	 */
-	protected final Collider col;
+	protected Collider col;
 	
 	/**
 	 * Constructor of an Entity

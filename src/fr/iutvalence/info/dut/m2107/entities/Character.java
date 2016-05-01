@@ -123,6 +123,12 @@ public class Character extends LivingEntity{
 	public boolean isGrounded() {return isGrounded;}
 
 	/**
+	 * Return the previous state of grounded of the character
+	 * @return the previous state of grounded of the character
+	 */
+	public boolean isPrevGrounded() {return prevGrounded;}
+	
+	/**
 	 * Return the state of the facing character's direction
 	 * @return the state of the facing character's direction
 	 */

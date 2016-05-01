@@ -50,6 +50,9 @@ public class Player extends Character{
 	 */
 	private Vector2f shoot;
 
+	public boolean rightWallJump = false;
+	public boolean leftWallJump = false;
+
 	/**
 	 * Constructor of a player
 	 */
@@ -96,7 +99,7 @@ public class Player extends Character{
 	 * @see fr.iutvalence.info.dut.m2107.entities.Character#update(fr.iutvalence.info.dut.m2107.storage.Layer)
 	 */
 	@Override
-	public void update(Layer layer) {		
+	public void update(Layer layer) {
 		if(!strInventory.equals(this.inventory.toString())) {
 			strInventory = this.inventory.toString();
 			System.out.println(strInventory);
@@ -109,7 +112,7 @@ public class Player extends Character{
 		updateQuickBar();
 		
 		if(this.itemOnHand != null) {
-			this.itemOnHand.rot = this.degreeShoot+45;
+			this.itemOnHand.rot = this.degreeShoot;
 			this.itemOnHand.pos = this.pos;
 		}
 		
@@ -172,14 +175,26 @@ public class Player extends Character{
 	private void input() {
 		this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
 		
+		if(isGrounded) rightWallJump = true;
+		if(isGrounded) leftWallJump = true;
+		
 		if (GameWorld.camera.isFree()) {
 			if (Input.isJumping() && this.isGrounded) this.vel.y = this.jumpHeight;
 			
 			//if (Input.isMoveUp())	this.vel.y += this.spd/2;
-			//if (Input.isMoveDown())	this.vel.y -= this.spd/2;
-			if (Input.isMoveRight())this.vel.x += this.spd;
-			if (Input.isMoveLeft())	this.vel.x -= this.spd;
+			//if (Input.isMoveDown())	this.vel.y += -this.spd/2;
+			if (Input.isMoveRight()) {
+				if(!rightWallJump || !leftWallJump) this.vel.x += this.spd/6;
+				else this.vel.x += this.spd;
+			}
+			if (Input.isMoveLeft()) {
+				if(!leftWallJump || !rightWallJump) this.vel.x += -this.spd/6;
+				else this.vel.x += -this.spd;
+			}
 		}
+		
+		if(rightWallJump == false) this.vel.x += -this.spd/2;
+		if(leftWallJump == false) this.vel.x += this.spd/2;
 		
 		this.vel.x = Maths.lerp(this.vel.x, 0, 0.25f);
 		

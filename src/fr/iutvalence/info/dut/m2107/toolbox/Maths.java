@@ -222,7 +222,8 @@ public class Maths {
 	public static float round(float number, int decimal) {
 	    float pow = pow(10, decimal);
 	    float tmp = number * pow;
-	    return (float) (int) ((tmp - (int) tmp) >= 0.5f ? tmp + 1 : tmp) / pow;
+	    if(number >= 0) return (float) (int) ((tmp - (int) tmp) >= 0.5f ? tmp + 1 : tmp) / pow;
+	    else return (float) (int) ((tmp - (int) tmp) <= -0.5f ? tmp - 1 : tmp) / pow;
 	}
 	
 }

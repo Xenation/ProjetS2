@@ -92,7 +92,7 @@ public abstract class Ammunition extends Item {
 		super(spr, col, id, name, description, rarity, maxStack, value);
 		this.damage = damage;
 		this.knockback = knockback;
-		this.vel = DEF_VEL;
+		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
 		this.speed = speed;
 	}
 	
@@ -120,9 +120,10 @@ public abstract class Ammunition extends Item {
 	}
 	
 	/**
-	 * Initialize the position, rotation and velocity of the ammunition
+	 * Initialize the collision, the position, rotation and velocity of the ammunition
 	 */
 	public void initLaunch() {
+		this.col = new Collider(this.col);
 		this.pos = new Vector2f(GameWorld.player.pos.x, GameWorld.player.pos.y);
 		this.rot = GameWorld.player.getDegreeShoot();
 		this.vel = new Vector2f(GameWorld.player.getShoot().x, GameWorld.player.getShoot().y);

@@ -10,6 +10,7 @@ import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
@@ -50,6 +51,19 @@ public class Collider {
 		this.localMinY = -spr.getSize().y/2;
 		this.localMaxX = spr.getSize().x/2;
 		this.localMaxY = spr.getSize().y/2;
+		initPos();
+	}
+	
+	/**
+	 * Constructor of a collider
+	 * @param col The collider to copy
+	 */
+	public Collider(Collider col) {
+		this.localMinX = col.localMinX;
+		this.localMinY = col.localMinY;
+		this.localMaxX = col.localMaxX;
+		this.localMaxY = col.localMaxY;
+		this.ent = col.ent;
 		initPos();
 	}
 	
@@ -147,76 +161,95 @@ public class Collider {
 		
 		for (Tile tile : surroundTile) {
 			if(isCollidingLeft(this, tile)) { // if the tile is on my left
-				if(this.minY <= tile.y + Tile.TILE_SIZE && this.maxY >= tile.y && GameWorld.chunkMap.getRightTile(tile) == null) {
-					// I'm on the right of the tile
-					if((this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) &&
-							GameWorld.chunkMap.getTopTile(tile) == null &&
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && GameWorld.chunkMap.getRightTile(tile) == null) {
+					// I'm on the perfect right of the tile
+					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
+						// My bottom is between the tile height
+						if(GameWorld.chunkMap.getTopTile(tile) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x, tile.y+2) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x, tile.y+3) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x, tile.y+4) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x+1, tile.y+4) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x+2, tile.y+4) == null) {
-						// My bottom is between the tile height and there is no block to prevent the StepUp
-						modVel.y = 0;
-						ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
-						((Character)ent).isGrounded = true;
-						((Character)ent).hasStepUp = true;
+							GameWorld.chunkMap.getTileAt(tile.x+1, tile.y+4) == null) {
+							// There is no block to prevent the StepUp
+							modVel.y = 0;
+							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
+							((Character)ent).isGrounded = true;
+							((Character)ent).hasStepUp = true;
+						} else if(Input.isJumping() && !((Character)this.ent).prevGrounded) {
+							// Jump input and previously grounded
+							((Player)this.ent).leftWallJump = false;
+							((Character)this.ent).vel.y = ((Character)this.ent).jumpHeight;
+						}
 					} else {
-						// I can't StepUp so I block the x movement and I stick to the tile
+						// I can't StepUp or wall jump so I block the x movement and stick to the tile
 						modVel.x = 0;
 						ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+						((Player)this.ent).rightWallJump = true;
 					}
 				} else {
-					//I'm above or under the tile
-					if(((Character)this.ent).vel.y <= 0) {
-						if(GameWorld.chunkMap.getTopTile(tile) == null) modVel.y = 0;
-						else modVel.x = 0;
-					} else {
-						if(GameWorld.chunkMap.getBottomTile(tile) == null) modVel.y = 0;
-						else modVel.x = 0;
+					// I'm under or above the right tile
+					if(isCollidingUp(this, tile)) {
+						if(GameWorld.chunkMap.getBottomTile(tile) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-2) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-3) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-4) != null) {
+							modVel.x = 0;
+							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+						} else modVel.y = 0;
+					} else if(isCollidingDown(this, tile)) {
+						if(GameWorld.chunkMap.getTopTile(tile) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+2) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+3) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+4) != null) {
+							modVel.x = 0;
+							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+						} else modVel.y = 0;
 					}
 				}
-			}else
+			}
 			if(isCollidingRight(this, tile)) { // if the tile is on my right
-				if(this.minY <= tile.y + Tile.TILE_SIZE && this.maxY >= tile.y && GameWorld.chunkMap.getLeftTile(tile) == null) {
-					// I'm on the left of the tile
-					if((this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) &&
-							GameWorld.chunkMap.getTopTile(tile) == null &&
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && GameWorld.chunkMap.getLeftTile(tile) == null) {
+					// I'm on the perfect left of the tile
+					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
+						// My bottom is between the tile height
+						if(GameWorld.chunkMap.getTopTile(tile) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x, tile.y+2) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x, tile.y+3) == null &&
 							GameWorld.chunkMap.getTileAt(tile.x, tile.y+4) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x-1, tile.y+4) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x-2, tile.y+4) == null) {
-						// My bottom is between the tile height and there is no block to prevent the StepUp
-						modVel.y = 0;
-						ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
-						((Character)ent).isGrounded = true;
-						((Character)ent).hasStepUp = true;
+							GameWorld.chunkMap.getTileAt(tile.x-1, tile.y+4) == null) {
+							modVel.y = 0;
+							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
+							((Character)ent).isGrounded = true;
+							((Character)ent).hasStepUp = true;
+						} else if(Input.isJumping() && !((Character)this.ent).prevGrounded) {
+							// There is no block to prevent the StepUp
+							((Player)this.ent).rightWallJump = false;
+							((Character)this.ent).vel.y = ((Character)this.ent).jumpHeight;
+						}
 					} else {
-						// I can't StepUp so I block the x movement and I stick to the tile
+						// I can't StepUp or wall jump so I block the x movement and stick to the tile
 						modVel.x = 0;
 						ent.pos.x = tile.x - this.getW()/2;
+						((Player)this.ent).leftWallJump = true;
 					}
 				} else {
-					//I'm above or under the tile
-					if(((Character)this.ent).vel.y <= 0) {
-						if(GameWorld.chunkMap.getTopTile(tile) == null) modVel.y = 0;
-						else modVel.x = 0;
-					} else {
-						if(GameWorld.chunkMap.getBottomTile(tile) == null) modVel.y = 0;
-						else modVel.x = 0;
+					// I'm under or above the right tile
+					if(isCollidingUp(this, tile)) {
+						if(GameWorld.chunkMap.getBottomTile(tile) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-2) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-3) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-4) != null) {
+							modVel.x = 0;
+							ent.pos.x = tile.x - this.getW()/2;
+						} else modVel.y = 0;
+					} else if(isCollidingDown(this, tile)) {
+						if(GameWorld.chunkMap.getTopTile(tile) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+2) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+3) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+4) != null) {
+							modVel.x = 0;
+							ent.pos.x = tile.x - this.getW()/2;
+						} else modVel.y = 0;
 					}
 				}
-			}else
+			}
 			if(isCollidingUp(this, tile)) { //if the tile is above me
-				if(this.minX <= tile.x + Tile.TILE_SIZE && this.maxX >= tile.x && GameWorld.chunkMap.getBottomTile(tile) == null) {
+				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && GameWorld.chunkMap.getBottomTile(tile) == null) {
 					// I'm under the tile
 					modVel.y = 0;
 					ent.pos.y = tile.y - this.getH()/2;
 				}
-			}else
+			}
 			if(isCollidingDown(this, tile)) { // if the tile is under me
-				if(this.minX <= tile.x + Tile.TILE_SIZE && this.maxX >= tile.x && GameWorld.chunkMap.getTopTile(tile) == null) {
+				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && GameWorld.chunkMap.getTopTile(tile) == null) {
 					// I'm above the tile
 					modVel.y = 0;
 					((Character)ent).isGrounded = true;
@@ -251,11 +284,11 @@ public class Collider {
 	 * @return true when colliding otherwise false
 	 */
 	public boolean isContinuousCollidingWithMap() {
-		int continuousStep = (int) ((Math.abs(((Ammunition)this.ent).vel.x) + Math.abs(((Ammunition)this.ent).vel.y))/8+1);
+		int continuousStep = (int) ((Math.abs(((Ammunition)this.ent).vel.x) + Math.abs(((Ammunition)this.ent).vel.y))/8+1)*2;
 		float stepXtoAdd = ((Ammunition)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
 		float stepYtoAdd = ((Ammunition)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
-		float stepX = this.ent.pos.x;
-		float stepY = this.ent.pos.y;
+		float stepX = this.ent.col.minX + this.getW()/2;
+		float stepY = this.ent.col.minY + this.getH()/2;
 		
 		for (int step = continuousStep; step > 0; step--) {
 			stepX += stepXtoAdd;
@@ -267,7 +300,8 @@ public class Collider {
 			
 			Tile tileColliding = isCollidingWithMap(encompassCol);
 			if(tileColliding != null) {
-				this.ent.pos = nextPos;
+				this.ent.pos.x = nextPos.x -(float) (Math.cos((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().x/2.5f);
+				this.ent.pos.y = nextPos.y -(float) -(Math.sin((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().y/2.5f);
 				((Ammunition)this.ent).vel = new Vector2f(0, 0);
 				return true;
 			}
