@@ -77,8 +77,6 @@ public class WorldLoader {
 				int x = buffer.getInt();
 				int y = buffer.getInt();
 				
-				System.out.println("t"+t+" v"+v+" o"+o+" x"+x+" y"+y);
-				
 				typ = TileType.getTypeById(t);
 				Tile tile = TileBuilder.buildTile(typ, x, y);
 				if (v != 0)
