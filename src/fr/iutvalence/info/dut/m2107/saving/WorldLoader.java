@@ -9,7 +9,9 @@ import java.nio.ByteBuffer;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
+import fr.iutvalence.info.dut.m2107.tiles.TileOrientation;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
+import fr.iutvalence.info.dut.m2107.tiles.TileVariant;
 
 /**
  * Used to load data from a save file to the world
@@ -70,22 +72,31 @@ public class WorldLoader {
 			TileType typ = TileType.Dirt;
 			while (buffer.hasRemaining()) {
 				byte t = buffer.get();
+				byte v = buffer.get();
+				byte o = buffer.get();
 				int x = buffer.getInt();
 				int y = buffer.getInt();
+				
+				System.out.println("t"+t+" v"+v+" o"+o+" x"+x+" y"+y);
+				
 				typ = TileType.getTypeById(t);
-				GameWorld.chunkMap.setTilenChunk(TileBuilder.buildTile(typ, x, y));
+				Tile tile = TileBuilder.buildTile(typ, x, y);
+				if (v != 0)
+					tile.setVariantUnsafe(TileVariant.getVariantById(v));
+				tile.setOrientation(TileOrientation.getOrientationById(o));
+				GameWorld.chunkMap.setTilenChunk(tile);
 			}
 			
 			try {
 				fs.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.err.println("Failed to close strem");
+				System.err.println("Failed to close stream");
 				return;
 			}
 		}
 		
-		System.out.println("World Loaded ("+file.length()/9+" tiles) in: "+(System.currentTimeMillis()-start)+"ms");
+		System.out.println("World Loaded ("+file.length()/WorldSaver.tileByteSize+" tiles) in: "+(System.currentTimeMillis()-start)+"ms");
 		
 	}
 }

@@ -183,12 +183,12 @@ public class Maths {
 	}
 	
 	/**
-	 * Returns a float rounded at a certain decimal after the comma
-	 * @param f the float to round
-	 * @param decimal the nth decimal to round at
-	 * @return a float rounded at the decimal after the comma
+	 * Returns a float truncated at a certain decimal after the comma
+	 * @param f the float to truncate
+	 * @param decimal the nth decimal to truncate at
+	 * @return a float truncated at the decimal after the comma
 	 */
-	public static float roundDecim(float f, int decimal) {
+	public static float truncate(float f, int decimal) {
 		float pow = pow(10, decimal);
 		return ((int) (f*pow))/pow;
 	}
@@ -211,6 +211,19 @@ public class Maths {
 			b /= 2;
 		}
 		return result;
+	}
+	
+	/**
+	 * Returns a float rounded at a certain decimal after the comma
+	 * @param number The number to round
+	 * @param decimal The number of number after the comma
+	 * @return The rounded number
+	 */
+	public static float round(float number, int decimal) {
+	    float pow = pow(10, decimal);
+	    float tmp = number * pow;
+	    if(number >= 0) return (float) (int) ((tmp - (int) tmp) >= 0.5f ? tmp + 1 : tmp) / pow;
+	    else return (float) (int) ((tmp - (int) tmp) <= -0.5f ? tmp - 1 : tmp) / pow;
 	}
 	
 }
