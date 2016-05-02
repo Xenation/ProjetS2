@@ -29,7 +29,7 @@ public class WorldSaver {
 	/**
 	 * The size of a tile in the save file
 	 */
-	private static final int tileByteSize = 10;
+	private static final int tileByteSize = 11;
 	
 	/**
 	 * Sets the path to the new save file
@@ -72,6 +72,7 @@ public class WorldSaver {
 				for (Tile tile : chk) {
 					buffer.put(tile.getType().getId());
 					buffer.put(tile.getVariant().id);
+					buffer.put(tile.getOrientation().getId());
 					buffer.putInt(tile.x);
 					buffer.putInt(tile.y);
 				}

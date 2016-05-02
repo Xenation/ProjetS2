@@ -115,6 +115,7 @@ public class TileBuilder {
 		stats.add("type = "+tile.type.name());
 		stats.add("x = "+tile.x);
 		stats.add("y = "+tile.y);
+		stats.add("Ori = "+tile.orientation.name());
 		switch (tile.type) {
 		case Dirt:
 		case Stone:
