@@ -14,6 +14,7 @@ import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
 import fr.iutvalence.info.dut.m2107.guiRendering.GUIMaster;
 import fr.iutvalence.info.dut.m2107.listeners.TileListener;
 import fr.iutvalence.info.dut.m2107.render.*;
+import fr.iutvalence.info.dut.m2107.saving.SaveFileUpdater;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
@@ -44,6 +45,7 @@ public class MainGameTester {
 		
 		WorldSaver.setFilePath("res/test.sav");
 		WorldLoader.setFilePath("res/test.sav");
+		SaveFileUpdater.setFilePath("res/test.sav");
 		
 		GUIText chunks = new GUIText("Chunks :", 1, 0, .8f, 0.5f, false);
 		chunks.setColour(0, 1, 0);
@@ -56,6 +58,8 @@ public class MainGameTester {
 		GUIText loaderStats = new GUIText("", .8f, 0, .92f, 0.5f, false);
 		loaderStats.setColour(0, 1, 0);
 		loaderStats.setLineHeight(0.024);
+		
+		//SaveFileUpdater.updateFileFormat("tvxy", 10);
 		
 		WorldLoader.loadWorld();
 		

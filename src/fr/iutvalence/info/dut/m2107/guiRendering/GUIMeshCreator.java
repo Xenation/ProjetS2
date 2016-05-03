@@ -1,12 +1,14 @@
 package fr.iutvalence.info.dut.m2107.guiRendering;
 
+import fr.iutvalence.info.dut.m2107.render.DisplayManager;
+
 public class GUIMeshCreator {
 	
 	public static final float[] QUAD_POS = {
-			0, 1,
-			1, 1,
-			0, 0,
-			1, 0
+			-.5f, .5f,
+			.5f, .5f,
+			-.5f, -.5f,
+			.5f, -.5f
 	};
 	public static final float[] QUAD_UVs = {
 			0, 0,
@@ -67,7 +69,7 @@ public class GUIMeshCreator {
 		for (int i = 0; i < QUAD_POS.length; i++) {
 			pos[i] = QUAD_POS[i]*width;
 			i++;
-			pos[i] = QUAD_POS[i]*height;
+			pos[i] = QUAD_POS[i]*height*DisplayManager.aspectRatio;
 		}
 		return new GUIMeshData(pos, QUAD_UVs.clone());
 	}

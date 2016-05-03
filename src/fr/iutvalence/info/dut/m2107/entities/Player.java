@@ -32,7 +32,7 @@ public class Player extends Character{
 	
 	// Temporary
 	private float width = 0.05f;
-	private float height = 0.05f*DisplayManager.aspectRatio;
+	private float height = 0.05f;
 	private float posX = .5f - width/2;
 	private float posY = height;
 	private float offsetX = width;
@@ -87,9 +87,9 @@ public class Player extends Character{
 		this.quick_Bar[3] = ItemDatabase.get(1);
 		
 		for (int slotNumber = 0; slotNumber < 8; slotNumber++) {
-			GUIElement quickBar = new GUIElement("gui/quick_bar_slot", new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber, 1-posY), width, height);
+			new GUIElement("gui/quick_bar_slot", new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber, 1-posY), width, height);
 			if(this.quick_Bar[slotNumber] != null) {
-				GUIElement quickBarItem = new GUIElement(this.quick_Bar[slotNumber].getSprite().getTextureID(), new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber + width/5, 1-posY - height/5), width - width/2.5f, height - height/2.5f);
+				new GUIElement(this.quick_Bar[slotNumber].getSprite().getTextureID(), new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber, 1-posY), width - width/2.5f, height - height/2.5f);
 			}
 		}
 		selectQuickBar = new GUIElement("gui/select_quick_bar_slot", new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, 1-posY), width, height);

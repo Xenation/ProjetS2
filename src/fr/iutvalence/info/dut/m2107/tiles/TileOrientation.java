@@ -1,10 +1,16 @@
 package fr.iutvalence.info.dut.m2107.tiles;
 
 public enum TileOrientation {
-	UP,
-	RIGHT,
-	DOWN,
-	LEFT;
+	UP(0),
+	RIGHT(1),
+	DOWN(2),
+	LEFT(3);
+	
+	private final byte id;
+	
+	private TileOrientation(int id) {
+		this.id = (byte) id;
+	}
 	
 	public float getRadians() {
 		float deg = 0;
@@ -55,6 +61,17 @@ public enum TileOrientation {
 		default:
 			return LEFT;
 		}
+	}
+
+	public byte getId() {
+		return id;
+	}
+	
+	public static TileOrientation getOrientationById(byte id) {
+		for (TileOrientation ori : values()) {
+			if (ori.id == id) return ori;
+		}
+		return null;
 	}
 	
 }

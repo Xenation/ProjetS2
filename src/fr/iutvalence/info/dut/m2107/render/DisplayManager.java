@@ -24,7 +24,6 @@ public class DisplayManager {
 	 * The default displayMode to be used
 	 */
 	private static final DisplayMode DEF_DISPLAYMODE = new DisplayMode(1280, 720);
-	//private static final DisplayMode DEF_DISPLAYMODE = new DisplayMode(1280, 960);
 	/**
 	 * the maximum number of frames per second
 	 */
@@ -96,17 +95,17 @@ public class DisplayManager {
 			// Temporary Code to put the display in full screen
 			DisplayMode[] modes = Display.getAvailableDisplayModes();
 			
+			System.out.println("Available Displays:");
 			for (int i = 0; i < modes.length; i++) {
 				DisplayMode current = modes[i];
+				System.out.println(current.getWidth()+"x"+current.getHeight()+" "+current.getFrequency());
 				if (current.getWidth() >= finalMode.getWidth() && current.getHeight() >= finalMode.getHeight() && current.getBitsPerPixel() >= finalMode.getBitsPerPixel()) {
 					finalMode = current;
 				}
 			}
 			
-			System.out.println(finalMode.getWidth() + "x" + finalMode.getHeight() + "x" + finalMode.getBitsPerPixel() + " " + finalMode.getFrequency() + "Hz");
+			System.out.println("Selected Display:\n"+finalMode.getWidth() + "x" + finalMode.getHeight() + "x" + finalMode.getBitsPerPixel() + " " + finalMode.getFrequency() + "Hz\n");
 			
-			
-//			Display.setDisplayMode(DEF_DISPLAYMODE);
 			Display.setDisplayModeAndFullscreen(finalMode);
 			aspectRatio = ((float) Display.getDisplayMode().getWidth() /(float) Display.getDisplayMode().getHeight());
 			fpsCap = Display.getDisplayMode().getFrequency();

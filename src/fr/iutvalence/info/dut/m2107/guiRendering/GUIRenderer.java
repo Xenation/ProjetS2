@@ -45,7 +45,7 @@ public class GUIRenderer {
 		GL30.glBindVertexArray(elem.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
-		shader.loadTranslation(elem.getPosition());
+		shader.loadTranslation(elem.getRealPosition());
 		GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, elem.getVertexCount());
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(0);
