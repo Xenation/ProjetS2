@@ -175,16 +175,19 @@ public class Collider {
 							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 							((Character)ent).isGrounded = true;
 							((Character)ent).hasStepUp = true;
-						} else if(Input.isJumping() && !((Character)this.ent).prevGrounded) {
+						} else if(Input.isJumping() && !((Character)this.ent).prevGrounded && ((Player)this.ent).leftWallJump) {
 							// Jump input and previously grounded
+							((Player)this.ent).vel.y = ((Player)this.ent).jumpHeight;
 							((Player)this.ent).leftWallJump = false;
-							((Character)this.ent).vel.y = ((Character)this.ent).jumpHeight;
+							checkCharacterContinuousCollision();
 						} else {
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						}
 					} else {
 						// I can't StepUp or wall jump so I block the x movement and stick to the tile
+						if(!((Character)this.ent).prevGrounded && ((Player)this.ent).vel.y < 0)
+							((Player)this.ent).vel.y = Maths.lerp(((Player)this.ent).vel.y, -5, 0.05f);
 						modVel.x = 0;
 						ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						((Player)this.ent).rightWallJump = true;
@@ -218,16 +221,19 @@ public class Collider {
 							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 							((Character)ent).isGrounded = true;
 							((Character)ent).hasStepUp = true;
-						} else if(Input.isJumping() && !((Character)this.ent).prevGrounded) {
-							// There is no block to prevent the StepUp
+						} else if(Input.isJumping() && !((Character)this.ent).prevGrounded && ((Player)this.ent).rightWallJump) {
+							// Jump input and previously grounded
+							((Player)this.ent).vel.y = ((Player)this.ent).jumpHeight;
 							((Player)this.ent).rightWallJump = false;
-							((Character)this.ent).vel.y = ((Character)this.ent).jumpHeight;
+							checkCharacterContinuousCollision();
 						} else {
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						}
 					} else {
 						// I can't StepUp or wall jump so I block the x movement and stick to the tile
+						if(!((Character)this.ent).prevGrounded && ((Player)this.ent).vel.y < 0)
+							((Player)this.ent).vel.y = Maths.lerp(((Player)this.ent).vel.y, -5, 0.05f);
 						modVel.x = 0;
 						ent.pos.x = tile.x - this.getW()/2;
 						((Player)this.ent).leftWallJump = true;

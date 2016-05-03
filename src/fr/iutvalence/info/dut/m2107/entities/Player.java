@@ -30,15 +30,14 @@ public class Player extends Character{
 	 */
 	private Item[] quick_Bar = new Item[8];
 	
-	// Temporary
-	private float width = 0.05f;
-	private float height = 0.05f;
-	private float posX = .5f - width/2;
-	private float posY = height;
-	private float offsetX = width;
-	private int selectSlot = 0;
-	private GUIElement selectQuickBar;
-	// Temporary
+	 // Temporary
+	 private float width = 0.1f;
+	 private float height = 0.1f;
+	 private float posX = 0;
+	 private float posY = 2 - height*1.5f;
+	 private int selectSlot = 0;
+	 private GUIElement selectQuickBar;
+	 // Temporary
 	
 	/**
 	 * The angle between the player and the camera
@@ -87,12 +86,12 @@ public class Player extends Character{
 		this.quick_Bar[3] = ItemDatabase.get(1);
 		
 		for (int slotNumber = 0; slotNumber < 8; slotNumber++) {
-			new GUIElement("gui/quick_bar_slot", new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber, 1-posY), width, height);
+			new GUIElement("gui/quick_bar_slot", new Vector2f(posX - width*3.5f + width*slotNumber, 1-posY), width, height);
 			if(this.quick_Bar[slotNumber] != null) {
-				new GUIElement(this.quick_Bar[slotNumber].getSprite().getTextureID(), new Vector2f(posX - offsetX*3.5f + offsetX*slotNumber, 1-posY), width - width/2.5f, height - height/2.5f);
+				new GUIElement(this.quick_Bar[slotNumber].getSprite().getTextureID(), new Vector2f(posX - width*3.5f + width*slotNumber, 1-posY), width - width/2.5f, height - height/2.5f);
 			}
 		}
-		selectQuickBar = new GUIElement("gui/select_quick_bar_slot", new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, 1-posY), width, height);
+		selectQuickBar = new GUIElement("gui/select_quick_bar_slot", new Vector2f(posX - width*3.5f + selectSlot*width, 1-posY), width, height);
 	}
 
 	/* (non-Javadoc)
@@ -146,7 +145,7 @@ public class Player extends Character{
 		selectSlot += Input.WheelScrolling();
 		if(selectSlot > 7) selectSlot -= 8;
 		if(selectSlot < 0) selectSlot += 8;
-		selectQuickBar.setPosition(new Vector2f(posX - offsetX*3.5f + selectSlot*offsetX, selectQuickBar.getPosition().y));			
+		selectQuickBar.setPosition(new Vector2f(posX - width*3.5f + selectSlot*width, selectQuickBar.getPosition().y));			
 		
 		if(this.itemOnHand != this.quick_Bar[selectSlot]) {
 			if(this.quick_Bar[selectSlot] != null) {
