@@ -179,6 +179,9 @@ public class Collider {
 							// Jump input and previously grounded
 							((Player)this.ent).leftWallJump = false;
 							((Character)this.ent).vel.y = ((Character)this.ent).jumpHeight;
+						} else {
+							modVel.x = 0;
+							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						}
 					} else {
 						// I can't StepUp or wall jump so I block the x movement and stick to the tile
@@ -219,6 +222,9 @@ public class Collider {
 							// There is no block to prevent the StepUp
 							((Player)this.ent).rightWallJump = false;
 							((Character)this.ent).vel.y = ((Character)this.ent).jumpHeight;
+						} else {
+							modVel.x = 0;
+							ent.pos.x = tile.x - this.getW()/2;
 						}
 					} else {
 						// I can't StepUp or wall jump so I block the x movement and stick to the tile
