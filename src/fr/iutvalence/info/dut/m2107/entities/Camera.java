@@ -107,11 +107,9 @@ public class Camera {
 			Sprite spr = new Sprite("entities/selection", new Vector2f(1, 1));
 			spr.setAlpha(0.5f);
 			this.preview = new Entity(spr);
-			GameWorld.layerMap.getLayer(1).add(preview);
 		}
-		GameWorld.chunkMap.generateSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, position);
 		
-		Tile pointed = GameWorld.chunkMap.getTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+		GameWorld.chunkMap.generateSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, position);
 		
 		//// Lerp to target
 		if (target != null) {
@@ -119,26 +117,84 @@ public class Camera {
 			this.position.y = Maths.lerp(this.position.y, target.pos.y, 0.1f);
 		}
 		
-		//// Movement
-		if (target == null) {
-			if (Input.isMoveUp()) 	this.position.y += 20 * DisplayManager.deltaTime();
-			if (Input.isMoveDown()) this.position.y -= 20 * DisplayManager.deltaTime();
-			if (Input.isMoveRight())this.position.x += 20 * DisplayManager.deltaTime();
-			if (Input.isMoveLeft())	this.position.x -= 20 * DisplayManager.deltaTime();
-			
-			if (Input.isNumPad0()) setPosition(0, 0);
-		}
-		
-		//// Switches
-
 		//// Player target bind/unbind
 		if (Input.isFocusOnPlayer()) {
 			if (target == null) {
 				target = GameWorld.player;
 				this.isFree = true;
+				GameWorld.layerMap.getLayer(1).remove(preview);
 			} else {
 				target = null;
 				this.isFree = false;
+				GameWorld.layerMap.getLayer(1).add(preview);
+			}
+		}
+		
+		Tile pointed = GameWorld.chunkMap.getTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+		
+		//// Build Mode
+		if (target == null && preview != null) {
+			//// Movement
+			if (Input.isMoveUp()) 	this.position.y += 20 * DisplayManager.deltaTime();
+			if (Input.isMoveDown()) this.position.y -= 20 * DisplayManager.deltaTime();
+			if (Input.isMoveRight())this.position.x += 20 * DisplayManager.deltaTime();
+			if (Input.isMoveLeft())	this.position.x -= 20 * DisplayManager.deltaTime();
+			if (Input.isNumPad0()) setPosition(0, 0);
+			
+			//// Tile Choice
+			if (Input.isKey1())	this.type = TileType.Dirt;
+			if (Input.isKey2())	this.type = TileType.Stone;
+			if (Input.isKey3()) this.type = TileType.Grass;
+			if (Input.isKey4()) this.type = TileType.Log;
+			if (Input.isKey5())	this.type = TileType.Leaves;
+			if (Input.isKey6())	this.type = TileType.Fader;
+			if (Input.isKey7())	this.type = TileType.Spikes;
+			if (Input.isKey8())	this.type = TileType.Sand;
+			if (Input.isKey9())	this.type = TileType.Creator;
+			if (Input.isKey0())	this.type = TileType.Piston;
+			if (Input.isKeyWater()) this.type = TileType.Water;
+			
+			//// Load/Save
+			if (Input.isWriteWorld()) WorldSaver.writeWorld();
+			if (Input.isLoadWorld())  WorldLoader.loadWorld();
+			
+			//// Tile Rotation
+			if (Input.isTileRotate() && pointed != null)
+				GameWorld.chunkMap.rotateTileAt(pointed.x, pointed.y, pointed.getOrientation().getNext());
+			
+			this.preview.pos.x = Maths.fastFloor(getMouseWorldX()) + Tile.TILE_SIZE/2;
+			this.preview.pos.y = Maths.fastFloor(getMouseWorldY()) + Tile.TILE_SIZE/2;
+			
+			//// Drawing
+			if (Input.isLShift() && (Input.isMouseLeft() || Input.isMouseRight())) {
+				if (drawStart == null) {
+					if (Input.isMouseLeft()) isRemoving = false;
+					else if (Input.isMouseRight()) isRemoving = true;
+					
+					drawStart = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+					isSelecting = true;
+				} else {
+					drawEnd = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+					calculateSelectionCenter();
+				}
+			} else if (isSelecting) {
+				isSelecting = false;
+				if (!isRemoving) {
+					GameWorld.chunkMap.fillZone(type, drawStart, drawEnd);
+				} else {
+					GameWorld.chunkMap.emptyZone(drawStart, drawEnd);
+				}
+				preview.setScale(1, 1);
+				isRemoving = false;
+				drawStart = null;
+			}
+			if (!isSelecting) {
+				if (Input.isMouseLeft()) {
+					GameWorld.chunkMap.setTile(TileBuilder.buildTile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
+				}
+				if (Input.isMouseRight()) {
+					GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+				}
 			}
 		}
 		
@@ -148,62 +204,6 @@ public class Camera {
 			else DisplayManager.vSyncTracker = true;
 			
 			Display.setVSyncEnabled(DisplayManager.vSyncTracker);
-		}
-		
-		//// Load/Save
-		if (Input.isWriteWorld()) WorldSaver.writeWorld();
-		if (Input.isLoadWorld())  WorldLoader.loadWorld();
-		
-		//// Tile Choice
-		if (Input.isKey1())	this.type = TileType.Dirt;
-		if (Input.isKey2())	this.type = TileType.Stone;
-		if (Input.isKey3()) this.type = TileType.Grass;
-		if (Input.isKey4()) this.type = TileType.Log;
-		if (Input.isKey5())	this.type = TileType.Leaves;
-		if (Input.isKey6())	this.type = TileType.Fader;
-		if (Input.isKey7())	this.type = TileType.Spikes;
-		if (Input.isKey8())	this.type = TileType.Sand;
-		if (Input.isKey9())	this.type = TileType.Creator;
-		if (Input.isKey0())	this.type = TileType.Piston;
-		if (Input.isKeyWater()) this.type = TileType.Water;
-		
-		//// Tile Rotation
-		if (Input.isTileRotate() && pointed != null)
-			GameWorld.chunkMap.rotateTileAt(pointed.x, pointed.y, pointed.getOrientation().getNext());
-		
-		this.preview.pos.x = Maths.fastFloor(getMouseWorldX()) + Tile.TILE_SIZE/2;
-		this.preview.pos.y = Maths.fastFloor(getMouseWorldY()) + Tile.TILE_SIZE/2;
-		
-		//// Drawing
-		if (Input.isLShift() && (Input.isMouseLeft() || Input.isMouseRight())) {
-			if (drawStart == null) {
-				if (Input.isMouseLeft()) isRemoving = false;
-				else if (Input.isMouseRight()) isRemoving = true;
-				
-				drawStart = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
-				isSelecting = true;
-			} else {
-				drawEnd = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
-				calculateSelectionCenter();
-			}
-		} else if (isSelecting) {
-			isSelecting = false;
-			if (!isRemoving) {
-				GameWorld.chunkMap.fillZone(type, drawStart, drawEnd);
-			} else {
-				GameWorld.chunkMap.emptyZone(drawStart, drawEnd);
-			}
-			preview.setScale(1, 1);
-			isRemoving = false;
-			drawStart = null;
-		}
-		if (!isSelecting) {
-			if (Input.isMouseLeft()) {
-				GameWorld.chunkMap.setTile(TileBuilder.buildTile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
-			}
-			if (Input.isMouseRight()) {
-				GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
-			}
 		}
 		
 		String updateStr = "Mouse: "+Maths.round(getMouseWorldX(), 3)+", "+Maths.round(getMouseWorldY(), 3) 
