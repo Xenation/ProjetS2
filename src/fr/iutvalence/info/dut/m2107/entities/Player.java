@@ -115,7 +115,7 @@ public class Player extends Character{
 			this.itemOnHand.pos = this.pos;
 		}
 		
-		if(Input.isUseWeapon() && this.itemOnHand != null) {
+		if(Input.isMouseLeft() && this.itemOnHand != null) {
 			if(this.itemOnHand instanceof Bow)
 				((Bow) this.itemOnHand).use(this);
 			if(this.itemOnHand instanceof Sword)

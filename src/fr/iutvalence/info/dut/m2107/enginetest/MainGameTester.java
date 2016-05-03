@@ -22,10 +22,20 @@ import fr.iutvalence.info.dut.m2107.storage.Input;
 
 public class MainGameTester {
 	
+	/**
+	 * Launches the game (test version)
+	 * arguments:
+	 * <ul>
+	 * <li>0: anything - won't create the window</li>
+	 * </ul>
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
-		// Display Window initialization
-		DisplayManager.createDisplay();
-		DisplayManager.updateDisplay();
+		// Display Window initialisation
+		if (args.length == 0) {
+			DisplayManager.createDisplay();
+			DisplayManager.updateDisplay();
+		}
 		
 		TextMaster.init();
 		GUIMaster.init();

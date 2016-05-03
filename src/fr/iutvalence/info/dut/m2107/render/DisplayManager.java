@@ -1,5 +1,6 @@
 package fr.iutvalence.info.dut.m2107.render;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -128,6 +129,37 @@ public class DisplayManager {
 		lastFPS = getCurrentTime();
 	}
 	
+	public static void createDisplay(DisplayMode mode, boolean fullscreen, boolean vsync, int cap) {
+		// Display creation
+				try {
+					if (fullscreen)
+						Display.setDisplayModeAndFullscreen(mode);
+					else
+						Display.setDisplayMode(mode);
+					aspectRatio = ((float) Display.getDisplayMode().getWidth() /(float) Display.getDisplayMode().getHeight());
+					if (cap == 0)
+						fpsCap = Display.getDisplayMode().getFrequency();
+					else
+						fpsCap = cap;
+					Display.setVSyncEnabled(vsync);
+					Display.create();
+				} catch (LWJGLException e) {
+					e.printStackTrace();
+					System.exit(1);
+				}
+				
+				// OpenGL Configuration
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+				updateDelta();
+				lastFPS = getCurrentTime();
+	}
+	
 	/**
 	 * Updates the display (delta time also)
 	 */
@@ -211,6 +243,24 @@ public class DisplayManager {
 	 */
 	public static int getFPS() {
 		return currentFPS;
+	}
+	
+	/**
+	 * Returns a list of all available display modes
+	 * @return a list of all available display modes
+	 */
+	public static List<DisplayMode> getDisplayModes() {
+		DisplayMode[] modesArray = null;
+		try {
+			modesArray = Display.getAvailableDisplayModes();
+		} catch (LWJGLException e) {
+			return null;
+		}
+		List<DisplayMode> modes = new ArrayList<DisplayMode>();
+		for (DisplayMode displayMode : modesArray) {
+			modes.add(displayMode);
+		}
+		return modes;
 	}
 	
 	/**
