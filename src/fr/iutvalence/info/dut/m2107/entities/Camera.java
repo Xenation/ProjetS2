@@ -195,6 +195,15 @@ public class Camera {
 					GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 				}
 			}
+		} else {
+//			if (Input.isNumPad0()) {
+//				float pow = Maths.pow(2, 25);
+//				this.target.pos = new Vector2f(pow, 0);
+//				setPosition(pow, 0);
+//				for (int i = -10; i <= 10; i++) {
+//					GameWorld.chunkMap.setTilenChunk(TileBuilder.buildTile(type, Maths.fastFloor(pow+i), -20));
+//				}
+//			}
 		}
 		
 		//// VSync

@@ -147,8 +147,9 @@ public class Renderer {
 						glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 						
 						if (ent.getLayer() != null) {
+							Matrix4f mat = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
 							unbindSprite();
-							renderSubLayer(ent);
+							renderSubLayers(ent, mat);
 							prepareSprite(spr);
 						}
 					}
@@ -165,17 +166,23 @@ public class Renderer {
 	 * Renders a sub layer (a layer contained by an entity)
 	 * @param layer the sub layer to render
 	 */
-	private void renderSubLayer(Entity entity) {
+	private void renderSubLayers(Entity entity, Matrix4f matrix) {
 		for (Sprite spr : entity.getLayer().sprites()) {
 			if (spr != null) {
 				prepareSprite(spr);
 				
 				for (Entity ent : entity.getLayer().getEntities(spr)) {
-					Matrix4f matrix = Maths.createRelativeTransformationMatrix(entity, ent.getPosition(), ent.getScale(), ent.getRotation());
+					Maths.addTransformationMatrix(matrix, ent.getPosition(), ent.getScale(), ent.getRotation());
 					shader.loadTransformation(matrix);
 					shader.loadAlpha(spr.getAlpha());
 					
 					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+					
+					if (ent.getLayer() != null) {
+						unbindSprite();
+						renderSubLayers(ent, matrix);
+						prepareSprite(spr);
+					}
 				}
 				
 				unbindSprite();

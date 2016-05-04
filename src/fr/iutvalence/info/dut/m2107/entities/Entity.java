@@ -109,8 +109,10 @@ public class Entity {
 		this.spr = spr;
 		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = col;
-		col.setEnt(this);
-		col.updateColPos();
+		if (col != null) {
+			col.setEnt(this);
+			col.updateColPos();
+		}
 	}
 	
 	/**

@@ -4,6 +4,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
+import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
@@ -71,6 +72,14 @@ public class MainGameTester {
 		
 		GameWorld.layerMap.getLayer(1).add(new LivingEntity(new Vector2f(4, -6), 45, SpriteDatabase.getSwordSpr(), new Collider(SpriteDatabase.getSwordSpr()), new Vector2f(), 0, 10, 0, 0));
 		
+		GameWorld.player.initLayer();
+		LivingEntity sword = new LivingEntity(new Vector2f(.8f, 0), 0, SpriteDatabase.getSwordSpr(), new Collider(SpriteDatabase.getSwordSpr()), new Vector2f(), 0, 10, 0, 0);
+		Entity pivot = new Entity(new Vector2f(0, 0), SpriteDatabase.getArrowSpr(), null);
+		pivot.initLayer();
+		GameWorld.player.getLayer().add(pivot);
+		pivot.getLayer().add(sword);
+		GameWorld.player.setRotation(0);
+		
 		EventManager.init();
 		for (Class<?> cla : ListenersScanner.listenersClasses) {
 			System.out.println("LISTENER: "+cla.getSimpleName());
@@ -93,6 +102,8 @@ public class MainGameTester {
 					+ "\nGUI: "+Loader.GUI_LOADER.debugValues());
 			
 			GameWorld.update();
+			
+			pivot.setRotation(GameWorld.player.getDegreeShoot());
 			
 			renderer.prepare();
 			renderer.render();

@@ -132,7 +132,7 @@ public class Player extends Character{
 	private void updateShootVal() {
 		shoot = (Vector2f) new Vector2f(GameWorld.camera.getMouseWorldX() - this.pos.x,
 				GameWorld.camera.getMouseWorldY() - this.pos.y).normalise();
-
+		
 		if (shoot.y > 0) degreeShoot = (float) (Math.atan(shoot.x / shoot.y)*180/Math.PI-90);
 		else degreeShoot = (float) (Math.atan(shoot.x / shoot.y)*180/Math.PI+90);
 	}
