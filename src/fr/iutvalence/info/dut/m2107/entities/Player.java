@@ -13,7 +13,7 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 public class Player extends Character{
 	
 	// Temporary
-	private GUIText playerGUI = new GUIText("", .8f, 0.82f, 0, 0.5f, false);
+	private GUIText playerGUI = new GUIText("", .8f, 0.82f, 0, 0.5f, false, true);
 	// Temporary
 	
 	/**
@@ -57,7 +57,6 @@ public class Player extends Character{
 	 */
 	public Player() {
 		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.5f, -1.8f, .5f, 1.8f));
-		playerGUI.setColour(0, 1, 0);
 		playerGUI.setLineHeight(0.024);
 		initQuickBar();
 		initInventory();

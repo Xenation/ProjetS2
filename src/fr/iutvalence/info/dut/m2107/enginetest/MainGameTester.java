@@ -35,9 +35,9 @@ public class MainGameTester {
 		if (args.length == 0) {
 			DisplayManager.createDisplay();
 			DisplayManager.updateDisplay();
+			TextMaster.init();
 		}
 		
-		TextMaster.init();
 		GUIMaster.init();
 		
 		ItemDatabase.create();
@@ -57,16 +57,12 @@ public class MainGameTester {
 		WorldLoader.setFilePath("res/test.sav");
 		SaveFileUpdater.setFilePath("res/test.sav");
 		
-		GUIText chunks = new GUIText("Chunks :", 1, 0, .8f, 0.5f, false);
-		chunks.setColour(0, 1, 0);
-		GUIText chunkStats = new GUIText("", .8f, 0, .82f, 0.5f, false);
-		chunkStats.setColour(0, 1, 0);
+		new GUIText("Chunks :", 1, 0, .8f, 0.5f, false, true);
+		GUIText chunkStats = new GUIText("", .8f, 0, .82f, 0.5f, false, true);
 		chunkStats.setLineHeight(0.024);
 		
-		GUIText loaders = new GUIText("Loaders :", 1, 0, .90f, 0.5f, false);
-		loaders.setColour(0, 1, 0);
-		GUIText loaderStats = new GUIText("", .8f, 0, .92f, 0.5f, false);
-		loaderStats.setColour(0, 1, 0);
+		new GUIText("Loaders :", 1, 0, .90f, 0.5f, false, true);
+		GUIText loaderStats = new GUIText("", .8f, 0, .92f, 0.5f, false, true);
 		loaderStats.setLineHeight(0.024);
 		
 		//SaveFileUpdater.updateFileFormat("tvxy", 10);
@@ -89,7 +85,7 @@ public class MainGameTester {
 
 			chunkStats.updateText("Chunks: "+GameWorld.chunkMap.getChunkCount()
 					+ "\nTiles: "+GameWorld.chunkMap.getTilesCount()
-					+ "\nCurrent Tiles: "+GameWorld.chunkMap.getSurroundingTilesCount(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, GameWorld.camera.getPosition()));
+					+ "\n\tCurrent Tiles: "+GameWorld.chunkMap.getSurroundingTilesCount(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, GameWorld.camera.getPosition()));
 			
 			loaderStats.updateText("TILES: "+Loader.TILE_LOADER.debugValues()
 					+ "\nSPRITES: "+Loader.SPRITE_LOADER.debugValues()

@@ -141,6 +141,7 @@ public class DisplayManager {
 						fpsCap = Display.getDisplayMode().getFrequency();
 					else
 						fpsCap = cap;
+					vSyncTracker = vsync;
 					Display.setVSyncEnabled(vsync);
 					Display.create();
 				} catch (LWJGLException e) {

@@ -37,6 +37,10 @@ public class Shader extends ShaderProgram {
 	 * The location of the alpha uniform variable in the Shader
 	 */
 	private int location_alpha;
+	/**
+	 * The location of the depth uniform variable in the Shader
+	 */
+	private int location_depth;
 	
 	/**
 	 * Creates a new ShaderProgram using the vertex and fragment files
@@ -75,6 +79,13 @@ public class Shader extends ShaderProgram {
 	public void loadAlpha(float alph) {
 		super.loadFloat(location_alpha, alph);
 	}
+	/**
+	 * Loads the specified depth to the shader
+	 * @param depth the depth to load
+	 */
+	public void loadDepth(float depth) {
+		super.loadFloat(location_depth, depth);
+	}
 	
 	/**
 	 * Gets the location of all the uniform variables of the shader
@@ -85,6 +96,7 @@ public class Shader extends ShaderProgram {
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_alpha = super.getUniformLocation("alpha");
+		location_depth = super.getUniformLocation("depth");
 	}
 	
 	/**

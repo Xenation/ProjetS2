@@ -78,8 +78,7 @@ public class Camera {
 	public Camera() {
 		this.position = new Vector2f();
 		this.rotation = 0;
-		this.debugText = new GUIText("", .8f, 0, 0, .5f, false);
-		debugText.setColour(0, 1, 0);
+		this.debugText = new GUIText("", .8f, 0, 0, .5f, false, true);
 		this.type = TileType.Dirt;
 	}
 	

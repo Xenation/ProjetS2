@@ -27,6 +27,7 @@ public class GUIText {
 	private FontType font;
 
 	private boolean centerText = false;
+	private final boolean isDebug;
 
 	/**
 	 * Creates a new text, loads the text's quads into a VAO, and adds the text
@@ -60,6 +61,7 @@ public class GUIText {
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
+		this.isDebug = false;
 		TextMaster.loadText(this);
 	}
 	
@@ -70,6 +72,19 @@ public class GUIText {
 		this.position = new Vector2f(posX, posY);
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
+		this.isDebug = false;
+		TextMaster.loadText(this);
+	}
+	
+	public GUIText(String text, float fontSize, float posX, float posY, float maxLineLength, boolean centered, boolean isDebug) {
+		this.textString = text;
+		this.fontSize = fontSize;
+		this.font = TextMaster.font;
+		this.position = new Vector2f(posX, posY);
+		this.lineMaxSize = maxLineLength;
+		this.centerText = centered;
+		this.isDebug = isDebug;
+		this.colour = TextMaster.debugColor;
 		TextMaster.loadText(this);
 	}
 	
@@ -207,6 +222,10 @@ public class GUIText {
 
 	public void setLineHeight(double lineHeight) {
 		this.lineHeight = lineHeight;
+	}
+
+	public boolean isDebug() {
+		return isDebug;
 	}
 
 }
