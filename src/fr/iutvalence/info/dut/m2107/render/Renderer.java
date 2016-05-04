@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
@@ -140,12 +141,17 @@ public class Renderer {
 					prepareSprite(spr);
 					
 					for (Entity ent : layer.getEntities(spr)) {
-	//					Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
 						Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getScale(), ent.getRotation());
 						shader.loadTransformation(matrix);
 						shader.loadAlpha(spr.getAlpha());
 						
 						glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+						
+						if (ent.getLayer() != null) {
+							unbindSprite();
+							renderSubLayer(ent);
+							prepareSprite(spr);
+						}
 					}
 					
 					unbindSprite();
@@ -154,6 +160,30 @@ public class Renderer {
 		}
 		
 		shader.stop();
+	}
+	
+	/**
+	 * Renders a sub layer (a layer contained by an entity)
+	 * @param layer the sub layer to render
+	 */
+	private void renderSubLayer(Entity entity) {
+		Vector2f pos = new Vector2f();
+		for (Sprite spr : entity.getLayer().sprites()) {
+			if (spr != null) {
+				prepareSprite(spr);
+				
+				for (Entity ent : entity.getLayer().getEntities(spr)) {
+					Vector2f.add(ent.getPosition(), entity.getPosition(), pos);
+					Matrix4f matrix = Maths.createTransformationMatrix(pos, ent.getScale(), ent.getRotation());
+					shader.loadTransformation(matrix);
+					shader.loadAlpha(spr.getAlpha());
+					
+					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+				}
+				
+				unbindSprite();
+			}
+		}
 	}
 	
 	/**
