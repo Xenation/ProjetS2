@@ -4,7 +4,10 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.sun.webkit.ThemeClient;
+
 import fr.iutvalence.info.dut.m2107.entities.Camera;
+import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.tiles.TileOrientation;
 
 /**
@@ -52,6 +55,25 @@ public class Maths {
 	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale, float rotation) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
+		Matrix4f.translate(translation, matrix, matrix);
+		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1f), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(-rotation), new Vector3f(0, 0, 1), matrix, matrix);
+		return matrix;
+	}
+
+	/**
+	 * Creates a transformation matrix using a position(translation), scale, rotation and an origin Entity
+	 * @param origin the entity to be used as an origin
+	 * @param translation the translation to apply (position)
+	 * @param scale the scale
+	 * @param rotation the rotation
+	 * @return a transformation matrix using a position(translation), scale and rotation
+	 */
+	public static Matrix4f createRelativeTransformationMatrix(Entity origin, Vector2f translation, Vector2f scale, float rotation) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity();
+		Matrix4f.translate(origin.getPosition(), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(-origin.getRotation()), new Vector3f(0, 0, 1), matrix, matrix);
 		Matrix4f.translate(translation, matrix, matrix);
 		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1f), matrix, matrix);
 		Matrix4f.rotate((float) Math.toRadians(-rotation), new Vector3f(0, 0, 1), matrix, matrix);

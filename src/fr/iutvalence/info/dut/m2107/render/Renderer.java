@@ -7,7 +7,6 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
@@ -167,14 +166,12 @@ public class Renderer {
 	 * @param layer the sub layer to render
 	 */
 	private void renderSubLayer(Entity entity) {
-		Vector2f pos = new Vector2f();
 		for (Sprite spr : entity.getLayer().sprites()) {
 			if (spr != null) {
 				prepareSprite(spr);
 				
 				for (Entity ent : entity.getLayer().getEntities(spr)) {
-					Vector2f.add(ent.getPosition(), entity.getPosition(), pos);
-					Matrix4f matrix = Maths.createTransformationMatrix(pos, ent.getScale(), ent.getRotation());
+					Matrix4f matrix = Maths.createRelativeTransformationMatrix(entity, ent.getPosition(), ent.getScale(), ent.getRotation());
 					shader.loadTransformation(matrix);
 					shader.loadAlpha(spr.getAlpha());
 					
