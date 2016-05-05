@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.models.*;
@@ -25,31 +26,30 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
  */
 public class Renderer {
 	
-	
 	/**
 	 * The amount of Units in height in the screen
 	 */
-	public static final float UNITS_Y = 20;
+	public static float UNITS_Y = 20;
 	
 	/**
 	 * The left boundary of the screen
 	 */
-	public static final float BOUNDARY_LEFT = -UNITS_Y/2*DisplayManager.aspectRatio;
+	public static float BOUNDARY_LEFT = -UNITS_Y/2*DisplayManager.aspectRatio;
 	
 	/**
 	 * The right boundary of the screen
 	 */
-	public static final float BOUNDARY_RIGHT = -BOUNDARY_LEFT;
+	public static float BOUNDARY_RIGHT = -BOUNDARY_LEFT;
 	
 	/**
 	 * The bottom boundary of the screen
 	 */
-	public static final float BOUNDARY_BOTTOM = -UNITS_Y/2;
+	public static float BOUNDARY_BOTTOM = -UNITS_Y/2;
 	
 	/**
 	 * The top boundary of the screen
 	 */
-	public static final float BOUNDARY_TOP = UNITS_Y/2;
+	public static float BOUNDARY_TOP = UNITS_Y/2;
 	
 	/**
 	 * the orthogonal projection matrix
@@ -62,16 +62,35 @@ public class Renderer {
 	private Shader shader;
 	
 	/**
+	 * The clear color (=background color)
+	 */
+	private Vector3f bgColor = new Vector3f(126f/255, 192f/255, 238f/255);
+	
+	
+	/**
+	 * Initialises the rendering frame of the renderers
+	 * @param units_y the height of the rendered frame
+	 */
+	public static void init(float units_y) {
+		UNITS_Y = units_y;
+		BOUNDARY_LEFT = -UNITS_Y/2*DisplayManager.aspectRatio;
+		BOUNDARY_RIGHT = -BOUNDARY_LEFT;
+		BOUNDARY_BOTTOM = -UNITS_Y/2;
+		BOUNDARY_TOP = UNITS_Y/2;
+	}
+	
+	/**
 	 * A new Renderer.
 	 * Initialises a new shader, the orthogonal projection matrix,
 	 * Loads the projectionMatrix to the shader
 	 */
 	public Renderer() {
 		shader = new Shader();
-		createOrthoProjectionMatrix(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_BOTTOM, BOUNDARY_TOP, 2, -5);
+		createOrthoProjectionMatrix(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_BOTTOM, BOUNDARY_TOP, 5, -10);
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
+		glClearColor(bgColor.x, bgColor.y, bgColor.z, 1);
 	}
 	
 	/**
@@ -81,6 +100,7 @@ public class Renderer {
 	public void render() {
 		shader.start();
 		shader.loadViewMatrix(GameWorld.camera);
+		shader.loadDepth(0);
 		
 		for (Chunk chk : GameWorld.chunkMap.getSurroundingChunks(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_TOP, BOUNDARY_BOTTOM, GameWorld.camera.getPosition())) {
 			for (TileVariant var : chk.variants()) {
@@ -92,7 +112,7 @@ public class Renderer {
 					shader.loadTransformation(matrix);
 					
 					// Draws the sprite
-					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+					glDrawArrays(GL_QUADS, 0, 4);
 				}
 				
 				unbindSprite();
@@ -114,17 +134,24 @@ public class Renderer {
 		
 		for (int i = GameWorld.layerMap.getLayersCount()-1; i >= 0; i--) {
 			Layer layer = GameWorld.layerMap.getLayer(i);
+			shader.loadDepth(layer.getDepth());
 			for (Sprite spr : layer.sprites()) {
 				if (spr != null) {
 					prepareSprite(spr);
 					
 					for (Entity ent : layer.getEntities(spr)) {
-	//					Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
 						Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getScale(), ent.getRotation());
 						shader.loadTransformation(matrix);
 						shader.loadAlpha(spr.getAlpha());
 						
 						glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+						
+						if (ent.getLayer() != null) {
+							Matrix4f mat = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
+							unbindSprite();
+							renderSubLayers(ent, mat);
+							prepareSprite(spr);
+						}
 					}
 					
 					unbindSprite();
@@ -133,6 +160,34 @@ public class Renderer {
 		}
 		
 		shader.stop();
+	}
+	
+	/**
+	 * Renders a sub layer (a layer contained by an entity)
+	 * @param layer the sub layer to render
+	 */
+	private void renderSubLayers(Entity entity, Matrix4f matrix) {
+		for (Sprite spr : entity.getLayer().sprites()) {
+			if (spr != null) {
+				prepareSprite(spr);
+				
+				for (Entity ent : entity.getLayer().getEntities(spr)) {
+					Maths.addTransformationMatrix(matrix, ent.getPosition(), ent.getScale(), ent.getRotation());
+					shader.loadTransformation(matrix);
+					shader.loadAlpha(spr.getAlpha());
+					
+					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+					
+					if (ent.getLayer() != null) {
+						unbindSprite();
+						renderSubLayers(ent, matrix);
+						prepareSprite(spr);
+					}
+				}
+				
+				unbindSprite();
+			}
+		}
 	}
 	
 	/**

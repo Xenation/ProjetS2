@@ -9,6 +9,7 @@ public class TextMeshCreator {
 	protected static final double LINE_HEIGHT = 0.03f;
 	protected static final int SPACE_ASCII = 32; // Space
 	protected static final int LF_ASCII = 10; // Line Feed
+	protected static final int TAB_ASCII = 9; // Tabulation
 
 	private MetaFile metaData;
 
@@ -44,6 +45,16 @@ public class TextMeshCreator {
 				lines.add(currentLine);
 				currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
 				if (!added) {
+					currentLine.attemptToAddWord(currentWord);
+				}
+				currentWord = new Word(text.getFontSize());
+				continue;
+			}
+			if (ascii == TAB_ASCII) {
+				boolean added = currentLine.attemptToAddWordAndInsertTab(currentWord, text);
+				if (!added) {
+					lines.add(currentLine);
+					currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
 					currentLine.attemptToAddWord(currentWord);
 				}
 				currentWord = new Word(text.getFontSize());

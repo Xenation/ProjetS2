@@ -4,6 +4,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
+import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
@@ -35,9 +36,9 @@ public class MainGameTester {
 		if (args.length == 0) {
 			DisplayManager.createDisplay();
 			DisplayManager.updateDisplay();
+			TextMaster.init();
 		}
 		
-		TextMaster.init();
 		GUIMaster.init();
 		
 		ItemDatabase.create();
@@ -57,16 +58,12 @@ public class MainGameTester {
 		WorldLoader.setFilePath("res/test.sav");
 		SaveFileUpdater.setFilePath("res/test.sav");
 		
-		GUIText chunks = new GUIText("Chunks :", 1, 0, .8f, 0.5f, false);
-		chunks.setColour(0, 1, 0);
-		GUIText chunkStats = new GUIText("", .8f, 0, .82f, 0.5f, false);
-		chunkStats.setColour(0, 1, 0);
+		new GUIText("Chunks :", 1, 0, .8f, 0.5f, false, true);
+		GUIText chunkStats = new GUIText("", .8f, 0, .82f, 0.5f, false, true);
 		chunkStats.setLineHeight(0.024);
 		
-		GUIText loaders = new GUIText("Loaders :", 1, 0, .90f, 0.5f, false);
-		loaders.setColour(0, 1, 0);
-		GUIText loaderStats = new GUIText("", .8f, 0, .92f, 0.5f, false);
-		loaderStats.setColour(0, 1, 0);
+		new GUIText("Loaders :", 1, 0, .90f, 0.5f, false, true);
+		GUIText loaderStats = new GUIText("", .8f, 0, .92f, 0.5f, false, true);
 		loaderStats.setLineHeight(0.024);
 		
 		//SaveFileUpdater.updateFileFormat("tvxy", 10);
@@ -74,6 +71,15 @@ public class MainGameTester {
 		WorldLoader.loadWorld();
 		Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
 		GameWorld.layerMap.getLayer(0).add(new LivingEntity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider, new Vector2f(), 0, 10, 0, 0));
+		
+		GameWorld.player.initLayer();
+		LivingEntity sword = new LivingEntity(new Vector2f(.8f, 0), 0, SpriteDatabase.getSwordSpr(), new Collider(SpriteDatabase.getSwordSpr()), new Vector2f(), 0, 10, 0, 0);
+		Entity pivot = new Entity(new Vector2f(0, 0), SpriteDatabase.getArrowSpr(), null);
+		pivot.initLayer();
+		GameWorld.player.getLayer().add(pivot);
+		pivot.getLayer().add(sword);
+		GameWorld.player.setRotation(0);
+		
 		EventManager.init();
 		for (Class<?> cla : ListenersScanner.listenersClasses) {
 			System.out.println("LISTENER: "+cla.getSimpleName());
@@ -88,7 +94,7 @@ public class MainGameTester {
 
 			chunkStats.updateText("Chunks: "+GameWorld.chunkMap.getChunkCount()
 					+ "\nTiles: "+GameWorld.chunkMap.getTilesCount()
-					+ "\nCurrent Tiles: "+GameWorld.chunkMap.getSurroundingTilesCount(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, GameWorld.camera.getPosition()));
+					+ "\n\tCurrent Tiles: "+GameWorld.chunkMap.getSurroundingTilesCount(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, GameWorld.camera.getPosition()));
 			
 			loaderStats.updateText("TILES: "+Loader.TILE_LOADER.debugValues()
 					+ "\nSPRITES: "+Loader.SPRITE_LOADER.debugValues()
@@ -96,6 +102,8 @@ public class MainGameTester {
 					+ "\nGUI: "+Loader.GUI_LOADER.debugValues());
 			
 			GameWorld.update();
+			
+			pivot.setRotation(GameWorld.player.getDegreeShoot());
 			
 			renderer.prepare();
 			renderer.render();

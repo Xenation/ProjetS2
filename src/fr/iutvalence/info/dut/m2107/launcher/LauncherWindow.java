@@ -24,6 +24,8 @@ public class LauncherWindow extends JFrame {
 	private LIntegerField field_fps;
 	private LIntegerField field_render;
 	
+	private JCheckBox check_debug;
+	
 	public LauncherWindow() {
 		this.setTitle("EAGL Game Launcher");
 		this.setSize(400, 500);
@@ -50,6 +52,7 @@ public class LauncherWindow extends JFrame {
 		panel_graphics.add(check_fullscreen);
 		panel_graphics.add(new JLabel("Vsync: "));
 		check_vsync = new JCheckBox();
+		check_vsync.setSelected(true);
 		panel_graphics.add(check_vsync);
 		panel_graphics.add(new JLabel("FPS cap: "));
 		field_fps = new LIntegerField(60);
@@ -65,7 +68,8 @@ public class LauncherWindow extends JFrame {
 //		panel_others.setBackground(Color.ORANGE);
 		panel_others.setLayout(layout_others);
 		panel_others.add(new JLabel("Debug Text: "));
-		panel_others.add(new JCheckBox());
+		check_debug = new JCheckBox();
+		panel_others.add(check_debug);
 		
 		JPanel panel_empty = new JPanel();
 //		panel_empty.setBackground(Color.CYAN);
@@ -96,6 +100,14 @@ public class LauncherWindow extends JFrame {
 	
 	public int getFPSCap() {
 		return field_fps.parseValue();
+	}
+	
+	public int getRenderHeight() {
+		return field_render.parseValue();
+	}
+	
+	public boolean getDebug() {
+		return check_debug.isSelected();
 	}
 	
 }

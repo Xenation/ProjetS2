@@ -78,8 +78,7 @@ public class Camera {
 	public Camera() {
 		this.position = new Vector2f();
 		this.rotation = 0;
-		this.debugText = new GUIText("", .8f, 0, 0, .5f, false);
-		debugText.setColour(0, 1, 0);
+		this.debugText = new GUIText("", .8f, 0, 0, .5f, false, true);
 		this.type = TileType.Dirt;
 	}
 	
@@ -196,6 +195,15 @@ public class Camera {
 					GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 				}
 			}
+		} else {
+//			if (Input.isNumPad0()) {
+//				float pow = Maths.pow(2, 25);
+//				this.target.pos = new Vector2f(pow, 0);
+//				setPosition(pow, 0);
+//				for (int i = -10; i <= 10; i++) {
+//					GameWorld.chunkMap.setTilenChunk(TileBuilder.buildTile(type, Maths.fastFloor(pow+i), -20));
+//				}
+//			}
 		}
 		
 		//// VSync

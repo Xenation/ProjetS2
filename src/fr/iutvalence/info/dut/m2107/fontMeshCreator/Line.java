@@ -52,6 +52,21 @@ public class Line {
 			return false;
 		}
 	}
+	
+	protected boolean attemptToAddWordAndInsertTab(Word word, GUIText text) {
+		double additionalLength = word.getWordWidth();
+		additionalLength += !words.isEmpty() ? spaceSize*4 : 0;
+		if (currentLineLength + additionalLength <= maxLength) {
+			words.add(word);
+			words.add(new Word(text.getFontSize()));
+			words.add(new Word(text.getFontSize()));
+			words.add(new Word(text.getFontSize()));
+			currentLineLength += additionalLength;
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * @return The max length of the line.

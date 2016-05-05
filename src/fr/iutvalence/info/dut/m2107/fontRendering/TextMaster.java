@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.FontType;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.TextMeshData;
@@ -29,11 +31,21 @@ public class TextMaster {
 	 * The Renderer to use when rendering text
 	 */
 	private static FontRenderer renderer;
+	/**
+	 * Whether debug texts needs to be rendered
+	 */
+	private static boolean renderDebug = false;
 	
 	/**
 	 * The default font in which to write
 	 */
 	public static FontType font;
+	
+	/**
+	 * Debug color
+	 */
+	public static Vector3f debugColor = new Vector3f(1, 1, 1);
+//	public static Vector3f debugColor = new Vector3f(1, .662745f, .223529f);
 	
 	/**
 	 * Initialises the renderer, loader and font
@@ -42,6 +54,16 @@ public class TextMaster {
 		renderer = new FontRenderer();
 		loader = Loader.TEXT_LOADER;
 		font = new FontType("Pixel");
+	}
+	
+	/**
+	 * Initialises the renderer, loader and font
+	 */
+	public static void init(boolean debug) {
+		renderer = new FontRenderer();
+		loader = Loader.TEXT_LOADER;
+		font = new FontType("Pixel");
+		renderDebug = debug;
 	}
 	
 	/**
@@ -88,6 +110,14 @@ public class TextMaster {
 	 */
 	public static void cleanUp() {
 		renderer.cleanUp();
+	}
+	
+	/**
+	 * Returns whether the debug text needs to be rendered
+	 * @return whether the debug text needs to be rendered
+	 */
+	public static boolean renderDebug() {
+		return renderDebug;
 	}
 	
 }

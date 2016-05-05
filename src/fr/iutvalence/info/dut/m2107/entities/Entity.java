@@ -43,6 +43,11 @@ public class Entity {
 	protected Collider col;
 	
 	/**
+	 * The layer of entities contained by this entity
+	 */
+	private Layer layer;
+	
+	/**
 	 * Constructor of an Entity
 	 * @param pos The position of the entity
 	 * @param rot The rotation of the entity
@@ -104,8 +109,10 @@ public class Entity {
 		this.spr = spr;
 		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = col;
-		col.setEnt(this);
-		col.updateColPos();
+		if (col != null) {
+			col.setEnt(this);
+			col.updateColPos();
+		}
 	}
 	
 	/**
@@ -219,6 +226,17 @@ public class Entity {
 	 * @param rot The rotation to set
 	 */
 	public void setRotation(float rot) {this.rot = rot;}
+	
+	/**
+	 * Returns the group layer
+	 * @return the group layer
+	 */
+	public Layer getLayer() {return layer;}
+	
+	/**
+	 * Initialises a empty layer for this entity
+	 */
+	public void initLayer() {this.layer = new Layer();}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)

@@ -14,7 +14,7 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 public class Player extends Character{
 	
 	// Temporary
-	private GUIText playerGUI = new GUIText("", .8f, 0.82f, 0, 0.5f, false);
+	private GUIText playerGUI = new GUIText("", .8f, 0.82f, 0, 0.5f, false, true);
 	// Temporary
 	
 	/**
@@ -54,8 +54,7 @@ public class Player extends Character{
 	 * Constructor of a player
 	 */
 	public Player() {
-		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.75f, -1.7f, .75f, 1.7f));
-		playerGUI.setColour(0, 1, 0);
+		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.5f, -1.7f, .5f, 1.7f));
 		playerGUI.setLineHeight(0.024);
 		initQuickBar();
 		initInventory();
@@ -122,7 +121,7 @@ public class Player extends Character{
 	private void updateShootVal() {
 		shoot = (Vector2f) new Vector2f(GameWorld.camera.getMouseWorldX() - this.pos.x,
 				GameWorld.camera.getMouseWorldY() - this.pos.y).normalise();
-
+		
 		if (shoot.y > 0) degreeShoot = (float) (Math.atan(shoot.x / shoot.y)*180/Math.PI-90);
 		else degreeShoot = (float) (Math.atan(shoot.x / shoot.y)*180/Math.PI+90);
 	}

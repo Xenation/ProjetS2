@@ -58,6 +58,22 @@ public class Maths {
 		return matrix;
 	}
 	
+
+	/**
+	 * Add a transformation to the given matrix using a position(translation), scale and rotation
+	 * @param matrix the base matrix
+	 * @param translation the translation to apply (position)
+	 * @param scale the scale
+	 * @param rotation the rotation
+	 * @return a transformation matrix using a position(translation), scale and rotation
+	 */
+	public static Matrix4f addTransformationMatrix(Matrix4f matrix, Vector2f translation, Vector2f scale, float rotation) {
+		Matrix4f.translate(translation, matrix, matrix);
+		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1f), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(-rotation), new Vector3f(0, 0, 1), matrix, matrix);
+		return matrix;
+	}
+	
 	/**
 	 * Creates a transformation matrix using a position(translation), scale, rotation and depth
 	 * @param translation the translation to apply (position)

@@ -24,6 +24,11 @@ public class Layer implements Iterable<Entity> {
 	private Map<Sprite, List<Entity>> layer = new HashMap<Sprite, List<Entity>>();
 	
 	/**
+	 * The depth of this layer (only visual)
+	 */
+	private float depth = 0;
+	
+	/**
 	 * Updates every entity of this layer
 	 */
 	public void update() {
@@ -96,6 +101,22 @@ public class Layer implements Iterable<Entity> {
 			}
 		}
 		return ents.iterator();
+	}
+	
+	/**
+	 * Returns the depth of this layer
+	 * @return the depth of this layer
+	 */
+	public float getDepth() {
+		return depth;
+	}
+
+	/**
+	 * Sets the depth of this layer
+	 * @param depth the new depth
+	 */
+	public void setDepth(float depth) {
+		this.depth = depth;
 	}
 	
 }

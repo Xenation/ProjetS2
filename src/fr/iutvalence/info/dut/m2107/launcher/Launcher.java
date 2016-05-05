@@ -1,7 +1,9 @@
 package fr.iutvalence.info.dut.m2107.launcher;
 
 import fr.iutvalence.info.dut.m2107.enginetest.MainGameTester;
+import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
+import fr.iutvalence.info.dut.m2107.render.Renderer;
 
 public class Launcher {
 	
@@ -17,6 +19,9 @@ public class Launcher {
 		String[] args = {"launcher"};
 		System.out.println("Launching Game with:\nresolution = "+window.getDisplayMode().toString()+"\nfullscreen = "+window.getFullscreen()+"\nvsync = "+window.getVSync()+"\nfps = "+window.getFPSCap());
 		DisplayManager.createDisplay(window.getDisplayMode(), window.getFullscreen(), window.getVSync(), window.getFPSCap());
+		DisplayManager.updateDisplay();
+		TextMaster.init(window.getDebug());
+		Renderer.init(window.getRenderHeight());
 		MainGameTester.main(args);
 	}
 	
