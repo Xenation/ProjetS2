@@ -41,7 +41,7 @@ public class TextMaster {
 	public static void init() {
 		renderer = new FontRenderer();
 		loader = Loader.TEXT_LOADER;
-		font = new FontType("CourierNew");
+		font = new FontType("Pixel");
 	}
 	
 	/**

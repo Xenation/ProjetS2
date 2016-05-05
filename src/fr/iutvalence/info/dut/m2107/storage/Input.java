@@ -8,9 +8,6 @@ public class Input {
 	/** Boolean for player's jumping input */
 	private static boolean isJumping;
 	
-	/** Boolean for player's use weapon input */
-	private static boolean useWeapon;
-	
 	/** Boolean for move up input */
 	private static boolean isMoveUp;
 	
@@ -98,7 +95,6 @@ public class Input {
 	public static void input() {
 		
 		isJumping = false;
-		useWeapon = false;
 		isFocusOnPlayer = false;
 		isVSync = false;
 		isWriteWorld = false;
@@ -146,7 +142,6 @@ public class Input {
 		while(Keyboard.next()){
 			if (Keyboard.getEventKeyState()) {
 		        if(Keyboard.getEventKey() == Keyboard.KEY_SPACE)	isJumping = true;
-		        if(Keyboard.getEventKey() == Keyboard.KEY_A)    	useWeapon = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_TAB)     	isFocusOnPlayer = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_V)       	isVSync = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_DIVIDE)  	isWriteWorld = true;
@@ -175,9 +170,6 @@ public class Input {
 
 	/** @return player's jumping input */
 	public static boolean isJumping() {return isJumping;}
-	
-	/** @return player's use weapon input */
-	public static boolean isUseWeapon() {return useWeapon;}
 
 	/** @return move up input */
 	public static boolean isMoveUp() {return isMoveUp;}

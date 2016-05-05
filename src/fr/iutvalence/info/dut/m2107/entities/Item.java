@@ -41,7 +41,7 @@ public class Item extends Entity {
 	/**
 	 * The current stack of the item
 	 */
-	protected int stack = 0;
+	protected int stack = 1;
 	
 	/**
 	 * The value of the item
@@ -139,12 +139,8 @@ public class Item extends Entity {
 	/**
 	 * Add a number of stack to the current stack of the item
 	 * @param stackToAdd The number of stack to add
-	 * @return
 	 */
-	public Item changeStack(int stackToAdd) {
-		this.stack += stackToAdd;
-		return this;
-	}	
+	public void changeStack(int stackToAdd) {this.stack += stackToAdd;}	
 
 	/**
 	 * Return the id of the item

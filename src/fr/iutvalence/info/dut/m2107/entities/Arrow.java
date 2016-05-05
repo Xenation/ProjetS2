@@ -13,11 +13,6 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
  *
  */
 public class Arrow extends Ammunition {
-
-	/**
-	 * The arrow is or not stick into an object
-	 */
-	protected boolean isPierce = false;
 	
 	/**
 	 * Constructor of an arrow
@@ -73,7 +68,7 @@ public class Arrow extends Ammunition {
 	 * @see fr.iutvalence.info.dut.m2107.entities.Ammunition#update(fr.iutvalence.info.dut.m2107.storage.Layer)
 	 */
 	@Override
-	public void update(Layer layer) {
+	public void update(Layer layer) {		
 		if(!isPierce) {
 			this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
 			
@@ -85,7 +80,7 @@ public class Arrow extends Ammunition {
 			this.col.extendLeft(-(float) (Math.cos((rot)*Math.PI/180)*this.spr.getSize().x/2.5f));
 			this.col.extendUp(-(float) (Math.sin((rot)*Math.PI/180)*this.spr.getSize().y/2.5f));
 			this.col.extendDown((float) (Math.sin((rot)*Math.PI/180)*this.spr.getSize().y/2.5f));
-			if(this.col.isContinuousCollidingWithMap()) this.isPierce = true;
+			if(this.col.isContinuousColliding()) this.isPierce = true;
 			
 			// temporary code for entity collision detection
 			/*for (Entity entity : layer) {

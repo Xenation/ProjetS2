@@ -120,7 +120,7 @@ public class Collider {
 		((Character)ent).hasStepUp = false;
 		((Character)ent).isGrounded = false;
 		
-		int continuousStep = (int) ((Math.abs(((Character)this.ent).vel.x) + Math.abs(((Character)this.ent).vel.y))/8+1);
+		int continuousStep = (int) ((Maths.fastAbs(((Character)this.ent).vel.x) + Math.abs(((Character)this.ent).vel.y))/8+1);
 
 		float stepXtoAdd = ((Character)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
 		float stepYtoAdd = ((Character)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
@@ -295,8 +295,8 @@ public class Collider {
 	 * Check the continuous collision with the map
 	 * @return true when colliding otherwise false
 	 */
-	public boolean isContinuousCollidingWithMap() {
-		int continuousStep = (int) ((Math.abs(((Ammunition)this.ent).vel.x) + Math.abs(((Ammunition)this.ent).vel.y))/8+1)*2;
+	public boolean isContinuousColliding() {
+		int continuousStep = (int) ((Maths.fastAbs(((Ammunition)this.ent).vel.x) + Maths.fastAbs(((Ammunition)this.ent).vel.y))/8+1)*2;
 		float stepXtoAdd = ((Ammunition)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
 		float stepYtoAdd = ((Ammunition)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
 		float stepX = this.ent.col.minX + this.getW()/2;
@@ -311,9 +311,11 @@ public class Collider {
 			encompassCol.extendAll(this.getW()/2, this.getH()/2);
 			
 			Tile tileColliding = isCollidingWithMap(encompassCol);
-			if(tileColliding != null) {
+			Entity entColliding = isCollidingWithEntity(GameWorld.layerMap.getLayer(0));
+			if(tileColliding != null || entColliding != null) {
 				this.ent.pos.x = nextPos.x -(float) (Math.cos((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().x/2.5f);
 				this.ent.pos.y = nextPos.y -(float) -(Math.sin((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().y/2.5f);
+				//if(entColliding != null) this.ent.pos = entColliding.pos;
 				((Ammunition)this.ent).vel = new Vector2f(0, 0);
 				return true;
 			}
@@ -368,8 +370,8 @@ public class Collider {
 	 */
 	public Entity isCollidingWithEntity(Layer layer) {
 		for (Entity ent : layer){
-				if(!isColliding(this, ent.col))
-					return ent;
+			if(!isColliding(this, ent.col))
+				return ent;
 		}
 		return null;
 	}

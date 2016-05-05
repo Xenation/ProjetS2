@@ -2,6 +2,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.guiRendering.GUIMaster;
 import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 
@@ -69,13 +70,26 @@ public class Bow extends Weapon {
 	public void use(Character owner) {
 		if(this.remainingTime <= 0) {
 			if(owner instanceof Player) {
-				Arrow arrow = GameWorld.player.getInventory().getArrow();
-				if(arrow != null) {
-					GameWorld.player.getInventory().remove(arrow, 1);
-					arrow.addWeaponStats(this);
-					arrow.initLaunch();
-					GameWorld.layerMap.getLayer(0).add(arrow);
-				} else System.out.println("No more arrow in inventory");
+				Arrow arrow = null;
+				for (int i = 0; i < ((Player)owner).getQuickBarLength() ; i++) {
+					if(((Player)owner).getQuickBarItem(i) instanceof Arrow) {
+						arrow = new Arrow ((Arrow)((Player)owner).getQuickBarItem(i));
+						((Player)owner).removeQuickBarItem(i, 1);
+						arrow.addWeaponStats(this);
+						arrow.initLaunch();
+						GameWorld.layerMap.getLayer(1).add(arrow);
+						break;
+					}
+				}
+				if(arrow == null) {
+					arrow = GameWorld.player.getInventory().getArrow();
+					if(arrow != null) {
+						GameWorld.player.getInventory().remove(arrow, 1);
+						arrow.addWeaponStats(this);
+						arrow.initLaunch();
+						GameWorld.layerMap.getLayer(1).add(arrow);
+					} else System.out.println("No more arrow in inventory");
+				}
 			}
 			this.remainingTime = this.useTime;
 		}

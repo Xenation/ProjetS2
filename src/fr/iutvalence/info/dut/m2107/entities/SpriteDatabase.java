@@ -23,6 +23,9 @@ public class SpriteDatabase {
 	private final static Sprite arrowSpr = new Sprite("item/arrow", new Vector2f(1, 1));
 	public static Sprite getArrowSpr() {return arrowSpr;}
 	
-	private final static Sprite spectralArrowSpr = new Sprite("item/spectral_arrow", new Vector2f(1, 1));
-	public static Sprite getSpectralArrowSpr() {return spectralArrowSpr;}
+	private final static Sprite lightningArrowSpr = new Sprite("item/lightning_arrow", new Vector2f(1, 1));
+	public static Sprite getLightningArrowSpr() {return lightningArrowSpr;}
+	
+	private final static Sprite chestSpr = new Sprite("entities/chest", new Vector2f(2, 2));
+	public static Sprite getChestSpr() {return chestSpr;}
 }

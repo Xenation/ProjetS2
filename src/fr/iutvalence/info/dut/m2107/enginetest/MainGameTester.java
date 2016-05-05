@@ -72,9 +72,8 @@ public class MainGameTester {
 		//SaveFileUpdater.updateFileFormat("tvxy", 10);
 		
 		WorldLoader.loadWorld();
-		
-		GameWorld.layerMap.getLayer(1).add(new LivingEntity(new Vector2f(4, -6), 45, SpriteDatabase.getSwordSpr(), new Collider(SpriteDatabase.getSwordSpr()), new Vector2f(), 0, 10, 0, 0));
-		
+		Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
+		GameWorld.layerMap.getLayer(0).add(new LivingEntity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider, new Vector2f(), 0, 10, 0, 0));
 		EventManager.init();
 		for (Class<?> cla : ListenersScanner.listenersClasses) {
 			System.out.println("LISTENER: "+cla.getSimpleName());

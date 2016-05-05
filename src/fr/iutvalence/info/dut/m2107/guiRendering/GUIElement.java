@@ -26,6 +26,10 @@ public class GUIElement {
 		GUIMaster.loadElement(this, textureID);
 	}
 
+	public void remove() {
+		GUIMaster.removeElement(this);
+	}
+	
 	public int getVaoID() {
 		return vaoID;
 	}
@@ -61,6 +65,10 @@ public class GUIElement {
 	public void setPosition(Vector2f position) {
 		this.position = position;
 	}
+	
+	public void setPositionX(float x) {this.position.x = x;}
+	
+	public void setPositionY(float y) {this.position.y = y;}
 
 	public float getWidth() {
 		return width;

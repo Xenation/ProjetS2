@@ -69,9 +69,6 @@ public class Bullet extends Ammunition {
 	 */
 	@Override
 	public void update(Layer layer) {
-		if(this.col.isContinuousCollidingWithMap()) GameWorld.layerMap.getLayer(0).remove(this);
-		this.pos.x += this.vel.x * DisplayManager.deltaTime();
-		this.pos.y += this.vel.y * DisplayManager.deltaTime();
 		super.update(layer);
 	}
 }

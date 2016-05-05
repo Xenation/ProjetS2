@@ -47,6 +47,11 @@ public abstract class Ammunition extends Item {
 	protected int speed;
 	
 	/**
+	 * The ammunition is or not stick into an object
+	 */
+	protected boolean isPierce = false;
+	
+	/**
 	 * Constructor of an ammunition
 	 * @param pos The position of the ammo
 	 * @param rot The rotation of the ammo

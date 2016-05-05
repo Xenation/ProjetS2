@@ -14,27 +14,20 @@ public class ItemDatabase {
 	 * A list of Item which contain all the items of the game
 	 */
 	private static List<Item> itemDatabase = new ArrayList<Item>();
-	
-	private static List<Ammunition> ammunitionDatabase = new ArrayList<Ammunition>();
-	//private static List<Armor> armorDatabase = new ArrayList<Armor>();
-	private static List<Weapon> weaponDatabase = new ArrayList<Weapon>();
 
 	/**
 	 * Create the ItemDatabase
 	 */
 	public static void create() {
 		// AMMUNIITON
-		//							TYPE	SPR							 			COL											ID	NAME				DESC				RARITY			MAX		VAL		DMG		KNO		SPD
-		ammunitionDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			new Collider(-.01f, -.01f, .01f, .01f),		0, 	"Arrow",			"A basic arrow", 	Rarity.POOR,	50,		1,		1,		1,		25));
-		ammunitionDatabase.add(new Arrow	(SpriteDatabase.getSpectralArrowSpr(),	new Collider(-.01f, -.01f, .01f, .01f),		1,	"Spectral Arrow", 	"A spectral arrow",	Rarity.COMMON,	25,		5,		2,		1,		100));
+		//					TYPE	SPR							 			COL											ID	NAME				DESC					RARITY			MAX		VAL		DMG		KNO		SPD
+		itemDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			new Collider(-.01f, -.01f, .01f, .01f),		0, 	"Arrow",			"A basic arrow", 		Rarity.POOR,	50,		1,		1,		1,		25));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getLightningArrowSpr(),	new Collider(-.01f, -.01f, .01f, .01f),		1,	"Lightning Arrow", 	"A lightning arrow",	Rarity.COMMON,	25,		5,		2,		1,		100));
 		
 		// WEAPON
-		//						TYPE	SPR								ID	NAME		DESC				RARITY			MAX		VAL		DMG 	RNG		USE		KNOC
-		weaponDatabase.add(new Bow		(SpriteDatabase.getBowSpr(),	0,	"Bow",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	1));
-		weaponDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	1,	"Sword",	"A simple Sword",	Rarity.POOR,	1,		3, 		5, 		2, 		1,		1));
-		
-		itemDatabase.addAll(ammunitionDatabase);
-		itemDatabase.addAll(weaponDatabase);
+		//					TYPE	SPR								ID	NAME		DESC				RARITY			MAX		VAL		DMG 	RNG		USE		KNOC
+		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	2,	"Bow",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	1));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	3,	"Sword",	"A simple Sword",	Rarity.POOR,	1,		3, 		5, 		2, 		1,		1));
 	}
 	
 	/**
