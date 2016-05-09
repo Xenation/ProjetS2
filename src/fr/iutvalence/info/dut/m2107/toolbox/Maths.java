@@ -15,6 +15,11 @@ import fr.iutvalence.info.dut.m2107.tiles.TileOrientation;
 public class Maths {
 	
 	/**
+	 * The Forward unit vector (pointing out of the screen in front of you)
+	 */
+	private static final Vector3f FORWARD = new Vector3f(0, 0, 1);
+	
+	/**
 	 * Creates a transformation matrix using a position(translation) and rotation
 	 * @param translation the translation to apply (position)
 	 * @param rotation the rotation
@@ -24,7 +29,7 @@ public class Maths {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(translation, matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(-rotation), new Vector3f(0, 0, 1), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(-rotation), FORWARD, matrix, matrix);
 		return matrix;
 	}
 	
@@ -54,7 +59,7 @@ public class Maths {
 		matrix.setIdentity();
 		Matrix4f.translate(translation, matrix, matrix);
 		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1f), matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(-rotation), new Vector3f(0, 0, 1), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(-rotation), FORWARD, matrix, matrix);
 		return matrix;
 	}
 	
@@ -67,11 +72,10 @@ public class Maths {
 	 * @param rotation the rotation
 	 * @return a transformation matrix using a position(translation), scale and rotation
 	 */
-	public static Matrix4f addTransformationMatrix(Matrix4f matrix, Vector2f translation, Vector2f scale, float rotation) {
+	public static void addTransformationMatrix(Matrix4f matrix, Vector2f translation, Vector2f scale, float rotation) {
 		Matrix4f.translate(translation, matrix, matrix);
 		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1f), matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(-rotation), new Vector3f(0, 0, 1), matrix, matrix);
-		return matrix;
+		Matrix4f.rotate((float) Math.toRadians(-rotation), FORWARD, matrix, matrix);
 	}
 	
 	/**
@@ -87,7 +91,7 @@ public class Maths {
 		matrix.setIdentity();
 		Matrix4f.translate(new Vector3f(translation.x, translation.y, depth), matrix, matrix);
 		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1f), matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(-rotation), new Vector3f(0, 0, 1), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(-rotation), FORWARD, matrix, matrix);
 		return matrix;
 	}
 	
@@ -132,7 +136,7 @@ public class Maths {
 		Matrix4f.translate(new Vector2f(x, y), matrix, matrix);
 		switch (orientation) {
 		case DOWN:
-			Matrix4f.rotate(-orientation.getRadians(), new Vector3f(0, 0, 1), matrix, matrix);
+			Matrix4f.rotate(-orientation.getRadians(), FORWARD, matrix, matrix);
 			break;
 		case LEFT:
 			Matrix4f.scale(new Vector3f(-1f, 1f, 1f), matrix, matrix);
@@ -140,7 +144,7 @@ public class Maths {
 		case RIGHT:
 			break;
 		case UP:
-			Matrix4f.rotate(-orientation.getRadians(), new Vector3f(0, 0, 1), matrix, matrix);
+			Matrix4f.rotate(-orientation.getRadians(), FORWARD, matrix, matrix);
 			break;
 		default:
 			break;
@@ -157,7 +161,7 @@ public class Maths {
 	public static Matrix4f createViewMatrix(Camera camera) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
-		Matrix4f.rotate((float) Math.toRadians(camera.getRotation()), new Vector3f(0, 0, 1), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(camera.getRotation()), FORWARD, matrix, matrix);
 		Vector2f negPos = new Vector2f(-camera.getPosition().x, -camera.getPosition().y);
 		Matrix4f.translate(negPos, matrix, matrix);
 		return matrix;

@@ -167,20 +167,22 @@ public class Renderer {
 	 * @param layer the sub layer to render
 	 */
 	private void renderSubLayers(Entity entity, Matrix4f matrix) {
+		Matrix4f mat = new Matrix4f();
 		for (Sprite spr : entity.getLayer().sprites()) {
 			if (spr != null) {
 				prepareSprite(spr);
 				
 				for (Entity ent : entity.getLayer().getEntities(spr)) {
-					Maths.addTransformationMatrix(matrix, ent.getPosition(), ent.getScale(), ent.getRotation());
-					shader.loadTransformation(matrix);
+					Matrix4f.load(matrix, mat);
+					Maths.addTransformationMatrix(mat, ent.getPosition(), ent.getScale(), ent.getRotation());
+					shader.loadTransformation(mat);
 					shader.loadAlpha(spr.getAlpha());
 					
 					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 					
 					if (ent.getLayer() != null) {
 						unbindSprite();
-						renderSubLayers(ent, matrix);
+						renderSubLayers(ent, mat);
 						prepareSprite(spr);
 					}
 				}
