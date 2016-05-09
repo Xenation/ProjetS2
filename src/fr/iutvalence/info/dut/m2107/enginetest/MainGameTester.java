@@ -4,10 +4,10 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
-import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
+import fr.iutvalence.info.dut.m2107.entities.Zombie;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.ListenersScanner;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
@@ -70,15 +70,15 @@ public class MainGameTester {
 		
 		WorldLoader.loadWorld();
 		Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
-		GameWorld.layerMap.getLayer(0).add(new LivingEntity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider, new Vector2f(), 0, 10, 0, 0));
+		LivingEntity chest = new LivingEntity(new Vector2f(6.5f, -2f), 0, SpriteDatabase.getChestSpr(), chestCollider, new Vector2f(0, .5f), 0, 10, 0, 0);
+		GameWorld.layerMap.getLayer(0).add(chest);
 		
 		GameWorld.player.initLayer();
-		LivingEntity sword = new LivingEntity(new Vector2f(.8f, 0), 0, SpriteDatabase.getSwordSpr(), new Collider(SpriteDatabase.getSwordSpr()), new Vector2f(), 0, 10, 0, 0);
-		Entity pivot = new Entity(new Vector2f(0, 0), SpriteDatabase.getArrowSpr(), null);
-		pivot.initLayer();
-		GameWorld.player.getLayer().add(pivot);
-		pivot.getLayer().add(sword);
-		GameWorld.player.setRotation(0);
+		GameWorld.player.getLayer().add(GameWorld.player.getPivot());
+		GameWorld.player.initPivot();
+		GameWorld.player.getPivot().setPosition(new Vector2f(0.675f, -.25f));
+		
+		GameWorld.layerMap.getLayer(0).add(new Zombie(new Vector2f(0,0), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f)) );
 		
 		EventManager.init();
 		for (Class<?> cla : ListenersScanner.listenersClasses) {
@@ -89,7 +89,6 @@ public class MainGameTester {
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {
-			
 			Input.input();
 
 			chunkStats.updateText("Chunks: "+GameWorld.chunkMap.getChunkCount()
@@ -101,9 +100,10 @@ public class MainGameTester {
 					+ "\nTEXT: "+Loader.TEXT_LOADER.debugValues()
 					+ "\nGUI: "+Loader.GUI_LOADER.debugValues());
 			
-			GameWorld.update();
+			if(chest.getPosition().y <= -3) chest.setVelocity(new Vector2f(0, 1));
+			else if(chest.getPosition().y >= -2) chest.setVelocity(new Vector2f(0, -1));
 			
-			pivot.setRotation(GameWorld.player.getDegreeShoot());
+			GameWorld.update();
 			
 			renderer.prepare();
 			renderer.render();

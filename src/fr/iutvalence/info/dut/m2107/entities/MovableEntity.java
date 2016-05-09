@@ -48,7 +48,7 @@ public class MovableEntity extends Entity {
 	 */
 	public MovableEntity(Vector2f pos, Sprite spr) {
 		super(pos, spr);
-		this.vel = DEF_VEL;
+		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
 		this.spd = DEF_SPD;
 	}
 	
@@ -60,7 +60,7 @@ public class MovableEntity extends Entity {
 	 */
 	public MovableEntity(Vector2f pos, Sprite spr, Collider col) {
 		super(pos, spr, col);
-		this.vel = DEF_VEL;
+		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
 		this.spd = DEF_SPD;
 	}
 	
@@ -82,7 +82,7 @@ public class MovableEntity extends Entity {
 	 */
 	public MovableEntity() {
 		super();
-		this.vel = DEF_VEL;
+		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
 		this.spd = DEF_SPD;
 	}
 	
@@ -91,10 +91,18 @@ public class MovableEntity extends Entity {
 	 */
 	@Override
 	public void update(Layer layer) {
+		if(this.col != null)
+			this.col.updateColPos();
 		this.pos.x += this.vel.x * DisplayManager.deltaTime();
 		this.pos.y += this.vel.y * DisplayManager.deltaTime();
 	}
 
+	/**
+	 * Set the velocity of the entity
+	 * @param the velocity to set of the entity
+	 */
+	public void setVelocity(Vector2f vel) {this.vel = vel;}
+	
 	/**
 	 * Return the velocity of the entity
 	 * @return the velocity of the entity

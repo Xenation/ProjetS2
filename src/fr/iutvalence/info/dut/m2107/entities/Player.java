@@ -5,7 +5,6 @@ import org.lwjgl.util.vector.Vector2f;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.guiRendering.GUIElement;
 import fr.iutvalence.info.dut.m2107.guiRendering.GUIMaster;
-import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
@@ -83,7 +82,6 @@ public class Player extends Character{
 			if(this.quickBar[slotNumber] != null) {
 				sprQuickBar[slotNumber] = new GUIElement(this.quickBar[slotNumber].getSprite().getTextureID(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width - width/2.5f, height - height/2.5f);
 				textQuickBar[slotNumber] = new GUIText("" + this.quickBar[slotNumber].stack , .8f, width*2.875f + width*slotNumber/2, 1-height/1.5f, .1f, true);
-				textQuickBar[slotNumber].setColour(0, 1, 0);
 			}
 		}
 		selectQuickBar = new GUIElement("gui/select_quick_bar_slot", new Vector2f(-width*3.5f + selectSlot*width, 1-posY), width, height);
@@ -99,12 +97,24 @@ public class Player extends Character{
 		updateShootVal();
 		updateQuickBar();
 		
-		if(this.itemOnHand != null) {
-			this.itemOnHand.rot = this.degreeShoot;
-			this.itemOnHand.pos = this.pos;
+		if(this.degreeShoot > -90 && this.degreeShoot < 90) {
+			this.scale.setX(Maths.fastAbs(this.scale.x));
+			this.pivot.pos.x = .65f;
+		} else {
+			this.scale.setX(-Maths.fastAbs(this.scale.x));
+			this.pivot.pos.x = -.65f;
 		}
+		pivot.setRotation(GameWorld.player.getDegreeShoot());
 		
 		if(Input.isMouseLeft() && this.itemOnHand != null && GameWorld.camera.isFree()) {
+			if(this.scale.x == -1 && this.degreeShoot < 90 && this.degreeShoot > -90) {
+				this.scale.x = 1;
+				this.pivot.pos.x = .65f;
+			}
+			else if(this.scale.x == 1 && (this.degreeShoot > 90 || this.degreeShoot < -90)) {
+				this.scale.x = -1;
+				this.pivot.pos.x = -.65f;
+			}
 			if(this.itemOnHand instanceof Bow)
 				((Bow) this.itemOnHand).use(this);
 			if(this.itemOnHand instanceof Sword)
@@ -137,20 +147,20 @@ public class Player extends Character{
 		
 		if(this.itemOnHand != this.quickBar[selectSlot]) {
 			if(this.quickBar[selectSlot] != null) {
-				if(this.itemOnHand == null) {
-					if(!(this.quickBar[selectSlot] instanceof Weapon))
-						this.itemOnHand = new Item(this.quickBar[selectSlot]);
-					else this.itemOnHand = this.quickBar[selectSlot];
-						GameWorld.layerMap.getLayer(1).add(this.itemOnHand);
+				if(this.itemOnHand != null)
+					this.pivot.getLayer().remove(this.itemOnHand);
+				
+				if(!(this.quickBar[selectSlot] instanceof Weapon)) {
+					this.itemOnHand = new Item(this.quickBar[selectSlot]);
+					this.pivot.getLayer().add(this.itemOnHand);
 				} else {
-					GameWorld.layerMap.getLayer(1).remove(this.itemOnHand);
-					if(!(this.quickBar[selectSlot] instanceof Weapon))
-						this.itemOnHand =  new Item(this.quickBar[selectSlot]);
-					else this.itemOnHand = this.quickBar[selectSlot];
-					GameWorld.layerMap.getLayer(1).add(this.itemOnHand);
+					this.itemOnHand = this.quickBar[selectSlot];
+					if(this.itemOnHand instanceof Bow)	this.itemOnHand.setPosition(new Vector2f(-.3f, 0));
+					if(this.itemOnHand instanceof Sword)this.itemOnHand.setPosition(new Vector2f(.7f, 0));
+					this.pivot.getLayer().add(this.itemOnHand);
 				}
 			} else {
-				GameWorld.layerMap.getLayer(1).remove(this.itemOnHand);
+				this.pivot.getLayer().remove(this.itemOnHand);
 				this.itemOnHand = null;
 			}
 		}		
@@ -159,9 +169,7 @@ public class Player extends Character{
 	/**
 	 * Update the player velocity with inputs
 	 */
-	private void input() {
-		this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
-		
+	private void input() {		
 		if(isGrounded) rightWallJump = true;
 		if(isGrounded) leftWallJump = true;
 		

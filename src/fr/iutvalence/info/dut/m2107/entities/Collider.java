@@ -186,11 +186,12 @@ public class Collider {
 						}
 					} else {
 						// I can't StepUp or wall jump so I block the x movement and stick to the tile
-						if(!((Character)this.ent).prevGrounded && ((Player)this.ent).vel.y < 0)
-							((Player)this.ent).vel.y = Maths.lerp(((Player)this.ent).vel.y, -5, 0.05f);
+						if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0)
+							((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
 						modVel.x = 0;
 						ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
-						((Player)this.ent).rightWallJump = true;
+						if(this.ent instanceof Player)
+							((Player)this.ent).rightWallJump = true;
 					}
 				} else {
 					// I'm under or above the right tile
@@ -232,11 +233,12 @@ public class Collider {
 						}
 					} else {
 						// I can't StepUp or wall jump so I block the x movement and stick to the tile
-						if(!((Character)this.ent).prevGrounded && ((Player)this.ent).vel.y < 0)
-							((Player)this.ent).vel.y = Maths.lerp(((Player)this.ent).vel.y, -5, 0.05f);
+						if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0)
+							((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
 						modVel.x = 0;
 						ent.pos.x = tile.x - this.getW()/2;
-						((Player)this.ent).leftWallJump = true;
+						if(this.ent instanceof Player)
+							((Player)this.ent).leftWallJump = true;
 					}
 				} else {
 					// I'm under or above the right tile
@@ -315,7 +317,13 @@ public class Collider {
 			if(tileColliding != null || entColliding != null) {
 				this.ent.pos.x = nextPos.x -(float) (Math.cos((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().x/2.5f);
 				this.ent.pos.y = nextPos.y -(float) -(Math.sin((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().y/2.5f);
-				//if(entColliding != null) this.ent.pos = entColliding.pos;
+				if(entColliding != null) {
+					if(entColliding.getLayer() == null)
+						entColliding.initLayer();
+					entColliding.getLayer().add(this.ent);
+					GameWorld.layerMap.getLayer(1).remove(this.ent);
+					this.ent.pos = new Vector2f(this.ent.pos.x - entColliding.pos.x, this.ent.pos.y - entColliding.pos.y);
+				}
 				((Ammunition)this.ent).vel = new Vector2f(0, 0);
 				return true;
 			}
@@ -369,10 +377,9 @@ public class Collider {
 	 * @return The entity colliding
 	 */
 	public Entity isCollidingWithEntity(Layer layer) {
-		for (Entity ent : layer){
+		for (Entity ent : layer)
 			if(!isColliding(this, ent.col))
 				return ent;
-		}
 		return null;
 	}
 	

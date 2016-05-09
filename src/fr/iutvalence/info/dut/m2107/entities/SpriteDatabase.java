@@ -11,6 +11,12 @@ import fr.iutvalence.info.dut.m2107.models.Sprite;
  */
 public class SpriteDatabase {
 
+	private final static Sprite emptySpr = new Sprite("entities/empty", new Vector2f(1, 1));
+	public static Sprite getEmptySpr() {return emptySpr;}
+	
+	private final static Sprite zombieSpr = new Sprite("entities/zombie", new Vector2f(2, 4));
+	public static Sprite getZombieSpr() {return zombieSpr;}
+	
 	private final static Sprite playerSpr = new Sprite("entities/player", new Vector2f(2, 4));
 	public static Sprite getPlayerSpr() {return playerSpr;}
 	

@@ -3,6 +3,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
@@ -35,9 +36,9 @@ public class Character extends LivingEntity{
 	protected Item itemOnHand;
 	
 	/**
-	 * The character's facing direction
+	 * The pivot of the character's weapon
 	 */
-	protected boolean isFacingRight = true;
+	protected Entity pivot = new Entity(new Vector2f(.65f, -.3f), SpriteDatabase.getEmptySpr(), null);;
 	
 	/**
 	 * Constructor of a character
@@ -87,22 +88,42 @@ public class Character extends LivingEntity{
 	 */
 	@Override
 	public void update(Layer layer) {
-
+		//LivingEntity sword = new LivingEntity(new Vector2f(.7f, 0), 0, SpriteDatabase.getSwordSpr(), new Collider(SpriteDatabase.getSwordSpr()), new Vector2f(), 0, 10, 0, 0);
+		//LivingEntity bow = new LivingEntity(new Vector2f(-0.3f, 0), 0, SpriteDatabase.getBowSpr(), new Collider(SpriteDatabase.getBowSpr()), new Vector2f(), 0, 10, 0, 0);
+		
+		if(this.itemOnHand != null) this.itemOnHand.update(layer); 
+		
+		this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
+		
 		this.col.checkCharacterContinuousCollision();
 		
 		this.col.checkStepDown();
 		
-		if(GameWorld.player.getShoot().x > 0) isFacingRight = true;
-		if(GameWorld.player.getShoot().x < 0) isFacingRight = false;
-		
-		if(isFacingRight) this.scale.setX(Maths.fastAbs(this.scale.x));
-		else this.scale.setX(-Maths.fastAbs(this.scale.x));
+		if(!(this instanceof Player) && this.vel.x > 0) {
+			this.scale.setX(Maths.fastAbs(this.scale.x));
+			this.pivot.pos.x = .65f;
+		} else if(!(this instanceof Player) && this.vel.x < 0) {
+			this.scale.setX(-Maths.fastAbs(this.scale.x));
+			this.pivot.pos.x = -.65f;
+		}
+		pivot.setRotation(GameWorld.player.getDegreeShoot());
 		
 		/*for (Entity entity : layer) {
 			if(entity != this) this.col.checkCollision(this, entity);
 		}*/
 		super.update(layer);
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Entity getPivot() {return pivot;}
+	
+	/**
+	 * 
+	 */
+	public void initPivot() {pivot.initLayer();}
 	
 	/**
 	 * Set the item on hand of the character
@@ -128,9 +149,4 @@ public class Character extends LivingEntity{
 	 */
 	public boolean isPrevGrounded() {return prevGrounded;}
 	
-	/**
-	 * Return the state of the facing character's direction
-	 * @return the state of the facing character's direction
-	 */
-	public boolean isFacingRight() {return isFacingRight;}
 }

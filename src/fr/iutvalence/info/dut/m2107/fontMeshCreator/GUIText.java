@@ -62,6 +62,7 @@ public class GUIText {
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
 		this.isDebug = false;
+		this.colour = TextMaster.debugColor;
 		TextMaster.loadText(this);
 	}
 	
@@ -73,6 +74,7 @@ public class GUIText {
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
 		this.isDebug = false;
+		this.colour = TextMaster.debugColor;
 		TextMaster.loadText(this);
 	}
 	
