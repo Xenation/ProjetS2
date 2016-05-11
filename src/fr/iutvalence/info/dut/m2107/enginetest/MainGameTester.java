@@ -70,15 +70,8 @@ public class MainGameTester {
 		
 		WorldLoader.loadWorld();
 		Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
-		LivingEntity chest = new LivingEntity(new Vector2f(6.5f, -2f), 0, SpriteDatabase.getChestSpr(), chestCollider, new Vector2f(0, .5f), 0, 10, 0, 0);
+		LivingEntity chest = new LivingEntity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider, null, 0, 20, 0, 0);
 		GameWorld.layerMap.getLayer(0).add(chest);
-		
-		GameWorld.player.initLayer();
-		GameWorld.player.getLayer().add(GameWorld.player.getPivot());
-		GameWorld.player.initPivot();
-		GameWorld.player.getPivot().setPosition(new Vector2f(0.675f, -.25f));
-		
-		GameWorld.layerMap.getLayer(0).add(new Zombie(new Vector2f(0,0), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f)) );
 		
 		EventManager.init();
 		for (Class<?> cla : ListenersScanner.listenersClasses) {
@@ -100,8 +93,8 @@ public class MainGameTester {
 					+ "\nTEXT: "+Loader.TEXT_LOADER.debugValues()
 					+ "\nGUI: "+Loader.GUI_LOADER.debugValues());
 			
-			if(chest.getPosition().y <= -3) chest.setVelocity(new Vector2f(0, 1));
-			else if(chest.getPosition().y >= -2) chest.setVelocity(new Vector2f(0, -1));
+			if(Input.isKeyWater())
+				GameWorld.layerMap.getLayer(0).add(new Zombie(new Vector2f(0, 0), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f)));
 			
 			GameWorld.update();
 			

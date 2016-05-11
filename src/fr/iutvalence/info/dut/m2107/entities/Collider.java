@@ -181,17 +181,17 @@ public class Collider {
 							((Player)this.ent).leftWallJump = false;
 							checkCharacterContinuousCollision();
 						} else {
+							if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0)
+								((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+							if(this.ent instanceof Player)
+								((Player)this.ent).rightWallJump = true;
 						}
 					} else {
 						// I can't StepUp or wall jump so I block the x movement and stick to the tile
-						if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0)
-							((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
 						modVel.x = 0;
 						ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
-						if(this.ent instanceof Player)
-							((Player)this.ent).rightWallJump = true;
 					}
 				} else {
 					// I'm under or above the right tile
@@ -228,17 +228,17 @@ public class Collider {
 							((Player)this.ent).rightWallJump = false;
 							checkCharacterContinuousCollision();
 						} else {
+							if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0)
+								((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
+							if(this.ent instanceof Player)
+								((Player)this.ent).leftWallJump = true;
 						}
 					} else {
 						// I can't StepUp or wall jump so I block the x movement and stick to the tile
-						if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0)
-							((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
 						modVel.x = 0;
 						ent.pos.x = tile.x - this.getW()/2;
-						if(this.ent instanceof Player)
-							((Player)this.ent).leftWallJump = true;
 					}
 				} else {
 					// I'm under or above the right tile
@@ -297,7 +297,7 @@ public class Collider {
 	 * Check the continuous collision with the map
 	 * @return true when colliding otherwise false
 	 */
-	public boolean isContinuousColliding() {
+	public Entity isContinuousColliding(Tile tile) {
 		int continuousStep = (int) ((Maths.fastAbs(((Ammunition)this.ent).vel.x) + Maths.fastAbs(((Ammunition)this.ent).vel.y))/8+1)*2;
 		float stepXtoAdd = ((Ammunition)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
 		float stepYtoAdd = ((Ammunition)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
@@ -315,17 +315,15 @@ public class Collider {
 			Tile tileColliding = isCollidingWithMap(encompassCol);
 			Entity entColliding = isCollidingWithEntity(GameWorld.layerMap.getLayer(0));
 			if(tileColliding != null || entColliding != null) {
+				((Ammunition)this.ent).vel = new Vector2f(0, 0);
 				this.ent.pos.x = nextPos.x -(float) (Math.cos((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().x/2.5f);
 				this.ent.pos.y = nextPos.y -(float) -(Math.sin((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().y/2.5f);
 				if(entColliding != null) {
-					if(entColliding.getLayer() == null)
-						entColliding.initLayer();
-					entColliding.getLayer().add(this.ent);
-					GameWorld.layerMap.getLayer(1).remove(this.ent);
 					this.ent.pos = new Vector2f(this.ent.pos.x - entColliding.pos.x, this.ent.pos.y - entColliding.pos.y);
+					return entColliding;
 				}
-				((Ammunition)this.ent).vel = new Vector2f(0, 0);
-				return true;
+				((Arrow)this.ent).piercingTile = tileColliding;
+				return null;
 			}
 			
 			this.minX += stepXtoAdd;
@@ -333,7 +331,7 @@ public class Collider {
 			this.maxX += stepXtoAdd;
 			this.maxY += stepYtoAdd;
 		}
-		return false;
+		return null;
 	}
 	
 	/**

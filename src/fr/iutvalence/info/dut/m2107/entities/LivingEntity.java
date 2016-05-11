@@ -29,6 +29,8 @@ public class LivingEntity extends MovableEntity {
 	 */
 	protected int jumpHeight;
 	
+	protected float recoil = 0;
+	
 	/**
 	 * Constructor of a LivingEntity
 	 * @param pos The position of the entity
@@ -90,6 +92,17 @@ public class LivingEntity extends MovableEntity {
 	 */
 	@Override
 	public void update(Layer layer) {
+		if(this instanceof Character) {
+			if(this.recoil != 0) {
+				this.vel.x = this.recoil;
+				if(this.col != null) this.col.checkCharacterContinuousCollision();
+				this.recoil /= 2;
+				if(this.recoil < 1 && this.recoil > -1) {
+					this.recoil = 0;
+					//this.vel.x = 0;
+				}
+			}
+		}
 		super.update(layer);
 		if(this.health <= 0) layer.remove(this);
 	}
@@ -100,6 +113,10 @@ public class LivingEntity extends MovableEntity {
 	 */
 	public void takeDamage(int damage) {
 		if(damage > 0) this.health -= damage;
+	}
+	
+	public void takeKnockback(int knockback) {
+		this.recoil = knockback;
 	}
 
 	/**
@@ -119,5 +136,5 @@ public class LivingEntity extends MovableEntity {
 	 * @return the jump height of the entity
 	 */
 	public int getJumpHeight() {return jumpHeight;}
-
+	
 }

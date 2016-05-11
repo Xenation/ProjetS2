@@ -129,7 +129,7 @@ public abstract class Ammunition extends Item {
 	 */
 	public void initLaunch() {
 		this.col = new Collider(this.col);
-		this.pos = new Vector2f(GameWorld.player.pos.x, GameWorld.player.pos.y);
+		this.pos = new Vector2f(GameWorld.player.pos.x + GameWorld.player.pivot.pos.x, GameWorld.player.pos.y + GameWorld.player.pivot.pos.y);
 		this.rot = GameWorld.player.getDegreeShoot();
 		this.vel = new Vector2f(GameWorld.player.getShoot().x, GameWorld.player.getShoot().y);
 		this.vel.scale(this.speed);

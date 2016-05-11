@@ -6,6 +6,7 @@ import fr.iutvalence.info.dut.m2107.models.Sprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 /**
  * An arrow ammunition
@@ -13,6 +14,8 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
  *
  */
 public class Arrow extends Ammunition {
+	
+	protected Tile piercingTile = null;
 	
 	/**
 	 * Constructor of an arrow
@@ -80,7 +83,21 @@ public class Arrow extends Ammunition {
 			this.col.extendLeft(-(float) (Math.cos((rot)*Math.PI/180)*this.spr.getSize().x/2.5f));
 			this.col.extendUp(-(float) (Math.sin((rot)*Math.PI/180)*this.spr.getSize().y/2.5f));
 			this.col.extendDown((float) (Math.sin((rot)*Math.PI/180)*this.spr.getSize().y/2.5f));
-			if(this.col.isContinuousColliding()) this.isPierce = true;
+			Entity entColliding = null;
+			if((entColliding = this.col.isContinuousColliding(this.piercingTile)) != null) {
+				this.isPierce = true;
+				if(entColliding instanceof LivingEntity) {
+					((LivingEntity)entColliding).takeDamage(this.damage);
+					((LivingEntity)entColliding).takeKnockback(this.knockback * (int)GameWorld.player.scale.x);
+				}
+				if(entColliding.getLayer() == null)
+					entColliding.initLayer();
+				entColliding.getLayer().add(this);
+				GameWorld.layerMap.getLayer(1).remove(this);
+			}
+			if(piercingTile != null) {
+				this.isPierce = true;
+			}
 			
 			// temporary code for entity collision detection
 			/*for (Entity entity : layer) {

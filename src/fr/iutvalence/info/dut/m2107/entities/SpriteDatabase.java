@@ -34,4 +34,13 @@ public class SpriteDatabase {
 	
 	private final static Sprite chestSpr = new Sprite("entities/chest", new Vector2f(2, 2));
 	public static Sprite getChestSpr() {return chestSpr;}
+	
+	private final static String heartStr = "gui/heart";
+	public static String getHeartStr() {return heartStr;}
+	
+	private final static String quickBarSlotStr = "gui/quick_bar_slot";
+	public static String getQuickBarSlotStr() {return quickBarSlotStr;}
+	
+	private final static String selectQuickBarSlotStr = "gui/select_quick_bar_slot";
+	public static String getSelectQuickBarSlotStr() {return selectQuickBarSlotStr;}
 }

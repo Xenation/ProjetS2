@@ -34,6 +34,9 @@ public class Player extends Character{
 	 private GUIElement selectQuickBar;
 	 private GUIElement[] sprQuickBar = new GUIElement[8];
 	 private GUIText[] textQuickBar = new GUIText[8];
+	 
+	 
+	 private GUIElement hpGUI;
 	 // Temporary
 	
 	/**
@@ -53,10 +56,15 @@ public class Player extends Character{
 	 * Constructor of a player
 	 */
 	public Player() {
-		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.5f, -1.7f, .5f, 1.7f));
-		playerGUI.setLineHeight(0.024);
-		initQuickBar();
-		initInventory();
+		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.5f, -1.92f, .5f, 1.92f));
+		this.initQuickBar();
+		this.initInventory();
+		this.hpGUI = new GUIElement(SpriteDatabase.getHeartStr(), new Vector2f(-1 + width, 1 - height), width/2, height/2);
+		
+		this.initLayer();
+		this.layer.add(this.pivot);
+		this.initPivot();
+		this.pivot.setPosition(new Vector2f(0.75f, -.35f));
 	}
 	
 	/**
@@ -78,13 +86,13 @@ public class Player extends Character{
 		this.quickBar[1] = ItemDatabase.get(3);
 		
 		for (int slotNumber = 0; slotNumber < 8; slotNumber++) {
-			new GUIElement("gui/quick_bar_slot", new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width, height);
+			new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width, height);
 			if(this.quickBar[slotNumber] != null) {
 				sprQuickBar[slotNumber] = new GUIElement(this.quickBar[slotNumber].getSprite().getTextureID(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width - width/2.5f, height - height/2.5f);
 				textQuickBar[slotNumber] = new GUIText("" + this.quickBar[slotNumber].stack , .8f, width*2.875f + width*slotNumber/2, 1-height/1.5f, .1f, true);
 			}
 		}
-		selectQuickBar = new GUIElement("gui/select_quick_bar_slot", new Vector2f(-width*3.5f + selectSlot*width, 1-posY), width, height);
+		selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*3.5f + selectSlot*width, 1-posY), width, height);
 	}
 
 	/* (non-Javadoc)
@@ -99,10 +107,10 @@ public class Player extends Character{
 		
 		if(this.degreeShoot > -90 && this.degreeShoot < 90) {
 			this.scale.setX(Maths.fastAbs(this.scale.x));
-			this.pivot.pos.x = .65f;
+			this.pivot.pos.x = .75f;
 		} else {
 			this.scale.setX(-Maths.fastAbs(this.scale.x));
-			this.pivot.pos.x = -.65f;
+			this.pivot.pos.x = -.75f;
 		}
 		pivot.setRotation(GameWorld.player.getDegreeShoot());
 		
@@ -130,7 +138,7 @@ public class Player extends Character{
 	 */
 	private void updateShootVal() {
 		shoot = (Vector2f) new Vector2f(GameWorld.camera.getMouseWorldX() - this.pos.x,
-				GameWorld.camera.getMouseWorldY() - this.pos.y).normalise();
+										GameWorld.camera.getMouseWorldY() - this.pos.y).normalise();
 		
 		if (shoot.y > 0) degreeShoot = (float) (Math.atan(shoot.x / shoot.y)*180/Math.PI-90);
 		else degreeShoot = (float) (Math.atan(shoot.x / shoot.y)*180/Math.PI+90);
@@ -140,7 +148,7 @@ public class Player extends Character{
 	 * Update the quick bar
 	 */
 	private void updateQuickBar() {
-		selectSlot += Input.WheelScrolling();
+		selectSlot -= Input.WheelScrolling();
 		if(selectSlot > 7) selectSlot -= 8;
 		if(selectSlot < 0) selectSlot += 8;
 		selectQuickBar.setPosition(new Vector2f(-width*3.5f + selectSlot*width, selectQuickBar.getPosition().y));			
@@ -190,8 +198,6 @@ public class Player extends Character{
 		
 		if(rightWallJump == false) this.vel.x += -this.spd/2;
 		if(leftWallJump == false) this.vel.x += this.spd/2;
-		
-		this.vel.x = Maths.lerp(this.vel.x, 0, 0.25f);
 		
 		if(this.vel.y < -70) vel.y = -70;
 		if(this.vel.y > 70) vel.y = 70;

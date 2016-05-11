@@ -3,6 +3,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 
 public class Sword extends Weapon {
 
@@ -62,17 +63,16 @@ public class Sword extends Weapon {
 	@Override
 	public void use(Character owner) {
 		if(remainingTime <= 0) {
-			System.out.println("swoosh");
+			Collider tmpCol = new Collider(owner.col.getMin(), owner.col.getMax());
+			if(owner.scale.x == 1) tmpCol.extendRight(range);
+			else tmpCol.extendLeft(range);
+			Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getLayer(0));
+			if(ent != owner && ent instanceof LivingEntity) {
+				((LivingEntity) ent).takeDamage(this.damage);
+				((LivingEntity) ent).takeKnockback(this.knockback * (int)owner.scale.x);
+			}
 			this.remainingTime = this.useTime;
 		}
-//		Collider tmpCol = new Collider(owner.col.getMin(), owner.col.getMax());
-//		tmpCol.extendRight(range);
-//		Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getLayer(1));
-//		if(ent != this.owner)
-//			if(ent instanceof LivingEntity) {
-//				((LivingEntity) ent).takeDamage(this.damage);
-//				System.out.println(this.damage + " damage to " + ent + "\t" + ((LivingEntity) ent).health + " hp left");
-//			}
 		super.use(owner);
 	}
 }

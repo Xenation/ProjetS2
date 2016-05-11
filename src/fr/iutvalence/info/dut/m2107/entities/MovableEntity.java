@@ -93,8 +93,10 @@ public class MovableEntity extends Entity {
 	public void update(Layer layer) {
 		if(this.col != null)
 			this.col.updateColPos();
-		this.pos.x += this.vel.x * DisplayManager.deltaTime();
-		this.pos.y += this.vel.y * DisplayManager.deltaTime();
+		if(this.vel != null) {
+			this.pos.x += this.vel.x * DisplayManager.deltaTime();
+			this.pos.y += this.vel.y * DisplayManager.deltaTime();
+		}
 	}
 
 	/**

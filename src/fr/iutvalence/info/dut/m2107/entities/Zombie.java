@@ -7,7 +7,7 @@ import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
 public class Zombie extends Character {
-
+	
 	public Zombie() {
 		// TODO Auto-generated constructor stub
 	}
@@ -31,11 +31,20 @@ public class Zombie extends Character {
 	@Override
 	public void update(Layer layer) {
 		float moveX = GameWorld.player.pos.x - this.pos.x;
-		if(moveX < 40 && moveX > -40) {
-			if(moveX > 1) this.vel.x = this.spd;
-			else if(moveX < -1) this.vel.x = -this.spd;
-			else this.vel.x = 0;
-		} else this.vel.x = 0;			
+		if(moveX < 40 && moveX > -40 && this.recoil == 0) {
+			if(moveX > 1) this.vel.x += this.spd/2;
+			else if(moveX < -1) this.vel.x += -this.spd/2;
+			else {
+				Collider tmpCol = new Collider(this.col.getMin(), this.col.getMax());
+				if(this.scale.x == 1) tmpCol.extendRight(2);
+				else tmpCol.extendLeft(2);
+				Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getLayer(1));
+				if(ent == GameWorld.player) {
+					((LivingEntity) ent).takeDamage(1);
+					((LivingEntity) ent).takeKnockback(20 * (int)this.scale.x);
+				}
+			}
+		}
 		super.update(layer);
 	}
 	

@@ -45,7 +45,7 @@ public class Entity {
 	/**
 	 * The layer of entities contained by this entity
 	 */
-	private Layer layer;
+	protected Layer layer;
 	
 	/**
 	 * Constructor of an Entity

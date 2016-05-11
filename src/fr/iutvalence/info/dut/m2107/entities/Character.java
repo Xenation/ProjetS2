@@ -93,24 +93,22 @@ public class Character extends LivingEntity{
 		
 		if(this.itemOnHand != null) this.itemOnHand.update(layer); 
 		
+		this.vel.x = Maths.lerp(this.vel.x, 0, 0.25f);
 		this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
 		
 		this.col.checkCharacterContinuousCollision();
 		
 		this.col.checkStepDown();
 		
-		if(!(this instanceof Player) && this.vel.x > 0) {
+		if(!(this instanceof Player) && this.vel.x > 0 && this.recoil == 0) {
 			this.scale.setX(Maths.fastAbs(this.scale.x));
 			this.pivot.pos.x = .65f;
-		} else if(!(this instanceof Player) && this.vel.x < 0) {
+		} else if(!(this instanceof Player) && this.vel.x < 0 && this.recoil == 0) {
 			this.scale.setX(-Maths.fastAbs(this.scale.x));
 			this.pivot.pos.x = -.65f;
 		}
 		pivot.setRotation(GameWorld.player.getDegreeShoot());
 		
-		/*for (Entity entity : layer) {
-			if(entity != this) this.col.checkCollision(this, entity);
-		}*/
 		super.update(layer);
 	}
 	
