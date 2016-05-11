@@ -35,26 +35,6 @@ public class Sprite extends AbstractSprite {
 	}
 	
 	/**
-	 * A Sprite with the given texture file, size and alpha
-	 * @param textureFile the path to the texture file
-	 * @param size the size of the sprite
-	 * @param alpha the alpha filter to apply upon rendering
-	 */
-	public Sprite(String textureFile, Vector2f size, float alpha) {
-		super();
-		this.size = size;
-		float pos[] = {-this.size.x/2, this.size.y/2,
-				this.size.x/2, this.size.y/2,
-				-this.size.x/2, -this.size.y/2,
-				this.size.x/2, -this.size.y/2};
-		float tex[] = {0,0, 1,0, 0,1, 1,1};
-		
-		super.setVaoID(Loader.SPRITE_LOADER.loadtoVao(pos, tex));
-		super.setTextureID(Loader.SPRITE_LOADER.loadTexture(textureFile));
-		this.alpha = alpha;
-	}
-	
-	/**
 	 * Returns the size of this sprite
 	 * @return the size of this sprite
 	 */

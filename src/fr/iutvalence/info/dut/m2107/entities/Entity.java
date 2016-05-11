@@ -38,6 +38,11 @@ public class Entity {
 	protected final Sprite spr;
 	
 	/**
+	 * The alpha filter to apply to this entity's sprite
+	 */
+	protected float alpha;
+
+	/**
 	 * The collider of the entity
 	 */
 	protected Collider col;
@@ -57,6 +62,7 @@ public class Entity {
 		this.pos = pos;
 		this.rot = rot;
 		this.spr = spr;
+		this.alpha = 1;
 		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = new Collider(spr);
 		col.setEnt(this);
@@ -74,6 +80,7 @@ public class Entity {
 		this.pos = pos;
 		this.rot = rot;
 		this.spr = spr;
+		this.alpha = 1;
 		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = col;
 		if(col != null) {
@@ -91,6 +98,7 @@ public class Entity {
 		this.pos = pos;
 		this.rot = DEF_ROT;
 		this.spr = spr;
+		this.alpha = 1;
 		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = new Collider(spr);
 		col.setEnt(this);
@@ -107,6 +115,7 @@ public class Entity {
 		this.pos = pos;
 		this.rot = DEF_ROT;
 		this.spr = spr;
+		this.alpha = 1;
 		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = col;
 		if (col != null) {
@@ -123,6 +132,7 @@ public class Entity {
 		this.pos = new Vector2f(DEF_POS.x, DEF_POS.y);
 		this.rot = DEF_ROT;
 		this.spr = spr;
+		this.alpha = 1;
 		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = new Collider(spr);
 		col.setEnt(this);
@@ -138,6 +148,7 @@ public class Entity {
 		this.pos = new Vector2f(DEF_POS.x, DEF_POS.y);
 		this.rot = DEF_ROT;
 		this.spr = spr;
+		this.alpha = 1;
 		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = col;
 		col.setEnt(this);
@@ -151,6 +162,7 @@ public class Entity {
 		this.pos = new Vector2f(DEF_POS.x, DEF_POS.y);
 		this.rot = DEF_ROT;
 		this.spr = DEF_SPR;
+		this.alpha = 1;
 		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
 		this.col = new Collider(spr);
 		col.setEnt(this);
@@ -226,6 +238,18 @@ public class Entity {
 	 * @param rot The rotation to set
 	 */
 	public void setRotation(float rot) {this.rot = rot;}
+	
+	/**
+	 * Returns the alpha of the entity
+	 * @return the alpha of the entity
+	 */
+	public float getAlpha() {return alpha;}
+
+	/**
+	 * Sets the alpha of the entity
+	 * @param alpha the new alpha of the entity
+	 */
+	public void setAlpha(float alpha) {this.alpha = alpha;}
 	
 	/**
 	 * Returns the group layer
