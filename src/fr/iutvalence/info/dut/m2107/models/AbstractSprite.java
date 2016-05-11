@@ -17,11 +17,6 @@ public abstract class AbstractSprite {
 	protected int textureID;
 	
 	/**
-	 * the alpha to apply over the texture
-	 */
-	protected float alpha = 1;
-	
-	/**
 	 * A Sprite with the specified VBO and texture
 	 * @param vaoID the ID of the VBO
 	 * @param texID the ID of the Texture
@@ -70,22 +65,6 @@ public abstract class AbstractSprite {
 	 */
 	protected void setTextureID(int texID) {
 		this.textureID = texID;
-	}
-	
-	/**
-	 * Returns the alpha of this sprite
-	 * @return the alpha of this sprite
-	 */
-	public float getAlpha() {
-		return alpha;
-	}
-	
-	/**
-	 * Sets the alpha of this sprite
-	 * @param alpha the new alpha
-	 */
-	public void setAlpha(float alpha) {
-		this.alpha = alpha;
 	}
 	
 }

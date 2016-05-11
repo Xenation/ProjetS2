@@ -104,8 +104,8 @@ public class Camera {
 		
 		if (this.preview == null) {
 			Sprite spr = new Sprite("entities/selection", new Vector2f(1, 1));
-			spr.setAlpha(0.5f);
 			this.preview = new Entity(spr);
+			this.preview.setAlpha(0.5f);
 		}
 		
 		GameWorld.chunkMap.generateSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, position);
