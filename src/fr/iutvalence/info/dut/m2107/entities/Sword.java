@@ -68,8 +68,8 @@ public class Sword extends Weapon {
 			else tmpCol.extendLeft(range);
 			Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getLayer(0));
 			if(ent != owner && ent instanceof LivingEntity) {
-				((LivingEntity) ent).takeDamage(this.damage);
 				((LivingEntity) ent).takeKnockback(this.knockback * (int)owner.scale.x);
+				((LivingEntity) ent).takeDamage(this.damage);
 			}
 			this.remainingTime = this.useTime;
 		}

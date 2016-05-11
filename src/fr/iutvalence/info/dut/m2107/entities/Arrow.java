@@ -87,8 +87,8 @@ public class Arrow extends Ammunition {
 			if((entColliding = this.col.isContinuousColliding(this.piercingTile)) != null) {
 				this.isPierce = true;
 				if(entColliding instanceof LivingEntity) {
-					((LivingEntity)entColliding).takeDamage(this.damage);
 					((LivingEntity)entColliding).takeKnockback(this.knockback * (int)GameWorld.player.scale.x);
+					((LivingEntity)entColliding).takeDamage(this.damage);
 				}
 				if(entColliding.getLayer() == null)
 					entColliding.initLayer();
