@@ -150,15 +150,15 @@ public class Player extends Character{
 	 */
 	private void updateQuickBar() {
 		
-		if (Input.isKey1())	this.selectSlot = 1;
-		if (Input.isKey2())	this.selectSlot = 2;
-		if (Input.isKey3()) this.selectSlot = 3;
-		if (Input.isKey4()) this.selectSlot = 4;
-		if (Input.isKey5())	this.selectSlot = 5;
-		if (Input.isKey6())	this.selectSlot = 6;
-		if (Input.isKey7())	this.selectSlot = 7;
-		if (Input.isKey8())	this.selectSlot = 8;
-			
+		if (Input.isKey1())	this.selectSlot = 0;
+		if (Input.isKey2())	this.selectSlot = 1;
+		if (Input.isKey3()) this.selectSlot = 2;
+		if (Input.isKey4()) this.selectSlot = 3;
+		if (Input.isKey5())	this.selectSlot = 4;
+		if (Input.isKey6())	this.selectSlot = 5;
+		if (Input.isKey7())	this.selectSlot = 6;
+		if (Input.isKey8())	this.selectSlot = 7;
+		
 		selectSlot -= Input.WheelScrolling();
 		if(selectSlot > 7) selectSlot -= 8;
 		if(selectSlot < 0) selectSlot += 8;
