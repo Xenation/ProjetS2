@@ -2,7 +2,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
@@ -54,7 +54,7 @@ public abstract class Weapon extends Item {
 	 * @param useTime The use time of the weapon
 	 * @param knockback The knockback of the weapon
 	 */
-	public Weapon(Vector2f pos, float rot, Sprite spr,
+	public Weapon(Vector2f pos, float rot, EntitySprite spr,
 				int id, String name, String description, Rarity rarity, int maxStack, int value,
 				int damage, int range, float useTime, int knockback) {
 		super(pos, rot, spr, id, name, description, rarity, maxStack, value);
@@ -78,7 +78,7 @@ public abstract class Weapon extends Item {
 	 * @param useTime The use time of the weapon
 	 * @param knockback The knockback of the weapon
 	 */
-	public Weapon(Sprite spr,
+	public Weapon(EntitySprite spr,
 				int id, String name, String description, Rarity rarity, int maxStack, int value,
 				int damage, int range, float useTime, int knockback) {
 		super(spr, id, name, description, rarity, maxStack, value);

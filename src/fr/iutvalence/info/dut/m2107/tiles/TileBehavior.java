@@ -108,8 +108,8 @@ public enum TileBehavior {
 	 * @return false if the tile has no tile under it
 	 */
 	private boolean updateFalling(Tile tile) {
-		FallingTile falling = (FallingTile) tile;
-		if (falling.fallingTime < 0) {
+		TimedTile timed = (TimedTile) tile;
+		if (timed.time < 0) {
 			Tile support = GameWorld.chunkMap.getTileAt(tile.x, tile.y-1);
 			if (support == null) {
 				GameWorld.chunkMap.addTile(TileBuilder.buildTile(tile.type, tile.x, tile.y-1));
@@ -122,7 +122,7 @@ public enum TileBehavior {
 			}
 			EventManager.sendEvent(new TileTouchGroundEvent(tile, support));
 		} else {
-			falling.fallingTime -= DisplayManager.deltaTime();
+			timed.time -= DisplayManager.deltaTime();
 		}
 		return true;
 	}
@@ -130,7 +130,7 @@ public enum TileBehavior {
 	private boolean updateLiquid(Tile tile) {
 		LiquidTile liquid = (LiquidTile) tile;
 		Tile support = GameWorld.chunkMap.getBottomTile(tile);
-		if (liquid.fallingTime < 0) {
+		if (liquid.time < 0) {
 			if (support == null) {
 				GameWorld.chunkMap.addTile(TileBuilder.buildTile(tile.type, tile.x, tile.y-1));
 				return false;
@@ -141,7 +141,7 @@ public enum TileBehavior {
 				return false;
 			}
 		} else {
-			liquid.fallingTime -= DisplayManager.deltaTime();
+			liquid.time -= DisplayManager.deltaTime();
 		}
 		if (liquid.spreadingTime < 0 && support != null && (support.type.isSolid() || support.type == TileType.Water)) {
 			Tile left = GameWorld.chunkMap.getLeftTile(tile);

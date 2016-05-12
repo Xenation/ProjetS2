@@ -2,8 +2,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
-
-import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
 /**
@@ -60,7 +59,7 @@ public class Item extends Entity {
 	 * @param maxStack The maximum stack of the item
 	 * @param value The value of the item
 	 */
-	public Item(Vector2f pos, float rot, Sprite spr,
+	public Item(Vector2f pos, float rot, EntitySprite spr,
 				int id, String name, String description, Rarity rarity, int maxStack, int value) {
 		super(pos, rot, spr);
 		this.id = id;
@@ -82,7 +81,7 @@ public class Item extends Entity {
 	 * @param maxStack The maximum stack of the item
 	 * @param value The value of the item
 	 */
-	public Item(Sprite spr, Collider col,
+	public Item(EntitySprite spr, Collider col,
 				int id, String name, String description, Rarity rarity, int maxStack, int value) {
 		super(spr, col);
 		this.id = id;
@@ -103,7 +102,7 @@ public class Item extends Entity {
 	 * @param maxStack The maximum stack of the item
 	 * @param value The value of the item
 	 */
-	public Item(Sprite spr,
+	public Item(EntitySprite spr,
 				int id, String name, String description, Rarity rarity, int maxStack, int value) {
 		super(spr);
 		this.id = id;

@@ -2,9 +2,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.models.Sprite;
-import fr.iutvalence.info.dut.m2107.render.DisplayManager;
-import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
 /**
@@ -30,7 +28,7 @@ public class Bullet extends Ammunition {
 	 * @param velocity The velocity of the ammo
 	 * @param speed The speed of the ammo
 	 */
-	public Bullet(Vector2f pos, float rot, Sprite spr,
+	public Bullet(Vector2f pos, float rot, EntitySprite spr,
 				int id, String name, String description, Rarity rarity, int maxStack, int value,
 				int damage, int knockback, Vector2f velocity, int speed) {
 		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, knockback, velocity, speed);
@@ -50,7 +48,7 @@ public class Bullet extends Ammunition {
 	 * @param knockback The knocback of the ammo
 	 * @param speed The speed of the ammo
 	 */
-	public Bullet(Sprite spr, Collider col,
+	public Bullet(EntitySprite spr, Collider col,
 				int id, String name, String description, Rarity rarity, int maxStack, int value,
 				int damage, int knockback, int speed) {
 		super(spr, col, id, name, description, rarity, maxStack, value, damage, knockback, speed);

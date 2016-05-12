@@ -3,7 +3,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
 /**
@@ -47,7 +47,7 @@ public class LivingEntity extends MovableEntity {
 	 * @param armor The armor of the entity
 	 * @param jumpHeight The jump height of the entity
 	 */
-	public LivingEntity(Vector2f pos, float rot, Sprite spr, Collider col,
+	public LivingEntity(Vector2f pos, float rot, EntitySprite spr, Collider col,
 						Vector2f vel, float spd,
 						int health, int armor, int jumpHeight) {
 		super(pos, rot, spr, col, vel, spd);
@@ -61,7 +61,7 @@ public class LivingEntity extends MovableEntity {
 	 * @param pos The position of the entity
 	 * @param spr The sprite of the entity
 	 */
-	public LivingEntity(Vector2f pos, Sprite spr) {
+	public LivingEntity(Vector2f pos, EntitySprite spr) {
 		super(pos, spr);
 		this.health = DEF_HEALTH;
 		this.armor = DEF_ARMOR;
@@ -74,7 +74,7 @@ public class LivingEntity extends MovableEntity {
 	 * @param spr The sprite of the entity
 	 * @param col The collider of the entity
 	 */
-	public LivingEntity(Vector2f pos, Sprite spr, Collider col) {
+	public LivingEntity(Vector2f pos, EntitySprite spr, Collider col) {
 		super(pos, spr, col);
 		this.health = DEF_HEALTH;
 		this.armor = DEF_ARMOR;

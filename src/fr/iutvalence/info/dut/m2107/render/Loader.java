@@ -72,6 +72,16 @@ public class Loader {
 		return vaoID;
 	}
 	
+	public void updateVao(int vaoID, float[] positions, float[] textureUVs) {
+		GL30.glBindVertexArray(vaoID);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vaoMap.get(vaoID));
+		
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, storeInterleavedDataInFloatBuffer(positions, textureUVs));
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL30.glBindVertexArray(0);
+	}
+	
 	/**
 	 * Returns a String representing the state of the loader
 	 * @return a String representing the state of the loader
@@ -174,6 +184,20 @@ public class Loader {
 		int textureID = texture.getTextureID();
 		textures.add(textureID);
 		return textureID;
+	}
+	
+	public Texture loadAtlas(String fileName) {
+		Texture texture = null;
+		try {
+			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/"+fileName+".png"));
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		textures.add(texture.getTextureID());
+		return texture;
 	}
 	
 	/**

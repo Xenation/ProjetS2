@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
-import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 
 /**
  * Defines a layer that contains entities.
@@ -21,7 +21,7 @@ public class Layer implements Iterable<Entity> {
 	/**
 	 * the map that gathers all the entities that have the same sprite under a same list
 	 */
-	private Map<Sprite, List<Entity>> layer = new HashMap<Sprite, List<Entity>>();
+	private Map<EntitySprite, List<Entity>> layer = new HashMap<EntitySprite, List<Entity>>();
 	
 	/**
 	 * The depth of this layer (only visual)
@@ -78,7 +78,7 @@ public class Layer implements Iterable<Entity> {
 	 * Returns a set of all sprites present in this layer
 	 * @return a set of all sprites present in this layer
 	 */
-	public Set<Sprite> sprites() {
+	public Set<EntitySprite> sprites() {
 		return this.layer.keySet();
 	}
 	
@@ -87,7 +87,7 @@ public class Layer implements Iterable<Entity> {
 	 * @param spr the sprite to look for
 	 * @return a list of entities that have the given sprite in his layer
 	 */
-	public List<Entity> getEntities(Sprite spr) {
+	public List<Entity> getEntities(EntitySprite spr) {
 		return this.layer.get(spr);
 	}
 	
@@ -95,7 +95,7 @@ public class Layer implements Iterable<Entity> {
 	@Override
 	public Iterator<Entity> iterator() {
 		List<Entity> ents = new ArrayList<Entity>();
-		for (Sprite spr : layer.keySet()) {
+		for (EntitySprite spr : layer.keySet()) {
 			for (Entity ent : layer.get(spr)) {
 				ents.add(ent);
 			}
