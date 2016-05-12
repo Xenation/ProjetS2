@@ -19,7 +19,7 @@ public abstract class Ammunition extends Item {
 	/**
 	 * Time before destruction
 	 */
-	protected final int DESTROY_TIME = 5;
+	protected final int DESTROY_TIME = 60;
 	
 	/**
 	 * Time remaining before destruction

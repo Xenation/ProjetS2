@@ -21,13 +21,13 @@ public class ItemDatabase {
 	public static void create() {
 		// AMMUNIITON
 		//					TYPE	SPR							 			COL											ID	NAME				DESC					RARITY			MAX		VAL		DMG		KNO		SPD
-		itemDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			new Collider(-.01f, -.01f, .01f, .01f),		0, 	"Arrow",			"A basic arrow", 		Rarity.POOR,	50,		1,		1,		5,		25));
-		itemDatabase.add(new Arrow	(SpriteDatabase.getLightningArrowSpr(),	new Collider(-.01f, -.01f, .01f, .01f),		1,	"Lightning Arrow", 	"A lightning arrow",	Rarity.COMMON,	25,		5,		2,		100,	100));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			new Collider(-.01f, -.01f, .01f, .01f),		0, 	"Arrow",			"A basic arrow", 		Rarity.POOR,	50,		1,		1,		1,		25));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getLightningArrowSpr(),	new Collider(-.01f, -.01f, .01f, .01f),		1,	"Lightning Arrow", 	"A lightning arrow",	Rarity.COMMON,	25,		5,		2,		20,		100));
 		
 		// WEAPON
 		//					TYPE	SPR								ID	NAME		DESC				RARITY			MAX		VAL		DMG 	RNG		USE		KNOC
-		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	2,	"Bow",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.25f,	25));
-		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	3,	"Sword",	"A simple Sword",	Rarity.POOR,	1,		3, 		5, 		2, 		.1f,	100));
+		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	2,	"Bow",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	3));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	3,	"Sword",	"A simple Sword",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
 	}
 	
 	/**
