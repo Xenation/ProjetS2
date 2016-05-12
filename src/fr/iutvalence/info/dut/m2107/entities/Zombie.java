@@ -40,7 +40,7 @@ public class Zombie extends Character {
 				else tmpCol.extendLeft(2);
 				Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getLayer(1));
 				if(ent == GameWorld.player) {
-					((LivingEntity) ent).takeKnockback(50 * (int)this.scale.x);
+					((LivingEntity) ent).takeKnockback(10 * (int)this.scale.x);
 					((LivingEntity) ent).takeDamage(1);
 				}
 			}

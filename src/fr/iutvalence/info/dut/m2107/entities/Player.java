@@ -1,5 +1,6 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
+import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
@@ -8,7 +9,6 @@ import fr.iutvalence.info.dut.m2107.guiRendering.GUIMaster;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
-import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Player extends Character{
@@ -40,6 +40,10 @@ public class Player extends Character{
 	 private GUIElement hpGUI;
 	 // Temporary
 	
+	 
+	 protected float invulnerabilityTime;
+	 protected float invulnerabilityFadeStep = -0.1f;
+		
 	/**
 	 * The angle between the player and the camera
 	 */
@@ -73,8 +77,8 @@ public class Player extends Character{
 	 */
 	private void initInventory() {
 		// TODO Take the item saved from a file save
-		addItem(ItemDatabase.get(0), 10);
-		addItem(ItemDatabase.get(1), 5);
+		addItem(ItemDatabase.get(0), 50);
+		addItem(ItemDatabase.get(1), 15);
 		
 		this.inventory.initInventory();
 	}
@@ -105,6 +109,16 @@ public class Player extends Character{
 		
 		updateShootVal();
 		updateQuickBar();
+		
+		if(this.invulnerabilityTime > Sys.getTime()/1000f) {
+			this.alpha += this.invulnerabilityFadeStep;
+			if(this.itemOnHand != null) this.itemOnHand.alpha += this.invulnerabilityFadeStep;
+			if(this.alpha >= 1) this.invulnerabilityFadeStep = -.1f;
+			else if(this.alpha <= 0.5f) this.invulnerabilityFadeStep = .1f;
+		} else {
+			this.alpha = 1;
+			if(this.itemOnHand != null) this.itemOnHand.alpha = 1;
+		}
 		
 		if(this.degreeShoot > -90 && this.degreeShoot < 90) {
 			this.scale.setX(Maths.fastAbs(this.scale.x));

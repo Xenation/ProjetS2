@@ -32,9 +32,6 @@ public class LivingEntity extends MovableEntity {
 	
 	protected float recoil = 0;
 	
-	protected float invulnerabilityTime;
-	protected float invulAdd = -0.1f;
-	
 	/**
 	 * Constructor of a LivingEntity
 	 * @param pos The position of the entity
@@ -96,29 +93,20 @@ public class LivingEntity extends MovableEntity {
 	 */
 	@Override
 	public void update(Layer layer) {
-		if(this instanceof Character) {
-			
-			if(this.invulnerabilityTime > Sys.getTime()/1000f) {
-				this.alpha += this.invulAdd;
-				if(((Character)this).itemOnHand != null) ((Character)this).itemOnHand.alpha += this.invulAdd;
-				if(this.alpha >= 1) this.invulAdd = -.1f;
-				else if(this.alpha <= 0.5f) this.invulAdd = .1f;
-			} else {
-				this.alpha = 1;
-				if(((Character)this).itemOnHand != null) ((Character)this).itemOnHand.alpha = 1;
-			}
-			
+		if(this.health <= 0) layer.remove(this);
+		
+		if(this instanceof Character) {			
 			if(this.recoil != 0) {
-				this.vel.x = this.recoil;
-				if(this.col != null) this.col.checkCharacterContinuousCollision();
-				this.recoil /= 2;
-				if(this.recoil < 1 && this.recoil > -1) {
+				if(!((Character)this).isGrounded) {
+					this.vel.x = this.recoil;
+					if(this.col != null) this.col.checkCharacterContinuousCollision();
+				} else {
+					this.vel.x = 0;
 					this.recoil = 0;
 				}
 			}
 		}
 		super.update(layer);
-		if(this.health <= 0) layer.remove(this);
 	}
 
 	/**
@@ -127,16 +115,20 @@ public class LivingEntity extends MovableEntity {
 	 */
 	public void takeDamage(int damage) {
 		if(this instanceof Player) {
-			if(this.invulnerabilityTime < Sys.getTime()/1000f) {
+			if(((Player)this).invulnerabilityTime < Sys.getTime()/1000f) {
 				if(damage > 0) this.health -= damage;
-				this.invulnerabilityTime = Sys.getTime()/1000f+.5f;
+				((Player)this).invulnerabilityTime = Sys.getTime()/1000f+.5f;
+				this.vel.y += this.jumpHeight/2;
 			}
-		} else if(damage > 0) this.health -= damage;
+		} else {
+			if(damage > 0) this.health -= damage;
+			this.vel.y += this.jumpHeight/2;
+		}
 	}
 	
 	public void takeKnockback(int knockback) {
 		if(this instanceof Player) {
-			if(this.invulnerabilityTime < Sys.getTime()/1000f)
+			if(((Player)this).invulnerabilityTime < Sys.getTime()/1000f)
 				this.recoil = knockback;
 		} else this.recoil = knockback;
 	}

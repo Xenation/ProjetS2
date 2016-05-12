@@ -5,6 +5,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
+import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
@@ -71,7 +72,7 @@ public class MainGameTester {
 		
 		WorldLoader.loadWorld();
 		Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
-		LivingEntity chest = new LivingEntity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider, null, 0, 20, 0, 0);
+		Entity chest = new Entity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider);
 		GameWorld.layerMap.getLayer(0).add(chest);
 		
 		EventManager.init();
