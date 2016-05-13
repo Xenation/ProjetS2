@@ -130,7 +130,7 @@ public class TileBuilder {
 			stats.add("dmg = "+((DamagingTile)tile).damage);
 			break;
 		case Sand:
-			stats.add("fallTime = "+((FallingTile)tile).fallingTime);
+			stats.add("fallTime = "+((FallingTile)tile).time);
 			break;
 		case Creator:
 			stats.add("created = "+((CreatingTile)tile).createdType);

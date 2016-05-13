@@ -2,7 +2,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
@@ -52,7 +52,7 @@ public class Character extends LivingEntity{
 	 * @param pos The position of the character
 	 * @param spr The sprite of the character
 	 */
-	public Character(Vector2f pos, Sprite spr) {
+	public Character(Vector2f pos, EntitySprite spr) {
 		super(pos, spr);
 	}
 	
@@ -62,7 +62,7 @@ public class Character extends LivingEntity{
 	 * @param spr The sprite of the character
 	 * @param col The collider of the character
 	 */
-	public Character(Vector2f pos, Sprite spr, Collider col) {
+	public Character(Vector2f pos, EntitySprite spr, Collider col) {
 		super(pos, spr, col);
 	}
 
@@ -78,7 +78,7 @@ public class Character extends LivingEntity{
 	 * @param armor The armor of the character
 	 * @param jumpHeight The jump height of the character
 	 */
-	public Character(Vector2f pos, float rot, Sprite spr, Collider col, Vector2f vel, float spd, int health, int armor,
+	public Character(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd, int health, int armor,
 			int jumpHeight) {
 		super(pos, rot, spr, col, vel, spd, health, armor, jumpHeight);
 	}

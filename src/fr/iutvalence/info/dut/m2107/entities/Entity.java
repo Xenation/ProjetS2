@@ -2,7 +2,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
 /**
@@ -14,7 +14,7 @@ public class Entity {
 	
 	private static final Vector2f DEF_POS = new Vector2f(0, 0);
 	private static final float DEF_ROT = 0;
-	private static final Sprite DEF_SPR = new Sprite("item/default", new Vector2f(1, 1));
+	private static final EntitySprite DEF_SPR = new EntitySprite("item/default", new Vector2f(1, 1));
 	private static final Vector2f DEF_SCALE = new Vector2f(1, 1);
 	
 	/**
@@ -35,7 +35,7 @@ public class Entity {
 	/**
 	 * The sprite of the entity
 	 */
-	protected final Sprite spr;
+	protected final EntitySprite spr;
 	
 	/**
 	 * The alpha filter to apply to this entity's sprite
@@ -58,7 +58,7 @@ public class Entity {
 	 * @param rot The rotation of the entity
 	 * @param spr The sprite of the entity
 	 */
-	public Entity(Vector2f pos, float rot, Sprite spr) {
+	public Entity(Vector2f pos, float rot, EntitySprite spr) {
 		this.pos = pos;
 		this.rot = rot;
 		this.spr = spr;
@@ -76,7 +76,7 @@ public class Entity {
 	 * @param spr The sprite of the entity
 	 * @param col The collider of the entity
 	 */
-	public Entity(Vector2f pos, float rot, Sprite spr, Collider col) {
+	public Entity(Vector2f pos, float rot, EntitySprite spr, Collider col) {
 		this.pos = pos;
 		this.rot = rot;
 		this.spr = spr;
@@ -94,7 +94,7 @@ public class Entity {
 	 * @param pos The position of the entity
 	 * @param spr The sprite of the entity
 	 */
-	public Entity(Vector2f pos, Sprite spr) {
+	public Entity(Vector2f pos, EntitySprite spr) {
 		this.pos = pos;
 		this.rot = DEF_ROT;
 		this.spr = spr;
@@ -111,7 +111,7 @@ public class Entity {
 	 * @param spr The sprite of the entity
 	 * @param col The collider of the entity
 	 */
-	public Entity(Vector2f pos, Sprite spr, Collider col) {
+	public Entity(Vector2f pos, EntitySprite spr, Collider col) {
 		this.pos = pos;
 		this.rot = DEF_ROT;
 		this.spr = spr;
@@ -128,7 +128,7 @@ public class Entity {
 	 * Constructor of an Entity
 	 * @param spr The sprite of the entity
 	 */
-	public Entity(Sprite spr) {
+	public Entity(EntitySprite spr) {
 		this.pos = new Vector2f(DEF_POS.x, DEF_POS.y);
 		this.rot = DEF_ROT;
 		this.spr = spr;
@@ -144,7 +144,7 @@ public class Entity {
 	 * @param spr The sprite of the entity
 	 * @param col The collider of the entity
 	 */
-	public Entity(Sprite spr, Collider col) {
+	public Entity(EntitySprite spr, Collider col) {
 		this.pos = new Vector2f(DEF_POS.x, DEF_POS.y);
 		this.rot = DEF_ROT;
 		this.spr = spr;
@@ -181,7 +181,7 @@ public class Entity {
 	 * Return the sprite of the entity
 	 * @return the sprite of the entity
 	 */
-	public Sprite getSprite() {return this.spr;}
+	public EntitySprite getSprite() {return this.spr;}
 	
 	/**
 	 * Return the position of the entity

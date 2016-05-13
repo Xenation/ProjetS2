@@ -2,7 +2,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
@@ -35,7 +35,7 @@ public class MovableEntity extends Entity {
 	 * @param vel The velocity of the entity
 	 * @param spd The speed of the entity
 	 */
-	public MovableEntity(Vector2f pos, float rot, Sprite spr, Collider col, Vector2f vel, float spd) {
+	public MovableEntity(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd) {
 		super(pos, rot, spr, col);
 		this.vel = vel;
 		this.spd = spd;
@@ -46,7 +46,7 @@ public class MovableEntity extends Entity {
 	 * @param pos The position of the entity
 	 * @param spr The sprite of the entity
 	 */
-	public MovableEntity(Vector2f pos, Sprite spr) {
+	public MovableEntity(Vector2f pos, EntitySprite spr) {
 		super(pos, spr);
 		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
 		this.spd = DEF_SPD;
@@ -58,7 +58,7 @@ public class MovableEntity extends Entity {
 	 * @param spr The sprite of the entity
 	 * @param col The collider of the entity
 	 */
-	public MovableEntity(Vector2f pos, Sprite spr, Collider col) {
+	public MovableEntity(Vector2f pos, EntitySprite spr, Collider col) {
 		super(pos, spr, col);
 		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
 		this.spd = DEF_SPD;
@@ -71,7 +71,7 @@ public class MovableEntity extends Entity {
 	 * @param spr The sprite of the entity
 	 * @param vel The velocity of the entity
 	 */
-	public MovableEntity(Vector2f pos, float rot, Sprite spr, Vector2f vel) {
+	public MovableEntity(Vector2f pos, float rot, EntitySprite spr, Vector2f vel) {
 		super(pos, rot, spr);
 		this.vel = vel;
 		this.spd = DEF_SPD;

@@ -2,7 +2,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 
 /**
@@ -28,7 +28,7 @@ public class Bow extends Weapon {
 	 * @param useTime The use time of the bow
 	 * @param knockback The knockback of the bow
 	 */
-	public Bow(Vector2f pos, float rot, Sprite spr,
+	public Bow(Vector2f pos, float rot, EntitySprite spr,
 				int id, String name, String description, Rarity rarity, int maxStack, int value,
 				int damage, int range, float useTime, int knockback) {
 		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback);
@@ -48,7 +48,7 @@ public class Bow extends Weapon {
 	 * @param useTime The use time of the bow
 	 * @param knockback The knockback of the bow
 	 */
-	public Bow(Sprite spr,
+	public Bow(EntitySprite spr,
 				int id, String name, String description, Rarity rarity, int maxStack, int value,
 				int damage, int range, float useTime, int knockback) {
 		super(spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback);

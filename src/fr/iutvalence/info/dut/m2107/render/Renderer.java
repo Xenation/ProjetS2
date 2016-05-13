@@ -135,7 +135,7 @@ public class Renderer {
 		for (int i = GameWorld.layerMap.getLayersCount()-1; i >= 0; i--) {
 			Layer layer = GameWorld.layerMap.getLayer(i);
 			shader.loadDepth(layer.getDepth());
-			for (Sprite spr : layer.sprites()) {
+			for (EntitySprite spr : layer.sprites()) {
 				if (spr != null) {
 					prepareSprite(spr);
 					
@@ -144,7 +144,7 @@ public class Renderer {
 						shader.loadTransformation(matrix);
 						shader.loadAlpha(ent.getAlpha());
 						
-						glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+						glDrawArrays(GL_QUADS, 0, 4);
 						
 						if (ent.getLayer() != null) {
 							Matrix4f mat = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
@@ -168,7 +168,7 @@ public class Renderer {
 	 */
 	private void renderSubLayers(Entity entity, Matrix4f matrix) {
 		Matrix4f mat = new Matrix4f();
-		for (Sprite spr : entity.getLayer().sprites()) {
+		for (EntitySprite spr : entity.getLayer().sprites()) {
 			if (spr != null) {
 				prepareSprite(spr);
 				
@@ -178,7 +178,7 @@ public class Renderer {
 					shader.loadTransformation(mat);
 					shader.loadAlpha(ent.getAlpha());
 					
-					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+					glDrawArrays(GL_QUADS, 0, 4);
 					
 					if (ent.getLayer() != null) {
 						unbindSprite();
@@ -212,7 +212,7 @@ public class Renderer {
 	 * Prepares a sprite by enabling its attributes and texture
 	 * @param spr the sprite to prepare
 	 */
-	private void prepareSprite(AbstractSprite spr) {
+	private void prepareSprite(AtlasSprite spr) {
 		GL30.glBindVertexArray(spr.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);

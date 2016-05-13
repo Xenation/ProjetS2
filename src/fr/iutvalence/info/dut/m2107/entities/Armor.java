@@ -2,7 +2,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 
 /**
  * An armor item
@@ -29,7 +29,7 @@ public class Armor extends Item {
 	 * @param value The value of the armor
 	 * @param defense The defense of the armor
 	 */
-	public Armor(Vector2f pos, float rot, Sprite spr, int id, String name, String description, Rarity rarity,
+	public Armor(Vector2f pos, float rot, EntitySprite spr, int id, String name, String description, Rarity rarity,
 			int maxStack, int value, int defense) {
 		super(pos, rot, spr, id, name, description, rarity, maxStack, value);
 		this.defense = defense;

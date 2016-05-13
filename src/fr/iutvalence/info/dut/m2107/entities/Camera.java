@@ -7,7 +7,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
-import fr.iutvalence.info.dut.m2107.models.Sprite;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
@@ -103,7 +103,7 @@ public class Camera {
 	public void update() {
 		
 		if (this.preview == null) {
-			Sprite spr = new Sprite("entities/selection", new Vector2f(1, 1));
+			EntitySprite spr = new EntitySprite("entities/selection", new Vector2f(1, 1));
 			this.preview = new Entity(spr);
 			this.preview.setAlpha(0.5f);
 		}
@@ -197,7 +197,7 @@ public class Camera {
 			}
 		} else {
 //			if (Input.isNumPad0()) {
-//				float pow = Maths.pow(2, 25);
+//				float pow = Maths.pow(2, 23);
 //				this.target.pos = new Vector2f(pow, 0);
 //				setPosition(pow, 0);
 //				for (int i = -10; i <= 10; i++) {
