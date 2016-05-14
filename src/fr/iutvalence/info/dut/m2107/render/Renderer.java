@@ -102,6 +102,8 @@ public class Renderer {
 		shader.loadViewMatrix(GameWorld.camera);
 		shader.loadDepth(0);
 		
+		// Chunks Rendering
+		prepareAtlas(Atlas.TILE_ATLAS);
 		for (Chunk chk : GameWorld.chunkMap.getSurroundingChunks(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_TOP, BOUNDARY_BOTTOM, GameWorld.camera.getPosition())) {
 			for (TileVariant var : chk.variants()) {
 				prepareSprite(var.sprite);
@@ -117,44 +119,35 @@ public class Renderer {
 				
 				unbindSprite();
 			}
-			
-			/// Code to Render whole chunks (not working)
-//			prepareChunk(chk);
-//			
-//			for (Tile til : chk) {
-//				Matrix4f matrix = Maths.createTransformationMatrix(til.x, til.y);
-//				shader.loadTransformation(matrix);
-//				
-//				int tileIndex = til.getRelY(chk)*Chunk.CHUNK_SIZE + til.getRelX(chk);
-//				glDrawArrays(GL_TRIANGLE_STRIP, tileIndex*4, 4);
-//			}
-//			
-//			unbindSprite();
 		}
 		
+		// Layers rendering
 		for (int i = GameWorld.layerMap.getLayersCount()-1; i >= 0; i--) {
 			Layer layer = GameWorld.layerMap.getLayer(i);
 			shader.loadDepth(layer.getDepth());
-			for (EntitySprite spr : layer.sprites()) {
-				if (spr != null) {
-					prepareSprite(spr);
-					
-					for (Entity ent : layer.getEntities(spr)) {
-						Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getScale(), ent.getRotation());
-						shader.loadTransformation(matrix);
-						shader.loadAlpha(ent.getAlpha());
+			for (Atlas atl : layer.atlases()) {
+				prepareAtlas(atl);
+				for (EntitySprite spr : layer.sprites(atl)) {
+					if (spr != null) {
+						prepareSprite(spr);
 						
-						glDrawArrays(GL_QUADS, 0, 4);
-						
-						if (ent.getLayer() != null) {
-							Matrix4f mat = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
-							unbindSprite();
-							renderSubLayers(ent, mat);
-							prepareSprite(spr);
+						for (Entity ent : layer.getEntities(atl, spr)) {
+							Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getScale(), ent.getRotation());
+							shader.loadTransformation(matrix);
+							shader.loadAlpha(ent.getAlpha());
+							
+							glDrawArrays(GL_QUADS, 0, 4);
+							
+							if (ent.getLayer() != null) {
+								Matrix4f mat = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation());
+								unbindSprite();
+								renderSubLayers(ent, mat);
+								prepareSprite(spr);
+							}
 						}
+						
+						unbindSprite();
 					}
-					
-					unbindSprite();
 				}
 			}
 		}
@@ -168,26 +161,29 @@ public class Renderer {
 	 */
 	private void renderSubLayers(Entity entity, Matrix4f matrix) {
 		Matrix4f mat = new Matrix4f();
-		for (EntitySprite spr : entity.getLayer().sprites()) {
-			if (spr != null) {
-				prepareSprite(spr);
-				
-				for (Entity ent : entity.getLayer().getEntities(spr)) {
-					Matrix4f.load(matrix, mat);
-					Maths.addTransformationMatrix(mat, ent.getPosition(), ent.getScale(), ent.getRotation());
-					shader.loadTransformation(mat);
-					shader.loadAlpha(ent.getAlpha());
+		for (Atlas atl : entity.getLayer().atlases()) {
+			prepareAtlas(atl);
+			for (EntitySprite spr : entity.getLayer().sprites(atl)) {
+				if (spr != null) {
+					prepareSprite(spr);
 					
-					glDrawArrays(GL_QUADS, 0, 4);
-					
-					if (ent.getLayer() != null) {
-						unbindSprite();
-						renderSubLayers(ent, mat);
-						prepareSprite(spr);
+					for (Entity ent : entity.getLayer().getEntities(atl, spr)) {
+						Matrix4f.load(matrix, mat);
+						Maths.addTransformationMatrix(mat, ent.getPosition(), ent.getScale(), ent.getRotation());
+						shader.loadTransformation(mat);
+						shader.loadAlpha(ent.getAlpha());
+						
+						glDrawArrays(GL_QUADS, 0, 4);
+						
+						if (ent.getLayer() != null) {
+							unbindSprite();
+							renderSubLayers(ent, mat);
+							prepareSprite(spr);
+						}
 					}
+					
+					unbindSprite();
 				}
-				
-				unbindSprite();
 			}
 		}
 	}
@@ -200,24 +196,23 @@ public class Renderer {
 		glClearDepth(1);
 	}
 	
-//	private void prepareChunk(Chunk chk) {
-//		GL30.glBindVertexArray(chk.getVaoID());
-//		GL20.glEnableVertexAttribArray(0);
-//		GL20.glEnableVertexAttribArray(1);
-//		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-//		GL11.glBindTexture(GL11.GL_TEXTURE_2D, chk.getTextureID());
-//	}
-	
 	/**
-	 * Prepares a sprite by enabling its attributes and texture
+	 * Prepares a sprite by enabling its attributes
 	 * @param spr the sprite to prepare
 	 */
 	private void prepareSprite(AtlasSprite spr) {
 		GL30.glBindVertexArray(spr.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
+	}
+	
+	/**
+	 * Prepares an atlas by enabling its texture
+	 * @param atlas the atlas to prepare
+	 */
+	private void prepareAtlas(Atlas atlas) {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, spr.getTextureID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, atlas.getTextureID());
 	}
 	
 	/**
