@@ -559,25 +559,33 @@ public class Collider {
 	 * Extend the left of the collider
 	 * @param left The amount to extend
 	 */
-	public void extendLeft (float left)  {this.minX -= left;}
+	public void extendLeft (float left)  {
+		this.minX = Maths.round(this.minX - left, 5);
+	}
 	
 	/**
 	 * Extend the right of the collider
 	 * @param right The amount to extend
 	 */
-	public void extendRight(float right) {this.maxX += right;}
+	public void extendRight(float right) {
+		this.maxX = Maths.round(this.maxX + right, 5);
+	}
 	
 	/**
 	 * Extend the down of the collider
 	 * @param down The amount to extend
 	 */
-	public void extendDown(float down) {this.minY -= down;}
+	public void extendDown(float down) {
+		this.minY = Maths.round(this.minY - down, 5);
+	}
 	
 	/**
 	 * Extend the up of the collider
 	 * @param up The amount to extend
 	 */
-	public void extendUp  (float up)   {this.maxY += up;}
+	public void extendUp  (float up)   {
+		this.maxY = Maths.round(this.maxY + up, 5);
+	}
 	
 	/**
 	 * Return the minimum position of the collider

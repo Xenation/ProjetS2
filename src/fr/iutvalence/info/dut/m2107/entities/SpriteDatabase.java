@@ -2,7 +2,9 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.models.Atlas;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
+import fr.iutvalence.info.dut.m2107.render.Loader;
 
 /**
  * Sprite Database
@@ -17,7 +19,7 @@ public class SpriteDatabase {
 	private final static EntitySprite zombieSpr = new EntitySprite("entities/zombie", new Vector2f(2, 4));
 	public static EntitySprite getZombieSpr() {return zombieSpr;}
 	
-	private final static EntitySprite playerSpr = new EntitySprite("entities/player", new Vector2f(2, 4));
+	private final static EntitySprite playerSpr = new EntitySprite(new Atlas("entities/player_atlas", 8, 8, Loader.SPRITE_LOADER), new Vector2f(4, 4));
 	public static EntitySprite getPlayerSpr() {return playerSpr;}
 	
 	private final static EntitySprite swordSpr = new EntitySprite("item/iron_sword", new Vector2f(2, 1));

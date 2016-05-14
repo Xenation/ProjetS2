@@ -1,5 +1,7 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
+import java.util.Random;
+
 import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -56,12 +58,18 @@ public class Player extends Character{
 
 	public boolean rightWallJump = false;
 	public boolean leftWallJump = false;
+	
+	private float atlasCount = 0;
+	private float atlasAdd = 0.25f;
+	
+	private Vector2f pivotPos = new Vector2f(0.7f, -.2f);
+	private Vector2f pivotLerp = new Vector2f();
 
 	/**
 	 * Constructor of a player
 	 */
 	public Player() {
-		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.5f, -1.92f, .5f, 1.92f));
+		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.5f, -1.75f, .5f, 1.75f));
 		this.initQuickBar();
 		this.initInventory();
 		this.hpGUI = new GUIElement(SpriteDatabase.getHeartStr(), new Vector2f(-1 + width, 1 - height), width/2, height/2);
@@ -69,7 +77,8 @@ public class Player extends Character{
 		this.initLayer();
 		this.layer.add(this.pivot);
 		this.initPivot();
-		this.pivot.setPosition(new Vector2f(0.75f, -.35f));
+		
+		this.pivotLerp.y = this.pivot.pos.y;
 	}
 	
 	/**
@@ -107,6 +116,8 @@ public class Player extends Character{
 	public void update(Layer layer) {		
 		input();
 		
+		updateSpriteAnimation();
+		
 		updateShootVal();
 		updateQuickBar();
 		
@@ -122,22 +133,14 @@ public class Player extends Character{
 		
 		if(this.degreeShoot > -90 && this.degreeShoot < 90) {
 			this.scale.setX(Maths.fastAbs(this.scale.x));
-			this.pivot.pos.x = .75f;
+			this.pivot.pos.x = Maths.fastAbs(this.pivot.pos.x);
 		} else {
 			this.scale.setX(-Maths.fastAbs(this.scale.x));
-			this.pivot.pos.x = -.75f;
+			this.pivot.pos.x = -Maths.fastAbs(this.pivot.pos.x);
 		}
 		pivot.setRotation(GameWorld.player.getDegreeShoot());
 		
 		if(Input.isMouseLeft() && this.itemOnHand != null && GameWorld.camera.isFree()) {
-			if(this.scale.x == -1 && this.degreeShoot < 90 && this.degreeShoot > -90) {
-				this.scale.x = 1;
-				this.pivot.pos.x = .65f;
-			}
-			else if(this.scale.x == 1 && (this.degreeShoot > 90 || this.degreeShoot < -90)) {
-				this.scale.x = -1;
-				this.pivot.pos.x = -.65f;
-			}
 			if(this.itemOnHand instanceof Bow)
 				((Bow) this.itemOnHand).use(this);
 			if(this.itemOnHand instanceof Sword)
@@ -146,6 +149,31 @@ public class Player extends Character{
 		
 		playerGUI.updateText("IsGrounded : " + this.isGrounded);
 		super.update(layer);
+	}
+
+	private void updateSpriteAnimation() {
+		if(this.isGrounded) {
+			if(this.spr.getAtlasIndex() >= 16 && this.spr.getAtlasIndex() < 26)
+				atlasCount = this.spr.getAtlasIndex()+1;
+			else {
+				if(atlasCount >= 16) atlasCount = 0;
+				if(atlasCount == 0) atlasAdd = .25f;
+				else if(atlasCount == 12.75f) atlasAdd = -.25f;
+				else if(atlasCount + atlasAdd == 9 && atlasAdd > 0 && new Random().nextBoolean()) {
+					atlasCount = 15.75f;
+					atlasAdd = -.25f;
+				}
+				
+				atlasCount += atlasAdd;
+			}
+		} else {
+			if(this.spr.getAtlasIndex() >= 16 && this.spr.getAtlasIndex() <= 22) {
+				atlasCount = this.spr.getAtlasIndex()+1;
+				if(atlasCount > 22) atlasCount = 22;
+			} else atlasCount = 16;
+		}
+		//System.out.println(atlasCount);
+		this.spr.updateAtlasIndex(Maths.fastFloor(atlasCount));
 	}
 
 	/**
