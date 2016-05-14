@@ -1,4 +1,4 @@
-package fr.iutvalence.info.dut.m2107.Sound;
+package fr.iutvalence.info.dut.m2107.sound;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
