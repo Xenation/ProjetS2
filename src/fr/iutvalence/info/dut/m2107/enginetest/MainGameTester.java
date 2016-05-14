@@ -4,6 +4,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.Sound.openAL;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.ItemDatabase;
@@ -40,6 +41,8 @@ public class MainGameTester {
 			DisplayManager.updateDisplay();
 			TextMaster.init();
 		}
+		
+		openAL.init();
 		
 		GUIMaster.init();
 		
@@ -98,6 +101,8 @@ public class MainGameTester {
 			if(Input.isKeyWater())
 				GameWorld.layerMap.getLayer(0).add(new Zombie(new Vector2f(0, 0), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f)));
 			
+			openAL.update();
+			
 			GameWorld.update();
 			
 			renderer.prepare();
@@ -108,7 +113,7 @@ public class MainGameTester {
 			
 			DisplayManager.updateDisplay();
 		}
-		
+		openAL.delete();
 		renderer.cleanUp();
 		TextMaster.cleanUp();
 		GUIMaster.cleanUp();

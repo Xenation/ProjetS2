@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.models.Atlas;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 
 /**
@@ -21,7 +22,8 @@ public class Layer implements Iterable<Entity> {
 	/**
 	 * the map that gathers all the entities that have the same sprite under a same list
 	 */
-	private Map<EntitySprite, List<Entity>> layer = new HashMap<EntitySprite, List<Entity>>();
+	private Map<Atlas, Map<EntitySprite, List<Entity>>> layer = new HashMap<Atlas, Map<EntitySprite, List<Entity>>>();
+	
 	
 	/**
 	 * The depth of this layer (only visual)
@@ -42,10 +44,15 @@ public class Layer implements Iterable<Entity> {
 	 * @param ent the entity to add
 	 */
 	public void add(Entity ent) {
-		List<Entity> newList = layer.get(ent.getSprite());
+		Map<EntitySprite, List<Entity>> newMap = layer.get(ent.getSprite().getAtlas());
+		if (newMap == null) {
+			newMap = new HashMap<EntitySprite, List<Entity>>();
+			layer.put(ent.getSprite().getAtlas(), newMap);
+		}
+		List<Entity> newList = layer.get(ent.getSprite().getAtlas()).get(ent.getSprite());
 		if (newList == null) {
 			newList = new ArrayList<Entity>();
-			layer.put(ent.getSprite(), newList);
+			layer.get(ent.getSprite().getAtlas()).put(ent.getSprite(), newList);
 		}
 		newList.add(ent);
 	}
@@ -65,21 +72,35 @@ public class Layer implements Iterable<Entity> {
 	 * @param ent the entity to remove
 	 */
 	public void remove(Entity ent) {
-		List<Entity> ents = layer.get(ent.getSprite());
-		if (ents != null) {
-			ents.remove(ent);
-			if (ents.size() == 0) {
-				layer.remove(ents);
+		Map<EntitySprite, List<Entity>> rMap = layer.get(ent.getSprite().getAtlas());
+		if (rMap != null) {
+			List<Entity> rList = layer.get(ent.getSprite().getAtlas()).get(ent.getSprite());
+			if (rList != null) {
+				rList.remove(ent);
+				if (rList.size() == 0) {
+					layer.get(ent.getSprite().getAtlas()).remove(ent.getSprite());
+				}
+			}
+			if (rMap.size() == 0) {
+				layer.remove(ent.getSprite().getAtlas());
 			}
 		}
 	}
 	
 	/**
-	 * Returns a set of all sprites present in this layer
-	 * @return a set of all sprites present in this layer
+	 * Returns a set of all atlases of the layer
+	 * @return a set of all atlases of the layer
 	 */
-	public Set<EntitySprite> sprites() {
+	public Set<Atlas> atlases() {
 		return this.layer.keySet();
+	}
+	
+	/**
+	 * Returns a set of all sprites that use a given atlas
+	 * @return a set of all sprites that use a given atlas
+	 */
+	public Set<EntitySprite> sprites(Atlas atlas) {
+		return this.layer.get(atlas).keySet();
 	}
 	
 	/**
@@ -87,17 +108,19 @@ public class Layer implements Iterable<Entity> {
 	 * @param spr the sprite to look for
 	 * @return a list of entities that have the given sprite in his layer
 	 */
-	public List<Entity> getEntities(EntitySprite spr) {
-		return this.layer.get(spr);
+	public List<Entity> getEntities(Atlas atlas, EntitySprite spr) {
+		return this.layer.get(atlas).get(spr);
 	}
 	
 	////ITERABLE \\\\
 	@Override
 	public Iterator<Entity> iterator() {
 		List<Entity> ents = new ArrayList<Entity>();
-		for (EntitySprite spr : layer.keySet()) {
-			for (Entity ent : layer.get(spr)) {
-				ents.add(ent);
+		for (Atlas atl : layer.keySet()) {
+			for (EntitySprite spr : layer.get(atl).keySet()) {
+				for (Entity ent : layer.get(atl).get(spr)) {
+					ents.add(ent);
+				}
 			}
 		}
 		return ents.iterator();
