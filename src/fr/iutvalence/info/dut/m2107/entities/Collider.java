@@ -119,6 +119,7 @@ public class Collider {
 		
 		((Character)ent).hasStepUp = false;
 		((Character)ent).isGrounded = false;
+		((Character)ent).wallSlide = false;
 		
 		int continuousStep = (int) ((Maths.fastAbs(((Character)this.ent).vel.x) + Math.abs(((Character)this.ent).vel.y))/8+1);
 
@@ -181,8 +182,10 @@ public class Collider {
 							((Player)this.ent).leftWallJump = false;
 							checkCharacterContinuousCollision();
 						} else {
-							if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0)
+							if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0) {
 								((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
+								((Character)this.ent).wallSlide = true;
+							}
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 							if(this.ent instanceof Player)
@@ -228,8 +231,10 @@ public class Collider {
 							((Player)this.ent).rightWallJump = false;
 							checkCharacterContinuousCollision();
 						} else {
-							if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0)
+							if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0) {
 								((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
+								((Character)this.ent).wallSlide = true;
+							}
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 							if(this.ent instanceof Player)
