@@ -38,7 +38,9 @@ public class Character extends LivingEntity{
 	/**
 	 * The pivot of the character's weapon
 	 */
-	protected Entity pivot = new Entity(new Vector2f(.725f, -.3f), SpriteDatabase.getEmptySpr(), null);;
+	protected Entity pivot = new Entity(new Vector2f(.725f, -.3f), SpriteDatabase.getEmptySpr(), null);
+
+	protected boolean wallSlide = false;
 	
 	/**
 	 * Constructor of a character
@@ -88,8 +90,6 @@ public class Character extends LivingEntity{
 	 */
 	@Override
 	public void update(Layer layer) {
-		//LivingEntity sword = new LivingEntity(new Vector2f(.7f, 0), 0, SpriteDatabase.getSwordSpr(), new Collider(SpriteDatabase.getSwordSpr()), new Vector2f(), 0, 10, 0, 0);
-		//LivingEntity bow = new LivingEntity(new Vector2f(-0.3f, 0), 0, SpriteDatabase.getBowSpr(), new Collider(SpriteDatabase.getBowSpr()), new Vector2f(), 0, 10, 0, 0);
 		
 		if(this.itemOnHand != null) this.itemOnHand.update(layer); 
 		

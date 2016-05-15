@@ -64,13 +64,14 @@ public class Player extends Character{
 	
 	private Vector2f[] pivotPos = {new Vector2f(0.725f, -.15f),
 									new Vector2f(0.725f, -.35f),
-									new Vector2f(.9f, -.25f)};
+									new Vector2f(.9f, -.25f),
+									new Vector2f(.85f, .8f)};
 
 	/**
 	 * Constructor of a player
 	 */
 	public Player() {
-		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.5f, -1.75f, .5f, 1.75f));
+		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.75f, -1.75f, .75f, 1.75f));
 		this.initQuickBar();
 		this.initInventory();
 		this.hpGUI = new GUIElement(SpriteDatabase.getHeartStr(), new Vector2f(-1 + width, 1 - height), width/2, height/2);
@@ -130,14 +131,13 @@ public class Player extends Character{
 			if(this.itemOnHand != null) this.itemOnHand.alpha = 1;
 		}
 		
-		if(this.degreeShoot > -90 && this.degreeShoot < 90) {
-			this.scale.setX(Maths.fastAbs(this.scale.x));
+		if(this.vel.x > 0) this.scale.setX(1);
+		else if(this.vel.x < 0) this.scale.setX(-1);
+		
+		if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
 			this.pivot.pos.x = Maths.fastAbs(this.pivot.pos.x);
-		} else {
-			this.scale.setX(-Maths.fastAbs(this.scale.x));
+		else
 			this.pivot.pos.x = -Maths.fastAbs(this.pivot.pos.x);
-		}
-		pivot.setRotation(GameWorld.player.getDegreeShoot());
 		
 		if(Input.isMouseLeft() && this.itemOnHand != null && GameWorld.camera.isFree()) {
 			if(this.itemOnHand instanceof Bow)
@@ -152,37 +152,71 @@ public class Player extends Character{
 
 	private void updateSpriteAnimation() {
 		if(this.isGrounded) {
+			
 			if(this.spr.getAtlasIndex() >= 16 && this.spr.getAtlasIndex() < 26) {
 				atlasCount = this.spr.getAtlasIndex()+1;
 				this.pivot.pos.x = pivotPos[0].x;
 				this.pivot.pos.y = pivotPos[0].y;
-			}
-			else {
-				if(atlasAdd > 0) this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[1].y, .015f);
-				else this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .015f);
+			} else if(this.spr.getAtlasIndex() >= 27 && this.spr.getAtlasIndex() <= 32) {
+				atlasCount = this.spr.getAtlasIndex()-1;
+				this.pivot.pos.x = pivotPos[0].x;
+				this.pivot.pos.y = pivotPos[0].y;
+			} else {
+				if(atlasAdd > 0)
+					this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[1].y, .015f);
+				else
+					this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .015f);
 				
-				if(atlasCount >= 16) atlasCount = 0;
-				if(atlasCount == 0) atlasAdd = .25f;
-				else if(atlasCount == 12.75f) atlasAdd = -.25f;
+				if(atlasCount == 0)
+					atlasAdd = .25f;
+				else if(atlasCount == 12.75f)
+					atlasAdd = -.25f;
+				else if(atlasCount + atlasAdd == 9 && atlasAdd > 0 && new Random().nextBoolean())
+					atlasCount = 12.75f;
 				else if(atlasCount == 15.75f) {
 					atlasCount = 13;
 					atlasAdd = -.25f;
+				} else if(atlasCount >= 16) {
+					atlasCount = 0;
+					atlasAdd = .25f;
 				}
-				else if(atlasCount + atlasAdd == 9 && atlasAdd > 0 && new Random().nextBoolean())
-					atlasCount = 12.75f;
-				
 				atlasCount += atlasAdd;
 			}
-		} else {
-			this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, .5f);
-			if(this.scale.x > 0) this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[2].x, .5f);
-			else this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[2].x, .5f);
-			if(this.spr.getAtlasIndex() >= 16 && this.spr.getAtlasIndex() <= 22) {
-				atlasCount = this.spr.getAtlasIndex()+1;
-				if(atlasCount > 22) atlasCount = 22;
-			} else atlasCount = 16;
+		} else {			
+			if(wallSlide) {
+				this.pivot.pos.x = pivotPos[3].x;
+				
+				if(this.scale.x < 0)
+					if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
+						this.pivot.pos.y = pivotPos[2].y;
+					else
+						this.pivot.pos.y = pivotPos[3].y;
+				else
+					if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
+						this.pivot.pos.y = pivotPos[3].y;
+					else
+						this.pivot.pos.y = pivotPos[2].y;
+				
+				if(this.spr.getAtlasIndex() >= 27 && this.spr.getAtlasIndex() <= 32) {
+					atlasCount = this.spr.getAtlasIndex()+1;
+					if(atlasCount > 32) atlasCount = 32;
+				} else atlasCount = 27;
+			} else {
+				this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, .5f);
+				
+				if(this.pivot.pos.x > 0)
+					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[2].x, .5f);
+				else
+					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[2].x, .5f);
+				
+				if(this.spr.getAtlasIndex() >= 16 && this.spr.getAtlasIndex() <= 22) {
+					atlasCount = this.spr.getAtlasIndex()+1;
+					if(atlasCount > 22) atlasCount = 22;
+				} else if(this.spr.getAtlasIndex() >= 27 && this.spr.getAtlasIndex() <= 32)
+					atlasCount = 22;
+				else atlasCount = 16;
+			}
 		}
-		System.out.println(this.pivot.pos);
 		this.spr.updateAtlasIndex(Maths.fastFloor(atlasCount));
 	}
 
@@ -243,6 +277,7 @@ public class Player extends Character{
 	private void input() {		
 		if(isGrounded) rightWallJump = true;
 		if(isGrounded) leftWallJump = true;
+		if(isGrounded) wallSlide = false;
 		
 		if (GameWorld.camera.isFree()) {
 			if (Input.isJumping() && this.isGrounded) this.vel.y = this.jumpHeight;
@@ -259,8 +294,8 @@ public class Player extends Character{
 			}
 		}
 		
-		if(rightWallJump == false) this.vel.x += -this.spd/2;
-		if(leftWallJump == false) this.vel.x += this.spd/2;
+		if(!rightWallJump) this.vel.x += -this.spd/2;
+		if(!leftWallJump) this.vel.x += this.spd/2;
 		
 		if(this.vel.y < -70) vel.y = -70;
 		if(this.vel.y > 70) vel.y = 70;
