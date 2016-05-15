@@ -17,7 +17,6 @@ import fr.iutvalence.info.dut.m2107.render.*;
 import fr.iutvalence.info.dut.m2107.saving.SaveFileUpdater;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
-import fr.iutvalence.info.dut.m2107.sound.openAL;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 
@@ -39,7 +38,7 @@ public class MainGameTester {
 			TextMaster.init();
 		}
 		
-		openAL.init();
+		//openAL.init();
 		
 		ItemDatabase.create();
 		
@@ -100,7 +99,7 @@ public class MainGameTester {
 			if(Input.isKeyWater())
 				GameWorld.layerMap.getLayer(0).add(new Zombie(new Vector2f(0, 0), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f)));
 			
-			openAL.update();
+			//openAL.update();
 			
 			GameWorld.update();
 			
@@ -111,7 +110,7 @@ public class MainGameTester {
 			
 			DisplayManager.updateDisplay();
 		}
-		openAL.delete();
+		//openAL.delete();
 		renderer.cleanUp();
 		TextMaster.cleanUp();
 		Loader.TILE_LOADER.unloadAll();
