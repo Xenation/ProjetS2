@@ -62,8 +62,9 @@ public class Player extends Character{
 	private float atlasCount = 0;
 	private float atlasAdd = 0.25f;
 	
-	private Vector2f pivotPos = new Vector2f(0.7f, -.2f);
-	private Vector2f pivotLerp = new Vector2f();
+	private Vector2f[] pivotPos = {new Vector2f(0.725f, -.15f),
+									new Vector2f(0.725f, -.35f),
+									new Vector2f(.9f, -.25f)};
 
 	/**
 	 * Constructor of a player
@@ -77,8 +78,6 @@ public class Player extends Character{
 		this.initLayer();
 		this.layer.add(this.pivot);
 		this.initPivot();
-		
-		this.pivotLerp.y = this.pivot.pos.y;
 	}
 	
 	/**
@@ -153,26 +152,37 @@ public class Player extends Character{
 
 	private void updateSpriteAnimation() {
 		if(this.isGrounded) {
-			if(this.spr.getAtlasIndex() >= 16 && this.spr.getAtlasIndex() < 26)
+			if(this.spr.getAtlasIndex() >= 16 && this.spr.getAtlasIndex() < 26) {
 				atlasCount = this.spr.getAtlasIndex()+1;
+				this.pivot.pos.x = pivotPos[0].x;
+				this.pivot.pos.y = pivotPos[0].y;
+			}
 			else {
+				if(atlasAdd > 0) this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[1].y, .015f);
+				else this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .015f);
+				
 				if(atlasCount >= 16) atlasCount = 0;
 				if(atlasCount == 0) atlasAdd = .25f;
 				else if(atlasCount == 12.75f) atlasAdd = -.25f;
-				else if(atlasCount + atlasAdd == 9 && atlasAdd > 0 && new Random().nextBoolean()) {
-					atlasCount = 15.75f;
+				else if(atlasCount == 15.75f) {
+					atlasCount = 13;
 					atlasAdd = -.25f;
 				}
+				else if(atlasCount + atlasAdd == 9 && atlasAdd > 0 && new Random().nextBoolean())
+					atlasCount = 12.75f;
 				
 				atlasCount += atlasAdd;
 			}
 		} else {
+			this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, .5f);
+			if(this.scale.x > 0) this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[2].x, .5f);
+			else this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[2].x, .5f);
 			if(this.spr.getAtlasIndex() >= 16 && this.spr.getAtlasIndex() <= 22) {
 				atlasCount = this.spr.getAtlasIndex()+1;
 				if(atlasCount > 22) atlasCount = 22;
 			} else atlasCount = 16;
 		}
-		//System.out.println(atlasCount);
+		System.out.println(this.pivot.pos);
 		this.spr.updateAtlasIndex(Maths.fastFloor(atlasCount));
 	}
 
@@ -217,7 +227,7 @@ public class Player extends Character{
 				} else {
 					this.itemOnHand = this.quickBar[selectSlot];
 					if(this.itemOnHand instanceof Bow)	this.itemOnHand.setPosition(new Vector2f(-.3f, 0));
-					if(this.itemOnHand instanceof Sword)this.itemOnHand.setPosition(new Vector2f(.7f, 0));
+					if(this.itemOnHand instanceof Sword)this.itemOnHand.setPosition(new Vector2f(.7f, -0.02f));
 					this.pivot.getLayer().add(this.itemOnHand);
 				}
 			} else {

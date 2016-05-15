@@ -38,7 +38,7 @@ public class Character extends LivingEntity{
 	/**
 	 * The pivot of the character's weapon
 	 */
-	protected Entity pivot = new Entity(new Vector2f(.65f, -.3f), SpriteDatabase.getEmptySpr(), null);;
+	protected Entity pivot = new Entity(new Vector2f(.725f, -.3f), SpriteDatabase.getEmptySpr(), null);;
 	
 	/**
 	 * Constructor of a character
