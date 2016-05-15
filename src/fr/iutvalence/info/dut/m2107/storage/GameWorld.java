@@ -23,19 +23,34 @@ public class GameWorld {
 	/**
 	 * The player
 	 */
-	public static final Player player = new Player();
+	public static Player player;
 	/**
 	 * The camera
 	 */
-	public static final Camera camera = new Camera();
+	public static Camera camera;
 	/**
 	 * The map of all chunks
 	 */
-	public static final ChunkMap chunkMap = new ChunkMap();
+	public static ChunkMap chunkMap;
 	/**
-	 * The map of all layers
+	 * The map of all layers of entities
 	 */
-	public static final LayerMap layerMap = new LayerMap();
+	public static LayerMap layerMap;
+	/**
+	 * The map of all layers of gui elements
+	 */
+	public static LayerMap guiLayerMap;
+	
+	public static void init() {
+		chunkMap = new ChunkMap();
+		layerMap = new LayerMap();
+		guiLayerMap = new LayerMap();
+		guiLayerMap.addEmpty(1);
+		
+		camera = new Camera();
+		
+		player = new Player();
+	}
 	
 	/**
 	 * Updates the camera and every entity and tiles of the world

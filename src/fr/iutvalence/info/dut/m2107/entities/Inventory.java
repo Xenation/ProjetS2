@@ -5,7 +5,7 @@ import java.util.*;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
-import fr.iutvalence.info.dut.m2107.guiRendering.GUIElement;
+import fr.iutvalence.info.dut.m2107.gui.GUIElement;
 
 /**
  * An inventory system which contain item
@@ -88,7 +88,7 @@ public class Inventory {
 		int i = 0;
 		for (Item item : inventory) {
 			inventoryGUI.add(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(1 - width, 1 - height - height*i*2), width, height));
-			inventoryGUISpr.add(new GUIElement(item.getSprite().getTextureID(), new Vector2f(1 - width, 1 - height - height*i*2), width*.625f, height*.625f));
+			inventoryGUISpr.add(new GUIElement(item.getSprite(), new Vector2f(1 - width, 1 - height - height*i*2), width*.625f, height*.625f));
 			inventoryGUIText.add(new GUIText("" + this.inventory.get(i).stack , .5f, 1 - width -0.1f/5.5f, height -0.02f + height*i, .1f, true));
 			i++;
 		}

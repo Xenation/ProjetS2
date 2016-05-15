@@ -1,26 +1,23 @@
 package fr.iutvalence.info.dut.m2107.enginetest;
 
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.Sound.openAL;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.ItemDatabase;
-import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.entities.Zombie;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.ListenersScanner;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
-import fr.iutvalence.info.dut.m2107.guiRendering.GUIMaster;
 import fr.iutvalence.info.dut.m2107.listeners.TileListener;
 import fr.iutvalence.info.dut.m2107.render.*;
 import fr.iutvalence.info.dut.m2107.saving.SaveFileUpdater;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
+import fr.iutvalence.info.dut.m2107.sound.openAL;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 
@@ -44,11 +41,13 @@ public class MainGameTester {
 		
 		openAL.init();
 		
-		GUIMaster.init();
-		
 		ItemDatabase.create();
 		
 		Renderer renderer = new Renderer();
+		
+		GameWorld.init();
+		
+		GameWorld.guiLayerMap.addEmpty(4);
 		
 		GameWorld.camera.setTarget(GameWorld.player);
 		
@@ -108,7 +107,6 @@ public class MainGameTester {
 			renderer.prepare();
 			renderer.render();
 			
-			GUIMaster.render();
 			TextMaster.render();
 			
 			DisplayManager.updateDisplay();
@@ -116,13 +114,10 @@ public class MainGameTester {
 		openAL.delete();
 		renderer.cleanUp();
 		TextMaster.cleanUp();
-		GUIMaster.cleanUp();
 		Loader.TILE_LOADER.unloadAll();
 		Loader.SPRITE_LOADER.unloadAll();
 		Loader.TEXT_LOADER.unloadAll();
 		Loader.GUI_LOADER.unloadAll();
-		// Code to clean the whole chunk loader
-		//ChunkLoader.CHUNK_LOADER.unloadAll();
 		DisplayManager.closeDisplay();
 		
 	}

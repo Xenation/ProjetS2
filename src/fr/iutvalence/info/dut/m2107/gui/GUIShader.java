@@ -1,48 +1,40 @@
-package fr.iutvalence.info.dut.m2107.guiRendering;
+package fr.iutvalence.info.dut.m2107.gui;
 
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.shaders.ShaderProgram;
 
-/**
- * Defines a GUI Shader
- * @author Xenation
- *
- */
 public class GUIShader extends ShaderProgram {
 	
+
 	/**
-	 * The path to the vertex shader file
+	 * The location of the Vertex Shader file
 	 */
-	private static final String VERTEX_FILE = "src/fr/iutvalence/info/dut/m2107/guiRendering/guiVertex.txt";
+	private static final String VERTEX_FILE = "src/fr/iutvalence/info/dut/m2107/gui/guiVertex.txt";
 	/**
-	 * The path to the fragment shader file
+	 * The location of the Fragment Shader file
 	 */
-	private static final String FRAGMENT_FILE = "src/fr/iutvalence/info/dut/m2107/guiRendering/guiFragment.txt";
+	private static final String FRAGMENT_FILE = "src/fr/iutvalence/info/dut/m2107/gui/guiFragment.txt";
 	
+
 	/**
 	 * The location of the translation uniform variable
 	 */
 	private int location_translation;
 	
-	/**
-	 * A GUIShader that uses VERTEX_FILE and FRAGMENT_FILE
-	 */
+	private int location_scale;
+	
+	
 	public GUIShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
 	
-	/**
-	 * Gets the location of all the uniform variables 
-	 */
 	@Override
 	protected void getAllUniformLocations() {
 		location_translation = super.getUniformLocation("translation");
+		location_scale = super.getUniformLocation("scale");
 	}
 	
-	/**
-	 * Binds the attributes of the VAO to the shader
-	 */
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
@@ -53,8 +45,12 @@ public class GUIShader extends ShaderProgram {
 	 * Loads the given translation to shader
 	 * @param translation the translation to load
 	 */
-	protected void loadTranslation(Vector2f translation) {
+	public void loadTranslation(Vector2f translation) {
 		super.load2DVector(location_translation, translation);
+	}
+	
+	public void loadScale(Vector2f scale) {
+		super.load2DVector(location_scale, scale);
 	}
 	
 }

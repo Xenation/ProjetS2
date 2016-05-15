@@ -4,8 +4,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
-import fr.iutvalence.info.dut.m2107.guiRendering.GUIElement;
-import fr.iutvalence.info.dut.m2107.guiRendering.GUIMaster;
+import fr.iutvalence.info.dut.m2107.gui.GUIElement;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
@@ -27,22 +26,22 @@ public class Player extends Character{
 	 */
 	private Item[] quickBar = new Item[8];
 	
-	 // Temporary
-	 private float width = 0.1f;
-	 private float height = 0.1f;
-	 private float posY = 2 - height*1.5f;
-	 private int selectSlot = 0;
-	 private GUIElement selectQuickBar;
-	 private GUIElement[] sprQuickBar = new GUIElement[8];
-	 private GUIText[] textQuickBar = new GUIText[8];
-	 
-	 
-	 private GUIElement hpGUI;
-	 // Temporary
+	// Temporary
+	private float width = 0.1f;
+	private float height = 0.1f;
+	private float posY = 2 - height*1.5f;
+	private int selectSlot = 0;
+	private GUIElement selectQuickBar;
+	private GUIElement[] sprQuickBar = new GUIElement[8];
+	private GUIText[] textQuickBar = new GUIText[8];
 	
-	 
-	 protected float invulnerabilityTime;
-	 protected float invulnerabilityFadeStep = -0.1f;
+	
+	private GUIElement hpGUI;
+	// Temporary
+	
+	
+	protected float invulnerabilityTime;
+	protected float invulnerabilityFadeStep = -0.1f;
 		
 	/**
 	 * The angle between the player and the camera
@@ -93,7 +92,7 @@ public class Player extends Character{
 		for (int slotNumber = 0; slotNumber < 8; slotNumber++) {
 			new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width, height);
 			if(this.quickBar[slotNumber] != null) {
-				sprQuickBar[slotNumber] = new GUIElement(this.quickBar[slotNumber].getSprite().getTextureID(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width - width/2.5f, height - height/2.5f);
+				sprQuickBar[slotNumber] = new GUIElement(this.quickBar[slotNumber].getSprite(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width - width/2.5f, height - height/2.5f);
 				textQuickBar[slotNumber] = new GUIText("" + this.quickBar[slotNumber].stack , .8f, width*2.875f + width*slotNumber/2, 1-height/1.5f, .1f, true);
 			}
 		}
@@ -260,7 +259,7 @@ public class Player extends Character{
 	public boolean removeQuickBarItem(int index, int stack) {
 		if((this.quickBar[index].stack -= stack) <= 0) {
 			this.quickBar[index] = null;
-			GUIMaster.removeElement(this.sprQuickBar[index]);
+			this.sprQuickBar[index].remove();
 			textQuickBar[index].updateText("");
 			return false;
 		}

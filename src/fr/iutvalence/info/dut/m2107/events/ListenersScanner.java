@@ -50,7 +50,7 @@ public class ListenersScanner {
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.events"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.fontMeshCreator"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.fontRendering"));
-		classes.addAll(find("fr.iutvalence.info.dut.m2107.guiRendering"));
+		classes.addAll(find("fr.iutvalence.info.dut.m2107.gui"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.listeners"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.models"));
 		classes.addAll(find("fr.iutvalence.info.dut.m2107.render"));

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.models.EntitySprite;
+import fr.iutvalence.info.dut.m2107.models.AbstractSprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
@@ -46,7 +46,7 @@ public class Collider {
 	 * Constructor of a collider
 	 * @param spr The sprite to fit
 	 */
-	public Collider(EntitySprite spr) {
+	public Collider(AbstractSprite spr) {
 		this.localMinX = -spr.getSize().x/2;
 		this.localMinY = -spr.getSize().y/2;
 		this.localMaxX = spr.getSize().x/2;

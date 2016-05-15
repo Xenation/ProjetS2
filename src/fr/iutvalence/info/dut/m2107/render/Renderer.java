@@ -7,14 +7,17 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.gui.GUIShader;
 import fr.iutvalence.info.dut.m2107.models.*;
 import fr.iutvalence.info.dut.m2107.shaders.Shader;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.storage.LayerMap;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileVariant;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
@@ -61,6 +64,8 @@ public class Renderer {
 	 */
 	private Shader shader;
 	
+	private GUIShader guiShader;
+	
 	/**
 	 * The clear color (=background color)
 	 */
@@ -86,6 +91,7 @@ public class Renderer {
 	 */
 	public Renderer() {
 		shader = new Shader();
+		guiShader = new GUIShader();
 		createOrthoProjectionMatrix(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_BOTTOM, BOUNDARY_TOP, 5, -10);
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -127,7 +133,7 @@ public class Renderer {
 			shader.loadDepth(layer.getDepth());
 			for (Atlas atl : layer.atlases()) {
 				prepareAtlas(atl);
-				for (EntitySprite spr : layer.sprites(atl)) {
+				for (AbstractSprite spr : layer.sprites(atl)) {
 					if (spr != null) {
 						prepareSprite(spr);
 						
@@ -153,6 +159,39 @@ public class Renderer {
 		}
 		
 		shader.stop();
+		
+		// GUI rendering
+		guiShader.start();
+		
+		for (int i = GameWorld.guiLayerMap.getLayersCount()-1; i >= 0; i--) {
+			Layer layer = GameWorld.guiLayerMap.getLayer(i);
+			for (Atlas atl : layer.atlases()) {
+				prepareAtlas(atl);
+				for (AbstractSprite spr : layer.sprites(atl)) {
+					if (spr != null) {
+						prepareSprite(spr);
+						
+						for (Entity ent : layer.getEntities(atl, spr)) {
+							guiShader.loadTranslation(ent.getPosition());
+							guiShader.loadScale(ent.getScale());
+							
+							glDrawArrays(GL_QUADS, 0, 4);
+							
+							if (ent.getLayer() != null) {
+								unbindSprite();
+								renderGuiSubLayers(ent);
+								prepareSprite(spr);
+							}
+						}
+						
+						unbindSprite();
+					}
+				}
+			}
+		}
+		
+		guiShader.stop();
+		
 	}
 	
 	/**
@@ -163,7 +202,7 @@ public class Renderer {
 		Matrix4f mat = new Matrix4f();
 		for (Atlas atl : entity.getLayer().atlases()) {
 			prepareAtlas(atl);
-			for (EntitySprite spr : entity.getLayer().sprites(atl)) {
+			for (AbstractSprite spr : entity.getLayer().sprites(atl)) {
 				if (spr != null) {
 					prepareSprite(spr);
 					
@@ -178,6 +217,37 @@ public class Renderer {
 						if (ent.getLayer() != null) {
 							unbindSprite();
 							renderSubLayers(ent, mat);
+							prepareSprite(spr);
+						}
+					}
+					
+					unbindSprite();
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Renders a sub layer of gui elements
+	 * @param entity the gui entity that has the sub layer to render
+	 */
+	private void renderGuiSubLayers(Entity entity) {
+		for (Atlas atl : entity.getLayer().atlases()) {
+			prepareAtlas(atl);
+			for (AbstractSprite spr : entity.getLayer().sprites(atl)) {
+				if (spr != null) {
+					prepareSprite(spr);
+					
+					for (Entity ent : entity.getLayer().getEntities(atl, spr)) {
+						
+						guiShader.loadTranslation(new Vector2f(entity.getPosition().x + ent.getPosition().x, entity.getPosition().y + ent.getPosition().y));
+						guiShader.loadScale(ent.getScale());
+						
+						glDrawArrays(GL_QUADS, 0, 4);
+						
+						if (ent.getLayer() != null) {
+							unbindSprite();
+							renderGuiSubLayers(ent);
 							prepareSprite(spr);
 						}
 					}
@@ -229,6 +299,7 @@ public class Renderer {
 	 */
 	public void cleanUp() {
 		shader.cleanUp();
+		guiShader.cleanUp();
 	}
 	
 	/**

@@ -53,8 +53,8 @@ public class openAL {
 	}
 	
 	public static void update() {
-		if (Input.isJumping())
-			alSourcePlay(source);
+//		if (Input.isJumping())
+//			alSourcePlay(source);
 	}
 	
 	public static void delete() {
