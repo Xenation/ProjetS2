@@ -150,34 +150,43 @@ public class Player extends Character{
 	}
 
 	private void updateSpriteAnimation() {
+		System.out.println(atlasCount);
 		if(this.isGrounded) {
-			
-			if(this.spr.getAtlasIndex() >= 16 && this.spr.getAtlasIndex() < 26) {
+			if(this.spr.getAtlasIndex() >= 65 && this.spr.getAtlasIndex() < 76) {
 				atlasCount = this.spr.getAtlasIndex()+1;
 				this.pivot.pos.x = pivotPos[0].x;
 				this.pivot.pos.y = pivotPos[0].y;
-			} else if(this.spr.getAtlasIndex() >= 27 && this.spr.getAtlasIndex() <= 32) {
-				atlasCount = this.spr.getAtlasIndex()-1;
+			} else if(this.spr.getAtlasIndex() >= 80 && this.spr.getAtlasIndex() <= 85) {
+				if(atlasCount == 80) atlasCount = 71;
+				else atlasCount = this.spr.getAtlasIndex()-1;
 				this.pivot.pos.x = pivotPos[0].x;
 				this.pivot.pos.y = pivotPos[0].y;
 			} else {
-				if(atlasAdd > 0)
-					this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[1].y, .015f);
-				else
-					this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .015f);
-				
-				if(atlasCount == 0)
-					atlasAdd = .25f;
-				else if(atlasCount == 12.75f)
-					atlasAdd = -.25f;
-				else if(atlasCount + atlasAdd == 9 && atlasAdd > 0 && new Random().nextBoolean())
-					atlasCount = 12.75f;
-				else if(atlasCount == 15.75f) {
-					atlasCount = 13;
-					atlasAdd = -.25f;
-				} else if(atlasCount >= 16) {
-					atlasCount = 0;
-					atlasAdd = .25f;
+				if(!Input.isMoveLeft() && !Input.isMoveRight()) {
+					if(atlasAdd > 0)
+						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[1].y, .015f);
+					else
+						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .015f);
+					
+					if(atlasCount == 0)
+						atlasAdd = .25f;
+					else if(atlasCount == 12.75f)
+						atlasAdd = -.25f;
+					else if(atlasCount + atlasAdd == 9 && atlasAdd > 0 && new Random().nextBoolean())
+						atlasCount = 12.75f;
+					else if(atlasCount == 15.75f) {
+						atlasCount = 13;
+						atlasAdd = -.25f;
+					} else if(atlasCount >= 16) {
+						atlasCount = 0;
+						atlasAdd = .25f;
+					}
+				} else {
+					if(atlasCount < 16 || atlasCount > 51) {
+						atlasCount = 15;
+						atlasAdd = 1;
+					}
+					else if(atlasCount >= 51) atlasCount = 27;
 				}
 				atlasCount += atlasAdd;
 			}
@@ -187,19 +196,19 @@ public class Player extends Character{
 				
 				if(this.scale.x < 0)
 					if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
-						this.pivot.pos.y = pivotPos[2].y;
+						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, 0.25f);
 					else
-						this.pivot.pos.y = pivotPos[3].y;
+						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[3].y, 0.25f);
 				else
 					if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
-						this.pivot.pos.y = pivotPos[3].y;
+						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[3].y, 0.25f);
 					else
-						this.pivot.pos.y = pivotPos[2].y;
+						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, 0.25f);
 				
-				if(this.spr.getAtlasIndex() >= 27 && this.spr.getAtlasIndex() <= 32) {
+				if(this.spr.getAtlasIndex() >= 80 && this.spr.getAtlasIndex() <= 85) {
 					atlasCount = this.spr.getAtlasIndex()+1;
-					if(atlasCount > 32) atlasCount = 32;
-				} else atlasCount = 27;
+					if(atlasCount > 85) atlasCount = 85;
+				} else atlasCount = 80;
 			} else {
 				this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, .5f);
 				
@@ -208,12 +217,12 @@ public class Player extends Character{
 				else
 					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[2].x, .5f);
 				
-				if(this.spr.getAtlasIndex() >= 16 && this.spr.getAtlasIndex() <= 22) {
+				if(this.spr.getAtlasIndex() >= 65 && this.spr.getAtlasIndex() <= 70) {
 					atlasCount = this.spr.getAtlasIndex()+1;
-					if(atlasCount > 22) atlasCount = 22;
-				} else if(this.spr.getAtlasIndex() >= 27 && this.spr.getAtlasIndex() <= 32)
-					atlasCount = 22;
-				else atlasCount = 16;
+					if(atlasCount > 70) atlasCount = 70;
+				} else if(this.spr.getAtlasIndex() >= 80 && this.spr.getAtlasIndex() <= 85)
+					atlasCount = 70;
+				else atlasCount = 65;
 			}
 		}
 		this.spr.updateAtlasIndex(Maths.fastFloor(atlasCount));
