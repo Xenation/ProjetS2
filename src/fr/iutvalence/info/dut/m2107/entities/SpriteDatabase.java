@@ -19,7 +19,7 @@ public class SpriteDatabase {
 	private final static EntitySprite zombieSpr = new EntitySprite("entities/zombie", new Vector2f(2, 4));
 	public static EntitySprite getZombieSpr() {return zombieSpr;}
 	
-	private final static EntitySprite playerSpr = new EntitySprite(new Atlas("entities/player_atlas", 8, 8, Loader.SPRITE_LOADER), new Vector2f(4, 4));
+	private final static EntitySprite playerSpr = new EntitySprite(new Atlas("entities/player_atlas", 16, 16, Loader.SPRITE_LOADER), new Vector2f(4, 4));
 	public static EntitySprite getPlayerSpr() {return playerSpr;}
 	
 	private final static EntitySprite swordSpr = new EntitySprite("item/iron_sword", new Vector2f(2, 1));
