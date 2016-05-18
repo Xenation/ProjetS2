@@ -38,6 +38,12 @@ public class GameWorld {
 	public static LayerMap layerMap;
 	/**
 	 * The map of all layers of gui elements
+	 * <ul>
+	 *  <li><b>0: </b> Debug Text</li>
+	 *  <li><b>1: </b> ?</li>
+	 *  <li><b>2: </b> ?</li>
+	 *  <li><b>3: </b> ?</li>
+	 * </ul>
 	 */
 	public static LayerMap guiLayerMap;
 	
@@ -45,7 +51,7 @@ public class GameWorld {
 		chunkMap = new ChunkMap();
 		layerMap = new LayerMap();
 		guiLayerMap = new LayerMap();
-		guiLayerMap.addEmpty(1);
+		guiLayerMap.addEmpty(4);
 		
 		camera = new Camera();
 		

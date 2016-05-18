@@ -3,23 +3,23 @@ package fr.iutvalence.info.dut.m2107.fontMeshCreator;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
+import fr.iutvalence.info.dut.m2107.fontRendering.TextSprite;
+import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 
 /**
  * Represents a piece of text in the game.
  * @author Karl
  *
  */
-public class GUIText {
+public class GUIText extends Entity {
 
 	private String textString;
 	private float fontSize;
-
-	private int textMeshVao;
-	private int vertexCount;
+	
 	private Vector3f colour = new Vector3f(0f, 0f, 0f);
-
-	private Vector2f position;
+	
 	private float lineMaxSize;
 	private int numberOfLines;
 	private double lineHeight = TextMeshCreator.LINE_HEIGHT;
@@ -28,66 +28,22 @@ public class GUIText {
 
 	private boolean centerText = false;
 	private final boolean isDebug;
-
-	/**
-	 * Creates a new text, loads the text's quads into a VAO, and adds the text
-	 * to the screen.
-	 * 
-	 * @param text
-	 *            - the text.
-	 * @param fontSize
-	 *            - the font size of the text, where a font size of 1 is the
-	 *            default size.
-	 * @param font
-	 *            - the font that this text should use.
-	 * @param position
-	 *            - the position on the screen where the top left corner of the
-	 *            text should be rendered. The top left corner of the screen is
-	 *            (0, 0) and the bottom right is (1, 1).
-	 * @param maxLineLength
-	 *            - basically the width of the virtual page in terms of screen
-	 *            width (1 is full screen width, 0.5 is half the width of the
-	 *            screen, etc.) Text cannot go off the edge of the page, so if
-	 *            the text is longer than this length it will go onto the next
-	 *            line. When text is centered it is centered into the middle of
-	 *            the line, based on this line length value.
-	 * @param centered
-	 *            - whether the text should be centered or not.
-	 */
-	public GUIText(String text, float fontSize, FontType font, Vector2f position, float maxLineLength, boolean centered) {
-		this.textString = text;
-		this.fontSize = fontSize;
-		this.font = font;
-		this.position = position;
-		this.lineMaxSize = maxLineLength;
-		this.centerText = centered;
-		this.isDebug = false;
-		this.colour = TextMaster.debugColor;
-		TextMaster.loadText(this);
-	}
-	
-	public GUIText(String text, float fontSize, float posX, float posY, float maxLineLength, boolean centered) {
-		this.textString = text;
-		this.fontSize = fontSize;
-		this.font = TextMaster.font;
-		this.position = new Vector2f(posX, posY);
-		this.lineMaxSize = maxLineLength;
-		this.centerText = centered;
-		this.isDebug = false;
-		this.colour = TextMaster.debugColor;
-		TextMaster.loadText(this);
-	}
 	
 	public GUIText(String text, float fontSize, float posX, float posY, float maxLineLength, boolean centered, boolean isDebug) {
+		super(new Vector2f(posX*2, -posY*2), new TextSprite());
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.font = TextMaster.font;
-		this.position = new Vector2f(posX, posY);
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
 		this.isDebug = isDebug;
 		this.colour = TextMaster.debugColor;
 		TextMaster.loadText(this);
+		GameWorld.guiLayerMap.getLayer(0).add(this);
+	}
+	
+	public GUIText(String text, float fontSize, float posX, float posY, float maxLineLength, boolean centered) {
+		this(text, fontSize, posX, posY, maxLineLength, centered, false);
 	}
 	
 	public void updateText(String str) {
@@ -148,7 +104,7 @@ public class GUIText {
 	 *         right.
 	 */
 	public Vector2f getPosition() {
-		return position;
+		return this.pos;
 	}
 
 	/**
@@ -156,7 +112,7 @@ public class GUIText {
 	 *         the quads on which the text will be rendered.
 	 */
 	public int getMesh() {
-		return textMeshVao;
+		return this.spr.getVaoID();
 	}
 
 	/**
@@ -169,15 +125,17 @@ public class GUIText {
 	 *            - the total number of vertices in all of the quads.
 	 */
 	public void setMeshInfo(int vao, int verticesCount) {
-		this.textMeshVao = vao;
-		this.vertexCount = verticesCount;
+		TextSprite spr = (TextSprite) this.spr;
+		spr.setVaoID(vao);
+		spr.setVertexCount(verticesCount);
 	}
 
 	/**
 	 * @return The total number of vertices of all the text's quads.
 	 */
 	public int getVertexCount() {
-		return this.vertexCount;
+		TextSprite spr = (TextSprite) this.spr;
+		return spr.getVertexCount();
 	}
 
 	/**
