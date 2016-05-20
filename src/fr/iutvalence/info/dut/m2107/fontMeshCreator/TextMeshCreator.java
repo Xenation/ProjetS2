@@ -6,7 +6,7 @@ import java.util.List;
 
 public class TextMeshCreator {
 
-	protected static final double LINE_HEIGHT = 0.03f;
+	public static final double LINE_HEIGHT = 0.03f;
 	protected static final int SPACE_ASCII = 32; // Space
 	protected static final int LF_ASCII = 10; // Line Feed
 	protected static final int TAB_ASCII = 9; // Tabulation
@@ -117,30 +117,28 @@ public class TextMeshCreator {
 
 	private static void addVertices(List<Float> vertices, double x, double y, double maxX, double maxY) {
 		vertices.add((float) x);
-		vertices.add((float) y);
-		vertices.add((float) x);
 		vertices.add((float) maxY);
+		
 		vertices.add((float) maxX);
 		vertices.add((float) maxY);
-		vertices.add((float) maxX);
-		vertices.add((float) maxY);
+		
 		vertices.add((float) maxX);
 		vertices.add((float) y);
+		
 		vertices.add((float) x);
 		vertices.add((float) y);
 	}
 
 	private static void addTexCoords(List<Float> texCoords, double x, double y, double maxX, double maxY) {
 		texCoords.add((float) x);
-		texCoords.add((float) y);
-		texCoords.add((float) x);
 		texCoords.add((float) maxY);
+		
 		texCoords.add((float) maxX);
 		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) maxY);
+		
 		texCoords.add((float) maxX);
 		texCoords.add((float) y);
+		
 		texCoords.add((float) x);
 		texCoords.add((float) y);
 	}

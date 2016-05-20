@@ -11,6 +11,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.fontRendering.TextSprite;
 import fr.iutvalence.info.dut.m2107.gui.GUIShader;
 import fr.iutvalence.info.dut.m2107.models.*;
 import fr.iutvalence.info.dut.m2107.shaders.Shader;
@@ -174,7 +175,12 @@ public class Renderer {
 							guiShader.loadTranslation(ent.getPosition());
 							guiShader.loadScale(ent.getScale());
 							
-							glDrawArrays(GL_QUADS, 0, 4);
+							if (ent.getSprite().getClass() == TextSprite.class) {
+								TextSprite s = (TextSprite) ent.getSprite();
+								glDrawArrays(GL_QUADS, 0, s.getVertexCount());
+							} else {
+								glDrawArrays(GL_QUADS, 0, 4);
+							}
 							
 							if (ent.getLayer() != null) {
 								unbindSprite();
@@ -242,7 +248,12 @@ public class Renderer {
 						guiShader.loadTranslation(new Vector2f(entity.getPosition().x + ent.getPosition().x, entity.getPosition().y + ent.getPosition().y));
 						guiShader.loadScale(ent.getScale());
 						
-						glDrawArrays(GL_QUADS, 0, 4);
+						if (ent.getSprite().getClass() == TextSprite.class) {
+							TextSprite s = (TextSprite) ent.getSprite();
+							glDrawArrays(GL_QUADS, 0, s.getVertexCount());
+						} else {
+							glDrawArrays(GL_QUADS, 0, 4);
+						}
 						
 						if (ent.getLayer() != null) {
 							unbindSprite();
