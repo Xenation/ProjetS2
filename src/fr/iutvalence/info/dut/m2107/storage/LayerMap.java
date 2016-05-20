@@ -3,6 +3,8 @@ package fr.iutvalence.info.dut.m2107.storage;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
+
 /**
  * Defines a map of layers.
  * Layers are ordered by an index (min 0)
@@ -100,6 +102,10 @@ public class LayerMap {
 	 */
 	public Layer getLayer(int index) {
 		return this.layerMap.get(index);
+	}
+	
+	public Layer getStoredLayer(LayerStore index) {
+		return this.layerMap.get(index.ordinal());
 	}
 	
 }

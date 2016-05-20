@@ -17,8 +17,6 @@ import static org.lwjgl.openal.AL10.*;
 
 import org.newdawn.slick.openal.WaveData;
 
-import fr.iutvalence.info.dut.m2107.storage.Input;
-
 public class openAL {
 
 	static int source;

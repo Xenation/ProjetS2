@@ -19,6 +19,7 @@ import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
+import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 public class MainGameTester {
 	
@@ -51,7 +52,7 @@ public class MainGameTester {
 		GameWorld.camera.setTarget(GameWorld.player);
 		
 		GameWorld.layerMap.addEmpty(4);
-		GameWorld.layerMap.getLayer(1).add(GameWorld.player);
+		GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER).add(GameWorld.player);
 		
 		// Debug for the whole chunk rendering 
 		//System.out.println(ChunkLoader.CHUNK_LOADER.debugBuffers());
@@ -74,7 +75,7 @@ public class MainGameTester {
 		WorldLoader.loadWorld();
 		Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
 		Entity chest = new Entity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider);
-		GameWorld.layerMap.getLayer(0).add(chest);
+		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(chest);
 		
 		EventManager.init();
 		for (Class<?> cla : ListenersScanner.listenersClasses) {
@@ -97,7 +98,7 @@ public class MainGameTester {
 					+ "\nGUI: "+Loader.GUI_LOADER.debugValues());
 			
 			if(Input.isKeyWater())
-				GameWorld.layerMap.getLayer(0).add(new Zombie(new Vector2f(0, 0), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f)));
+				GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f(0, 0), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f)));
 			
 			//openAL.update();
 			

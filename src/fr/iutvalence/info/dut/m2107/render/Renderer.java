@@ -17,7 +17,6 @@ import fr.iutvalence.info.dut.m2107.shaders.Shader;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
-import fr.iutvalence.info.dut.m2107.storage.LayerMap;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileVariant;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;

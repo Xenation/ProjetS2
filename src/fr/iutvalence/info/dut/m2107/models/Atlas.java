@@ -6,7 +6,7 @@ import fr.iutvalence.info.dut.m2107.render.Loader;
 
 public class Atlas {
 	
-	public static final Atlas TILE_ATLAS = new Atlas("tile/atlas", 8, 32, Loader.TILE_LOADER);
+	public static final Atlas TILE_ATLAS = new Atlas("tile/atlas", 8, 8, Loader.TILE_LOADER);
 	
 	private Texture texture;
 	

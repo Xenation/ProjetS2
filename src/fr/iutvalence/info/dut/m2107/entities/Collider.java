@@ -12,6 +12,7 @@ import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
@@ -122,7 +123,9 @@ public class Collider {
 		((Character)ent).wallSlide = false;
 		
 		int continuousStep = (int) ((Maths.fastAbs(((Character)this.ent).vel.x) + Math.abs(((Character)this.ent).vel.y))/8+1);
-
+		continuousStep *= DisplayManager.deltaTime()*20;
+		if(continuousStep < 1) continuousStep = 1;
+		
 		float stepXtoAdd = ((Character)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
 		float stepYtoAdd = ((Character)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
 		float stepX = this.ent.pos.x;
@@ -304,6 +307,9 @@ public class Collider {
 	 */
 	public Entity isContinuousColliding(Tile tile) {
 		int continuousStep = (int) ((Maths.fastAbs(((Ammunition)this.ent).vel.x) + Maths.fastAbs(((Ammunition)this.ent).vel.y))/8+1)*2;
+		continuousStep *= DisplayManager.deltaTime()*20;
+		if(continuousStep < 1) continuousStep = 1;
+		
 		float stepXtoAdd = ((Ammunition)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
 		float stepYtoAdd = ((Ammunition)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
 		float stepX = this.ent.col.minX + this.getW()/2;
@@ -318,7 +324,7 @@ public class Collider {
 			encompassCol.extendAll(this.getW()/2, this.getH()/2);
 			
 			Tile tileColliding = isCollidingWithMap(encompassCol);
-			Entity entColliding = isCollidingWithEntity(GameWorld.layerMap.getLayer(0));
+			Entity entColliding = isCollidingWithEntity(GameWorld.layerMap.getStoredLayer(LayerStore.MOBS));
 			if(tileColliding != null || entColliding != null) {
 				((Ammunition)this.ent).vel = new Vector2f(0, 0);
 				this.ent.pos.x = nextPos.x -(float) (Math.cos((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().x/2.5f);

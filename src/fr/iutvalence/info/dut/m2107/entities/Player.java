@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
+import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
@@ -64,7 +65,8 @@ public class Player extends Character{
 	private Vector2f[] pivotPos = {new Vector2f(0.725f, -.15f),
 									new Vector2f(0.725f, -.35f),
 									new Vector2f(.9f, -.25f),
-									new Vector2f(.85f, .8f)};
+									new Vector2f(.85f, .8f),
+									new Vector2f(0.725f, -.25f)};
 
 	/**
 	 * Constructor of a player
@@ -149,16 +151,19 @@ public class Player extends Character{
 		super.update(layer);
 	}
 
+	private boolean eyeAnimation = false;
+	
 	private void updateSpriteAnimation() {
-		System.out.println(atlasCount);
 		if(this.isGrounded) {
-			if(this.spr.getAtlasIndex() >= 65 && this.spr.getAtlasIndex() < 76) {
-				atlasCount = this.spr.getAtlasIndex()+1;
+			if(atlasCount >= 65 && atlasCount < 76) {
+				atlasCount += DisplayManager.deltaTime()*100/2;
+				if(atlasCount < 70) atlasCount = 71;
+				else if(atlasCount + atlasAdd >= 77) atlasCount = 0;
 				this.pivot.pos.x = pivotPos[0].x;
 				this.pivot.pos.y = pivotPos[0].y;
-			} else if(this.spr.getAtlasIndex() >= 80 && this.spr.getAtlasIndex() <= 85) {
-				if(atlasCount == 80) atlasCount = 71;
-				else atlasCount = this.spr.getAtlasIndex()-1;
+			} else if(atlasCount >= 80 && atlasCount <= 85) {
+				if(atlasCount - atlasAdd <= 80) atlasCount = 71;
+				else atlasCount += -DisplayManager.deltaTime()*100/2;
 				this.pivot.pos.x = pivotPos[0].x;
 				this.pivot.pos.y = pivotPos[0].y;
 			} else {
@@ -168,25 +173,38 @@ public class Player extends Character{
 					else
 						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .015f);
 					
-					if(atlasCount == 0)
-						atlasAdd = .25f;
-					else if(atlasCount == 12.75f)
-						atlasAdd = -.25f;
-					else if(atlasCount + atlasAdd == 9 && atlasAdd > 0 && new Random().nextBoolean())
-						atlasCount = 12.75f;
-					else if(atlasCount == 15.75f) {
+					if(atlasCount + atlasAdd <= 0) {
+						atlasCount = 0;
+						atlasAdd = DisplayManager.deltaTime()*100/4/2;
+					} else if(atlasCount + atlasAdd >= 13 && atlasCount < 16 && !eyeAnimation) {
+						atlasAdd = -DisplayManager.deltaTime()*100/4/2;
+					} else if((int)(atlasCount + atlasAdd) == 9 && atlasAdd > 0 && new Random().nextBoolean()) {
 						atlasCount = 13;
-						atlasAdd = -.25f;
+						eyeAnimation = true;
+					} else if(atlasCount < 16 && atlasCount + atlasAdd >= 16) {
+						atlasCount = 13;
+						atlasAdd = -DisplayManager.deltaTime()*100/4/2;
+						eyeAnimation = false;
 					} else if(atlasCount >= 16) {
 						atlasCount = 0;
-						atlasAdd = .25f;
+						atlasAdd = DisplayManager.deltaTime()*100/4/2;
 					}
 				} else {
-					if(atlasCount < 16 || atlasCount > 51) {
-						atlasCount = 15;
-						atlasAdd = 1;
+					if(atlasCount >= 25 && atlasCount <= 34)
+						this.pivot.pos.x = pivotPos[2].x;
+					else
+						this.pivot.pos.x = -pivotPos[2].x;
+					
+					if(this.pivot.pos.x > 0)
+						this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[2].x, .5f);
+					else
+						this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[2].x, .5f);
+					
+					if(atlasCount + atlasAdd >= 51) atlasCount = 27;
+					else if(atlasCount < 16 || atlasCount > 51) {
+						atlasAdd = DisplayManager.deltaTime()*100/2;
+						atlasCount = 16 - atlasAdd;
 					}
-					else if(atlasCount >= 51) atlasCount = 27;
 				}
 				atlasCount += atlasAdd;
 			}
@@ -205,22 +223,23 @@ public class Player extends Character{
 					else
 						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, 0.25f);
 				
-				if(this.spr.getAtlasIndex() >= 80 && this.spr.getAtlasIndex() <= 85) {
-					atlasCount = this.spr.getAtlasIndex()+1;
+				if(atlasCount >= 80 && atlasCount <= 85) {
+					atlasCount += 1;
 					if(atlasCount > 85) atlasCount = 85;
 				} else atlasCount = 80;
 			} else {
-				this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, .5f);
+				/*this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, .5f);
 				
 				if(this.pivot.pos.x > 0)
 					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[2].x, .5f);
 				else
 					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[2].x, .5f);
-				
-				if(this.spr.getAtlasIndex() >= 65 && this.spr.getAtlasIndex() <= 70) {
-					atlasCount = this.spr.getAtlasIndex()+1;
+				*/
+				atlasAdd = DisplayManager.deltaTime()*100/2;
+				if(atlasCount >= 65 && atlasCount <= 70) {
+					atlasCount += 1;
 					if(atlasCount > 70) atlasCount = 70;
-				} else if(this.spr.getAtlasIndex() >= 80 && this.spr.getAtlasIndex() <= 85)
+				} else if(atlasCount >= 80 && atlasCount <= 85)
 					atlasCount = 70;
 				else atlasCount = 65;
 			}

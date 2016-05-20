@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 /**
  * A bow weapon
@@ -76,7 +77,7 @@ public class Bow extends Weapon {
 						((Player)owner).removeQuickBarItem(i, 1);
 						arrow.addWeaponStats(this);
 						arrow.initLaunch();
-						GameWorld.layerMap.getLayer(1).add(arrow);
+						GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).add(arrow);
 						break;
 					}
 				}
@@ -86,7 +87,7 @@ public class Bow extends Weapon {
 						GameWorld.player.getInventory().remove(arrow, 1);
 						arrow.addWeaponStats(this);
 						arrow.initLaunch();
-						GameWorld.layerMap.getLayer(1).add(arrow);
+						GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).add(arrow);
 					} else System.out.println("No more arrow in inventory");
 				}
 			}
