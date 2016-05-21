@@ -1,6 +1,6 @@
 package fr.iutvalence.info.dut.m2107.gui;
 
-import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Matrix4f;
 
 import fr.iutvalence.info.dut.m2107.shaders.ShaderProgram;
 
@@ -16,13 +16,8 @@ public class GUIShader extends ShaderProgram {
 	 */
 	private static final String FRAGMENT_FILE = "src/fr/iutvalence/info/dut/m2107/gui/guiFragment.txt";
 	
-
-	/**
-	 * The location of the translation uniform variable
-	 */
-	private int location_translation;
 	
-	private int location_scale;
+	private int location_transformation;
 	
 	
 	public GUIShader() {
@@ -31,8 +26,7 @@ public class GUIShader extends ShaderProgram {
 	
 	@Override
 	protected void getAllUniformLocations() {
-		location_translation = super.getUniformLocation("translation");
-		location_scale = super.getUniformLocation("scale");
+		location_transformation = super.getUniformLocation("transformation");
 	}
 	
 	@Override
@@ -41,16 +35,8 @@ public class GUIShader extends ShaderProgram {
 		super.bindAttribute(1, "textureUVs");
 	}
 	
-	/**
-	 * Loads the given translation to shader
-	 * @param translation the translation to load
-	 */
-	public void loadTranslation(Vector2f translation) {
-		super.load2DVector(location_translation, translation);
-	}
-	
-	public void loadScale(Vector2f scale) {
-		super.load2DVector(location_scale, scale);
+	public void loadTransformation(Matrix4f matrix) {
+		super.loadMatrix(location_transformation, matrix);
 	}
 	
 }

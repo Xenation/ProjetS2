@@ -171,8 +171,9 @@ public class Renderer {
 					if (ent.getSprite() != null) {
 						prepareSprite(ent.getSprite());
 						
-						guiShader.loadTranslation(ent.getPosition());
-						guiShader.loadScale(ent.getScale());
+						Matrix4f mat = Maths.createTransformationMatrix(ent.getPosition(), ent.getScale(), ent.getRotation());
+						
+						guiShader.loadTransformation(mat);
 						
 						glDrawArrays(GL_QUADS, 0, ent.getSprite().getVertexCount());
 						
@@ -231,7 +232,7 @@ public class Renderer {
 	 * @param entity the gui entity that has the sub layer to render
 	 */
 	private void renderGuiSubLayers(Entity entity) {
-		Vector2f pos;
+		Matrix4f mat;
 		GUILayer layer = (GUILayer) entity.getLayer();
 		for (Atlas atl : layer.atlases()) {
 			prepareAtlas(atl);
@@ -239,9 +240,9 @@ public class Renderer {
 				if (ent.getSprite() != null) {
 					prepareSprite(ent.getSprite());
 					
-					pos = new Vector2f(entity.getPosition().x + ent.getPosition().x, entity.getPosition().y + ent.getPosition().y);
-					guiShader.loadTranslation(pos);
-					guiShader.loadScale(ent.getScale());
+					mat = Maths.createTransformationMatrix(new Vector2f(entity.getPosition().x + ent.getPosition().x, entity.getPosition().y + ent.getPosition().y), ent.getScale(), ent.getRotation());
+					
+					guiShader.loadTransformation(mat);
 					
 					glDrawArrays(GL_QUADS, 0, ent.getSprite().getVertexCount());
 					
