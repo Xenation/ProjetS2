@@ -1,7 +1,10 @@
-package fr.iutvalence.info.dut.m2107.entities;
+package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.entities.Collider;
+import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
@@ -16,7 +19,7 @@ import fr.iutvalence.info.dut.m2107.tiles.Tile;
  */
 public class Arrow extends Ammunition {
 	
-	protected Tile piercingTile = null;
+	private Tile piercingTile = null;
 	
 	/**
 	 * Constructor of an arrow
@@ -85,7 +88,7 @@ public class Arrow extends Ammunition {
 			this.col.extendUp(-(float) (Math.sin((rot)*Math.PI/180)*this.spr.getSize().y/2.5f));
 			this.col.extendDown((float) (Math.sin((rot)*Math.PI/180)*this.spr.getSize().y/2.5f));
 			Entity entColliding = null;
-			if((entColliding = this.col.isContinuousColliding(this.piercingTile)) != null) {
+			if((entColliding = this.col.isContinuousColliding(this.getPiercingTile())) != null) {
 				this.isPierce = true;
 				if(entColliding instanceof LivingEntity) {
 					if(this.rot < 90 && this.rot > -90)
@@ -99,7 +102,7 @@ public class Arrow extends Ammunition {
 				entColliding.getLayer().add(this);
 				GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
 			}
-			if(piercingTile != null) {
+			if(getPiercingTile() != null) {
 				this.isPierce = true;
 
 			}
@@ -114,4 +117,7 @@ public class Arrow extends Ammunition {
 		}
 		super.update(layer);
 	}
+
+	public Tile getPiercingTile() {return piercingTile;}
+	public void setPiercingTile(Tile piercingTile) {this.piercingTile = piercingTile;}
 }

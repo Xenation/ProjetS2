@@ -7,6 +7,14 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
+import fr.iutvalence.info.dut.m2107.gui.GUISprite;
+import fr.iutvalence.info.dut.m2107.inventory.Bow;
+import fr.iutvalence.info.dut.m2107.inventory.Inventory;
+import fr.iutvalence.info.dut.m2107.inventory.InventorySlot;
+import fr.iutvalence.info.dut.m2107.inventory.Item;
+import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
+import fr.iutvalence.info.dut.m2107.inventory.Sword;
+import fr.iutvalence.info.dut.m2107.inventory.Weapon;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
@@ -16,7 +24,7 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 public class Player extends Character{
 	
 	// Temporary
-	private GUIText playerGUI = new GUIText("", .8f, 0.82f, 0, 0.5f, false, true);
+	private GUIText playerGUI = new GUIText("", .8f, 0.77f, 1, 0.5f, false, true);
 	// Temporary
 	
 	/**
@@ -27,7 +35,7 @@ public class Player extends Character{
 	/**
 	 * The quick bar of the player
 	 */
-	private Item[] quickBar = new Item[8];
+	private InventorySlot[] quickBar = new InventorySlot[8];
 	
 	// Temporary
 	private float width = 0.1f;
@@ -35,8 +43,6 @@ public class Player extends Character{
 	private float posY = 2 - height*1.5f;
 	private int selectSlot = 0;
 	private GUIElement selectQuickBar;
-	private GUIElement[] sprQuickBar = new GUIElement[8];
-	private GUIText[] textQuickBar = new GUIText[8];
 	
 	
 	private GUIElement hpGUI;
@@ -87,27 +93,36 @@ public class Player extends Character{
 	 */
 	private void initInventory() {
 		// TODO Take the item saved from a file save
-		addItem(ItemDatabase.get(0), 50);
-		addItem(ItemDatabase.get(1), 15);
+		addItem(ItemDatabase.get(0), 10);
+		addItem(ItemDatabase.get(1), 5);
+		addItem(ItemDatabase.get(4), 1);
+		addItem(ItemDatabase.get(5), 1);
+		addItem(ItemDatabase.get(6), 1);
+		addItem(ItemDatabase.get(7), 1);
+		addItem(ItemDatabase.get(8), 1);
 		
-		this.inventory.initInventory();
+		//this.inventory.initInventory();
 	}
 	
 	/**
 	 * Initialize the quick bar
 	 */
 	private void initQuickBar() {
-		this.quickBar[0] = ItemDatabase.get(2);
-		this.quickBar[1] = ItemDatabase.get(3);
+		for (int slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++)
+			this.quickBar[slotNumber] = new InventorySlot();
 		
-		for (int slotNumber = 0; slotNumber < 8; slotNumber++) {
-			new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width, height);
-			if(this.quickBar[slotNumber] != null) {
-				sprQuickBar[slotNumber] = new GUIElement(this.quickBar[slotNumber].getSprite(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width - width/2.5f, height - height/2.5f);
-				textQuickBar[slotNumber] = new GUIText("" + this.quickBar[slotNumber].stack , .8f, width*2.875f + width*slotNumber/2, 1-height/1.5f, .1f, true);
+		this.quickBar[0].setItem(ItemDatabase.get(2));
+		this.quickBar[1].setItem(ItemDatabase.get(3));
+		
+		for (int slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++) {
+			this.quickBar[slotNumber].setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width, height));
+			if(this.quickBar[slotNumber].getItem() != null) {
+				this.quickBar[slotNumber].setItemSprite(new GUIElement(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(), width, height));
+				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
 			}
+			this.quickBar[slotNumber].display();
 		}
-		selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*3.5f + selectSlot*width, 1-posY), width, height);
+		GameWorld.guiLayerMap.getLayer(0).add(selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*3.5f + selectSlot*width, 1-posY), width, height));
 	}
 
 	/* (non-Javadoc)
@@ -119,9 +134,32 @@ public class Player extends Character{
 		
 		updateSpriteAnimation();
 		
+		System.out.println(this.inventory);
+		
 		updateShootVal();
+		
 		updateQuickBar();
 		
+		updateInvulnerability();
+		
+		updateScale();
+		
+		useItem();
+		
+		playerGUI.updateText("IsGrounded : " + this.isGrounded);
+		super.update(layer);
+	}
+
+	private void useItem() {
+		if(Input.isMouseLeft() && this.itemOnHand != null && GameWorld.camera.isFree()) {
+			if(this.itemOnHand instanceof Bow)
+				((Bow) this.itemOnHand).use(this);
+			if(this.itemOnHand instanceof Sword)
+				((Sword) this.itemOnHand).use(this);
+		}			
+	}
+	
+	private void updateInvulnerability() {
 		if(this.invulnerabilityTime > Sys.getTime()/1000f) {
 			this.alpha += this.invulnerabilityFadeStep;
 			if(this.itemOnHand != null) this.itemOnHand.alpha += this.invulnerabilityFadeStep;
@@ -131,7 +169,9 @@ public class Player extends Character{
 			this.alpha = 1;
 			if(this.itemOnHand != null) this.itemOnHand.alpha = 1;
 		}
-		
+	}
+	
+	private void updateScale() {
 		if(this.vel.x > 0) this.scale.setX(1);
 		else if(this.vel.x < 0) this.scale.setX(-1);
 		
@@ -139,18 +179,8 @@ public class Player extends Character{
 			this.pivot.pos.x = Maths.fastAbs(this.pivot.pos.x);
 		else
 			this.pivot.pos.x = -Maths.fastAbs(this.pivot.pos.x);
-		
-		if(Input.isMouseLeft() && this.itemOnHand != null && GameWorld.camera.isFree()) {
-			if(this.itemOnHand instanceof Bow)
-				((Bow) this.itemOnHand).use(this);
-			if(this.itemOnHand instanceof Sword)
-				((Sword) this.itemOnHand).use(this);
-		}
-		
-		playerGUI.updateText("IsGrounded : " + this.isGrounded);
-		super.update(layer);
 	}
-
+	
 	private boolean eyeAnimation = false;
 	
 	private void updateSpriteAnimation() {
@@ -277,16 +307,16 @@ public class Player extends Character{
 		if(selectSlot < 0) selectSlot += 8;
 		selectQuickBar.setPosition(new Vector2f(-width*3.5f + selectSlot*width, selectQuickBar.getPosition().y));			
 		
-		if(this.itemOnHand != this.quickBar[selectSlot]) {
-			if(this.quickBar[selectSlot] != null) {
+		if(this.itemOnHand != this.quickBar[selectSlot].getItem()) {
+			if(this.quickBar[selectSlot].getItem() != null) {
 				if(this.itemOnHand != null)
 					this.pivot.getLayer().remove(this.itemOnHand);
 				
-				if(!(this.quickBar[selectSlot] instanceof Weapon)) {
-					this.itemOnHand = new Item(this.quickBar[selectSlot]);
+				if(!(this.quickBar[selectSlot].getItem() instanceof Weapon)) {
+					this.itemOnHand = new Item(this.quickBar[selectSlot].getItem());
 					this.pivot.getLayer().add(this.itemOnHand);
 				} else {
-					this.itemOnHand = this.quickBar[selectSlot];
+					this.itemOnHand = this.quickBar[selectSlot].getItem();
 					if(this.itemOnHand instanceof Bow)	this.itemOnHand.setPosition(new Vector2f(-.3f, 0));
 					if(this.itemOnHand instanceof Sword)this.itemOnHand.setPosition(new Vector2f(.7f, -0.02f));
 					this.pivot.getLayer().add(this.itemOnHand);
@@ -339,16 +369,16 @@ public class Player extends Character{
 	}
 	
 	public boolean addItem(Item item) {
-		return addItem(item, item.stack);
+		return addItem(item, item.getStack());
 	}
 	
 	public byte addQuickBarItem(Item item, int stack) {
 		if(stack <= item.getMAX_STACK()) {
-			for (Item it : quickBar) {
-				if(it != null) {
-					if(it.id == item.id) {
-						if(it.stack + stack <= it.MAX_STACK) {
-							it.changeStack(stack);
+			for (InventorySlot slot : quickBar) {
+				if(slot.getItem() != null) {
+					if(slot.getItem().getId() == item.getId()) {
+						if(slot.getItem().getStack() + stack <= slot.getItem().getMAX_STACK()) {
+							slot.getItem().changeStack(stack);
 							return 1;
 						} return -1;
 					}
@@ -358,13 +388,15 @@ public class Player extends Character{
 	}
 	
 	public boolean removeQuickBarItem(int index, int stack) {
-		if((this.quickBar[index].stack -= stack) <= 0) {
-			this.quickBar[index] = null;
-			this.sprQuickBar[index].remove();
-			textQuickBar[index].updateText("");
+		if((this.quickBar[index].getItem().getStack() - stack) <= 0) {
+			this.quickBar[index].setItem(null);
+			this.quickBar[index].getItemSprite().remove();
+			this.quickBar[index].setItemSprite(null);
+			this.quickBar[index].getQuantity().remove();
+			this.quickBar[index].setQuantity(null);
 			return false;
 		}
-		textQuickBar[index].updateText("" + this.quickBar[index].stack);
+		this.quickBar[index].getQuantity().updateText("" + this.quickBar[index].getItem().getStack());
 		return true;
 	}
 	
@@ -378,7 +410,7 @@ public class Player extends Character{
 	 * Return the item of the quick bar at a specified index of the player
 	 * @return the item of the quick bar at a specified index of the player
 	 */
-	public Item getQuickBarItem(int index) {return this.quickBar[index];}
+	public Item getQuickBarItem(int index) {return this.quickBar[index].getItem();}
 
 	/**
 	 * Return the length of the quick bar

@@ -1,7 +1,11 @@
-package fr.iutvalence.info.dut.m2107.entities;
+package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.entities.Character;
+import fr.iutvalence.info.dut.m2107.entities.Collider;
+import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
@@ -64,12 +68,12 @@ public class Sword extends Weapon {
 	@Override
 	public void use(Character owner) {
 		if(remainingTime <= 0) {
-			Collider tmpCol = new Collider(owner.col.getMin(), owner.col.getMax());
-			if(owner.scale.x == 1) tmpCol.extendRight(range);
+			Collider tmpCol = new Collider(owner.getCollider().getMin(), owner.getCollider().getMax());
+			if(owner.getScale().x == 1) tmpCol.extendRight(range);
 			else tmpCol.extendLeft(range);
 			Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getStoredLayer(LayerStore.MOBS));
 			if(ent != owner && ent instanceof LivingEntity) {
-				((LivingEntity) ent).takeKnockback(this.knockback * (int)owner.scale.x);
+				((LivingEntity) ent).takeKnockback(this.knockback * (int)owner.getScale().x);
 				((LivingEntity) ent).takeDamage(this.damage);
 			}
 			this.remainingTime = this.useTime;
