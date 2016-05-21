@@ -1,8 +1,7 @@
-package fr.iutvalence.info.dut.m2107.fontRendering;
+package fr.iutvalence.info.dut.m2107.gui;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.models.Atlas;
 import fr.iutvalence.info.dut.m2107.render.Loader;
 

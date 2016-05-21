@@ -11,11 +11,11 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
-import fr.iutvalence.info.dut.m2107.fontRendering.TextSprite;
 import fr.iutvalence.info.dut.m2107.gui.GUIShader;
 import fr.iutvalence.info.dut.m2107.models.*;
 import fr.iutvalence.info.dut.m2107.shaders.Shader;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
+import fr.iutvalence.info.dut.m2107.storage.GUILayer;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
@@ -101,12 +101,12 @@ public class Renderer {
 	
 	/**
 	 * Renders all the tiles in the gameWorld through the view of the gameWorld's camera
-	 * @param gameWorld the game world to render
 	 */
 	public void render() {
 		shader.start();
 		shader.loadViewMatrix(GameWorld.camera);
 		shader.loadDepth(0);
+		shader.loadAlpha(1);
 		
 		// Chunks Rendering
 		prepareAtlas(Atlas.TILE_ATLAS);
@@ -164,33 +164,10 @@ public class Renderer {
 		guiShader.start();
 		
 		for (int i = GameWorld.guiLayerMap.getLayersCount()-1; i >= 0; i--) {
-			Layer layer = GameWorld.guiLayerMap.getLayer(i);
+			GUILayer layer = (GUILayer) GameWorld.guiLayerMap.getLayer(i);
 			for (Atlas atl : layer.atlases()) {
 				prepareAtlas(atl);
-				for (AbstractSprite spr : layer.sprites(atl)) {
-					if (spr != null) {
-						prepareSprite(spr);
-						
-						for (Entity ent : layer.getEntities(atl, spr)) {
-							guiShader.loadTranslation(ent.getPosition());
-							guiShader.loadScale(ent.getScale());
-							
-							glDrawArrays(GL_QUADS, 0, spr.getVertexCount());
-							
-							if (ent.getLayer() != null) {
-								unbindSprite();
-								renderGuiSubLayers(ent);
-								prepareSprite(spr);
-							}
-						}
-						
-						unbindSprite();
-					}
-				}
-			}
-			for (Atlas atl : layer.streamedAltases()) {
-				prepareAtlas(atl);
-				for (Entity ent : layer.getStreamedEntities(atl)) {
+				for (Entity ent : layer.getEntities(atl)) {
 					if (ent.getSprite() != null) {
 						prepareSprite(ent.getSprite());
 						
@@ -218,6 +195,7 @@ public class Renderer {
 	/**
 	 * Renders a sub layer (a layer contained by an entity)
 	 * @param layer the sub layer to render
+	 * @param matrix the transformation matrix from the entity containing the layer
 	 */
 	private void renderSubLayers(Entity entity, Matrix4f matrix) {
 		Matrix4f mat = new Matrix4f();
@@ -253,37 +231,16 @@ public class Renderer {
 	 * @param entity the gui entity that has the sub layer to render
 	 */
 	private void renderGuiSubLayers(Entity entity) {
-		for (Atlas atl : entity.getLayer().atlases()) {
+		Vector2f pos;
+		GUILayer layer = (GUILayer) entity.getLayer();
+		for (Atlas atl : layer.atlases()) {
 			prepareAtlas(atl);
-			for (AbstractSprite spr : entity.getLayer().sprites(atl)) {
-				if (spr != null) {
-					prepareSprite(spr);
-					
-					for (Entity ent : entity.getLayer().getEntities(atl, spr)) {
-						
-						guiShader.loadTranslation(new Vector2f(entity.getPosition().x + ent.getPosition().x, entity.getPosition().y + ent.getPosition().y));
-						guiShader.loadScale(ent.getScale());
-						
-						glDrawArrays(GL_QUADS, 0, ent.getSprite().getVertexCount());
-						
-						if (ent.getLayer() != null) {
-							unbindSprite();
-							renderGuiSubLayers(ent);
-							prepareSprite(spr);
-						}
-					}
-					
-					unbindSprite();
-				}
-			}
-		}
-		for (Atlas atl : entity.getLayer().streamedAltases()) {
-			prepareAtlas(atl);
-			for (Entity ent : entity.getLayer().getStreamedEntities(atl)) {
+			for (Entity ent : layer.getEntities(atl)) {
 				if (ent.getSprite() != null) {
 					prepareSprite(ent.getSprite());
 					
-					guiShader.loadTranslation(ent.getPosition());
+					pos = new Vector2f(entity.getPosition().x + ent.getPosition().x, entity.getPosition().y + ent.getPosition().y);
+					guiShader.loadTranslation(pos);
 					guiShader.loadScale(ent.getScale());
 					
 					glDrawArrays(GL_QUADS, 0, ent.getSprite().getVertexCount());

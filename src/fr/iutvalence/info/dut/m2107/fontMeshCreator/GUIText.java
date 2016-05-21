@@ -4,9 +4,9 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
-import fr.iutvalence.info.dut.m2107.fontRendering.TextMaster;
-import fr.iutvalence.info.dut.m2107.fontRendering.TextSprite;
-import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
+import fr.iutvalence.info.dut.m2107.gui.TextSprite;
+import fr.iutvalence.info.dut.m2107.storage.GUILayer;
 
 /**
  * Represents a piece of text in the game.
@@ -27,19 +27,16 @@ public class GUIText extends Entity {
 	private FontType font;
 
 	private boolean centerText = false;
-	private final boolean isDebug;
 	
 	public GUIText(String text, float fontSize, float posX, float posY, float maxLineLength, boolean centered, boolean isDebug) {
 		super(new Vector2f(posX+1, posY-1), new TextSprite());
 		this.textString = text;
 		this.fontSize = fontSize;
-		this.font = TextMaster.font;
+		this.font = GUIMaster.font;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		this.isDebug = isDebug;
-		this.colour = TextMaster.debugColor;
-		TextMaster.loadText(this);
-		GameWorld.guiLayerMap.getLayer(0).addStreamed(this);
+		this.colour = GUIMaster.debugColor;
+		GUIMaster.loadText(this);
 	}
 	
 	public GUIText(String text, float fontSize, float posX, float posY, float maxLineLength, boolean centered) {
@@ -49,7 +46,7 @@ public class GUIText extends Entity {
 	public void updateText(String str) {
 		if (!textString.equals(str)) {
 			this.textString = str;
-			TextMaster.loadText(this);
+			GUIMaster.loadText(this);
 		}
 	}
 
@@ -57,8 +54,7 @@ public class GUIText extends Entity {
 	 * Remove the text from the screen.
 	 */
 	public void remove() {
-		TextMaster.removeText(this);
-		GameWorld.guiLayerMap.getLayer(0).removeStreamed(this);
+		GUIMaster.removeText(this);
 	}
 
 	/**
@@ -176,20 +172,37 @@ public class GUIText extends Entity {
 		return textString;
 	}
 	
+	/**
+	 * Sets the string of this text (does not update the Mesh)
+	 * @param str the new string
+	 */
 	public void setTextString(String str) {
 		this.textString = str;
 	}
-
+	
+	/**
+	 * Returns the height of a line
+	 * @return the height of a line
+	 */
 	public double getLineHeight() {
 		return lineHeight;
 	}
-
+	
+	/**
+	 * Sets the height of a line
+	 * @param lineHeight the new height of a line
+	 */
 	public void setLineHeight(double lineHeight) {
 		this.lineHeight = lineHeight;
 	}
-
-	public boolean isDebug() {
-		return isDebug;
+	
+	@Override
+	public void initLayer() {
+		this.layer = new GUILayer();
+	}
+	
+	public GUILayer getLayer() {
+		return (GUILayer) this.layer;
 	}
 
 }

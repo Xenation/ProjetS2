@@ -31,8 +31,6 @@ public class Layer implements Iterable<Entity> {
 	 */
 	private Map<Atlas, Map<AbstractSprite, List<Entity>>> layer = new HashMap<Atlas, Map<AbstractSprite, List<Entity>>>();
 	
-	private Map<Atlas, List<Entity>> streamedLayer = new HashMap<Atlas, List<Entity>>();
-	
 	/**
 	 * The depth of this layer (only visual)
 	 */
@@ -61,15 +59,6 @@ public class Layer implements Iterable<Entity> {
 		if (newList == null) {
 			newList = new ArrayList<Entity>();
 			layer.get(ent.getSprite().getAtlas()).put(ent.getSprite(), newList);
-		}
-		newList.add(ent);
-	}
-	
-	public void addStreamed(Entity ent) {
-		List<Entity> newList = streamedLayer.get(ent.getSprite().getAtlas());
-		if (newList == null) {
-			newList = new ArrayList<Entity>();
-			streamedLayer.put(ent.getSprite().getAtlas(), newList);
 		}
 		newList.add(ent);
 	}
@@ -104,26 +93,12 @@ public class Layer implements Iterable<Entity> {
 		}
 	}
 	
-	public void removeStreamed(Entity ent) {
-		List<Entity> rList = streamedLayer.get(ent.getSprite().getAtlas());
-		if (rList != null) {
-			rList.remove(ent);
-			if (rList.size() == 0) {
-				streamedLayer.remove(ent.getSprite().getAtlas());
-			}
-		}
-	}
-	
 	/**
 	 * Returns a set of all atlases of the layer
 	 * @return a set of all atlases of the layer
 	 */
 	public Set<Atlas> atlases() {
 		return this.layer.keySet();
-	}
-	
-	public Set<Atlas> streamedAltases() {
-		return this.streamedLayer.keySet();
 	}
 	
 	/**
@@ -141,10 +116,6 @@ public class Layer implements Iterable<Entity> {
 	 */
 	public List<Entity> getEntities(Atlas atlas, AbstractSprite spr) {
 		return this.layer.get(atlas).get(spr);
-	}
-	
-	public List<Entity> getStreamedEntities(Atlas atlas) {
-		return this.streamedLayer.get(atlas);
 	}
 	
 	////ITERABLE \\\\

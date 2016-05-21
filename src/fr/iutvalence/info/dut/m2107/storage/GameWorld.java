@@ -2,6 +2,7 @@ package fr.iutvalence.info.dut.m2107.storage;
 
 import fr.iutvalence.info.dut.m2107.entities.Camera;
 import fr.iutvalence.info.dut.m2107.entities.Player;
+import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 /**
  * The GameWorld
@@ -49,13 +50,22 @@ public class GameWorld {
 	
 	public static void init() {
 		chunkMap = new ChunkMap();
+		
 		layerMap = new LayerMap();
+		layerMap.addEmpty(4);
+		
 		guiLayerMap = new LayerMap();
-		guiLayerMap.addEmpty(4);
+		guiLayerMap.add(new GUILayer());
+		guiLayerMap.add(new GUILayer());
+		guiLayerMap.add(new GUILayer());
+		guiLayerMap.add(new GUILayer());
 		
 		camera = new Camera();
 		
 		player = new Player();
+		
+		camera.setTarget(GameWorld.player);
+		layerMap.getStoredLayer(LayerStore.PLAYER).add(GameWorld.player);
 	}
 	
 	/**

@@ -7,6 +7,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
+import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
@@ -78,7 +79,7 @@ public class Camera {
 	public Camera() {
 		this.position = new Vector2f();
 		this.rotation = 0;
-		this.debugText = new GUIText("", .8f, -1, 1, .5f, false, true);
+		this.debugText = GUIMaster.addText(new GUIText("", .8f, -1, 1, .5f, false, true));
 		this.type = TileType.Dirt;
 	}
 	
