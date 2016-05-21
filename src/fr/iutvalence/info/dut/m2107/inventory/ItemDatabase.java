@@ -1,6 +1,9 @@
-package fr.iutvalence.info.dut.m2107.entities;
+package fr.iutvalence.info.dut.m2107.inventory;
 
 import java.util.*;
+
+import fr.iutvalence.info.dut.m2107.entities.Collider;
+import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 
 /**
  * This class create and initialize a List of item which is the ItemDatabase of the game
@@ -28,6 +31,11 @@ public class ItemDatabase {
 		//					TYPE	SPR								ID	NAME		DESC				RARITY			MAX		VAL		DMG 	RNG		USE		KNOC
 		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	2,	"Bow",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	3));
 		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	3,	"Sword",	"A simple Sword",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	4,	"Sword1",	"A simple Sword1",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	5,	"Sword2",	"A simple Sword2",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	6,	"Sword3",	"A simple Sword3",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	7,	"Sword4",	"A simple Sword4",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	8,	"Sword5",	"A simple Sword5",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
 	}
 	
 	/**

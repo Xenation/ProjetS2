@@ -253,6 +253,12 @@ public class Entity {
 	public void setAlpha(float alpha) {this.alpha = alpha;}
 	
 	/**
+	 * 
+	 * @return
+	 */
+	public Collider getCollider() {return col;}
+	
+	/**
 	 * Returns the group layer
 	 * @return the group layer
 	 */
@@ -286,6 +292,5 @@ public class Entity {
 		} else if (!spr.equals(other.spr))
 			return false;
 		return true;
-	}
-	
+	}	
 }

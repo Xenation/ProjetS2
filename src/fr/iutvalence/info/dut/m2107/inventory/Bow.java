@@ -1,7 +1,9 @@
-package fr.iutvalence.info.dut.m2107.entities;
+package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.entities.Character;
+import fr.iutvalence.info.dut.m2107.entities.Player;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;

@@ -1,7 +1,8 @@
-package fr.iutvalence.info.dut.m2107.entities;
+package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
@@ -129,7 +130,7 @@ public abstract class Ammunition extends Item {
 	 */
 	public void initLaunch() {
 		this.col = new Collider(this.col);
-		this.pos = new Vector2f(GameWorld.player.pos.x + GameWorld.player.pivot.pos.x, GameWorld.player.pos.y + GameWorld.player.pivot.pos.y);
+		this.pos = new Vector2f(GameWorld.player.getPosition().x + GameWorld.player.getPivot().getPosition().x, GameWorld.player.getPosition().y + GameWorld.player.getPivot().getPosition().y);
 		this.rot = GameWorld.player.getDegreeShoot();
 		this.vel = new Vector2f(GameWorld.player.getShoot().x, GameWorld.player.getShoot().y);
 		this.vel.scale(this.speed);
@@ -163,8 +164,15 @@ public abstract class Ammunition extends Item {
 	public Vector2f getVelocity() {return vel;}
 	
 	/**
+	 * 
+	 * @param vel
+	 */
+	public void setVelocity(Vector2f vel) {this.vel = vel;}
+	
+	/**
 	 * Return the speed of the ammo
 	 * @return the speed of the ammo
 	 */
 	public int getSpeed() {return speed;}
+
 }

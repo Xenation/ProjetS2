@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.inventory.Ammunition;
+import fr.iutvalence.info.dut.m2107.inventory.Arrow;
 import fr.iutvalence.info.dut.m2107.models.AbstractSprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
@@ -306,12 +308,12 @@ public class Collider {
 	 * @return true when colliding otherwise false
 	 */
 	public Entity isContinuousColliding(Tile tile) {
-		int continuousStep = (int) ((Maths.fastAbs(((Ammunition)this.ent).vel.x) + Maths.fastAbs(((Ammunition)this.ent).vel.y))/8+1)*2;
+		int continuousStep = (int) ((Maths.fastAbs(((Ammunition)this.ent).getVelocity().x) + Maths.fastAbs(((Ammunition)this.ent).getVelocity().y))/8+1)*2;
 		continuousStep *= DisplayManager.deltaTime()*20;
 		if(continuousStep < 1) continuousStep = 1;
 		
-		float stepXtoAdd = ((Ammunition)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
-		float stepYtoAdd = ((Ammunition)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
+		float stepXtoAdd = ((Ammunition)this.ent).getVelocity().x * DisplayManager.deltaTime() / continuousStep;
+		float stepYtoAdd = ((Ammunition)this.ent).getVelocity().y * DisplayManager.deltaTime() / continuousStep;
 		float stepX = this.ent.col.minX + this.getW()/2;
 		float stepY = this.ent.col.minY + this.getH()/2;
 		
@@ -326,14 +328,14 @@ public class Collider {
 			Tile tileColliding = isCollidingWithMap(encompassCol);
 			Entity entColliding = isCollidingWithEntity(GameWorld.layerMap.getStoredLayer(LayerStore.MOBS));
 			if(tileColliding != null || entColliding != null) {
-				((Ammunition)this.ent).vel = new Vector2f(0, 0);
+				((Ammunition)this.ent).setVelocity(new Vector2f(0, 0));
 				this.ent.pos.x = nextPos.x -(float) (Math.cos((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().x/2.5f);
 				this.ent.pos.y = nextPos.y -(float) -(Math.sin((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().y/2.5f);
 				if(entColliding != null) {
 					this.ent.pos = new Vector2f(this.ent.pos.x - entColliding.pos.x, this.ent.pos.y - entColliding.pos.y);
 					return entColliding;
 				}
-				((Arrow)this.ent).piercingTile = tileColliding;
+				((Arrow)this.ent).setPiercingTile(tileColliding);
 				return null;
 			}
 			
