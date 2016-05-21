@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 public class Sword extends Weapon {
 
@@ -66,7 +67,7 @@ public class Sword extends Weapon {
 			Collider tmpCol = new Collider(owner.col.getMin(), owner.col.getMax());
 			if(owner.scale.x == 1) tmpCol.extendRight(range);
 			else tmpCol.extendLeft(range);
-			Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getLayer(0));
+			Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getStoredLayer(LayerStore.MOBS));
 			if(ent != owner && ent instanceof LivingEntity) {
 				((LivingEntity) ent).takeKnockback(this.knockback * (int)owner.scale.x);
 				((LivingEntity) ent).takeDamage(this.damage);

@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 public class Zombie extends Character {
 	
@@ -38,7 +39,7 @@ public class Zombie extends Character {
 				Collider tmpCol = new Collider(this.col.getMin(), this.col.getMax());
 				if(this.scale.x == 1) tmpCol.extendRight(2);
 				else tmpCol.extendLeft(2);
-				Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getLayer(1));
+				Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER));
 				if(ent == GameWorld.player) {
 					((LivingEntity) ent).takeKnockback(10 * (int)this.scale.x);
 					((LivingEntity) ent).takeDamage(1);

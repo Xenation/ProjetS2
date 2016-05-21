@@ -6,6 +6,7 @@ import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 /**
@@ -87,16 +88,20 @@ public class Arrow extends Ammunition {
 			if((entColliding = this.col.isContinuousColliding(this.piercingTile)) != null) {
 				this.isPierce = true;
 				if(entColliding instanceof LivingEntity) {
-					((LivingEntity)entColliding).takeKnockback(this.knockback * (int)GameWorld.player.scale.x);
+					if(this.rot < 90 && this.rot > -90)
+						((LivingEntity)entColliding).takeKnockback(this.knockback);
+					else
+						((LivingEntity)entColliding).takeKnockback(-this.knockback);
 					((LivingEntity)entColliding).takeDamage(this.damage);
 				}
 				if(entColliding.getLayer() == null)
 					entColliding.initLayer();
 				entColliding.getLayer().add(this);
-				GameWorld.layerMap.getLayer(1).remove(this);
+				GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
 			}
 			if(piercingTile != null) {
 				this.isPierce = true;
+
 			}
 			
 			// temporary code for entity collision detection

@@ -19,6 +19,13 @@ import fr.iutvalence.info.dut.m2107.models.Atlas;
  */
 public class Layer implements Iterable<Entity> {
 	
+	public static enum LayerStore {
+		AMMUNITION,
+		PLAYER,
+		MOBS,
+		DECORATION
+	}
+	
 	/**
 	 * the map that gathers all the entities that have the same sprite under a same list
 	 */
