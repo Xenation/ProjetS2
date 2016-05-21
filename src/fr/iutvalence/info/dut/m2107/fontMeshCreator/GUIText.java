@@ -30,7 +30,7 @@ public class GUIText extends Entity {
 	private final boolean isDebug;
 	
 	public GUIText(String text, float fontSize, float posX, float posY, float maxLineLength, boolean centered, boolean isDebug) {
-		super(new Vector2f(posX*2, -posY*2), new TextSprite());
+		super(new Vector2f(posX+1, posY-1), new TextSprite());
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.font = TextMaster.font;
@@ -39,7 +39,7 @@ public class GUIText extends Entity {
 		this.isDebug = isDebug;
 		this.colour = TextMaster.debugColor;
 		TextMaster.loadText(this);
-		GameWorld.guiLayerMap.getLayer(0).add(this);
+		GameWorld.guiLayerMap.getLayer(0).addStreamed(this);
 	}
 	
 	public GUIText(String text, float fontSize, float posX, float posY, float maxLineLength, boolean centered) {
@@ -48,7 +48,6 @@ public class GUIText extends Entity {
 	
 	public void updateText(String str) {
 		if (!textString.equals(str)) {
-			remove();
 			this.textString = str;
 			TextMaster.loadText(this);
 		}
@@ -59,6 +58,7 @@ public class GUIText extends Entity {
 	 */
 	public void remove() {
 		TextMaster.removeText(this);
+		GameWorld.guiLayerMap.getLayer(0).removeStreamed(this);
 	}
 
 	/**
@@ -174,6 +174,10 @@ public class GUIText extends Entity {
 	 */
 	public String getTextString() {
 		return textString;
+	}
+	
+	public void setTextString(String str) {
+		this.textString = str;
 	}
 
 	public double getLineHeight() {

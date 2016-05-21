@@ -8,8 +8,6 @@ import fr.iutvalence.info.dut.m2107.render.Loader;
 
 public class GUISprite extends AbstractSprite {
 	
-	private int vertexCount;
-	
 	/**
 	 * To be used by TextSprite
 	 * @param atlas
@@ -36,14 +34,6 @@ public class GUISprite extends AbstractSprite {
 	public GUISprite(Atlas atlas, Vector2f size) {
 		this(atlas, 0, size);
 		this.vertexCount = 4;
-	}
-
-	public int getVertexCount() {
-		return vertexCount;
-	}
-
-	public void setVertexCount(int vertexCount) {
-		this.vertexCount = vertexCount;
 	}
 	
 }

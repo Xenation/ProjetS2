@@ -55,12 +55,12 @@ public class MainGameTester {
 		WorldLoader.setFilePath("res/test.sav");
 		SaveFileUpdater.setFilePath("res/test.sav");
 		
-		new GUIText("Chunks :", 1, 0, .8f, 0.5f, false, true);
-		GUIText chunkStats = new GUIText("", .8f, 0, .82f, 0.5f, false, true);
+		new GUIText("Chunks :", 1, -1, -.60f, 0.5f, false, true);
+		GUIText chunkStats = new GUIText("", .8f, -1, -.65f, 0.5f, false, true);
 		chunkStats.setLineHeight(0.024);
 		
-		new GUIText("Loaders :", 1, 0, .90f, 0.5f, false, true);
-		GUIText loaderStats = new GUIText("", .8f, 0, .92f, 0.5f, false, true);
+		new GUIText("Loaders :", 1, -1, -.80f, 0.5f, false, true);
+		GUIText loaderStats = new GUIText("", .8f, -1, -.85f, 0.5f, false, true);
 		loaderStats.setLineHeight(0.024);
 		
 		WorldLoader.loadWorld();

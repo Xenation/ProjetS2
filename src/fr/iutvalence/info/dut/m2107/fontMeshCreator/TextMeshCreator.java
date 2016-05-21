@@ -98,7 +98,7 @@ public class TextMeshCreator {
 			}
 			curserX = 0;
 			curserY += text.getLineHeight() * text.getFontSize();
-		}		
+		}
 		return new TextMeshData(listToArray(vertices), listToArray(textureCoords));
 	}
 

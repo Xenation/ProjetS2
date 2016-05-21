@@ -9,6 +9,7 @@ public abstract class AbstractSprite extends AtlasSprite {
 	protected Vector2f size;
 	
 	protected final float[] positions;
+	protected int vertexCount;
 	
 	private Loader loader;
 	
@@ -44,6 +45,14 @@ public abstract class AbstractSprite extends AtlasSprite {
 	public void updateAtlasIndex(int atlasIndex) {
 		this.atlasIndex = atlasIndex;
 		this.loader.updateVao(vaoID, this.positions, atlas.getUVs(atlasIndex));
+	}
+	
+	public int getVertexCount() {
+		return vertexCount;
+	}
+
+	public void setVertexCount(int vertexCount) {
+		this.vertexCount = vertexCount;
 	}
 	
 }

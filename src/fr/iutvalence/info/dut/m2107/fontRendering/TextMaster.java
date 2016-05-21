@@ -59,6 +59,9 @@ public class TextMaster {
 		FontType font = txt.getFont();
 		TextMeshData data = font.loadText(txt);
 		int vao = loader.loadtoVao(data.getVertexPositions(), data.getTextureCoords());
+		if (txt.getSprite().getVaoID() != 0) {
+			loader.unloadVAO(txt.getSprite().getVaoID());
+		}
 		txt.setMeshInfo(vao, data.getVertexCount());
 	}
 	

@@ -13,25 +13,25 @@ public class GUIElement extends Entity {
 		super(pos, new GUISprite(fileName, new Vector2f(1, 1)));
 		this.scale.x = width;
 		this.scale.y = height*DisplayManager.aspectRatio;
-		GameWorld.guiLayerMap.getLayer(1).add(this);
+		GameWorld.guiLayerMap.getLayer(1).addStreamed(this);
 	}
 	
 	public GUIElement(AbstractSprite spr, Vector2f pos, float width, float height) {
 		super(pos, spr);
 		this.scale.x = width;
 		this.scale.y = height*DisplayManager.aspectRatio;
-		GameWorld.guiLayerMap.getLayer(1).add(this);
+		GameWorld.guiLayerMap.getLayer(1).addStreamed(this);
 	}
 	
 	public GUIElement(AbstractSprite spr, Vector2f pos) {
 		super(pos, spr);
 		this.scale.x = spr.getSize().x;
 		this.scale.y = spr.getSize().y*DisplayManager.aspectRatio;
-		GameWorld.guiLayerMap.getLayer(1).add(this);
+		GameWorld.guiLayerMap.getLayer(1).addStreamed(this);
 	}
 	
 	public void remove() {
-		GameWorld.guiLayerMap.getLayer(1).remove(this);
+		GameWorld.guiLayerMap.getLayer(1).removeStreamed(this);
 	}
 	
 	public void setPositionY(float y) {

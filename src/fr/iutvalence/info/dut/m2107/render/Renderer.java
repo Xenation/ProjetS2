@@ -175,18 +175,34 @@ public class Renderer {
 							guiShader.loadTranslation(ent.getPosition());
 							guiShader.loadScale(ent.getScale());
 							
-							if (ent.getSprite().getClass() == TextSprite.class) {
-								TextSprite s = (TextSprite) ent.getSprite();
-								glDrawArrays(GL_QUADS, 0, s.getVertexCount());
-							} else {
-								glDrawArrays(GL_QUADS, 0, 4);
-							}
+							glDrawArrays(GL_QUADS, 0, spr.getVertexCount());
 							
 							if (ent.getLayer() != null) {
 								unbindSprite();
 								renderGuiSubLayers(ent);
 								prepareSprite(spr);
 							}
+						}
+						
+						unbindSprite();
+					}
+				}
+			}
+			for (Atlas atl : layer.streamedAltases()) {
+				prepareAtlas(atl);
+				for (Entity ent : layer.getStreamedEntities(atl)) {
+					if (ent.getSprite() != null) {
+						prepareSprite(ent.getSprite());
+						
+						guiShader.loadTranslation(ent.getPosition());
+						guiShader.loadScale(ent.getScale());
+						
+						glDrawArrays(GL_QUADS, 0, ent.getSprite().getVertexCount());
+						
+						if (ent.getLayer() != null) {
+							unbindSprite();
+							renderGuiSubLayers(ent);
+							prepareSprite(ent.getSprite());
 						}
 						
 						unbindSprite();
@@ -248,18 +264,34 @@ public class Renderer {
 						guiShader.loadTranslation(new Vector2f(entity.getPosition().x + ent.getPosition().x, entity.getPosition().y + ent.getPosition().y));
 						guiShader.loadScale(ent.getScale());
 						
-						if (ent.getSprite().getClass() == TextSprite.class) {
-							TextSprite s = (TextSprite) ent.getSprite();
-							glDrawArrays(GL_QUADS, 0, s.getVertexCount());
-						} else {
-							glDrawArrays(GL_QUADS, 0, 4);
-						}
+						glDrawArrays(GL_QUADS, 0, ent.getSprite().getVertexCount());
 						
 						if (ent.getLayer() != null) {
 							unbindSprite();
 							renderGuiSubLayers(ent);
 							prepareSprite(spr);
 						}
+					}
+					
+					unbindSprite();
+				}
+			}
+		}
+		for (Atlas atl : entity.getLayer().streamedAltases()) {
+			prepareAtlas(atl);
+			for (Entity ent : entity.getLayer().getStreamedEntities(atl)) {
+				if (ent.getSprite() != null) {
+					prepareSprite(ent.getSprite());
+					
+					guiShader.loadTranslation(ent.getPosition());
+					guiShader.loadScale(ent.getScale());
+					
+					glDrawArrays(GL_QUADS, 0, ent.getSprite().getVertexCount());
+					
+					if (ent.getLayer() != null) {
+						unbindSprite();
+						renderGuiSubLayers(ent);
+						prepareSprite(ent.getSprite());
 					}
 					
 					unbindSprite();
