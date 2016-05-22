@@ -202,8 +202,8 @@ public class Entity {
 	 * @param y The Y position to set
 	 */
 	public void setPosition(float x, float y) {
-		this.pos.x = pos.x;
-		this.pos.y = pos.y;
+		this.pos.x = x;
+		this.pos.y = y;
 	}
 	
 	/**

@@ -62,12 +62,29 @@ public class Player extends Character{
 	 */
 	private Vector2f shoot;
 
+	/**
+	 * The player's state for the right wall jump (true is currently wallJumping)
+	 */
 	public boolean rightWallJump = false;
+	
+	/**
+	 * The player's state for the left wall jump (true is currently wallJumping)
+	 */
 	public boolean leftWallJump = false;
 	
+	/**
+	 * The index of the player's atlas
+	 */
 	private float atlasCount = 0;
+	
+	/**
+	 * The amount to add each frame according the animation state
+	 */
 	private float atlasAdd = 0.25f;
 	
+	/**
+	 * A bunch of position to set the weapon's pivot according to the animation
+	 */
 	private Vector2f[] pivotPos = {new Vector2f(0.725f, -.15f),
 									new Vector2f(0.725f, -.35f),
 									new Vector2f(.9f, -.25f),
@@ -119,6 +136,13 @@ public class Player extends Character{
 			if(this.quickBar[slotNumber].getItem() != null) {
 				this.quickBar[slotNumber].setItemSprite(new GUIElement(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(), width, height));
 				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
+				
+				this.quickBar[slotNumber].getItemSprite().setRotation(-45);
+				float scaleMult = this.quickBar[slotNumber].getItemSprite().getSprite().getSize().x*this.quickBar[slotNumber].getItemSprite().getSprite().getSize().y;
+				if(scaleMult == 1)
+					this.quickBar[slotNumber].getItemSprite().setScale(this.quickBar[slotNumber].getItemSprite().getScale().x / 1.25f, this.quickBar[slotNumber].getItemSprite().getScale().y / 1.25f);
+				else
+					this.quickBar[slotNumber].getItemSprite().setScale(this.quickBar[slotNumber].getItemSprite().getScale().x / scaleMult, this.quickBar[slotNumber].getItemSprite().getScale().y / scaleMult);
 			}
 			this.quickBar[slotNumber].display();
 		}
@@ -134,8 +158,6 @@ public class Player extends Character{
 		
 		updateSpriteAnimation();
 		
-		System.out.println(this.inventory);
-		
 		updateShootVal();
 		
 		updateQuickBar();
@@ -150,6 +172,9 @@ public class Player extends Character{
 		super.update(layer);
 	}
 
+	/**
+	 * Update the usage of the player's hand item
+	 */
 	private void useItem() {
 		if(Input.isMouseLeft() && this.itemOnHand != null && GameWorld.camera.isFree()) {
 			if(this.itemOnHand instanceof Bow)
@@ -159,6 +184,9 @@ public class Player extends Character{
 		}			
 	}
 	
+	/**
+	 * Update the player's invulnerability
+	 */
 	private void updateInvulnerability() {
 		if(this.invulnerabilityTime > Sys.getTime()/1000f) {
 			this.alpha += this.invulnerabilityFadeStep;
@@ -171,6 +199,9 @@ public class Player extends Character{
 		}
 	}
 	
+	/**
+	 * Update the player's and pivot scale
+	 */
 	private void updateScale() {
 		if(this.vel.x > 0) this.scale.setX(1);
 		else if(this.vel.x < 0) this.scale.setX(-1);
@@ -181,8 +212,14 @@ public class Player extends Character{
 			this.pivot.pos.x = -Maths.fastAbs(this.pivot.pos.x);
 	}
 	
+	/**
+	 * Store the state of the eye animation (true is blinking)
+	 */
 	private boolean eyeAnimation = false;
 	
+	/**
+	 * Update the animation of the player
+	 */
 	private void updateSpriteAnimation() {
 		if(this.isGrounded) {
 			if(atlasCount >= 65 && atlasCount < 76) {
@@ -361,6 +398,12 @@ public class Player extends Character{
 		if(this.vel.x > 70) this.vel.x = 70;
 	}
 	
+	/**
+	 * Add an item with an amount of stack to the player's inventory
+	 * @param item The item to add
+	 * @param stack The amount of item to add
+	 * @return True if added
+	 */
 	public boolean addItem(Item item, int stack) {
 		byte addState = addQuickBarItem(item, stack);
 		if(addState == 1) return true;
@@ -368,10 +411,21 @@ public class Player extends Character{
 		return this.inventory.add(item, stack);
 	}
 	
+	/**
+	 * Add an item with the stack stored into this item
+	 * @param item The item to add
+	 * @return True if added
+	 */
 	public boolean addItem(Item item) {
 		return addItem(item, item.getStack());
 	}
 	
+	/**
+	 * Add an item and an amount of stack to the quick bar
+	 * @param item The item to add
+	 * @param stack The amount of item to add
+	 * @return 1 if added, 0 if not found , -1 if found but no more room
+	 */
 	public byte addQuickBarItem(Item item, int stack) {
 		if(stack <= item.getMAX_STACK()) {
 			for (InventorySlot slot : quickBar) {
@@ -387,17 +441,20 @@ public class Player extends Character{
 		} return 0;
 	}
 	
-	public boolean removeQuickBarItem(int index, int stack) {
+	/**
+	 * Remove a certain stack of an item into the quick bar
+	 * @param index The index of the quick bar
+	 * @param stack The number of item to remove
+	 */
+	public void removeQuickBarItem(int index, int stack) {
 		if((this.quickBar[index].getItem().getStack() - stack) <= 0) {
 			this.quickBar[index].setItem(null);
 			this.quickBar[index].getItemSprite().remove();
 			this.quickBar[index].setItemSprite(null);
 			this.quickBar[index].getQuantity().remove();
 			this.quickBar[index].setQuantity(null);
-			return false;
 		}
 		this.quickBar[index].getQuantity().updateText("" + this.quickBar[index].getItem().getStack());
-		return true;
 	}
 	
 	/**

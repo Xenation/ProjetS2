@@ -181,7 +181,7 @@ public enum TileBehavior {
 	private boolean updatePiston(Tile tile) {
 		PushingTile pushing = (PushingTile) tile;
 		if (pushing.pushinginterval < 0 && !pushing.isPushing()) {
-			pushing.pushinginterval = PushingTile.DEF_INTERVAL;
+			pushing.pushinginterval += PushingTile.DEF_INTERVAL;
 			pushing.setPushing(true);
 			Tile front = GameWorld.chunkMap.getTileFront(tile);
 			if (front != null) {
@@ -193,7 +193,7 @@ public enum TileBehavior {
 			GameWorld.chunkMap.addTile(arm);
 			pushing.setVariant(TileVariant.Piston_extended);
 		} else if (pushing.pushinginterval < 0 && pushing.isPushing()) {
-			pushing.pushinginterval = PushingTile.DEF_INTERVAL;
+			pushing.pushinginterval += PushingTile.DEF_INTERVAL;
 			pushing.setPushing(false);
 			Tile front = GameWorld.chunkMap.getTileFront(tile);
 			if (front != null && front.type == TileType.PistonArm) {
