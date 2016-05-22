@@ -1,5 +1,9 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
+import static org.lwjgl.openal.AL10.alSourcePlay;
+
+import java.io.FileNotFoundException;
+
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Character;
@@ -7,6 +11,8 @@ import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
+import fr.iutvalence.info.dut.m2107.sound.AudioDataBase;
+import fr.iutvalence.info.dut.m2107.sound.OpenAL;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
@@ -68,6 +74,12 @@ public class Sword extends Weapon {
 	@Override
 	public void use(Character owner) {
 		if(remainingTime <= 0) {
+			try {
+				OpenAL.source.play(AudioDataBase.sword());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Collider tmpCol = new Collider(owner.getCollider().getMin(), owner.getCollider().getMax());
 			if(owner.getScale().x == 1) tmpCol.extendRight(range);
 			else tmpCol.extendLeft(range);

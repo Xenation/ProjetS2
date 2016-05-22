@@ -1,10 +1,16 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
+import static org.lwjgl.openal.AL10.alSourcePlay;
+
+import java.io.FileNotFoundException;
+
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Character;
 import fr.iutvalence.info.dut.m2107.entities.Player;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
+import fr.iutvalence.info.dut.m2107.sound.AudioDataBase;
+import fr.iutvalence.info.dut.m2107.sound.OpenAL;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
@@ -71,6 +77,12 @@ public class Bow extends Weapon {
 	@Override
 	public void use(Character owner) {
 		if(this.remainingTime <= 0) {
+			try {
+				OpenAL.source.play(AudioDataBase.arrow());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if(owner instanceof Player) {
 				Arrow arrow = null;
 				for (int i = 0; i < ((Player)owner).getQuickBarLength() ; i++) {
