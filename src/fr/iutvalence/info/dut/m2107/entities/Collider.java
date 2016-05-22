@@ -127,7 +127,7 @@ public class Collider {
 		
 		Collider globalCollider = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2),
 													new Vector2f(this.ent.col.minX + this.getW()/2 + ((Character)this.ent).vel.x * DisplayManager.deltaTime(), this.ent.col.minY + this.getH()/2 + ((Character)this.ent).vel.y * DisplayManager.deltaTime()));
-		globalCollider.extendAll(this.getW()*4, this.getH()*4);
+		globalCollider.extendAll(this.getW()*3, this.getH()*3);
 		List<Tile> globalTiles = generateGlobalSurroundingTiles(globalCollider);
 		
 		int continuousStep = (int) ((Maths.fastAbs(((Character)this.ent).vel.x) + Math.abs(((Character)this.ent).vel.y))/8+1);
@@ -173,15 +173,15 @@ public class Collider {
 		
 		for (Tile tile : surroundTile) {
 			if(isCollidingLeft(this, tile)) { // if the tile is on my left
-				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !globalTiles.contains(new Tile(TileType.Dirt, tile.x+1, tile.y))) {
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x+1, tile.y)) {
 					// I'm on the perfect right of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
 						// My bottom is between the tile height
-						if(!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+1)) &&
-								!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+2)) &&
-								!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+3)) &&
-								!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+4)) &&
-								!globalTiles.contains(new Tile(TileType.Dirt, tile.x+1, tile.y+4))) {
+						if(!checkTilePosition(globalTiles, tile.x, tile.y+1) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+2) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+3) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+4) &&
+								!checkTilePosition(globalTiles, tile.x+1, tile.y+4)) {
 							// There is no block to prevent the StepUp
 							modVel.y = 0;
 							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
@@ -210,12 +210,12 @@ public class Collider {
 				} else {
 					// I'm under or above the right tile
 					if(isCollidingUp(this, tile)) {
-						if(globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-1)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-2)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-3)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-4))) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y-1) || checkTilePosition(globalTiles, tile.x, tile.y-2) || checkTilePosition(globalTiles, tile.x, tile.y-3) || checkTilePosition(globalTiles, tile.x, tile.y-4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						} else modVel.y = 0;
 					} else if(isCollidingDown(this, tile)) {
-						if(globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+1)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+2)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+3)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+4))) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y+1) || checkTilePosition(globalTiles, tile.x, tile.y+2) || checkTilePosition(globalTiles, tile.x, tile.y+3) || checkTilePosition(globalTiles, tile.x, tile.y+4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						} else modVel.y = 0;
@@ -223,15 +223,15 @@ public class Collider {
 				}
 			}
 			if(isCollidingRight(this, tile)) { // if the tile is on my right
-				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !globalTiles.contains(new Tile(TileType.Dirt, tile.x-1, tile.y))) {
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x-1, tile.y)) {
 					// I'm on the perfect left of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
 						// My bottom is between the tile height
-						if(!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+1)) &&
-							!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+2)) &&
-							!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+3)) &&
-							!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+4)) &&
-							!globalTiles.contains(new Tile(TileType.Dirt, tile.x-1, tile.y+4))) {
+						if(!checkTilePosition(globalTiles, tile.x, tile.y+1) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+2) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+3) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+4) &&
+								!checkTilePosition(globalTiles, tile.x-1, tile.y+4)) {
 							modVel.y = 0;
 							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 							((Character)ent).isGrounded = true;
@@ -259,12 +259,12 @@ public class Collider {
 				} else {
 					// I'm under or above the right tile
 					if(isCollidingUp(this, tile)) {
-						if(globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-1)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-2)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-3)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-4))) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y-1) || checkTilePosition(globalTiles, tile.x, tile.y-2) || checkTilePosition(globalTiles, tile.x, tile.y-3) || checkTilePosition(globalTiles, tile.x, tile.y-4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						} else modVel.y = 0;
 					} else if(isCollidingDown(this, tile)) {
-						if(globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+1)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+2)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+3)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+4))) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y+1) || checkTilePosition(globalTiles, tile.x, tile.y+2) || checkTilePosition(globalTiles, tile.x, tile.y+3) || checkTilePosition(globalTiles, tile.x, tile.y+4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						} else modVel.y = 0;
@@ -272,14 +272,14 @@ public class Collider {
 				}
 			}
 			if(isCollidingUp(this, tile)) { //if the tile is above me
-				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-1))) {
+				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y-1)) {
 					// I'm under the tile
 					modVel.y = 0;
 					ent.pos.y = tile.y - this.getH()/2;
 				}
 			}
 			if(isCollidingDown(this, tile)) { // if the tile is under me
-				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+1))) {
+				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y+1)) {
 					// I'm above the tile
 					modVel.y = 0;
 					((Character)ent).isGrounded = true;
@@ -400,17 +400,26 @@ public class Collider {
 		return null;
 	}
 	
+	public boolean checkTilePosition(List<Tile> globalTiles, int x, int y) {
+		for (Tile tile : globalTiles) {
+			if(tile.x == x && tile.y == y) return true;
+		}
+		return false;
+	}
+	
 	/**
-	 * Generate all the tiles from the surrounding chunks colliding with a specific collider
+	 * Generate all the solid tiles from the surrounding chunks colliding with a specific collider
 	 * @param col The collider generation based on
-	 * @return A list of tiles colliding with
+	 * @return A list of solid tiles colliding with
 	 */
 	public List<Tile> generateGlobalSurroundingTiles(Collider col) {
 		List<Tile> tiles = new ArrayList<Tile>();
-		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, ent.pos)) 
-			for (Tile tile : chunk)
+		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(col.localMinX + col.getW()/2, col.localMinY + col.getH()/2))) 
+			for (Tile tile : chunk) {
+
 				if(!isColliding(col, tile) && tile.getType().isSolid())
 					tiles.add(tile);
+			}
 		return tiles;
 	}
 	
@@ -423,7 +432,7 @@ public class Collider {
 	public List<Tile> generateSurroundingTiles(List<Tile> globalTiles, Collider col) {
 		List<Tile> tiles = new ArrayList<Tile>();
 			for (Tile tile : globalTiles)
-				if(!isColliding(col, tile) && tile.getType().isSolid())
+				if(!isColliding(col, tile))
 					tiles.add(tile);
 		return tiles;
 	}
