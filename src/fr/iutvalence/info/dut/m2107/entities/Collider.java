@@ -381,10 +381,11 @@ public class Collider {
 	 * @return The tile colliding with the collider
 	 */
 	public Tile isCollidingWithMap(Collider encompassCol) {
-		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(this.minX, this.minY))) 
+		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(this.minX, this.minY))) { 
 			for (Tile tile : chunk)
 				if(!isColliding(encompassCol, tile))
 					return tile;
+		}
 		return null;
 	}
 	
@@ -401,9 +402,8 @@ public class Collider {
 	}
 	
 	public boolean checkTilePosition(List<Tile> globalTiles, int x, int y) {
-		for (Tile tile : globalTiles) {
+		for (Tile tile : globalTiles)
 			if(tile.x == x && tile.y == y) return true;
-		}
 		return false;
 	}
 	
@@ -414,12 +414,11 @@ public class Collider {
 	 */
 	public List<Tile> generateGlobalSurroundingTiles(Collider col) {
 		List<Tile> tiles = new ArrayList<Tile>();
-		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(col.localMinX + col.getW()/2, col.localMinY + col.getH()/2))) 
-			for (Tile tile : chunk) {
-
+		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(col.localMinX + col.getW()/2, col.localMinY + col.getH()/2))) { 
+			for (Tile tile : chunk)
 				if(!isColliding(col, tile) && tile.getType().isSolid())
 					tiles.add(tile);
-			}
+		}
 		return tiles;
 	}
 	
@@ -431,9 +430,9 @@ public class Collider {
 	 */
 	public List<Tile> generateSurroundingTiles(List<Tile> globalTiles, Collider col) {
 		List<Tile> tiles = new ArrayList<Tile>();
-			for (Tile tile : globalTiles)
-				if(!isColliding(col, tile))
-					tiles.add(tile);
+		for (Tile tile : globalTiles)
+			if(!isColliding(col, tile))
+				tiles.add(tile);
 		return tiles;
 	}
 	
