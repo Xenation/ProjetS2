@@ -16,27 +16,28 @@ import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
+import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Collider {
 
 	/**
-	 * The minimum x and y of the collider
+	 * The minimum x or y of the collider
 	 */
 	private float minX, minY;
 	
 	/**
-	 * The maximum x and y of the collider
+	 * The maximum x or y of the collider
 	 */
 	private float maxX, maxY;
 	
 	/**
-	 * The local minimum x and y of the collider
+	 * The local minimum x or y of the collider
 	 */
 	private final float localMinX, localMinY;
 	
 	/**
-	 * The local maximum x and y of the collider
+	 * The local maximum x or y of the collider
 	 */
 	private final float localMaxX, localMaxY;
 	
@@ -101,7 +102,7 @@ public class Collider {
 	/**
 	 * Check the discrete collision of a character
 	 */
-	public void checkCharacterDiscreteCollision() {
+	/*public void checkCharacterDiscreteCollision() {
 		updateColPos();
 		
 		((Character)ent).hasStepUp = false;
@@ -112,7 +113,7 @@ public class Collider {
 		encompassCol.extendAll(((Character)this.ent).col.getW()/2, ((Character)this.ent).col.getH()/2);
 		
 		checkCharacterCollision(encompassCol);
-	}
+	}*/
 	
 	/**
 	 * Check the continuous collision of a character
@@ -123,6 +124,11 @@ public class Collider {
 		((Character)ent).hasStepUp = false;
 		((Character)ent).isGrounded = false;
 		((Character)ent).wallSlide = false;
+		
+		Collider globalCollider = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2),
+													new Vector2f(this.ent.col.minX + this.getW()/2 + ((Character)this.ent).vel.x * DisplayManager.deltaTime(), this.ent.col.minY + this.getH()/2 + ((Character)this.ent).vel.y * DisplayManager.deltaTime()));
+		globalCollider.extendAll(this.getW()*4, this.getH()*4);
+		List<Tile> globalTiles = generateGlobalSurroundingTiles(globalCollider);
 		
 		int continuousStep = (int) ((Maths.fastAbs(((Character)this.ent).vel.x) + Math.abs(((Character)this.ent).vel.y))/8+1);
 		continuousStep *= DisplayManager.deltaTime()*20;
@@ -141,7 +147,7 @@ public class Collider {
 			Collider encompassCol = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2), nextPos);
 			encompassCol.extendAll(this.getW()/2, this.getH()/2);
 			
-			checkCharacterCollision(encompassCol);
+			checkCharacterCollision(globalTiles, encompassCol);
 			
 			updateColPos();
 			if(((Character)this.ent).vel.x != 0) {
@@ -159,23 +165,23 @@ public class Collider {
 	 * Check the collision of character
 	 * @param encompassCol The collider which encompass the current position and the next position
 	 */
-	private void checkCharacterCollision(Collider encompassCol) {
-		List<Tile> surroundTile = generateSurroundingTiles(encompassCol);
+	private void checkCharacterCollision(List<Tile> globalTiles, Collider encompassCol) {
+		List<Tile> surroundTile = generateSurroundingTiles(globalTiles, encompassCol);
 		if(surroundTile.size() == 0) return;
 		
 		Vector2f modVel = new Vector2f(1, 1);
 		
 		for (Tile tile : surroundTile) {
 			if(isCollidingLeft(this, tile)) { // if the tile is on my left
-				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && GameWorld.chunkMap.getRightTile(tile) == null) {
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !globalTiles.contains(new Tile(TileType.Dirt, tile.x+1, tile.y))) {
 					// I'm on the perfect right of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
 						// My bottom is between the tile height
-						if(GameWorld.chunkMap.getTopTile(tile) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x, tile.y+2) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x, tile.y+3) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x, tile.y+4) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x+1, tile.y+4) == null) {
+						if(!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+1)) &&
+								!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+2)) &&
+								!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+3)) &&
+								!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+4)) &&
+								!globalTiles.contains(new Tile(TileType.Dirt, tile.x+1, tile.y+4))) {
 							// There is no block to prevent the StepUp
 							modVel.y = 0;
 							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
@@ -204,12 +210,12 @@ public class Collider {
 				} else {
 					// I'm under or above the right tile
 					if(isCollidingUp(this, tile)) {
-						if(GameWorld.chunkMap.getBottomTile(tile) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-2) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-3) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-4) != null) {
+						if(globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-1)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-2)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-3)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-4))) {
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						} else modVel.y = 0;
 					} else if(isCollidingDown(this, tile)) {
-						if(GameWorld.chunkMap.getTopTile(tile) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+2) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+3) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+4) != null) {
+						if(globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+1)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+2)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+3)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+4))) {
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						} else modVel.y = 0;
@@ -217,15 +223,15 @@ public class Collider {
 				}
 			}
 			if(isCollidingRight(this, tile)) { // if the tile is on my right
-				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && GameWorld.chunkMap.getLeftTile(tile) == null) {
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !globalTiles.contains(new Tile(TileType.Dirt, tile.x-1, tile.y))) {
 					// I'm on the perfect left of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
 						// My bottom is between the tile height
-						if(GameWorld.chunkMap.getTopTile(tile) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x, tile.y+2) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x, tile.y+3) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x, tile.y+4) == null &&
-							GameWorld.chunkMap.getTileAt(tile.x-1, tile.y+4) == null) {
+						if(!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+1)) &&
+							!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+2)) &&
+							!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+3)) &&
+							!globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+4)) &&
+							!globalTiles.contains(new Tile(TileType.Dirt, tile.x-1, tile.y+4))) {
 							modVel.y = 0;
 							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 							((Character)ent).isGrounded = true;
@@ -253,12 +259,12 @@ public class Collider {
 				} else {
 					// I'm under or above the right tile
 					if(isCollidingUp(this, tile)) {
-						if(GameWorld.chunkMap.getBottomTile(tile) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-2) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-3) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y-4) != null) {
+						if(globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-1)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-2)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-3)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-4))) {
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						} else modVel.y = 0;
 					} else if(isCollidingDown(this, tile)) {
-						if(GameWorld.chunkMap.getTopTile(tile) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+2) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+3) != null || GameWorld.chunkMap.getTileAt(tile.x, tile.y+4) != null) {
+						if(globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+1)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+2)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+3)) || globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+4))) {
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						} else modVel.y = 0;
@@ -266,14 +272,14 @@ public class Collider {
 				}
 			}
 			if(isCollidingUp(this, tile)) { //if the tile is above me
-				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && GameWorld.chunkMap.getBottomTile(tile) == null) {
+				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y-1))) {
 					// I'm under the tile
 					modVel.y = 0;
 					ent.pos.y = tile.y - this.getH()/2;
 				}
 			}
 			if(isCollidingDown(this, tile)) { // if the tile is under me
-				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && GameWorld.chunkMap.getTopTile(tile) == null) {
+				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !globalTiles.contains(new Tile(TileType.Dirt, tile.x, tile.y+1))) {
 					// I'm above the tile
 					modVel.y = 0;
 					((Character)ent).isGrounded = true;
@@ -395,15 +401,29 @@ public class Collider {
 	}
 	
 	/**
-	 * Generate all the tiles colliding with a specific collider
+	 * Generate all the tiles from the surrounding chunks colliding with a specific collider
 	 * @param col The collider generation based on
 	 * @return A list of tiles colliding with
 	 */
-	public List<Tile> generateSurroundingTiles(Collider col) {
+	public List<Tile> generateGlobalSurroundingTiles(Collider col) {
 		List<Tile> tiles = new ArrayList<Tile>();
 		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, ent.pos)) 
 			for (Tile tile : chunk)
-				if(!isColliding(col, tile))
+				if(!isColliding(col, tile) && tile.getType().isSolid())
+					tiles.add(tile);
+		return tiles;
+	}
+	
+	/**
+	 * Generate all the tiles from a reduced map colliding with a specific collider
+	 * @param globalTiles The reduced map
+	 * @param col The collider generating based on
+	 * @return A list of tiles colliding with
+	 */
+	public List<Tile> generateSurroundingTiles(List<Tile> globalTiles, Collider col) {
+		List<Tile> tiles = new ArrayList<Tile>();
+			for (Tile tile : globalTiles)
+				if(!isColliding(col, tile) && tile.getType().isSolid())
 					tiles.add(tile);
 		return tiles;
 	}

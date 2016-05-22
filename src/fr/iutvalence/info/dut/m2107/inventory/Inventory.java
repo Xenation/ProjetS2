@@ -17,12 +17,23 @@ import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 
 public class Inventory {
 	
+	/**
+	 * The number of inventory slot by row
+	 */
 	private final int inventoryWidth = 6;
+	
+	/**
+	 * The start x position of the inventory display
+	 */
 	private final float startX = 0.25f;
+	
+	/**
+	 * The start y position of the inventory display
+	 */
 	private final float startY = 0.5f;
 	
 	/**
-	 * A list of item which contain a bunch of item and play the role of inventory
+	 * A list of inventory slot which contain a bunch of item and it's slot and play the role of inventory
 	 */	
 	private SortedSet<InventorySlot> inventorySlot = new TreeSet<InventorySlot>();
 	
@@ -106,15 +117,15 @@ public class Inventory {
 					this.replace();
 					slot.hide();
 				}
-				
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
-
+	/**
+	 * Re-organize the inventory display 
+	 */
 	private void replace() {
 		int x = 0 ,y = 0;
 		for (InventorySlot slot : inventorySlot) {
@@ -125,24 +136,7 @@ public class Inventory {
 				y++;
 			}
 		}
-	}
-	
-	/*public void initInventory() {
-		int i = 0;
-		for (InventorySlot slot : inventorySlot) {
-			InventorySlot slot = new InventorySlot();
-			
-			slot.setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(1 - width, 1 - height - height*i*2), width, height));
-			slot.setItem(new GUIElement(item.getSprite(), new Vector2f(1 - width, 1 - height - height*i*2), width*.625f, height*.625f));
-			slot.setQuantity(new GUIText("" + this.inventory.get(i).stack , .5f, 1 - width -0.1f/5.5f, height -0.02f + height*i, .1f, true));
-			
-			slot.display(0);
-			
-			inventorySlot.add(slot);
-			i++;
-		}
-	}*/
-	
+	}	
 	
 //	/**
 //	 * Sort an item list by Name
@@ -200,6 +194,10 @@ public class Inventory {
 //		});
 //	}
 	
+	/**
+	 * Return the first arrow found in the inventory
+	 * @return the first arrow found in the inventory
+	 */
 	public Arrow getArrow() {
 		for (InventorySlot slot : inventorySlot)
 			if(slot.getItem() instanceof Arrow)
@@ -207,6 +205,10 @@ public class Inventory {
 		return null;
 	}
 	
+	/**
+	 * Return the first bullet found in the inventory
+	 * @return the first bullet found in the inventory
+	 */
 	public Bullet getBullet() {
 		for (InventorySlot slot : inventorySlot)
 			if(slot.getItem() instanceof Bullet)
@@ -214,6 +216,9 @@ public class Inventory {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		String str = "";
