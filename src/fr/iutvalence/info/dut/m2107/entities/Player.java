@@ -119,6 +119,13 @@ public class Player extends Character{
 			if(this.quickBar[slotNumber].getItem() != null) {
 				this.quickBar[slotNumber].setItemSprite(new GUIElement(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(), width, height));
 				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
+				
+				this.quickBar[slotNumber].getItemSprite().setRotation(-45);
+				float scaleMult = this.quickBar[slotNumber].getItemSprite().getSprite().getSize().x*this.quickBar[slotNumber].getItemSprite().getSprite().getSize().y;
+				if(scaleMult == 1)
+					this.quickBar[slotNumber].getItemSprite().setScale(this.quickBar[slotNumber].getItemSprite().getScale().x / 1.25f, this.quickBar[slotNumber].getItemSprite().getScale().y / 1.25f);
+				else
+					this.quickBar[slotNumber].getItemSprite().setScale(this.quickBar[slotNumber].getItemSprite().getScale().x / scaleMult, this.quickBar[slotNumber].getItemSprite().getScale().y / scaleMult);
 			}
 			this.quickBar[slotNumber].display();
 		}
@@ -133,8 +140,6 @@ public class Player extends Character{
 		input();
 		
 		updateSpriteAnimation();
-		
-		System.out.println(this.inventory);
 		
 		updateShootVal();
 		

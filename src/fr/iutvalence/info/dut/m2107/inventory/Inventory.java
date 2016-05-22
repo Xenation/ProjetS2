@@ -73,6 +73,12 @@ public class Inventory {
 			newSlot.setItemSprite(new GUIElement(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(), width, height));
 			newSlot.setQuantity(new GUIText(""+item.stack, .5f, -width, -width/3, width, true));
 		}
+		newSlot.getItemSprite().setRotation(-45);
+		float scaleMult = newSlot.getItemSprite().getSprite().getSize().x/newSlot.getItemSprite().getSprite().getSize().y;
+		if(scaleMult == 1)
+			newSlot.getItemSprite().setScale(newSlot.getItemSprite().getScale().x / 1.25f, newSlot.getItemSprite().getScale().y / 1.25f);
+		else
+			newSlot.getItemSprite().setScale(newSlot.getItemSprite().getScale().x / scaleMult, newSlot.getItemSprite().getScale().y / scaleMult);
 		newSlot.display();
 		inventorySlot.add(newSlot);
 		return true;
