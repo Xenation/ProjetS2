@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.TileDestroyedEvent;
+import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 
 /**
  * Used to easily build (instantiate) tiles
@@ -31,7 +32,9 @@ public class TileBuilder {
 		case Fader:
 			return new FadingTile(type, x, y);
 		case Spikes:
-			return new DamagingTile(type, x, y);
+			DamagingSupportedTile spike = new DamagingSupportedTile(type, x, y);
+			spike.setDepending(GameWorld.chunkMap.getBottomTile(spike));
+			return spike;
 		case Sand:
 			return new FallingTile(type, x, y);
 		case Creator:
@@ -69,8 +72,8 @@ public class TileBuilder {
 //			EventManager.unregister(t);
 			break;
 		case Spikes:
-			DamagingTile damaging = (DamagingTile) tile;
-			EventManager.sendEvent(new TileDestroyedEvent(damaging));
+			DamagingSupportedTile spike = (DamagingSupportedTile) tile;
+			EventManager.sendEvent(new TileDestroyedEvent(spike));
 //			EventManager.unregister(damaging);
 			break;
 		case Sand:
@@ -116,6 +119,7 @@ public class TileBuilder {
 		stats.add("x = "+tile.x);
 		stats.add("y = "+tile.y);
 		stats.add("Ori = "+tile.orientation.name());
+		stats.add("toUp = "+tile.toUpdate());
 		switch (tile.type) {
 		case Dirt:
 		case Stone:
@@ -124,10 +128,10 @@ public class TileBuilder {
 		case Leaves:
 			break;
 		case Fader:
-			stats.add("time = "+((FadingTile)tile).timeRemaining);
+			stats.add("time = "+((TimedTile)tile).time);
 			break;
 		case Spikes:
-			stats.add("dmg = "+((DamagingTile)tile).damage);
+			stats.add("dmg = "+((DamagingSupportedTile)tile).damage);
 			break;
 		case Sand:
 			stats.add("fallTime = "+((FallingTile)tile).time);

@@ -75,10 +75,7 @@ public enum TileBehavior {
 	 * @return false if the tile has elapsed its lifetime
 	 */
 	private boolean updateFading(Tile tile) {
-		FadingTile fadtile = (FadingTile) tile;
-		if (fadtile.timeRemaining <= 0) return false;
-		fadtile.setTimeRemaining(fadtile.getTimeRemaining()-DisplayManager.deltaTime());
-		return true;
+		return false;
 	}
 	
 	/**
@@ -96,9 +93,6 @@ public enum TileBehavior {
 	 * @return false if the tile has no tile under it
 	 */
 	private boolean updateSupported(Tile tile) {
-		Tile support = GameWorld.chunkMap.getAdjacentTile(tile, TileOrientation.DOWN);
-		if (support == null) return false;
-		if (!support.getType().isSolid()) return false;
 		return true;
 	}
 	
@@ -214,6 +208,9 @@ public enum TileBehavior {
 	
 	private boolean updateDependant(Tile tile) {
 		DependantTile dependant = (DependantTile) tile;
+		if (dependant.depending == null) {
+			return false;
+		}
 		Tile realDep = GameWorld.chunkMap.getTileAt(dependant.depending.x, dependant.depending.y);
 		if (realDep == null) return false;
 		if (realDep.type != dependant.dependingType) return false;

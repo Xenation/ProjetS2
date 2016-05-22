@@ -36,6 +36,8 @@ public class Tile {
 	 */
 	protected TileOrientation orientation;
 	
+	protected boolean toUpdate;
+	
 	/**
 	 * A Tile with the specified type and coordinates
 	 * @param type the type of the tile
@@ -48,6 +50,7 @@ public class Tile {
 		this.x = x;
 		this.y = y;
 		this.orientation = TileOrientation.RIGHT;
+		this.toUpdate = true;
 	}
 	
 	/**
@@ -63,6 +66,7 @@ public class Tile {
 		this.x = x;
 		this.y = y;
 		this.orientation = TileOrientation.RIGHT;
+		this.toUpdate = true;
 	}
 	
 	/**
@@ -78,6 +82,7 @@ public class Tile {
 		this.x = x;
 		this.y = y;
 		this.orientation = orientation;
+		this.toUpdate = true;
 	}
 	
 	/**
@@ -94,14 +99,24 @@ public class Tile {
 		this.x = x;
 		this.y = y;
 		this.orientation = orientation;
+		this.toUpdate = true;
 	}
 	
-	/**
-	 * Updates this tile using the behaviors of its type
-	 * @return false if the tile needs to be deleted
-	 */
-	public boolean update() {
-		return type.updateBehaviors(this);
+	public void softUpdate() {
+		return;
+	}
+	
+	public boolean heavyUpdate() {
+		this.toUpdate = false;
+		return this.type.updateBehaviors(this);
+	}
+	
+	public boolean toUpdate() {
+		return this.toUpdate;
+	}
+	
+	public void toUpdate(boolean toUpdate) {
+		this.toUpdate = toUpdate;
 	}
 
 	/**

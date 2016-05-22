@@ -17,7 +17,7 @@ public enum TileType {
 	Log(4, TileVariant.Log),
 	Leaves(5, TileVariant.Leaves),
 	Fader(6, TileVariant.Fader, true, TileBehavior.FADING),
-	Spikes(7, TileVariant.Spikes, false, TileBehavior.DAMAGING, TileBehavior.SUPPORTED),
+	Spikes(7, TileVariant.Spikes, false, TileBehavior.DAMAGING, TileBehavior.DEPENDANT),
 	Sand(8, TileVariant.Sand, true, TileBehavior.FALLING),
 	Creator(9, TileVariant.Creator, true, TileBehavior.CREATOR),
 	Piston(10, TileVariant.Piston_retracted, true, TileBehavior.PISTON),

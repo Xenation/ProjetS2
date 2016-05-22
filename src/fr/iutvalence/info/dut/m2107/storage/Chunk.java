@@ -63,9 +63,15 @@ public class Chunk implements Iterable<Tile> {
 	 * Updates each tile of this chunk and deletes the tiles that have returned false for their update.
 	 */
 	public void update() {
+		// heavy updates detection
+		for (Tile tile : this) {
+			tile.toUpdate(false);
+			tile.softUpdate();
+		}
+		
 		List<Tile> toRemove = new ArrayList<Tile>();
 		for (Tile tile : this) {
-			if (!tile.update()) {
+			if (tile.toUpdate() && !tile.heavyUpdate()) {
 				toRemove.add(tile);
 			}
 		}

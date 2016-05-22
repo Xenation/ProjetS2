@@ -25,8 +25,14 @@ public class DependantTile extends Tile {
 
 	public void setDepending(Tile depending) {
 		this.depending = depending;
-		this.dependingType = depending.type;
-		this.dependingOri = depending.orientation;
+		if (depending != null) {
+			this.dependingType = depending.type;
+			this.dependingOri = depending.orientation;
+		}
+	}
+	
+	public void softUpdate() {
+		this.toUpdate = true;
 	}
 	
 }

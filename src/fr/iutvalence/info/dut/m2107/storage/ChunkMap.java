@@ -33,7 +33,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	 * Updates every chunk of this chunkMap
 	 */
 	public void update() {
-		for (Chunk chk : this) {
+		for (Chunk chk : getScreenChunks()) {
 			chk.update();
 		}
 	}

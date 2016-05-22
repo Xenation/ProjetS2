@@ -1,7 +1,6 @@
 package fr.iutvalence.info.dut.m2107.launcher;
 
 import fr.iutvalence.info.dut.m2107.enginetest.MainGameTester;
-import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 

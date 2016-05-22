@@ -6,7 +6,7 @@ package fr.iutvalence.info.dut.m2107.tiles;
  * @author Xenation
  *
  */
-public class DamagingTile extends Tile {
+public class DamagingSupportedTile extends DependantTile {
 	
 	/**
 	 * The default damage
@@ -24,7 +24,7 @@ public class DamagingTile extends Tile {
 	 * @param x the x coordinate
 	 * @param y the y coordinate
 	 */
-	public DamagingTile(TileType type, int x, int y) {
+	public DamagingSupportedTile(TileType type, int x, int y) {
 		super(type, x, y);
 		this.setDamage(DEF_DAMAGE);
 	}
@@ -36,7 +36,7 @@ public class DamagingTile extends Tile {
 	 * @param y the y coordinate
 	 * @param dmg the damage
 	 */
-	public DamagingTile(TileType type, int x, int y, float dmg) {
+	public DamagingSupportedTile(TileType type, int x, int y, float dmg) {
 		super(type, x, y);
 		this.setDamage(dmg);
 	}
