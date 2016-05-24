@@ -21,6 +21,14 @@ public class GUILayer extends Layer {
 	 */
 	private Map<Atlas, List<Entity>> layer = new HashMap<Atlas, List<Entity>>();
 	
+	public void update() {
+		for (Atlas atl : layer.keySet()) {
+			for (Entity ent : layer.get(atl)) {
+				ent.update(this);
+			}
+		}
+	}
+	
 	@Override
 	public void add(Entity ent) {
 		List<Entity> newList = layer.get(ent.getSprite().getAtlas());

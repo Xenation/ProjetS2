@@ -74,6 +74,7 @@ public class GameWorld {
 	public static void update() {
 		camera.update();
 		layerMap.update();
+		guiLayerMap.update();
 		chunkMap.update();
 	}
 }

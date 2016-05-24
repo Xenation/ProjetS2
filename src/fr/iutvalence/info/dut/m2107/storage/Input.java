@@ -2,6 +2,7 @@ package fr.iutvalence.info.dut.m2107.storage;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 
 public class Input {
 	
@@ -251,4 +252,11 @@ public class Input {
 	
 	/** @return wheel scroll value */
 	public static int WheelScrolling() {return wheelScrolling;}
+	
+	/** @return the mouse's x position */
+	public static float getMouseGUIPosX() {return ((Mouse.getX()/(float) Display.getWidth())-.5f)*2;}
+	
+	/** @return the mouse's y position */
+	public static float getMouseGUIPosY() {return ((Mouse.getY()/(float) Display.getHeight())-.5f)*2;}
+	
 }

@@ -69,6 +69,7 @@ public class GUIMaster {
 			textLoader.unloadVAO(txt.getSprite().getVaoID());
 		}
 		txt.setMeshInfo(vao, data.getVertexCount());
+		txt.setSize(data.getMaxX(), data.getMaxY());
 		return txt;
 	}
 	

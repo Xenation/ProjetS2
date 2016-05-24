@@ -26,5 +26,34 @@ public class TextMeshData {
 	public int getVertexCount() {
 		return vertexPositions.length/2;
 	}
-
+	
+	public float getMaxX() {
+		float max = -1;
+		for (int i = 0; i < vertexPositions.length; i = i+2) {
+			float f = vertexPositions[i];
+			if (f > max) {
+				max = f;
+			}
+		}
+		return (-1-max)*-1;
+	}
+	
+	public float getMaxY() {
+		float min = 1;
+		for (int i = 1; i < vertexPositions.length; i = i+2) {
+			float f = vertexPositions[i];
+			if (f < min) {
+				min = f;
+			}
+		}
+		float max = 0;
+		for (int i = 1; i < vertexPositions.length; i = i+2) {
+			float f = vertexPositions[i]-min;
+			if (f > max) {
+				max = f;
+			}
+		}
+		return max;
+	}
+	
 }

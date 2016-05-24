@@ -28,6 +28,9 @@ public class GUIText extends Entity {
 
 	private boolean centerText = false;
 	
+	private float width;
+	private float height;
+	
 	public GUIText(String text, float fontSize, float posX, float posY, float maxLineLength, boolean centered, boolean isDebug) {
 		super(new Vector2f(posX+1, posY-1), new TextSprite());
 		this.textString = text;
@@ -102,6 +105,11 @@ public class GUIText extends Entity {
 	public Vector2f getPosition() {
 		return this.pos;
 	}
+	
+	public void setPosition(float x, float y) {
+		this.pos.x = x+1;
+		this.pos.y = y-1;
+	}
 
 	/**
 	 * @return the ID of the text's VAO, which contains all the vertex data for
@@ -124,6 +132,19 @@ public class GUIText extends Entity {
 		TextSprite spr = (TextSprite) this.spr;
 		spr.setVaoID(vao);
 		spr.setVertexCount(verticesCount);
+	}
+	
+	public void setSize(float width, float height) {
+		this.width = width;
+		this.height = height;
+	}
+	
+	public float getWidth() {
+		return width;
+	}
+	
+	public float getHeight() {
+		return height;
 	}
 
 	/**
