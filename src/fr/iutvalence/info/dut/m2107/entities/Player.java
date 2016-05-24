@@ -212,26 +212,31 @@ public class Player extends Character{
 				atlasCount += DisplayManager.deltaTime()*100/2;
 				if(atlasCount < 70) atlasCount = 71;
 				else if(atlasCount + atlasAdd >= 77) atlasCount = 0;
+				
 				if(this.scale.x > 0)
-					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[0].x, .25f);
-				else
-					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[0].x, .25f);
+					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[0].x, .15f);
+				else this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[0].x, .15f);
+				
 				this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .25f);
 			} else if(atlasCount >= 80 && atlasCount <= 85) {
 				if(atlasCount - atlasAdd <= 80) atlasCount = 71;
 				else atlasCount += -DisplayManager.deltaTime()*100/2;
-				this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[0].x, .15f);
+				
+				if(this.scale.x > 0)
+					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[0].x, .15f);
+				else this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[0].x, .15f);
+				
 				this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .15f);
 			} else {
 				if(!Input.isMoveLeft() && !Input.isMoveRight()) {
 					if(atlasAdd > 0)
 						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[1].y, .015f);
-					else
-						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .015f);
+					else this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .015f);
+					
 					if(this.scale.x > 0)
 						this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[0].x, .25f);
-					else
-						this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[0].x, .25f);
+					else this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[0].x, .25f);
+					
 					if(atlasCount + atlasAdd <= 0) {
 						atlasCount = 0;
 						atlasAdd = DisplayManager.deltaTime()*100/4/2;
@@ -271,6 +276,7 @@ public class Player extends Character{
 				if(this.scale.x < 0)
 					this.pivot.pos.x = -pivotPos[3].x;
 				else this.pivot.pos.x = pivotPos[3].x;
+				
 				this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[3].y, .5f);
 				if(atlasCount >= 80 && atlasCount <= 85) {
 					atlasCount += 1;
@@ -281,8 +287,7 @@ public class Player extends Character{
 				
 				if(this.pivot.pos.x > 0)
 					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[2].x, .25f);
-				else
-					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[2].x, .25f);
+				else this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[2].x, .25f);
 				
 				atlasAdd = DisplayManager.deltaTime()*100/2;
 				if(atlasCount >= 65 && atlasCount <= 70) {

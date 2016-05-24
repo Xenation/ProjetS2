@@ -131,7 +131,6 @@ public class Inventory {
 		int x = 0 ,y = 0;
 		for (InventorySlot slot : inventorySlot) {
 			slot.getBackground().setPosition(startX + width*x, startY - height*1.75f*y);
-			System.out.println(y);
 			x++;
 			if(x == inventoryWidth) {
 				x =0;
