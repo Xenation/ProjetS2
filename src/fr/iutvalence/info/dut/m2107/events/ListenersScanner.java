@@ -100,6 +100,23 @@ public class ListenersScanner {
 	}
 	
 	/**
+	 * Returns the method that handles the given event in the given listener. returns null if the listener can't handle the event
+	 * @param listener the listener
+	 * @param eventClass the class of the event that needs to be handled
+	 * @return the method that handles the given event in the given listener. returns null if the listener can't handle the event
+	 */
+	public static Method getPreciseHandler(Listener listener, Class<?> eventClass) {
+		try {
+			return listener.getClass().getMethod("on"+eventClass.getSimpleName().substring(0, eventClass.getSimpleName().length()-5), eventClass);
+		} catch (NoSuchMethodException e) {
+			// Ignored
+		} catch (SecurityException e) {
+			// Ignored
+		}
+		return null;
+	}
+	
+	/**
 	 * Returns a list of classes that are contained by the given package
 	 * @param scannedPackage the full name of the package
 	 * @return a list of classes that are contained by the package

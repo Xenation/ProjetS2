@@ -1,8 +1,10 @@
 # EVENTS
 
+## Broadcast Events
+
 ### How to Listen
  * Listening class must implement Listener (fr.iutvalence.info.dut.m2107.events.Listener)
- * Listening class must possess a method with a name as `get{EventName}(EventClass event)` where {EventName} is {EventClass} without "Event" in the end
+ * Listening class must possess a method with a name as `get[EventName]([EventClass] event)` where [EventName] is [EventClass] without "Event" in the end
  * Listener must register itself using `EventManager.register(Listener listener)` where `listener` the listener itself
  * When the listener is destroyed it must be unregistered using `EventManager.unregister(Listener listener)` where `listener` is the listener itself
 
@@ -31,6 +33,31 @@ public class EntityCollisionEvent extends EntityEvent {
 	public EntityCollisionEvent(Entity entity) {
 		super(entity);
 	}
+	
+}
+```
+
+## Precise Events
+
+### How to Listen
+ * Listener class must implement Listener (fr.iutvalence.info.dut.m2107.events.Listener)
+ * Listener class must possess a method with a name as `on[EvenName]([EventClass] event)` where `[EventName]` is `[EventClass]` without "Event" in the end
+ * Listening instance must register itself on a sender using `[sender].registerListener([listener])` where `[sender]` is the sender instance and `[listener]` is the listening instance
+ * Listening instance must unregister itself when it is destroyed using `[sender].unregisterListener([listener])` where sender is the sender it was previously registered to and `[listener]` is the listening instance
+ * Notice : A listener can listen for multiple senders (you need to unregister of all the sender when destroyed)
+
+### How to Send
+ * Sender class must implement Sender (fr.iutvalance.ifo.dut.m2107.events.Sender)
+ * Sending instance uses `sendPreciseEvent([event])` method to send an event
+
+### Making an Event
+ * While Events that work with broadcasting will work with precise, Events that work with precise do not need to meet the requirements for broadcasting
+ * Event class must be named `[eventName]Event` where `[eventName]` is the name of the event
+ * Event class must extend Event
+
+#### Exemple
+```java
+public class PlayerWonEvent extends Event {
 	
 }
 ```
