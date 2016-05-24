@@ -2,7 +2,6 @@ package fr.iutvalence.info.dut.m2107.inventory;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
-import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 
 public class InventorySlot implements Comparable{

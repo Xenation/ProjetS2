@@ -8,6 +8,7 @@ import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
 import fr.iutvalence.info.dut.m2107.gui.GUISprite;
+import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 /**
  * An inventory system which contain item
@@ -25,7 +26,7 @@ public class Inventory {
 	/**
 	 * The start x position of the inventory display
 	 */
-	private final float startX = 0.25f;
+	private final float startX = 0.45f;
 	
 	/**
 	 * The start y position of the inventory display
@@ -35,7 +36,7 @@ public class Inventory {
 	/**
 	 * A list of inventory slot which contain a bunch of item and it's slot and play the role of inventory
 	 */	
-	private SortedSet<InventorySlot> inventorySlot = new TreeSet<InventorySlot>();
+	private List<InventorySlot> inventorySlot = new ArrayList<InventorySlot>();
 	
 	//Temporary
 	private float width = 0.075f;
@@ -69,18 +70,18 @@ public class Inventory {
 		// Not found so item is not in the inventory
 		InventorySlot lastSlot;
 		if(inventorySlot.isEmpty())
-			lastSlot = new InventorySlot(null, new GUIElement(SpriteDatabase.getEmptySpr(), new Vector2f(startX, startY), 0, 0),new GUIElement(SpriteDatabase.getEmptySpr(), new Vector2f(startX, startY), 0, 0),new GUIText("", 0, startX, startY, 0, false));
+			lastSlot = new InventorySlot(null, new GUIElement(SpriteDatabase.getEmptySpr(), new Vector2f(startX-width, startY), 0, 0),new GUIElement(SpriteDatabase.getEmptySpr(), new Vector2f(startX-width, startY), 0, 0),new GUIText("", 0, startX-width, startY, 0, false));
 		else
-			lastSlot = inventorySlot.last();
+			lastSlot = inventorySlot.get(inventorySlot.size()-1);
 		InventorySlot newSlot = new InventorySlot();
 		item.stack = stack;
 		newSlot.setItem(item);
-		if(lastSlot.getBackground().getPosition().x + width < startX + inventoryWidth*width) {
+		if(Maths.round(lastSlot.getBackground().getPosition().x + width, 5) < startX + inventoryWidth*width) {
 			newSlot.setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(lastSlot.getBackground().getPosition().x + width, lastSlot.getBackground().getPosition().y), width, height));
 			newSlot.setItemSprite(new GUIElement(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(), width, height));
 			newSlot.setQuantity(new GUIText(""+item.stack, .5f, -width, -width/3, width, true));
 		} else  {
-			newSlot.setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(startX + width, lastSlot.getBackground().getPosition().y - height*1.75f), width, height));
+			newSlot.setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(startX, lastSlot.getBackground().getPosition().y - height*1.75f), width, height));
 			newSlot.setItemSprite(new GUIElement(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(), width, height));
 			newSlot.setQuantity(new GUIText(""+item.stack, .5f, -width, -width/3, width, true));
 		}
@@ -129,7 +130,8 @@ public class Inventory {
 	private void replace() {
 		int x = 0 ,y = 0;
 		for (InventorySlot slot : inventorySlot) {
-			slot.getBackground().setPosition(startX + width*x, startY + height*y);
+			slot.getBackground().setPosition(startX + width*x, startY - height*1.75f*y);
+			System.out.println(y);
 			x++;
 			if(x == inventoryWidth) {
 				x =0;
@@ -138,61 +140,65 @@ public class Inventory {
 		}
 	}	
 	
-//	/**
-//	 * Sort an item list by Name
-//	 * @param sort >= 0 is Ascending else Descending
-//	 */
-//	public void sortName(byte sort) {		
-//		Collections.sort(inventory, new Comparator<Item>(){
-//			@Override
-//			public int compare(Item item1, Item item2) {
-//				if(sort >= 0) return item1.getName().compareTo(item2.getName());
-//				else return item2.getName().compareTo(item1.getName());
-//			}		
-//		});
-//	}
-//
-//	/**
-//	 * Sort an item list by Rarity
-//	 * @param sort >= 0 is Ascending else Descending
-//	 */
-//	public void sortRarity(byte sort) {
-//		Collections.sort(inventory, new Comparator<Item>(){
-//			@Override
-//			public int compare(Item item1, Item item2) {
-//				if(sort >= 0) return item1.getRarity().compareTo(item2.getRarity());
-//				else return item2.getRarity().compareTo(item1.getRarity());
-//			}		
-//		});
-//	}
-//	
-//	/**
-//	 * Sort an item list by Value
-//	 * @param sort >= 0 is Ascending else Descending
-//	 */
-//	public void sortValue(byte sort) {
-//		Collections.sort(inventory, new Comparator<Item>(){
-//			@Override
-//			public int compare(Item item1, Item item2) {
-//				if(sort >= 0) return item1.getValue()*item1.getStack() - (item2.getValue()*item2.getStack());
-//				else return item2.getValue()*item1.getStack() - (item1.getValue()*item2.getStack());
-//			}		
-//		});
-//	}
-//
-//	/**
-//	 * Sort an item list by Stack
-//	 * @param sort >= 0 is Ascending else Descending
-//	 */
-//	public void sortStack(byte sort) {
-//		Collections.sort(inventory, new Comparator<Item>(){
-//			@Override
-//			public int compare(Item item1, Item item2) {
-//				if(sort >= 0) return item1.getStack() - (item2.getStack());
-//				else return item2.getStack() - (item1.getStack());
-//			}
-//		});
-//	}
+	/**
+	 * Sort an item list by Name
+	 * @param sort >= 0 is Ascending else Descending
+	 */
+	public void sortName(byte sort) {		
+		Collections.sort(inventorySlot, new Comparator<InventorySlot>(){
+			@Override
+			public int compare(InventorySlot item1, InventorySlot item2) {
+				if(sort >= 0) return item1.getItem().getName().compareTo(item2.getItem().getName());
+				else return item2.getItem().getName().compareTo(item1.getItem().getName());
+			}		
+		});
+		this.replace();
+	}
+
+	/**
+	 * Sort an item list by Rarity
+	 * @param sort >= 0 is Ascending else Descending
+	 */
+	public void sortRarity(byte sort) {
+		Collections.sort(inventorySlot, new Comparator<InventorySlot>(){
+			@Override
+			public int compare(InventorySlot item1, InventorySlot item2) {
+				if(sort >= 0) return item1.getItem().getRarity().compareTo(item2.getItem().getRarity());
+				else return item2.getItem().getRarity().compareTo(item1.getItem().getRarity());
+			}		
+		});
+		this.replace();
+	}
+	
+	/**
+	 * Sort an item list by Value
+	 * @param sort >= 0 is Ascending else Descending
+	 */
+	public void sortValue(byte sort) {
+		Collections.sort(inventorySlot, new Comparator<InventorySlot>(){
+			@Override
+			public int compare(InventorySlot item1, InventorySlot item2) {
+				if(sort >= 0) return item1.getItem().getValue()*item1.getItem().getStack() - (item2.getItem().getValue()*item2.getItem().getStack());
+				else return item2.getItem().getValue()*item1.getItem().getStack() - (item1.getItem().getValue()*item2.getItem().getStack());
+			}		
+		});
+		this.replace();
+	}
+
+	/**
+	 * Sort an item list by Stack
+	 * @param sort >= 0 is Ascending else Descending
+	 */
+	public void sortStack(byte sort) {
+		Collections.sort(inventorySlot, new Comparator<InventorySlot>(){
+			@Override
+			public int compare(InventorySlot item1, InventorySlot item2) {
+				if(sort >= 0) return item1.getItem().getStack() - (item2.getItem().getStack());
+				else return item2.getItem().getStack() - (item1.getItem().getStack());
+			}
+		});
+		this.replace();
+	}
 	
 	/**
 	 * Return the first arrow found in the inventory

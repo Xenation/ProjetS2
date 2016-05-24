@@ -87,9 +87,10 @@ public class Player extends Character{
 	 */
 	private Vector2f[] pivotPos = {new Vector2f(0.725f, -.15f),
 									new Vector2f(0.725f, -.35f),
-									new Vector2f(.9f, -.25f),
+									new Vector2f(1, -.25f),
 									new Vector2f(.85f, .8f),
-									new Vector2f(0.725f, -.25f)};
+									new Vector2f(1.3f, -.25f),
+									new Vector2f(.4f, -.25f)};
 
 	/**
 	 * Constructor of a player
@@ -164,8 +165,6 @@ public class Player extends Character{
 		
 		updateInvulnerability();
 		
-		updateScale();
-		
 		useItem();
 		
 		playerGUI.updateText("IsGrounded : " + this.isGrounded);
@@ -200,19 +199,6 @@ public class Player extends Character{
 	}
 	
 	/**
-	 * Update the player's and pivot scale
-	 */
-	private void updateScale() {
-		if(this.vel.x > 0) this.scale.setX(1);
-		else if(this.vel.x < 0) this.scale.setX(-1);
-		
-		if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
-			this.pivot.pos.x = Maths.fastAbs(this.pivot.pos.x);
-		else
-			this.pivot.pos.x = -Maths.fastAbs(this.pivot.pos.x);
-	}
-	
-	/**
 	 * Store the state of the eye animation (true is blinking)
 	 */
 	private boolean eyeAnimation = false;
@@ -226,20 +212,26 @@ public class Player extends Character{
 				atlasCount += DisplayManager.deltaTime()*100/2;
 				if(atlasCount < 70) atlasCount = 71;
 				else if(atlasCount + atlasAdd >= 77) atlasCount = 0;
-				this.pivot.pos.x = pivotPos[0].x;
-				this.pivot.pos.y = pivotPos[0].y;
+				if(this.scale.x > 0)
+					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[0].x, .25f);
+				else
+					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[0].x, .25f);
+				this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .25f);
 			} else if(atlasCount >= 80 && atlasCount <= 85) {
 				if(atlasCount - atlasAdd <= 80) atlasCount = 71;
 				else atlasCount += -DisplayManager.deltaTime()*100/2;
-				this.pivot.pos.x = pivotPos[0].x;
-				this.pivot.pos.y = pivotPos[0].y;
+				this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[0].x, .15f);
+				this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .15f);
 			} else {
 				if(!Input.isMoveLeft() && !Input.isMoveRight()) {
 					if(atlasAdd > 0)
 						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[1].y, .015f);
 					else
 						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[0].y, .015f);
-					
+					if(this.scale.x > 0)
+						this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[0].x, .25f);
+					else
+						this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[0].x, .25f);
 					if(atlasCount + atlasAdd <= 0) {
 						atlasCount = 0;
 						atlasAdd = DisplayManager.deltaTime()*100/4/2;
@@ -257,15 +249,14 @@ public class Player extends Character{
 						atlasAdd = DisplayManager.deltaTime()*100/4/2;
 					}
 				} else {
-					if(atlasCount >= 25 && atlasCount <= 34)
-						this.pivot.pos.x = pivotPos[2].x;
+					if((atlasCount >= 25 && atlasCount <= 30) || (atlasCount >= 45 && atlasCount <= 51))
+						if(this.scale.x < 0)
+							this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[4].x, .1f);
+						else this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[4].x, .1f);
 					else
-						this.pivot.pos.x = -pivotPos[2].x;
-					
-					if(this.pivot.pos.x > 0)
-						this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[2].x, .5f);
-					else
-						this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[2].x, .5f);
+						if(this.scale.x < 0)
+							this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[5].x, .1f);
+						else this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[5].x, .1f);
 					
 					if(atlasCount + atlasAdd >= 51) atlasCount = 27;
 					else if(atlasCount < 16 || atlasCount > 51) {
@@ -277,31 +268,22 @@ public class Player extends Character{
 			}
 		} else {			
 			if(wallSlide) {
-				this.pivot.pos.x = pivotPos[3].x;
-				
 				if(this.scale.x < 0)
-					if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
-						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, 0.25f);
-					else
-						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[3].y, 0.25f);
-				else
-					if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
-						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[3].y, 0.25f);
-					else
-						this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, 0.25f);
-				
+					this.pivot.pos.x = -pivotPos[3].x;
+				else this.pivot.pos.x = pivotPos[3].x;
+				this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[3].y, .5f);
 				if(atlasCount >= 80 && atlasCount <= 85) {
 					atlasCount += 1;
 					if(atlasCount > 85) atlasCount = 85;
 				} else atlasCount = 80;
 			} else {
-				/*this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, .5f);
+				this.pivot.pos.y = Maths.lerp(this.pivot.pos.y, pivotPos[2].y, .5f);
 				
 				if(this.pivot.pos.x > 0)
-					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[2].x, .5f);
+					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, pivotPos[2].x, .25f);
 				else
-					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[2].x, .5f);
-				*/
+					this.pivot.pos.x = Maths.lerp(this.pivot.pos.x, -pivotPos[2].x, .25f);
+				
 				atlasAdd = DisplayManager.deltaTime()*100/2;
 				if(atlasCount >= 65 && atlasCount <= 70) {
 					atlasCount += 1;

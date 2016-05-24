@@ -2,7 +2,9 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.inventory.Bow;
 import fr.iutvalence.info.dut.m2107.inventory.Item;
+import fr.iutvalence.info.dut.m2107.inventory.Sword;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
@@ -101,14 +103,21 @@ public class Character extends LivingEntity{
 		
 		this.col.checkStepDown();
 		
-		if(!(this instanceof Player) && this.vel.x > 0 && this.recoil == 0) {
+		if(this.vel.x > 0 && this.recoil == 0) {
 			this.scale.setX(Maths.fastAbs(this.scale.x));
-			this.pivot.pos.x = .65f;
-		} else if(!(this instanceof Player) && this.vel.x < 0 && this.recoil == 0) {
+			this.pivot.pos.x = Maths.fastAbs(this.pivot.pos.x);
+			if(this.itemOnHand != null) {
+				if(this.itemOnHand instanceof Bow) this.pivot.rot = 20;
+				if(this.itemOnHand instanceof Sword) this.pivot.rot = -20;
+			}
+		} else if(this.vel.x < 0 && this.recoil == 0) {
 			this.scale.setX(-Maths.fastAbs(this.scale.x));
-			this.pivot.pos.x = -.65f;
+			this.pivot.pos.x = -Maths.fastAbs(this.pivot.pos.x);
+			if(this.itemOnHand != null) {
+				if(this.itemOnHand instanceof Bow) this.pivot.rot = -200;
+				if(this.itemOnHand instanceof Sword) this.pivot.rot = -160;
+			}
 		}
-		pivot.setRotation(GameWorld.player.getDegreeShoot());
 		
 		super.update(layer);
 	}
