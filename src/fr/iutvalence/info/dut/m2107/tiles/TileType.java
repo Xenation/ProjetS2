@@ -21,7 +21,7 @@ public enum TileType {
 	Sand(8, TileVariant.Sand, true, TileBehavior.FALLING),
 	Creator(9, TileVariant.Creator, true, TileBehavior.CREATOR),
 	Piston(10, TileVariant.Piston_retracted, true, TileBehavior.PISTON),
-	PistonArm(11, TileVariant.Piston_arm, true, TileBehavior.DEPENDANT),
+	PistonArm(11, TileVariant.Piston_arm, true, TileBehavior.FIXEDDEPENDANT),
 	Water(12, TileVariant.Water, false, TileBehavior.LIQUID);
 	
 	static {

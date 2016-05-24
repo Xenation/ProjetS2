@@ -41,10 +41,9 @@ public class TileBuilder {
 			return new CreatingTile(type, x, y, TileType.Sand);
 		case Piston:
 			PushingTile t = new PushingTile(type, x, y);
-			EventManager.register(t);
 			return t;
 		case PistonArm:
-			return new DependantTile(type, x, y);
+			return new DependantFixedTile(type, x, y);
 		case Water:
 			return new LiquidTile(type, x, y);
 		default:
@@ -89,10 +88,10 @@ public class TileBuilder {
 		case Piston:
 			PushingTile pushing = (PushingTile) tile;
 			EventManager.sendEvent(new TileDestroyedEvent(pushing));
-			EventManager.unregister(pushing);
+//			EventManager.unregister(pushing);
 			break;
 		case PistonArm:
-			DependantTile dependant = (DependantTile) tile;
+			DependantFixedTile dependant = (DependantFixedTile) tile;
 			EventManager.sendEvent(new TileDestroyedEvent(dependant));
 //			EventManager.unregister(dependant);
 			break;
@@ -138,11 +137,11 @@ public class TileBuilder {
 			break;
 		case Creator:
 			stats.add("created = "+((CreatingTile)tile).createdType);
-			stats.add("time = "+((CreatingTile)tile).creatingTime);
+			stats.add("time = "+((CreatingTile)tile).time);
 			break;
 		case Piston:
 			stats.add("pushing = "+((PushingTile)tile).isPushing());
-			stats.add("time = "+((PushingTile)tile).pushinginterval);
+			stats.add("time = "+((PushingTile)tile).time);
 			break;
 		case PistonArm:
 			break;
