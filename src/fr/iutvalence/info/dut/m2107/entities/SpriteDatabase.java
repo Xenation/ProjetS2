@@ -45,4 +45,7 @@ public class SpriteDatabase {
 	
 	private final static String selectQuickBarSlotStr = "gui/select_quick_bar_slot";
 	public static String getSelectQuickBarSlotStr() {return selectQuickBarSlotStr;}
+	
+	private final static String inventoryGUI = "gui/inventoryGUI";
+	public static String getInventoryGUIStr() {return inventoryGUI;}
 }

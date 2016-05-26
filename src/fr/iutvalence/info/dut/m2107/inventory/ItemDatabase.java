@@ -36,6 +36,24 @@ public class ItemDatabase {
 		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	6,	"Sword3",	"A simple Sword3",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
 		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	7,	"Sword4",	"A simple Sword4",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
 		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	8,	"Sword5",	"A simple Sword5",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	9,	"Bow1",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	3));
+		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	10,	"Bow2",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	3));
+		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	11,	"Bow3",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	3));
+		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	12,	"Bow4",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	3));
+		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	13,	"Bow5",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	3));
+		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	14,	"Bow6",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	3));
+		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	15,	"Bow7",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	3));
+		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	16,	"Bow8",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	3));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	17,	"Sword6",	"A simple Sword5",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	18,	"Sword7",	"A simple Sword5",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	19,	"Sword8",	"A simple Sword5",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	20,	"Sword9",	"A simple Sword5",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	21,	"Sword10",	"A simple Sword5",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	22,	"Sword11",	"A simple Sword5",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	23,	"Sword12",	"A simple Sword5",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	24,	"Sword13",	"A simple Sword5",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	25,	"Sword14",	"A simple Sword5",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+
 	}
 	
 	/**

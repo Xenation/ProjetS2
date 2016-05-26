@@ -8,6 +8,8 @@ import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
 import fr.iutvalence.info.dut.m2107.gui.GUISprite;
+import fr.iutvalence.info.dut.m2107.render.DisplayManager;
+import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 /**
@@ -18,30 +20,32 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Inventory {
 	
+	private boolean isDisplayed = false;
+	
 	/**
 	 * The number of inventory slot by row
 	 */
-	private final int inventoryWidth = 6;
+	private final int inventoryWidth = 4;
 	
-	/**
-	 * The start x position of the inventory display
-	 */
-	private final float startX = 0.45f;
 	
-	/**
-	 * The start y position of the inventory display
-	 */
-	private final float startY = 0.5f;
+	//Temporary
+	private float width = 0.1f;
+	private float height = 0.1f;
+	//Temporary
+	
+	private final GUIElement inventoryGUI = new GUIElement(SpriteDatabase.getInventoryGUIStr(), new Vector2f(0.7f, 0), width*(inventoryWidth+1), height*(inventoryWidth+1)*2);
 	
 	/**
 	 * A list of inventory slot which contain a bunch of item and it's slot and play the role of inventory
 	 */	
 	private List<InventorySlot> inventorySlot = new ArrayList<InventorySlot>();
 	
-	//Temporary
-	private float width = 0.075f;
-	private float height = 0.075f;
-	//Temporary
+	public void init() {
+		GameWorld.player.getInventory().getInventoryGUI().initLayer();
+		
+		GameWorld.player.initQuickBar();
+		GameWorld.player.initInventory();
+	}
 	
 	/**
 	 * Add an item with a certain amount into the inventory
@@ -68,30 +72,32 @@ public class Inventory {
 		}
 		
 		// Not found so item is not in the inventory
-		InventorySlot lastSlot;
-		if(inventorySlot.isEmpty())
-			lastSlot = new InventorySlot(null, new GUIElement(SpriteDatabase.getEmptySpr(), new Vector2f(startX-width, startY), 0, 0),new GUIElement(SpriteDatabase.getEmptySpr(), new Vector2f(startX-width, startY), 0, 0),new GUIText("", 0, startX-width, startY, 0, false));
-		else
-			lastSlot = inventorySlot.get(inventorySlot.size()-1);
+		InventorySlot lastSlot = null;
 		InventorySlot newSlot = new InventorySlot();
 		item.stack = stack;
 		newSlot.setItem(item);
-		if(Maths.round(lastSlot.getBackground().getPosition().x + width, 5) < startX + inventoryWidth*width) {
+		
+		if(inventorySlot.isEmpty())
+			newSlot.setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(-width*(inventoryWidth-1)/2, height*(inventoryWidth+1)), width, height));
+		else {
+			lastSlot = inventorySlot.get(inventorySlot.size()-1);
 			newSlot.setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(lastSlot.getBackground().getPosition().x + width, lastSlot.getBackground().getPosition().y), width, height));
-			newSlot.setItemSprite(new GUIElement(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(), width, height));
-			newSlot.setQuantity(new GUIText(""+item.stack, .5f, -width, -width/3, width, true));
-		} else  {
-			newSlot.setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(startX, lastSlot.getBackground().getPosition().y - height*1.75f), width, height));
-			newSlot.setItemSprite(new GUIElement(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(), width, height));
-			newSlot.setQuantity(new GUIText(""+item.stack, .5f, -width, -width/3, width, true));
+		}
+		
+		newSlot.setItemSprite(new GUIElement(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(), width, height));
+		newSlot.setQuantity(new GUIText(""+item.stack, .5f, -width, -width/3, width, true));
+		
+		if(lastSlot != null && Maths.round(lastSlot.getBackground().getPosition().x + width, 5) >= width*inventoryWidth/2) {
+			newSlot.getBackground().setPositionY(newSlot.getBackground().getPosition().y - height*DisplayManager.aspectRatio);
+			newSlot.getBackground().setPositionX(-width*(inventoryWidth-1)/2);
 		}
 		newSlot.getItemSprite().setRotation(-45);
-		float scaleMult = newSlot.getItemSprite().getSprite().getSize().x/newSlot.getItemSprite().getSprite().getSize().y;
+		float scaleMult = newSlot.getItemSprite().getSprite().getSize().x*newSlot.getItemSprite().getSprite().getSize().y;
 		if(scaleMult == 1)
 			newSlot.getItemSprite().setScale(newSlot.getItemSprite().getScale().x / 1.25f, newSlot.getItemSprite().getScale().y / 1.25f);
 		else
 			newSlot.getItemSprite().setScale(newSlot.getItemSprite().getScale().x / scaleMult, newSlot.getItemSprite().getScale().y / scaleMult);
-		newSlot.display();
+		newSlot.display(this.getInventoryGUI().getLayer());
 		inventorySlot.add(newSlot);
 		return true;
 	}
@@ -106,7 +112,7 @@ public class Inventory {
 			return false;
 		
 		for (InventorySlot slot : inventorySlot) {
-			if(item.id == slot.getItem().id) {
+			if(slot.getItem() != null && item.id == slot.getItem().id) {
 				if(slot.getItem().stack - stack < 0)
 					return false;
 					
@@ -114,9 +120,8 @@ public class Inventory {
 				slot.getQuantity().updateText(""+slot.getItem().stack);					
 				
 				if(slot.getItem().stack == 0) {
-					inventorySlot.remove(slot);
+					slot.empty();
 					this.replace();
-					slot.hide();
 				}
 				return true;
 			}
@@ -130,14 +135,22 @@ public class Inventory {
 	private void replace() {
 		int x = 0 ,y = 0;
 		for (InventorySlot slot : inventorySlot) {
-			slot.getBackground().setPosition(startX + width*x, startY - height*1.75f*y);
+			slot.getBackground().setPosition(-width*(inventoryWidth-1)/2 + width*x, height*(inventoryWidth+1) - height*y*DisplayManager.aspectRatio);
 			x++;
 			if(x == inventoryWidth) {
 				x =0;
 				y++;
 			}
 		}
-	}	
+	}
+	
+	public void changeDisplay() {
+		if(isDisplayed)
+			GameWorld.guiLayerMap.getLayer(1).remove(this.inventoryGUI);
+		else
+			GameWorld.guiLayerMap.getLayer(1).add(this.inventoryGUI);
+		this.isDisplayed = !this.isDisplayed;
+	}
 	
 	/**
 	 * Sort an item list by Name
@@ -149,7 +162,7 @@ public class Inventory {
 			public int compare(InventorySlot item1, InventorySlot item2) {
 				if(sort >= 0) return item1.getItem().getName().compareTo(item2.getItem().getName());
 				else return item2.getItem().getName().compareTo(item1.getItem().getName());
-			}		
+			}
 		});
 		this.replace();
 	}
@@ -231,4 +244,11 @@ public class Inventory {
 			str += slot.getItem().toString() + "\n";
 		return "Inventory :\n" + str;
 	}
+
+
+	/**
+	 * @return
+	 */
+	public GUIElement getInventoryGUI() {return inventoryGUI;}
+	
 }

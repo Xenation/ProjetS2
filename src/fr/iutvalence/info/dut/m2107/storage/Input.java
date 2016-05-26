@@ -91,6 +91,11 @@ public class Input {
 	private static int wheelScrolling;
 	
 	/**
+	 * Boolean for inventory show/hide
+	 */
+	private static boolean isInventory;
+	
+	/**
 	 * Update the keyboard and mouse input
 	 */
 	public static void input() {
@@ -113,6 +118,7 @@ public class Input {
 		isKeyWater = false;
 		isNumPad0 = false;
 		isTileRotate = false;
+		isInventory = false;
 		
 		// Check button stay down
 		if(Keyboard.isKeyDown(Keyboard.KEY_Z)) isMoveUp = true;
@@ -161,6 +167,7 @@ public class Input {
 		        if(Keyboard.getEventKey() == Keyboard.KEY_NUMPAD0)	isNumPad0 = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_R)		isTileRotate = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_P)		isPaused = !isPaused;
+		        if(Keyboard.getEventKey() == Keyboard.KEY_I)		isInventory = !isInventory;
 		    } else {
 		    	// Do ... when released
 		    }
@@ -249,6 +256,9 @@ public class Input {
 
 	/** @return paused input */
 	public static boolean isPaused() {return isPaused;}
+	
+	/** @return inventory input */
+	public static boolean isInventory() {return isInventory;}
 	
 	/** @return wheel scroll value */
 	public static int WheelScrolling() {return wheelScrolling;}

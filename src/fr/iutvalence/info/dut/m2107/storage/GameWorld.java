@@ -63,6 +63,7 @@ public class GameWorld {
 		camera = new Camera();
 		
 		player = new Player();
+		player.init();
 		
 		camera.setTarget(GameWorld.player);
 		layerMap.getStoredLayer(LayerStore.PLAYER).add(GameWorld.player);

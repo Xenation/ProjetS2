@@ -23,10 +23,6 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Player extends Character{
 	
-	// Temporary
-	private GUIText playerGUI = new GUIText("", .8f, 0.77f, 1, 0.5f, false, true);
-	// Temporary
-	
 	/**
 	 * The inventory of the player
 	 */
@@ -97,19 +93,23 @@ public class Player extends Character{
 	 */
 	public Player() {
 		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.75f, -1.75f, .75f, 1.75f));
-		this.initQuickBar();
-		this.initInventory();
+	}
+	
+	public void init() {
 		this.hpGUI = new GUIElement(SpriteDatabase.getHeartStr(), new Vector2f(-1 + width, 1 - height), width/2, height/2);
 		
 		this.initLayer();
 		this.layer.add(this.pivot);
 		this.initPivot();
+		
+
+		this.inventory.init();
 	}
 	
 	/**
 	 * Initialize the inventory
 	 */
-	private void initInventory() {
+	public void initInventory() {
 		// TODO Take the item saved from a file save
 		addItem(ItemDatabase.get(0), 10);
 		addItem(ItemDatabase.get(1), 5);
@@ -118,14 +118,29 @@ public class Player extends Character{
 		addItem(ItemDatabase.get(6), 1);
 		addItem(ItemDatabase.get(7), 1);
 		addItem(ItemDatabase.get(8), 1);
-		
-		//this.inventory.initInventory();
+		addItem(ItemDatabase.get(9), 1);
+		addItem(ItemDatabase.get(10), 1);
+		addItem(ItemDatabase.get(11), 1);
+		addItem(ItemDatabase.get(12), 1);
+		addItem(ItemDatabase.get(13), 1);
+		addItem(ItemDatabase.get(14), 1);
+		addItem(ItemDatabase.get(15), 1);
+		addItem(ItemDatabase.get(16), 1);
+		addItem(ItemDatabase.get(17), 1);
+		addItem(ItemDatabase.get(18), 1);
+		addItem(ItemDatabase.get(19), 1);
+		addItem(ItemDatabase.get(20), 1);
+		addItem(ItemDatabase.get(21), 1);
+		addItem(ItemDatabase.get(22), 1);
+		addItem(ItemDatabase.get(23), 1);
+		addItem(ItemDatabase.get(24), 1);
+		addItem(ItemDatabase.get(25), 1);
 	}
 	
 	/**
 	 * Initialize the quick bar
 	 */
-	private void initQuickBar() {
+	public void initQuickBar() {
 		for (int slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++)
 			this.quickBar[slotNumber] = new InventorySlot();
 		
@@ -136,7 +151,7 @@ public class Player extends Character{
 			this.quickBar[slotNumber].setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width, height));
 			if(this.quickBar[slotNumber].getItem() != null) {
 				this.quickBar[slotNumber].setItemSprite(new GUIElement(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(), width, height));
-				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
+				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, 0, 0, width, false));
 				
 				this.quickBar[slotNumber].getItemSprite().setRotation(-45);
 				float scaleMult = this.quickBar[slotNumber].getItemSprite().getSprite().getSize().x*this.quickBar[slotNumber].getItemSprite().getSprite().getSize().y;
@@ -145,16 +160,16 @@ public class Player extends Character{
 				else
 					this.quickBar[slotNumber].getItemSprite().setScale(this.quickBar[slotNumber].getItemSprite().getScale().x / scaleMult, this.quickBar[slotNumber].getItemSprite().getScale().y / scaleMult);
 			}
-			this.quickBar[slotNumber].display();
+			this.quickBar[slotNumber].display(1);
 		}
-		GameWorld.guiLayerMap.getLayer(0).add(selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*3.5f + selectSlot*width, 1-posY), width, height));
+		GameWorld.guiLayerMap.getLayer(1).add(selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*3.5f + selectSlot*width, 1-posY), width, height));
 	}
 
 	/* (non-Javadoc)
 	 * @see fr.iutvalence.info.dut.m2107.entities.Character#update(fr.iutvalence.info.dut.m2107.storage.Layer)
 	 */
 	@Override
-	public void update(Layer layer) {		
+	public void update(Layer layer) {
 		input();
 		
 		updateSpriteAnimation();
@@ -167,7 +182,6 @@ public class Player extends Character{
 		
 		useItem();
 		
-		playerGUI.updateText("IsGrounded : " + this.isGrounded);
 		super.update(layer);
 	}
 
@@ -359,6 +373,8 @@ public class Player extends Character{
 		if(isGrounded) rightWallJump = true;
 		if(isGrounded) leftWallJump = true;
 		if(isGrounded) wallSlide = false;
+		
+		if(Input.isInventory()) this.inventory.changeDisplay();
 		
 		if (GameWorld.camera.isFree()) {
 			if (Input.isJumping() && this.isGrounded) this.vel.y = this.jumpHeight;
