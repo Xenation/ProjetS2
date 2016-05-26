@@ -352,19 +352,19 @@ public class Player extends Character{
 		if(this.itemOnHand != this.quickBar[selectSlot].getItem()) {
 			if(this.quickBar[selectSlot].getItem() != null) {
 				if(this.itemOnHand != null)
-					this.pivot.getLayer().remove(this.itemOnHand);
+					this.itemOnHand.setParent(null);
 				
 				if(!(this.quickBar[selectSlot].getItem() instanceof Weapon)) {
 					this.itemOnHand = new Item(this.quickBar[selectSlot].getItem());
-					this.pivot.getLayer().add(this.itemOnHand);
+					this.itemOnHand.setParent(this.pivot);
 				} else {
 					this.itemOnHand = this.quickBar[selectSlot].getItem();
 					if(this.itemOnHand instanceof Bow)	this.itemOnHand.setPosition(new Vector2f(-.3f, 0));
 					if(this.itemOnHand instanceof Sword)this.itemOnHand.setPosition(new Vector2f(.7f, -0.02f));
-					this.pivot.getLayer().add(this.itemOnHand);
+					this.itemOnHand.setParent(this.pivot);
 				}
 			} else {
-				this.pivot.getLayer().remove(this.itemOnHand);
+				this.itemOnHand.setParent(null);
 				this.itemOnHand = null;
 			}
 		}		

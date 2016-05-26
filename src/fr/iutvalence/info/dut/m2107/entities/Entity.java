@@ -54,6 +54,11 @@ public class Entity {
 	protected Layer layer;
 	
 	/**
+	 * The parent entity
+	 */
+	private Entity parent;
+	
+	/**
 	 * Constructor of an Entity
 	 * @param pos The position of the entity
 	 * @param rot The rotation of the entity
@@ -68,6 +73,7 @@ public class Entity {
 		this.col = new Collider(spr);
 		col.setEnt(this);
 		col.updateColPos();
+		this.parent = null;
 	}
 
 	/**
@@ -88,6 +94,7 @@ public class Entity {
 			col.setEnt(this);
 			col.updateColPos();
 		}
+		this.parent = null;
 	}
 	
 	/**
@@ -104,6 +111,7 @@ public class Entity {
 		this.col = new Collider(spr);
 		col.setEnt(this);
 		col.updateColPos();
+		this.parent = null;
 	}
 	
 	/**
@@ -123,6 +131,7 @@ public class Entity {
 			col.setEnt(this);
 			col.updateColPos();
 		}
+		this.parent = null;
 	}
 	
 	/**
@@ -138,6 +147,7 @@ public class Entity {
 		this.col = new Collider(spr);
 		col.setEnt(this);
 		col.updateColPos();
+		this.parent = null;
 	}
 	
 	/**
@@ -154,6 +164,7 @@ public class Entity {
 		this.col = col;
 		col.setEnt(this);
 		col.updateColPos();
+		this.parent = null;
 	}
 	
 	/**
@@ -168,6 +179,7 @@ public class Entity {
 		this.col = new Collider(spr);
 		col.setEnt(this);
 		col.updateColPos();
+		this.parent = null;
 	}
 	
 	/**
@@ -176,6 +188,33 @@ public class Entity {
 	 */
 	public void update(Layer layer) {
 		return;
+	}
+
+	/**
+	 * Returns the parent of this element
+	 * @return the parent of this element
+	 */
+	public Entity getParent() {
+		return this.parent;
+	}
+	
+	/**
+	 * Sets the parent of this element
+	 * @param parent the new parent
+	 */
+	public void setParent(Entity parent) {
+		if (parent == null && this.parent != null) {
+			this.parent.getLayer().remove(this);
+			return;
+		}
+		if (this.parent != null) {
+			this.parent.getLayer().remove(this);
+		}
+		this.parent = parent;
+		if (parent.getLayer() == null) {
+			parent.initLayer();
+		}
+		parent.getLayer().add(this);
 	}
 	
 	/**

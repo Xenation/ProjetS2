@@ -27,6 +27,10 @@ public class TextMeshData {
 		return vertexPositions.length/2;
 	}
 	
+	/**
+	 * Returns the maximum X value of all the vertices
+	 * @return the maximum X value of all the vertices
+	 */
 	public float getMaxX() {
 		float max = -1;
 		for (int i = 0; i < vertexPositions.length; i = i+2) {
@@ -38,6 +42,10 @@ public class TextMeshData {
 		return (-1-max)*-1;
 	}
 	
+	/**
+	 * Returns the maximum Y value of all the vertices
+	 * @return the maximum Y value of all the vertices
+	 */
 	public float getMaxY() {
 		float min = 1;
 		for (int i = 1; i < vertexPositions.length; i = i+2) {

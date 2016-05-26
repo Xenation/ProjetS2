@@ -10,4 +10,8 @@ public abstract class GUIEvent extends Event {
 		this.element = elem;
 	}
 	
+	public GUIElement getElement() {
+		return this.element;
+	}
+	
 }

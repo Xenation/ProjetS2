@@ -14,23 +14,63 @@ import fr.iutvalence.info.dut.m2107.storage.GUILayer;
  *
  */
 public class GUIText extends Entity {
-
+	
+	/**
+	 * The text to be written
+	 */
 	private String textString;
+	/**
+	 * the size of the font
+	 */
 	private float fontSize;
 	
+	/**
+	 * The colour of the text
+	 */
 	private Vector3f colour = new Vector3f(0f, 0f, 0f);
 	
+	/**
+	 * The max size of a line
+	 */
 	private float lineMaxSize;
+	/**
+	 * The number of lines
+	 */
 	private int numberOfLines;
+	/**
+	 * The height of a line
+	 */
 	private double lineHeight = TextMeshCreator.LINE_HEIGHT;
-
+	
+	/**
+	 * The font of this text
+	 */
 	private FontType font;
-
+	
+	/**
+	 * Whether the text is centered or not
+	 */
 	private boolean centerText = false;
 	
+	/**
+	 * The width of the written text
+	 */
 	private float width;
+	/**
+	 * The height of the written text
+	 */
 	private float height;
 	
+	/**
+	 * A Text using the given text, font size, x/y coordinates, maximum line length and centered.
+	 * @param text the text
+	 * @param fontSize the size of the font (1 = normal size, 2 = two times bigger)
+	 * @param posX the X coordinate
+	 * @param posY the Y coordinate
+	 * @param maxLineLength the maximum length of a line
+	 * @param centered whether the text needs to be centered
+	 * @param isDebug whether the text is used for debug or not.
+	 */
 	public GUIText(String text, float fontSize, float posX, float posY, float maxLineLength, boolean centered, boolean isDebug) {
 		super(new Vector2f(posX+1, posY-1), new TextSprite());
 		this.textString = text;
@@ -42,10 +82,23 @@ public class GUIText extends Entity {
 		GUIMaster.loadText(this);
 	}
 	
+	/**
+	 * A Text using the given text, font size, x/y coordinates, maximum line length and centered.
+	 * @param text the text
+	 * @param fontSize the size of the font (1 = normal size, 2 = two times bigger)
+	 * @param posX the X coordinate
+	 * @param posY the Y coordinate
+	 * @param maxLineLength the maximum length of a line
+	 * @param centered whether the text needs to be centered
+	 */
 	public GUIText(String text, float fontSize, float posX, float posY, float maxLineLength, boolean centered) {
 		this(text, fontSize, posX, posY, maxLineLength, centered, false);
 	}
 	
+	/**
+	 * Updates the text of this element.
+	 * @param str the new text
+	 */
 	public void updateText(String str) {
 		if (!textString.equals(str)) {
 			this.textString = str;
@@ -106,6 +159,11 @@ public class GUIText extends Entity {
 		return this.pos;
 	}
 	
+	/**
+	 * Sets the position of this Text Element
+	 * @param x the new X coordinate
+	 * @param y the new Y coordinate
+	 */
 	public void setPosition(float x, float y) {
 		this.pos.x = x+1;
 		this.pos.y = y-1;
@@ -134,15 +192,28 @@ public class GUIText extends Entity {
 		spr.setVertexCount(verticesCount);
 	}
 	
+	/**
+	 * Sets the size of the written text of this element.<br>Do not change unless the model of this element changes.
+	 * @param width the new width
+	 * @param height the new height
+	 */
 	public void setSize(float width, float height) {
 		this.width = width;
 		this.height = height;
 	}
 	
+	/**
+	 * Returns the width of the written text
+	 * @return the width of the written text
+	 */
 	public float getWidth() {
 		return width;
 	}
 	
+	/**
+	 * Returns the height of the written text
+	 * @return the height of the written text
+	 */
 	public float getHeight() {
 		return height;
 	}
@@ -194,7 +265,7 @@ public class GUIText extends Entity {
 	}
 	
 	/**
-	 * Sets the string of this text (does not update the Mesh)
+	 * Sets the string of this text (does not update the Mesh).<br>To update the mesh use <tt>updateText(String)</tt>
 	 * @param str the new string
 	 */
 	public void setTextString(String str) {
