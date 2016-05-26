@@ -149,6 +149,7 @@ public class Renderer {
 								unbindSprite();
 								renderSubLayers(ent, mat);
 								prepareSprite(spr);
+								prepareAtlas(atl);
 							}
 						}
 						
@@ -182,6 +183,7 @@ public class Renderer {
 							unbindSprite();
 							renderGuiSubLayers(ent, pos);
 							prepareSprite(ent.getSprite());
+							prepareAtlas(atl);
 						}
 						
 						unbindSprite();
@@ -219,6 +221,7 @@ public class Renderer {
 							unbindSprite();
 							renderSubLayers(ent, mat);
 							prepareSprite(spr);
+							prepareAtlas(atl);
 						}
 					}
 					
@@ -253,6 +256,7 @@ public class Renderer {
 						unbindSprite();
 						renderGuiSubLayers(ent, pos);
 						prepareSprite(ent.getSprite());
+						prepareAtlas(atl);
 					}
 					
 					unbindSprite();
