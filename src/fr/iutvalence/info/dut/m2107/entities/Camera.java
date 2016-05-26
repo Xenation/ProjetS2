@@ -1,13 +1,9 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
-import java.util.ArrayList;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
-import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
@@ -43,9 +39,9 @@ public class Camera {
 	private Entity target;
 	
 	/**
-	 * The Top-left debugText
+	 * The tile that is pointed by the mouse
 	 */
-	private GUIText debugText;
+	private Tile pointed;
 	
 	/**
 	 * The type of tile to draw
@@ -65,7 +61,7 @@ public class Camera {
 	 */
 	private boolean isSelecting = false;
 	/**
-	 * Whether the selection in progress is a removal (true) ro not (false)
+	 * Whether the selection in progress is a removal (true) or not (false)
 	 */
 	private boolean isRemoving = false;
 	
@@ -79,7 +75,6 @@ public class Camera {
 	public Camera() {
 		this.position = new Vector2f();
 		this.rotation = 0;
-		this.debugText = GUIMaster.addText(new GUIText("", .8f, -1, 1, .5f, false, true));
 		this.type = TileType.Dirt;
 	}
 	
@@ -130,7 +125,7 @@ public class Camera {
 			}
 		}
 		
-		Tile pointed = GameWorld.chunkMap.getTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+		pointed = GameWorld.chunkMap.getTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 		
 		//// Build Mode
 		if (target == null && preview != null) {
@@ -214,21 +209,6 @@ public class Camera {
 			
 			Display.setVSyncEnabled(DisplayManager.vSyncTracker);
 		}
-		
-		String updateStr = "Mouse: "+Maths.round(getMouseWorldX(), 3)+", "+Maths.round(getMouseWorldY(), 3) 
-		+ "\nFPS: "+DisplayManager.getFPS()
-		+ "\nVSync = "+DisplayManager.vSyncTracker
-		+ "\nSelecting = "+isSelecting;
-		
-		if (pointed != null) {
-			updateStr += "\nTile:";
-			ArrayList<String> stats = TileBuilder.getStats(pointed);
-			for (String stat : stats) {
-				updateStr += "\n"+stat;
-			}
-		}
-		
-		debugText.updateText(updateStr);
 		
 	}
 	
@@ -326,6 +306,8 @@ public class Camera {
 		this.target = target;
 	}
 	
+	public Tile getPointed() {return pointed;}
+	
 	/**
 	 * Returns the X coordinate of the mouse in the world
 	 * @return the X coordinate of the mouse in the world
@@ -347,5 +329,7 @@ public class Camera {
 	 * @return whether the camera is free or not
 	 */
 	public boolean isFree() {return isFree;}
+	
+	public boolean isSelecting() {return isSelecting;}
 	
 }

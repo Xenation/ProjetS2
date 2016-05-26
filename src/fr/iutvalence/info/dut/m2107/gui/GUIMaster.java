@@ -117,6 +117,10 @@ public class GUIMaster {
 		textLinks.get(text).remove(text);
 	}
 	
+	public static void removeFromLayer(GUIText text) {
+		textLinks.get(text).remove(text);
+	}
+	
 	/**
 	 * Removes an element by unloading it and removing it from its layer
 	 * @param elem the element to remove

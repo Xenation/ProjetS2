@@ -7,6 +7,8 @@ import fr.iutvalence.info.dut.m2107.events.GUIMouseEnteredEvent;
 import fr.iutvalence.info.dut.m2107.events.GUIMouseLeavedEvent;
 import fr.iutvalence.info.dut.m2107.events.GUIMouseLeftDownEvent;
 import fr.iutvalence.info.dut.m2107.events.GUIMouseLeftUpEvent;
+import fr.iutvalence.info.dut.m2107.events.GUIMouseRightDownEvent;
+import fr.iutvalence.info.dut.m2107.events.GUIMouseRightUpEvent;
 import fr.iutvalence.info.dut.m2107.events.Sender;
 import fr.iutvalence.info.dut.m2107.models.AbstractSprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
@@ -29,7 +31,12 @@ public class GUIElement extends Entity implements Sender {
 	/**
 	 * Whether this element is being clicked on.
 	 */
-	protected boolean clicked;
+	protected boolean leftClicked;
+
+	/**
+	 * Whether this element is being clicked on.
+	 */
+	protected boolean rightClicked;
 	
 	/**
 	 * A GUIElement using the given file, position, width, and height
@@ -65,29 +72,48 @@ public class GUIElement extends Entity implements Sender {
 		float mX = Input.getMouseGUIPosX();
 		float mY = Input.getMouseGUIPosY();
 		
+		// Collision Detection
 		if (mX >= getScreenX() - this.scale.x/2
 				&& mX <= getScreenX() + this.scale.x/2
 				&& mY >= getScreenY() - this.scale.y/2
 				&& mY <= getScreenY() + this.scale.y/2) {
 			
+			// Hover Start
 			if (!mouseHover) {
 				sendPreciseEvent(new GUIMouseEnteredEvent(this));
 				Input.isOverGUI = true;
 				mouseHover = true;
 			}
+			// Mouse Left click
 			if (Input.isMouseLeftDown()) {
-				if (!clicked) {
+				if (!leftClicked) {
 					sendPreciseEvent(new GUIMouseLeftDownEvent(this));
-					clicked = true;
+					leftClicked = true;
 				}
-			} else if (clicked) {
+			} else if (leftClicked) {
 				sendPreciseEvent(new GUIMouseLeftUpEvent(this));
-				clicked = false;
+				leftClicked = false;
 			}
-		} else if (mouseHover) {
-			if (clicked) {
+			// Mouse Right click
+			if (Input.isMouseRightDown()) {
+				if (!rightClicked) {
+					sendPreciseEvent(new GUIMouseRightDownEvent(this));
+					rightClicked = true;
+				}
+			} else if (rightClicked) {
+				sendPreciseEvent(new GUIMouseRightUpEvent(this));
+				rightClicked = false;
+			}
+		} else if (mouseHover) { // Hover End
+			// Mouse Left End
+			if (leftClicked) {
 				sendPreciseEvent(new GUIMouseLeftUpEvent(this));
-				clicked = false;
+				leftClicked = false;
+			}
+			// Mouse Right End
+			if (rightClicked) {
+				sendPreciseEvent(new GUIMouseRightUpEvent(this));
+				rightClicked = false;
 			}
 			sendPreciseEvent(new GUIMouseLeavedEvent(this));
 			Input.isOverGUI = false;
@@ -96,11 +122,19 @@ public class GUIElement extends Entity implements Sender {
 	}
 
 	/**
-	 * Returns <tt>true</tt> if this element is being clicked on, <tt>false</tt> otherwise.
-	 * @return <tt>true</tt> if this element is being clicked on, <tt>false</tt> otherwise.
+	 * Returns <tt>true</tt> if this element is being clicked on (left), <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if this element is being clicked on (left), <tt>false</tt> otherwise.
 	 */
-	public boolean isClicked() {
-		return clicked;
+	public boolean isLeftClicked() {
+		return leftClicked;
+	}
+	
+	/**
+	 * Returns <tt>true</tt> if this element is being clicked on (right), <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if this element is being clicked on (right), <tt>false</tt> otherwise.
+	 */
+	public boolean isRightClicked() {
+		return rightClicked;
 	}
 	
 	/**

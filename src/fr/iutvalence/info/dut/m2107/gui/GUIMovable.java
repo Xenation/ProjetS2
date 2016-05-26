@@ -21,7 +21,7 @@ public class GUIMovable extends GUIElement {
 			bound = false;
 			Input.isDragingGUI = false;
 		}
-		if ((clicked && !Input.isDragingGUI) || bound) {
+		if ((leftClicked && !Input.isDragingGUI) || bound) {
 			if (!bound) {
 				bound = true;
 				Input.isDragingGUI = true;
