@@ -113,9 +113,9 @@ public class Player extends Character{
 	public void initInventory() {
 		// TODO Take the item saved from a file save
 		addItem(ItemDatabase.get(0), 10);
-		/*addItem(ItemDatabase.get(1), 5);
+		addItem(ItemDatabase.get(1), 5);
 		addItem(ItemDatabase.get(4), 1);
-		addItem(ItemDatabase.get(5), 1);
+		/*addItem(ItemDatabase.get(5), 1);
 		addItem(ItemDatabase.get(6), 1);
 		addItem(ItemDatabase.get(7), 1);
 		addItem(ItemDatabase.get(8), 1);
@@ -163,7 +163,7 @@ public class Player extends Character{
 				
 				this.quickBar[slotNumber].prepareDisplay();
 				
-				GameWorld.guiLayerMap.getLayer(1).add(this.quickBar[slotNumber].getItemSprite());
+				//GameWorld.guiLayerMap.getLayer(1).add(this.quickBar[slotNumber].getItemSprite());
 			}
 		}
 		GameWorld.guiLayerMap.getLayer(1).add(selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*3.5f + selectSlot*width, 1-posY), width, height));

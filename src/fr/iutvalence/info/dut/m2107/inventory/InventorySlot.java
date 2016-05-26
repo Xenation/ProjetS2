@@ -26,12 +26,13 @@ public class InventorySlot {
 		itemSprite.initLayer();
 		itemSprite.getLayer().add(quantity);
 		GameWorld.player.getInventory().getInventoryGUI().getLayer().add(this.itemSprite);
+		System.out.println(this.item + ", " + this.itemSprite.getPosition());
 	}
 	
 	public void prepareDisplay() {
 		itemSprite.initLayer();
 		itemSprite.getLayer().add(quantity);
-		GameWorld.player.getInventory().getInventoryGUI().getLayer().add(this.itemSprite);
+		GameWorld.guiLayerMap.getLayer(1).add(this.itemSprite);
 	}
 	
 	/*public void empty() {

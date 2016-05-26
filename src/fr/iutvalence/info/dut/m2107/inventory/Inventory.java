@@ -6,7 +6,8 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
-import fr.iutvalence.info.dut.m2107.render.DisplayManager;
+import fr.iutvalence.info.dut.m2107.gui.GUIMovable;
+import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
@@ -29,7 +30,7 @@ public class Inventory {
 
 	public static final float height = 0.075f;
 	
-	private final GUIElement inventoryGUI = new GUIElement(SpriteDatabase.getInventoryGUIStr(), new Vector2f(0.7f, 0), width*(inventoryWidth+1), height*(inventoryWidth+1)*2);
+	private final GUIElement inventoryGUI = new GUIElement(SpriteDatabase.getInventoryGUIStr(), new Vector2f(0.7f, 0), width*(inventoryWidth+1)*1.25f, height*(inventoryWidth+1)*2*1.25f);
 	
 	/**
 	 * A list of inventory slot which contain a bunch of item and it's slot and play the role of inventory
@@ -71,24 +72,23 @@ public class Inventory {
 		InventorySlot lastSlot;
 		item.stack = stack;
 		
-		if(inventorySlot.isEmpty())
-			lastSlot = new InventorySlot(ItemDatabase.get(0), new Vector2f(-width*(inventoryWidth-1)/2, height*(inventoryWidth+1)));
-		else
+		if(inventorySlot.isEmpty()) {
+			lastSlot = new InventorySlot();
+			lastSlot.setItemSprite(new GUIMovable(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(-width*(inventoryWidth-1)/2/1.25f, height*(inventoryWidth+1)/1.25f), Inventory.width, Inventory.height));
+		} else
 			lastSlot = inventorySlot.get(inventorySlot.size()-1);
 		
 		InventorySlot newSlot = new InventorySlot(item, new Vector2f(lastSlot.getItemSprite().getPosition().x + width, lastSlot.getItemSprite().getPosition().y));
 		
 		if(lastSlot != null && Maths.round(lastSlot.getItemSprite().getPosition().x + width, 5) >= width*inventoryWidth/2) {
-			newSlot.getItemSprite().setPositionY(newSlot.getItemSprite().getPosition().y - height*DisplayManager.aspectRatio);
+			newSlot.getItemSprite().setPositionY(newSlot.getItemSprite().getPosition().y - height);
 			newSlot.getItemSprite().setPositionX(-width*(inventoryWidth-1)/2);
 		}
 
 		newSlot.getItemSprite().setRotation(-45);
 		float scaleMult = newSlot.getItemSprite().getSprite().getSize().x*newSlot.getItemSprite().getSprite().getSize().y;
-		if(scaleMult == 1)
-			newSlot.getItemSprite().setScale(newSlot.getItemSprite().getScale().x / 1.25f, newSlot.getItemSprite().getScale().y / 1.25f);
-		else
-			newSlot.getItemSprite().setScale(newSlot.getItemSprite().getScale().x / scaleMult, newSlot.getItemSprite().getScale().y / scaleMult);
+		
+		newSlot.getItemSprite().setScale((Vector2f)newSlot.getItemSprite().getScale().scale(1/scaleMult));	//scaleMult == 1 ? 1 : scaleMult));
 		inventorySlot.add(newSlot);
 		return true;
 	}
@@ -126,7 +126,7 @@ public class Inventory {
 	private void replace() {
 		int x = 0 ,y = 0;
 		for (InventorySlot slot : inventorySlot) {
-			slot.getItemSprite().setPosition(-width*(inventoryWidth-1)/2 + width*x, height*(inventoryWidth+1) - height*y*DisplayManager.aspectRatio);
+			slot.getItemSprite().setPosition(-width*(inventoryWidth-1)/2/1.25f + width*x, height*(inventoryWidth+1)/1.25f - height*y);
 			x++;
 			if(x == inventoryWidth) {
 				x =0;
