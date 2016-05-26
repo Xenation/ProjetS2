@@ -115,7 +115,7 @@ public class Player extends Character{
 		addItem(ItemDatabase.get(0), 10);
 		addItem(ItemDatabase.get(1), 5);
 		addItem(ItemDatabase.get(4), 1);
-		/*addItem(ItemDatabase.get(5), 1);
+		addItem(ItemDatabase.get(5), 1);
 		addItem(ItemDatabase.get(6), 1);
 		addItem(ItemDatabase.get(7), 1);
 		addItem(ItemDatabase.get(8), 1);
@@ -135,7 +135,7 @@ public class Player extends Character{
 		addItem(ItemDatabase.get(22), 1);
 		addItem(ItemDatabase.get(23), 1);
 		addItem(ItemDatabase.get(24), 1);
-		addItem(ItemDatabase.get(25), 1);*/
+		addItem(ItemDatabase.get(25), 1);
 	}
 	
 	/**

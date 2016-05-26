@@ -69,25 +69,25 @@ public class Inventory {
 		}
 		
 		// Not found so item is not in the inventory
-		InventorySlot lastSlot;
+		InventorySlot lastSlot = null;
+		InventorySlot newSlot;
 		item.stack = stack;
 		
 		if(inventorySlot.isEmpty()) {
-			lastSlot = new InventorySlot();
-			lastSlot.setItemSprite(new GUIMovable(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(-width*(inventoryWidth-1)/2/1.25f, height*(inventoryWidth+1)/1.25f), Inventory.width, Inventory.height));
-		} else
+			newSlot = new InventorySlot(item, new Vector2f(-width*inventoryWidth/2+.005f, height*(inventoryWidth+3.25f)));
+		} else {
 			lastSlot = inventorySlot.get(inventorySlot.size()-1);
-		
-		InventorySlot newSlot = new InventorySlot(item, new Vector2f(lastSlot.getItemSprite().getPosition().x + width, lastSlot.getItemSprite().getPosition().y));
-		
-		if(lastSlot != null && Maths.round(lastSlot.getItemSprite().getPosition().x + width, 5) >= width*inventoryWidth/2) {
-			newSlot.getItemSprite().setPositionY(newSlot.getItemSprite().getPosition().y - height);
-			newSlot.getItemSprite().setPositionX(-width*(inventoryWidth-1)/2);
+			newSlot = new InventorySlot(item, new Vector2f(lastSlot.getItemSprite().getPosition().x + width*1.3f, lastSlot.getItemSprite().getPosition().y));
+			
+			if(Maths.round(lastSlot.getItemSprite().getPosition().x + width, 5) >= width*inventoryWidth/2) {
+				newSlot.getItemSprite().setPositionY(newSlot.getItemSprite().getPosition().y - height*2*1.135f);
+				newSlot.getItemSprite().setPositionX(-width*inventoryWidth/2+.005f);
+			}
 		}
 
 		newSlot.getItemSprite().setRotation(-45);
-		float scaleMult = newSlot.getItemSprite().getSprite().getSize().x*newSlot.getItemSprite().getSprite().getSize().y;
 		
+		float scaleMult = newSlot.getItemSprite().getSprite().getSize().x*newSlot.getItemSprite().getSprite().getSize().y;
 		newSlot.getItemSprite().setScale((Vector2f)newSlot.getItemSprite().getScale().scale(1/scaleMult));	//scaleMult == 1 ? 1 : scaleMult));
 		inventorySlot.add(newSlot);
 		return true;
@@ -111,7 +111,8 @@ public class Inventory {
 				slot.getQuantity().updateText(""+slot.getItem().stack);					
 				
 				if(slot.getItem().stack == 0) {
-					//slot.empty();
+					slot.empty();
+					inventorySlot.remove(slot);
 					this.replace();
 				}
 				return true;
@@ -126,10 +127,10 @@ public class Inventory {
 	private void replace() {
 		int x = 0 ,y = 0;
 		for (InventorySlot slot : inventorySlot) {
-			slot.getItemSprite().setPosition(-width*(inventoryWidth-1)/2/1.25f + width*x, height*(inventoryWidth+1)/1.25f - height*y);
+			slot.getItemSprite().setPosition(-width*inventoryWidth/2 + width*1.3f*x + 0.005f, height*(inventoryWidth+3.25f) - height*y*2*1.135f);
 			x++;
 			if(x == inventoryWidth) {
-				x =0;
+				x = 0;
 				y++;
 			}
 		}

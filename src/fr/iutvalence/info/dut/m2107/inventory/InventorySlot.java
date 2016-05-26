@@ -32,13 +32,13 @@ public class InventorySlot {
 		GameWorld.guiLayerMap.getLayer(1).add(this.itemSprite);
 	}
 	
-	/*public void empty() {
+	public void empty() {
 		GameWorld.player.getInventory().getInventoryGUI().getLayer().remove(this.itemSprite);
-		this.itemSprite.getLayer().remove(this.quantity);
+		this.quantity.setParent(null);
 		this.itemSprite = null;
 		this.quantity = null;
 		this.item = null;
-	}*/
+	}
 
 	public GUIText getQuantity() {return quantity;}
 	public void setQuantity(GUIText quantity) {this.quantity = quantity;}
