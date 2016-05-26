@@ -1,5 +1,6 @@
 package fr.iutvalence.info.dut.m2107.enginetest;
 
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -87,6 +88,7 @@ public class MainGameTester {
 		
 		GUIMovable btn = new GUIMovable(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(0, 0), .2f, .1f);
 		GameWorld.guiLayerMap.getLayer(2).add(btn);
+		DisplayManager.setStartTime((int)(Sys.getTime()/1000));
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {
