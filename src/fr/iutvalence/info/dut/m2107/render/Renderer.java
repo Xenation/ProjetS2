@@ -60,10 +60,13 @@ public class Renderer {
 	private Matrix4f projectionMatrix;
 	
 	/**
-	 * the shader used by this renderer
+	 * the shader used by this renderer to render the GameWorld.
 	 */
 	private Shader shader;
 	
+	/**
+	 * The shader used by this renderer to render GUI.
+	 */
 	private GUIShader guiShader;
 	
 	/**

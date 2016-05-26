@@ -21,8 +21,14 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
  */
 public class GUIElement extends Entity implements Sender {
 	
+	/**
+	 * Whether the mouse is over this element.
+	 */
 	protected boolean mouseHover;
 	
+	/**
+	 * Whether this element is being clicked on.
+	 */
 	protected boolean clicked;
 	
 	/**
@@ -52,13 +58,18 @@ public class GUIElement extends Entity implements Sender {
 	}
 	
 	public void update(Layer layer) {
+		if (this.layer != null) {
+			((GUILayer)this.layer).update();
+		}
+		
 		float mX = Input.getMouseGUIPosX();
 		float mY = Input.getMouseGUIPosY();
 		
-		if (mX >= this.pos.x - this.scale.x/2
-				&& mX <= this.pos.x + this.scale.x/2
-				&& mY >= this.pos.y - this.scale.y/2
-				&& mY <= this.pos.y + this.scale.y/2) {
+		if (mX >= getScreenX() - this.scale.x/2
+				&& mX <= getScreenX() + this.scale.x/2
+				&& mY >= getScreenY() - this.scale.y/2
+				&& mY <= getScreenY() + this.scale.y/2) {
+			
 			if (!mouseHover) {
 				sendPreciseEvent(new GUIMouseEnteredEvent(this));
 				Input.isOverGUI = true;
@@ -83,12 +94,48 @@ public class GUIElement extends Entity implements Sender {
 			mouseHover = false;
 		}
 	}
+
+	/**
+	 * Returns <tt>true</tt> if this element is being clicked on, <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if this element is being clicked on, <tt>false</tt> otherwise.
+	 */
+	public boolean isClicked() {
+		return clicked;
+	}
 	
 	/**
 	 * Removes this element from layers using the GUIMaster
 	 */
 	public void remove() {
 		GUIMaster.removeElement(this);
+	}
+	
+	/**
+	 * Returns the x position on the screen
+	 * @return the x position on the screen
+	 */
+	public float getScreenX() {
+		GUIElement curPar = (GUIElement) this.getParent();
+		float screenX = this.pos.x;
+		while (curPar != null) {
+			screenX += curPar.pos.x;
+			curPar = (GUIElement) curPar.getParent();
+		}
+		return screenX;
+	}
+	
+	/**
+	 * Returns the y position on the screen
+	 * @return the y position on the screen
+	 */
+	public float getScreenY() {
+		GUIElement curPar = (GUIElement) this.getParent();
+		float screenY = this.pos.y;
+		while (curPar != null) {
+			screenY += curPar.pos.y;
+			curPar = (GUIElement) curPar.getParent();
+		}
+		return screenY;
 	}
 	
 	/**
@@ -114,10 +161,6 @@ public class GUIElement extends Entity implements Sender {
 	
 	public GUILayer getLayer() {
 		return (GUILayer) this.layer;
-	}
-	
-	public boolean isClicked() {
-		return clicked;
 	}
 	
 }

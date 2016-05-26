@@ -23,15 +23,12 @@ public class InventorySlot {
 		this.item = item;
 		this.itemSprite = new GUIMovable(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), pos, Inventory.width, Inventory.height);
 		this.quantity = new GUIText(""+item.stack, .5f, -Inventory.width, -Inventory.width/3, Inventory.width, true);
-		itemSprite.initLayer();
-		itemSprite.getLayer().add(quantity);
-		GameWorld.player.getInventory().getInventoryGUI().getLayer().add(this.itemSprite);
-		System.out.println(this.item + ", " + this.itemSprite.getPosition());
+		quantity.setParent(itemSprite);
+		itemSprite.setParent(GameWorld.player.getInventory().getInventoryGUI());
 	}
 	
 	public void prepareDisplay() {
-		itemSprite.initLayer();
-		itemSprite.getLayer().add(quantity);
+		quantity.setParent(itemSprite);
 		GameWorld.guiLayerMap.getLayer(1).add(this.itemSprite);
 	}
 	
