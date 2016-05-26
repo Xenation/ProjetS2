@@ -6,6 +6,10 @@ import org.lwjgl.opengl.Display;
 
 public class Input {
 	
+	public static boolean isOverGUI;
+	
+	public static boolean isDragingGUI;
+	
 	/** Boolean for player's jumping input */
 	private static boolean isJumping;
 	
@@ -76,10 +80,16 @@ public class Input {
 	private static boolean isLShift;
 	
 	/** Boolean for mouse left click */
-	private static boolean isMouseLeft;
+	private static boolean isMouseLeftDown;
+	
+	/** Boolean for mouse left click up */
+	private static boolean isMouseLeftUp;
 	
 	/** Boolean for mouse right click */
-	private static boolean isMouseRight;
+	private static boolean isMouseRightDown;
+	
+	/** Boolean for mouse right click up */
+	private static boolean isMouseRightUp;
 	
 	/** Boolean for input escape */
 	private static boolean isEscape;
@@ -89,6 +99,9 @@ public class Input {
 	
 	/** Integer for wheel scroll */
 	private static int wheelScrolling;
+	
+	
+	
 	
 	/**
 	 * Boolean for inventory show/hide
@@ -136,11 +149,17 @@ public class Input {
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))	isLShift = true;
         else isLShift = false;
         
-		if(Mouse.isButtonDown(0)) isMouseLeft = true;
-		else isMouseLeft = false;
+		if(!Mouse.isButtonDown(0) && isMouseLeftDown) isMouseLeftUp = true;
+		else isMouseLeftUp = false;
+		
+		if(Mouse.isButtonDown(0)) isMouseLeftDown = true;
+		else isMouseLeftDown = false;
+		
+		if(!Mouse.isButtonDown(1) && isMouseRightDown) isMouseRightUp = true;
+		else isMouseRightUp = false;
         
-		if(Mouse.isButtonDown(1)) isMouseRight = true;
-		else isMouseRight = false;
+		if(Mouse.isButtonDown(1)) isMouseRightDown = true;
+		else isMouseRightDown = false;
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) isEscape = true;
 		else isEscape = false;
@@ -246,10 +265,16 @@ public class Input {
 	public static boolean isLShift() {return isLShift;}
 	
 	/** @return left mouse click */
-	public static boolean isMouseLeft() {return isMouseLeft;}
+	public static boolean isMouseLeftDown() {return isMouseLeftDown;}
+
+	/** @return left mouse click */
+	public static boolean isMouseLeftUp() {return isMouseLeftUp;}
 	
 	/** @return right mouse click */
-	public static boolean isMouseRight() {return isMouseRight;}
+	public static boolean isMouseRightDown() {return isMouseRightDown;}
+
+	/** @return left mouse click */
+	public static boolean isMouseRightUp() {return isMouseRightUp;}
 
 	/** @return escape input */
 	public static boolean isEscape() {return isEscape;}

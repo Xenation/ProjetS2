@@ -16,7 +16,6 @@ import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
-import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Collider {

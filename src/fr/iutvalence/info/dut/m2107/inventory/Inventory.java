@@ -5,9 +5,7 @@ import java.util.*;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
-import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
-import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
@@ -27,11 +25,9 @@ public class Inventory {
 	 */
 	private final int inventoryWidth = 4;
 	
-	
-	//Temporary
-	private float width = 0.1f;
-	private float height = 0.1f;
-	//Temporary
+	public static final float width = 0.075f;
+
+	public static final float height = 0.075f;
 	
 	private final GUIElement inventoryGUI = new GUIElement(SpriteDatabase.getInventoryGUIStr(), new Vector2f(0.7f, 0), width*(inventoryWidth+1), height*(inventoryWidth+1)*2);
 	
@@ -72,32 +68,27 @@ public class Inventory {
 		}
 		
 		// Not found so item is not in the inventory
-		InventorySlot lastSlot = null;
-		InventorySlot newSlot = new InventorySlot();
+		InventorySlot lastSlot;
 		item.stack = stack;
-		newSlot.setItem(item);
 		
 		if(inventorySlot.isEmpty())
-			newSlot.setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(-width*(inventoryWidth-1)/2, height*(inventoryWidth+1)), width, height));
-		else {
+			lastSlot = new InventorySlot(ItemDatabase.get(0), new Vector2f(-width*(inventoryWidth-1)/2, height*(inventoryWidth+1)));
+		else
 			lastSlot = inventorySlot.get(inventorySlot.size()-1);
-			newSlot.setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(lastSlot.getBackground().getPosition().x + width, lastSlot.getBackground().getPosition().y), width, height));
-		}
 		
-		newSlot.setItemSprite(new GUIElement(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(), width, height));
-		newSlot.setQuantity(new GUIText(""+item.stack, .5f, -width, -width/3, width, true));
+		InventorySlot newSlot = new InventorySlot(item, new Vector2f(lastSlot.getItemSprite().getPosition().x + width, lastSlot.getItemSprite().getPosition().y));
 		
-		if(lastSlot != null && Maths.round(lastSlot.getBackground().getPosition().x + width, 5) >= width*inventoryWidth/2) {
-			newSlot.getBackground().setPositionY(newSlot.getBackground().getPosition().y - height*DisplayManager.aspectRatio);
-			newSlot.getBackground().setPositionX(-width*(inventoryWidth-1)/2);
+		if(lastSlot != null && Maths.round(lastSlot.getItemSprite().getPosition().x + width, 5) >= width*inventoryWidth/2) {
+			newSlot.getItemSprite().setPositionY(newSlot.getItemSprite().getPosition().y - height*DisplayManager.aspectRatio);
+			newSlot.getItemSprite().setPositionX(-width*(inventoryWidth-1)/2);
 		}
+
 		newSlot.getItemSprite().setRotation(-45);
 		float scaleMult = newSlot.getItemSprite().getSprite().getSize().x*newSlot.getItemSprite().getSprite().getSize().y;
 		if(scaleMult == 1)
 			newSlot.getItemSprite().setScale(newSlot.getItemSprite().getScale().x / 1.25f, newSlot.getItemSprite().getScale().y / 1.25f);
 		else
 			newSlot.getItemSprite().setScale(newSlot.getItemSprite().getScale().x / scaleMult, newSlot.getItemSprite().getScale().y / scaleMult);
-		newSlot.display(this.getInventoryGUI().getLayer());
 		inventorySlot.add(newSlot);
 		return true;
 	}
@@ -120,7 +111,7 @@ public class Inventory {
 				slot.getQuantity().updateText(""+slot.getItem().stack);					
 				
 				if(slot.getItem().stack == 0) {
-					slot.empty();
+					//slot.empty();
 					this.replace();
 				}
 				return true;
@@ -135,7 +126,7 @@ public class Inventory {
 	private void replace() {
 		int x = 0 ,y = 0;
 		for (InventorySlot slot : inventorySlot) {
-			slot.getBackground().setPosition(-width*(inventoryWidth-1)/2 + width*x, height*(inventoryWidth+1) - height*y*DisplayManager.aspectRatio);
+			slot.getItemSprite().setPosition(-width*(inventoryWidth-1)/2 + width*x, height*(inventoryWidth+1) - height*y*DisplayManager.aspectRatio);
 			x++;
 			if(x == inventoryWidth) {
 				x =0;

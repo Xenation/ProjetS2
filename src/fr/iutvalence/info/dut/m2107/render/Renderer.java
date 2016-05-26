@@ -178,8 +178,9 @@ public class Renderer {
 						glDrawArrays(GL_QUADS, 0, ent.getSprite().getVertexCount());
 						
 						if (ent.getLayer() != null) {
+							Vector2f pos = new Vector2f(ent.getPosition());
 							unbindSprite();
-							renderGuiSubLayers(ent);
+							renderGuiSubLayers(ent, pos);
 							prepareSprite(ent.getSprite());
 						}
 						
@@ -231,7 +232,7 @@ public class Renderer {
 	 * Renders a sub layer of gui elements
 	 * @param entity the gui entity that has the sub layer to render
 	 */
-	private void renderGuiSubLayers(Entity entity) {
+	private void renderGuiSubLayers(Entity entity, Vector2f pos) {
 		Matrix4f mat;
 		GUILayer layer = (GUILayer) entity.getLayer();
 		for (Atlas atl : layer.atlases()) {
@@ -240,15 +241,17 @@ public class Renderer {
 				if (ent.getSprite() != null) {
 					prepareSprite(ent.getSprite());
 					
-					mat = Maths.createTransformationMatrix(new Vector2f(entity.getPosition().x + ent.getPosition().x, entity.getPosition().y + ent.getPosition().y), ent.getScale(), ent.getRotation());
+					mat = Maths.createTransformationMatrix(new Vector2f(pos.x + ent.getPosition().x, pos.y + ent.getPosition().y), ent.getScale(), ent.getRotation());
 					
 					guiShader.loadTransformation(mat);
 					
 					glDrawArrays(GL_QUADS, 0, ent.getSprite().getVertexCount());
 					
 					if (ent.getLayer() != null) {
+						pos.x += ent.getPosition().x;
+						pos.y += ent.getPosition().y;
 						unbindSprite();
-						renderGuiSubLayers(ent);
+						renderGuiSubLayers(ent, pos);
 						prepareSprite(ent.getSprite());
 					}
 					

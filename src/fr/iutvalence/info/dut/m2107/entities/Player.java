@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
+import fr.iutvalence.info.dut.m2107.gui.GUIMovable;
 import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.inventory.Bow;
 import fr.iutvalence.info.dut.m2107.inventory.Inventory;
@@ -112,7 +113,7 @@ public class Player extends Character{
 	public void initInventory() {
 		// TODO Take the item saved from a file save
 		addItem(ItemDatabase.get(0), 10);
-		addItem(ItemDatabase.get(1), 5);
+		/*addItem(ItemDatabase.get(1), 5);
 		addItem(ItemDatabase.get(4), 1);
 		addItem(ItemDatabase.get(5), 1);
 		addItem(ItemDatabase.get(6), 1);
@@ -134,7 +135,7 @@ public class Player extends Character{
 		addItem(ItemDatabase.get(22), 1);
 		addItem(ItemDatabase.get(23), 1);
 		addItem(ItemDatabase.get(24), 1);
-		addItem(ItemDatabase.get(25), 1);
+		addItem(ItemDatabase.get(25), 1);*/
 	}
 	
 	/**
@@ -148,10 +149,10 @@ public class Player extends Character{
 		this.quickBar[1].setItem(ItemDatabase.get(3));
 		
 		for (int slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++) {
-			this.quickBar[slotNumber].setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width, height));
 			if(this.quickBar[slotNumber].getItem() != null) {
-				this.quickBar[slotNumber].setItemSprite(new GUIElement(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(), width, height));
-				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, 0, 0, width, false));
+
+				this.quickBar[slotNumber].setItemSprite(new GUIMovable(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f((-width * (this.quickBar.length-1)/2)+width*slotNumber, -0.85f), width, height));
+				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
 				
 				this.quickBar[slotNumber].getItemSprite().setRotation(-45);
 				float scaleMult = this.quickBar[slotNumber].getItemSprite().getSprite().getSize().x*this.quickBar[slotNumber].getItemSprite().getSprite().getSize().y;
@@ -159,8 +160,11 @@ public class Player extends Character{
 					this.quickBar[slotNumber].getItemSprite().setScale(this.quickBar[slotNumber].getItemSprite().getScale().x / 1.25f, this.quickBar[slotNumber].getItemSprite().getScale().y / 1.25f);
 				else
 					this.quickBar[slotNumber].getItemSprite().setScale(this.quickBar[slotNumber].getItemSprite().getScale().x / scaleMult, this.quickBar[slotNumber].getItemSprite().getScale().y / scaleMult);
+				
+				this.quickBar[slotNumber].prepareDisplay();
+				
+				GameWorld.guiLayerMap.getLayer(1).add(this.quickBar[slotNumber].getItemSprite());
 			}
-			this.quickBar[slotNumber].display(1);
 		}
 		GameWorld.guiLayerMap.getLayer(1).add(selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*3.5f + selectSlot*width, 1-posY), width, height));
 	}
@@ -189,7 +193,7 @@ public class Player extends Character{
 	 * Update the usage of the player's hand item
 	 */
 	private void useItem() {
-		if(Input.isMouseLeft() && this.itemOnHand != null && GameWorld.camera.isFree()) {
+		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.isFree() && !Input.isOverGUI) {
 			if(this.itemOnHand instanceof Bow)
 				((Bow) this.itemOnHand).use(this);
 			if(this.itemOnHand instanceof Sword)

@@ -60,29 +60,26 @@ public class GUIElement extends Entity implements Sender {
 				&& mY >= this.pos.y - this.scale.y/2
 				&& mY <= this.pos.y + this.scale.y/2) {
 			if (!mouseHover) {
-//				System.out.println("Enter");
 				sendPreciseEvent(new GUIMouseEnteredEvent(this));
+				Input.isOverGUI = true;
 				mouseHover = true;
 			}
-			if (Input.isMouseLeft()) {
+			if (Input.isMouseLeftDown()) {
 				if (!clicked) {
-//					System.out.println("LeftDown");
 					sendPreciseEvent(new GUIMouseLeftDownEvent(this));
 					clicked = true;
 				}
 			} else if (clicked) {
-//				System.out.println("LeftUp");
 				sendPreciseEvent(new GUIMouseLeftUpEvent(this));
 				clicked = false;
 			}
 		} else if (mouseHover) {
 			if (clicked) {
-//				System.out.println("LeftUp");
 				sendPreciseEvent(new GUIMouseLeftUpEvent(this));
 				clicked = false;
 			}
-//			System.out.println("Leave");
 			sendPreciseEvent(new GUIMouseLeavedEvent(this));
+			Input.isOverGUI = false;
 			mouseHover = false;
 		}
 	}
@@ -117,6 +114,10 @@ public class GUIElement extends Entity implements Sender {
 	
 	public GUILayer getLayer() {
 		return (GUILayer) this.layer;
+	}
+	
+	public boolean isClicked() {
+		return clicked;
 	}
 	
 }

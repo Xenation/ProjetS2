@@ -84,6 +84,8 @@ public class DisplayManager {
 	
 	public static boolean isPaused = false;
 	
+	private static int startTime;
+
 	/**
 	 * Creates a new display window
 	 */
@@ -124,8 +126,12 @@ public class DisplayManager {
 		
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
+		
 		updateDelta();
+		for (int i = 0; i < 60; i++)
+		{
+			deltasMap.put(currentFrameTime, (float) fpsCap);
+		}
 		lastFPS = getCurrentTime();
 	}
 	
@@ -158,6 +164,7 @@ public class DisplayManager {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 				updateDelta();
+				updateDeltaMap();
 				lastFPS = getCurrentTime();
 	}
 	
@@ -226,7 +233,7 @@ public class DisplayManager {
 	 * @return the current delta time
 	 */
 	public static float deltaTime() {
-		if(isPaused) return 0;
+		if(isPaused || (int)(Sys.getTime()/1000) < startTime+1) return 0;
 		else return (smoothDelta/1000);
 	}
 	
@@ -271,5 +278,7 @@ public class DisplayManager {
 	private static long getCurrentTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
+	
+	public static void setStartTime(int startTime) { DisplayManager.startTime = startTime; }
 	
 }

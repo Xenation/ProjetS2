@@ -1,5 +1,6 @@
 package fr.iutvalence.info.dut.m2107.enginetest;
 
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -81,6 +82,8 @@ public class MainGameTester {
 		}
 		
 		EventManager.register(new TileListener());
+		
+		DisplayManager.setStartTime((int)(Sys.getTime()/1000));
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {

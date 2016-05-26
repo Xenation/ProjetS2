@@ -1,7 +1,5 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
-import static org.lwjgl.openal.AL10.alSourcePlay;
-
 import java.io.FileNotFoundException;
 
 import org.lwjgl.util.vector.Vector2f;
