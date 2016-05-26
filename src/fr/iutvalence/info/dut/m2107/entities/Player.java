@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
+import fr.iutvalence.info.dut.m2107.gui.GUIMovable;
 import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.inventory.Bow;
 import fr.iutvalence.info.dut.m2107.inventory.Inventory;
@@ -133,9 +134,8 @@ public class Player extends Character{
 		this.quickBar[1].setItem(ItemDatabase.get(3));
 		
 		for (int slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++) {
-			this.quickBar[slotNumber].setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(-width*3.5f + width*slotNumber, 1-posY), width, height));
 			if(this.quickBar[slotNumber].getItem() != null) {
-				this.quickBar[slotNumber].setItemSprite(new GUIElement(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(), width, height));
+				this.quickBar[slotNumber].setItemSprite(new GUIMovable(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(), width, height));
 				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
 				
 				this.quickBar[slotNumber].getItemSprite().setRotation(-45);
@@ -145,7 +145,6 @@ public class Player extends Character{
 				else
 					this.quickBar[slotNumber].getItemSprite().setScale(this.quickBar[slotNumber].getItemSprite().getScale().x / scaleMult, this.quickBar[slotNumber].getItemSprite().getScale().y / scaleMult);
 			}
-			this.quickBar[slotNumber].display();
 		}
 		GameWorld.guiLayerMap.getLayer(0).add(selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*3.5f + selectSlot*width, 1-posY), width, height));
 	}
@@ -175,7 +174,7 @@ public class Player extends Character{
 	 * Update the usage of the player's hand item
 	 */
 	private void useItem() {
-		if(Input.isMouseLeft() && this.itemOnHand != null && GameWorld.camera.isFree()) {
+		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.isFree() && !Input.isOverGUI) {
 			if(this.itemOnHand instanceof Bow)
 				((Bow) this.itemOnHand).use(this);
 			if(this.itemOnHand instanceof Sword)

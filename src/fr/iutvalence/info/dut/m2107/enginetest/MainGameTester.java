@@ -10,7 +10,10 @@ import fr.iutvalence.info.dut.m2107.entities.Zombie;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.ListenersScanner;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
+import fr.iutvalence.info.dut.m2107.gui.GUIButton;
 import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
+import fr.iutvalence.info.dut.m2107.gui.GUIMovable;
+import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.listeners.TileListener;
 import fr.iutvalence.info.dut.m2107.render.*;
@@ -81,6 +84,9 @@ public class MainGameTester {
 		}
 		
 		EventManager.register(new TileListener());
+		
+		GUIMovable btn = new GUIMovable(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(0, 0), .2f, .1f);
+		GameWorld.guiLayerMap.getLayer(2).add(btn);
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {

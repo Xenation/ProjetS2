@@ -166,10 +166,10 @@ public class Camera {
 			this.preview.pos.y = Maths.fastFloor(getMouseWorldY()) + Tile.TILE_SIZE/2;
 			
 			//// Drawing
-			if (Input.isLShift() && (Input.isMouseLeft() || Input.isMouseRight())) {
+			if (Input.isLShift() && (Input.isMouseLeftDown() || Input.isMouseRightDown())) {
 				if (drawStart == null) {
-					if (Input.isMouseLeft()) isRemoving = false;
-					else if (Input.isMouseRight()) isRemoving = true;
+					if (Input.isMouseLeftDown()) isRemoving = false;
+					else if (Input.isMouseRightDown()) isRemoving = true;
 					
 					drawStart = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 					isSelecting = true;
@@ -189,10 +189,10 @@ public class Camera {
 				drawStart = null;
 			}
 			if (!isSelecting) {
-				if (Input.isMouseLeft()) {
+				if (Input.isMouseLeftDown()) {
 					GameWorld.chunkMap.setTile(TileBuilder.buildTile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
 				}
-				if (Input.isMouseRight()) {
+				if (Input.isMouseRightDown()) {
 					GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
 				}
 			}

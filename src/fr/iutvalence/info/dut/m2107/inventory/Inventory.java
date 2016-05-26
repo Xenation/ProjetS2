@@ -8,6 +8,7 @@ import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
 import fr.iutvalence.info.dut.m2107.gui.GUISprite;
+import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 /**
@@ -39,8 +40,9 @@ public class Inventory {
 	private List<InventorySlot> inventorySlot = new ArrayList<InventorySlot>();
 	
 	//Temporary
-	private float width = 0.075f;
-	private float height = 0.075f;
+	public static final float width = 0.075f;
+
+	public static final float height = 0.075f;
 	//Temporary
 	
 	/**
@@ -69,29 +71,26 @@ public class Inventory {
 		
 		// Not found so item is not in the inventory
 		InventorySlot lastSlot;
+		item.stack = stack;
+		
+		
 		if(inventorySlot.isEmpty())
-			lastSlot = new InventorySlot(null, new GUIElement(SpriteDatabase.getEmptySpr(), new Vector2f(startX-width, startY), 0, 0),new GUIElement(SpriteDatabase.getEmptySpr(), new Vector2f(startX-width, startY), 0, 0),new GUIText("", 0, startX-width, startY, 0, false));
+			lastSlot = new InventorySlot(ItemDatabase.get(0), new Vector2f(startX-width, startY));
 		else
 			lastSlot = inventorySlot.get(inventorySlot.size()-1);
-		InventorySlot newSlot = new InventorySlot();
-		item.stack = stack;
-		newSlot.setItem(item);
-		if(Maths.round(lastSlot.getBackground().getPosition().x + width, 5) < startX + inventoryWidth*width) {
-			newSlot.setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(lastSlot.getBackground().getPosition().x + width, lastSlot.getBackground().getPosition().y), width, height));
-			newSlot.setItemSprite(new GUIElement(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(), width, height));
-			newSlot.setQuantity(new GUIText(""+item.stack, .5f, -width, -width/3, width, true));
-		} else  {
-			newSlot.setBackground(new GUIElement(SpriteDatabase.getQuickBarSlotStr(), new Vector2f(startX, lastSlot.getBackground().getPosition().y - height*1.75f), width, height));
-			newSlot.setItemSprite(new GUIElement(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(), width, height));
-			newSlot.setQuantity(new GUIText(""+item.stack, .5f, -width, -width/3, width, true));
+		InventorySlot newSlot = new InventorySlot(item, new Vector2f(startX-width, startY));
+		
+		if(Maths.round(lastSlot.getItemSprite().getPosition().x + width, 5) < startX + inventoryWidth*width) {
+			newSlot.getItemSprite().setPosition(startX, lastSlot.getItemSprite().getPosition().y - height*DisplayManager.aspectRatio);
 		}
+
 		newSlot.getItemSprite().setRotation(-45);
 		float scaleMult = newSlot.getItemSprite().getSprite().getSize().x/newSlot.getItemSprite().getSprite().getSize().y;
 		if(scaleMult == 1)
 			newSlot.getItemSprite().setScale(newSlot.getItemSprite().getScale().x / 1.25f, newSlot.getItemSprite().getScale().y / 1.25f);
 		else
 			newSlot.getItemSprite().setScale(newSlot.getItemSprite().getScale().x / scaleMult, newSlot.getItemSprite().getScale().y / scaleMult);
-		newSlot.display();
+		
 		inventorySlot.add(newSlot);
 		return true;
 	}
@@ -116,7 +115,6 @@ public class Inventory {
 				if(slot.getItem().stack == 0) {
 					inventorySlot.remove(slot);
 					this.replace();
-					slot.hide();
 				}
 				return true;
 			}
@@ -130,7 +128,7 @@ public class Inventory {
 	private void replace() {
 		int x = 0 ,y = 0;
 		for (InventorySlot slot : inventorySlot) {
-			slot.getBackground().setPosition(startX + width*x, startY - height*1.75f*y);
+			slot.getItemSprite().setPosition(startX + width*x, startY - height*1.75f*y);
 			x++;
 			if(x == inventoryWidth) {
 				x =0;
