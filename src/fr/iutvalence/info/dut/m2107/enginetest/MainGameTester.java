@@ -10,7 +10,7 @@ import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.entities.Zombie;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.ListenersScanner;
-import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
+import fr.iutvalence.info.dut.m2107.gui.GUI;
 import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
 import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.listeners.TileListener;
@@ -58,17 +58,6 @@ public class MainGameTester {
 		WorldLoader.setFilePath("res/test.sav");
 		SaveFileUpdater.setFilePath("res/test.sav");
 		
-		// Debug Texts
-		GUIMaster.addText(new GUIText("Chunks :", 1, -1, -.60f, 0.5f, false, true));
-		GUIText chunkStats = new GUIText("", .8f, -1, -.65f, 0.5f, false, true);
-		GUIMaster.addText(chunkStats);
-		chunkStats.setLineHeight(0.024);
-		
-		GUIMaster.addText(new GUIText("Loaders :", 1, -1, -.80f, 0.5f, false, true));
-		GUIText loaderStats = new GUIText("", .8f, -1, -.85f, 0.5f, false, true);
-		GUIMaster.addText(loaderStats);
-		loaderStats.setLineHeight(0.024);
-		
 		// World Loading
 		WorldLoader.loadWorld();
 		Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
@@ -83,25 +72,20 @@ public class MainGameTester {
 		
 		EventManager.register(new TileListener());
 		
+		GUI gui = new GUI();
+		
 		DisplayManager.setStartTime((int)(Sys.getTime()/1000));
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {
 			Input.input();
 			
-			chunkStats.updateText("Chunks: "+GameWorld.chunkMap.getChunkCount()
-					+ "\nTiles: "+GameWorld.chunkMap.getTilesCount()
-					+ "\n\tCurrent Tiles: "+GameWorld.chunkMap.getSurroundingTilesCount(-Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2*DisplayManager.aspectRatio, Renderer.UNITS_Y/2, -Renderer.UNITS_Y/2, GameWorld.camera.getPosition()));
-			
-			loaderStats.updateText("TILES: "+Loader.TILE_LOADER.debugValues()
-					+ "\nSPRITES: "+Loader.SPRITE_LOADER.debugValues()
-					+ "\nTEXT: "+Loader.TEXT_LOADER.debugValues()
-					+ "\nGUI: "+Loader.GUI_LOADER.debugValues());
-			
 			if(Input.isKeyWater())
 				GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f(0, 0), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f)));
 			
 			GameWorld.update();
+			
+			gui.update();
 			
 			renderer.prepare();
 			renderer.render();
