@@ -88,7 +88,7 @@ public class Bow extends Weapon {
 						arrow = new Arrow ((Arrow)((Player)owner).getQuickBarItem(i));
 						((Player)owner).removeQuickBarItem(i, 1);
 						arrow.addWeaponStats(this);
-						arrow.initLaunch();
+						arrow.initLaunch(owner);
 						GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).add(arrow);
 						break;
 					}
@@ -98,7 +98,7 @@ public class Bow extends Weapon {
 					if(arrow != null) {
 						GameWorld.player.getInventory().remove(arrow, 1);
 						arrow.addWeaponStats(this);
-						arrow.initLaunch();
+						arrow.initLaunch(owner);
 						GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).add(arrow);
 					} else System.out.println("No more arrow in inventory");
 				}

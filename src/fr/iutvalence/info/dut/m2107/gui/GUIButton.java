@@ -16,7 +16,7 @@ public class GUIButton extends GUILabel implements Listener {
 	/**
 	 * Used to determine whether the clicked event was handled by another object
 	 */
-	private boolean handled;
+	private boolean handled = true;
 	
 	/**
 	 * A GUIButton using the given sprite, position, width, and height

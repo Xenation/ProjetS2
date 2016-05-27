@@ -37,7 +37,7 @@ public class Player extends Character{
 	// Temporary
 	private float width = 0.1f;
 	private float height = 0.1f;
-	private float posY = 2 - height*1.5f;
+	private float posY = -.85f;
 	private int selectSlot = 0;
 	private GUIElement selectQuickBar;
 	
@@ -45,6 +45,7 @@ public class Player extends Character{
 	private GUIElement hpGUI;
 	// Temporary
 	
+	private GUIElement quickBarGUI;
 	
 	protected float invulnerabilityTime;
 	protected float invulnerabilityFadeStep = -0.1f;
@@ -97,6 +98,9 @@ public class Player extends Character{
 	}
 	
 	public void init() {
+		this.quickBarGUI = new GUIElement(SpriteDatabase.getQuickBarStr(), new Vector2f(0, posY), width*this.quickBar.length, height);
+		GameWorld.guiLayerMap.getLayer(1).add(this.quickBarGUI);
+		
 		this.hpGUI = new GUIElement(SpriteDatabase.getHeartStr(), new Vector2f(-1 + width, 1 - height), width/2, height/2);
 		
 		this.initLayer();
@@ -114,28 +118,8 @@ public class Player extends Character{
 		// TODO Take the item saved from a file save
 		addItem(ItemDatabase.get(0), 10);
 		addItem(ItemDatabase.get(1), 5);
-		addItem(ItemDatabase.get(4), 1);
-		addItem(ItemDatabase.get(5), 1);
-		addItem(ItemDatabase.get(6), 1);
-		addItem(ItemDatabase.get(7), 1);
-		addItem(ItemDatabase.get(8), 1);
-		addItem(ItemDatabase.get(9), 1);
-		addItem(ItemDatabase.get(10), 1);
-		addItem(ItemDatabase.get(11), 1);
-		addItem(ItemDatabase.get(12), 1);
-		addItem(ItemDatabase.get(13), 1);
-		addItem(ItemDatabase.get(14), 1);
-		addItem(ItemDatabase.get(15), 1);
-		addItem(ItemDatabase.get(16), 1);
-		addItem(ItemDatabase.get(17), 1);
-		addItem(ItemDatabase.get(18), 1);
-		addItem(ItemDatabase.get(19), 1);
-		addItem(ItemDatabase.get(20), 1);
-		addItem(ItemDatabase.get(21), 1);
-		addItem(ItemDatabase.get(22), 1);
-		addItem(ItemDatabase.get(23), 1);
-		addItem(ItemDatabase.get(24), 1);
-		addItem(ItemDatabase.get(25), 1);
+		addItem(ItemDatabase.get(4), 5);
+		addItem(ItemDatabase.get(5), 5);
 	}
 	
 	/**
@@ -151,7 +135,7 @@ public class Player extends Character{
 		for (int slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++) {
 			if(this.quickBar[slotNumber].getItem() != null) {
 
-				this.quickBar[slotNumber].setItemSprite(new GUIMovable(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f((-width * (this.quickBar.length-1)/2)+width*slotNumber, -0.85f), width, height));
+				this.quickBar[slotNumber].setItemSprite(new GUIMovable(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(-width*this.quickBar.length/2 + width*(slotNumber+.5f), 0), width, height));
 				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
 				
 				this.quickBar[slotNumber].getItemSprite().setRotation(-45);
@@ -163,10 +147,11 @@ public class Player extends Character{
 				
 				this.quickBar[slotNumber].prepareDisplay();
 				
-				//GameWorld.guiLayerMap.getLayer(1).add(this.quickBar[slotNumber].getItemSprite());
+				this.quickBar[slotNumber].getItemSprite().setParent(this.quickBarGUI);
 			}
 		}
-		GameWorld.guiLayerMap.getLayer(1).add(selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*3.5f + selectSlot*width, 1-posY), width, height));
+		selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*this.quickBar.length/2 + width*.5f, 0), width, height);
+		selectQuickBar.setParent(quickBarGUI);
 	}
 
 	/* (non-Javadoc)
@@ -373,18 +358,16 @@ public class Player extends Character{
 	/**
 	 * Update the player velocity with inputs
 	 */
-	private void input() {		
+	private void input() {
 		if(isGrounded) rightWallJump = true;
 		if(isGrounded) leftWallJump = true;
 		if(isGrounded) wallSlide = false;
 		
-		if(Input.isInventory()) this.inventory.changeDisplay();
+		if(Input.isInventory() || this.inventory.getExitButton().clicked()) this.inventory.changeDisplay();
 		
 		if (GameWorld.camera.isFree()) {
 			if (Input.isJumping() && this.isGrounded) this.vel.y = this.jumpHeight;
 			
-			//if (Input.isMoveUp())	this.vel.y += this.spd/2;
-			//if (Input.isMoveDown())	this.vel.y += -this.spd/2;
 			if (Input.isMoveRight()) {
 				if(!rightWallJump || !leftWallJump) this.vel.x += this.spd/6;
 				else this.vel.x += this.spd;

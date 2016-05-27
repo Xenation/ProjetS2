@@ -58,7 +58,7 @@ public class LauncherWindow extends JFrame {
 		field_fps = new LIntegerField(60);
 		panel_graphics.add(field_fps);
 		panel_graphics.add(new JLabel("Render height: "));
-		field_render = new LIntegerField(20);
+		field_render = new LIntegerField(30);
 		panel_graphics.add(field_render);
 		
 		GridLayout layout_others = new GridLayout(1, 2);

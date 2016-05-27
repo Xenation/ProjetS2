@@ -32,7 +32,7 @@ public class Renderer {
 	/**
 	 * The amount of Units in height in the screen
 	 */
-	public static float UNITS_Y = 20;
+	public static float UNITS_Y = 30;
 	
 	/**
 	 * The left boundary of the screen

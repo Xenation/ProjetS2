@@ -29,7 +29,6 @@ public class InventorySlot {
 	
 	public void prepareDisplay() {
 		quantity.setParent(itemSprite);
-		GameWorld.guiLayerMap.getLayer(1).add(this.itemSprite);
 	}
 	
 	public void empty() {
