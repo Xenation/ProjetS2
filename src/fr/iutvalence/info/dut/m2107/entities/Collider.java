@@ -184,6 +184,8 @@ public class Collider {
 //					if(this.ent instanceof Rat) {
 //						((Rat)this.ent).wallWalk = true;
 //						this.ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+//						((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x;
+//						((Rat) this.ent).getVelocity().x = 0;
 //					}
 					
 					// I'm on the perfect right of the tile
@@ -305,9 +307,6 @@ public class Collider {
 					
 //					if(this.ent instanceof Rat) {
 //						((Rat)this.ent).wallWalk = false;
-//						this.ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
-//						((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x;
-//						((Rat) this.ent).getVelocity().x = 0;
 //					}
 					
 					modVel.y = 0;
