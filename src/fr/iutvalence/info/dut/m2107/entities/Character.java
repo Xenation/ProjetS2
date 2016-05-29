@@ -27,8 +27,6 @@ public class Character extends TerrestrialCreature{
 	 * The pivot of the character's weapon
 	 */
 	protected Entity pivot = new Entity(new Vector2f(.725f, -.3f), SpriteDatabase.getEmptySpr(), null);
-
-	protected boolean wallSlide = false;
 	
 	/**
 	 * Constructor of a character
@@ -73,8 +71,6 @@ public class Character extends TerrestrialCreature{
 	public void update(Layer layer) {
 		
 		if(this.itemOnHand != null) this.itemOnHand.update(layer); 
-		
-		this.col.checkContinuousCollision();
 		
 		if(this.dirRight) {
 			this.pivot.pos.x = Maths.fastAbs(this.pivot.pos.x);

@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.entities.Rat;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.entities.Zombie;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
@@ -63,6 +64,9 @@ public class MainGameTester {
 		Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
 		Entity chest = new Entity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider);
 		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(chest);
+		
+		Rat rat = new Rat(new Vector2f(), SpriteDatabase.getArrowSpr());
+		GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(rat);
 		
 		// Events Initialisation
 		EventManager.init();

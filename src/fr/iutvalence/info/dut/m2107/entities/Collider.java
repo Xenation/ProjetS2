@@ -117,24 +117,23 @@ public class Collider {
 	public void checkContinuousCollision() {
 		if(this.ent instanceof Ammunition)
 			AmmunitionContinuousCollision(((Ammunition)this.ent));
-		else if(this.ent instanceof TerrestrialCreature)
-			CharacterContinuousCollision();
-		else return;
+		else
+			TerrestrialContinuousCollision();
 	}
 	
 	/**
 	 * Check the continuous collision of a character
 	 */
-	private void CharacterContinuousCollision() {
+	private void TerrestrialContinuousCollision() {
 		updateColPos();
 		
 		((TerrestrialCreature)ent).hasStepUp = false;
 		((TerrestrialCreature)ent).isGrounded = false;
-		if(this.ent instanceof Character)((Character)ent).wallSlide = false;
+		if(this.ent instanceof Player) ((Player)ent).wallSlide = false;
+		if(this.ent instanceof Rat) ((Rat)ent).wallWalk = false;
 		
-		Collider globalCollider = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2),
-													new Vector2f(this.ent.col.minX + this.getW()/2 + ((TerrestrialCreature)this.ent).vel.x * DisplayManager.deltaTime(), this.ent.col.minY + this.getH()/2 + ((TerrestrialCreature)this.ent).vel.y * DisplayManager.deltaTime()));
-		globalCollider.extendAll(this.getW()*3, this.getH()*3);
+		Collider globalCollider = encompassCollider(this, new Vector2f(this.minX + this.getW()/2 + ((TerrestrialCreature)this.ent).vel.x * DisplayManager.deltaTime(), this.minY + this.getH()/2 + ((TerrestrialCreature)this.ent).vel.y * DisplayManager.deltaTime()), 3);
+		
 		List<Tile> globalTiles = generateGlobalSurroundingTiles(globalCollider);
 		
 		int continuousStep = initStepCollision(((TerrestrialCreature)this.ent).vel);
@@ -149,9 +148,14 @@ public class Collider {
 			if(((TerrestrialCreature)this.ent).vel.y != 0) stepY += stepYtoAdd;
 			Vector2f nextPos = new Vector2f(stepX, stepY);
 			
-			Collider encompassCol = encompassCollider(this.ent.col, nextPos);
+			Collider encompassCol = encompassCollider(this, nextPos, 0.5f);
 			
-			checkCharacterCollision(globalTiles, encompassCol);
+			if(this.ent instanceof Player)
+				checkPlayerCollision(globalTiles, encompassCol);
+			else if(this.ent instanceof Rat)
+				checkCrawlingCollision(globalTiles, encompassCol);
+			else 
+				checkTerrestrialCollision(globalTiles, encompassCol);
 			
 			updateColPos();
 			if(((TerrestrialCreature)this.ent).vel.x != 0) {
@@ -163,15 +167,14 @@ public class Collider {
 				this.maxY += stepYtoAdd;
 			}
 		}
-		
-		checkStepDown();
+		if(!(this.ent instanceof Rat)) checkStepDown();
 	}
 	
 	/**
 	 * Check the collision of character
 	 * @param encompassCol The collider which encompass the current position and the next position
 	 */
-	private void checkCharacterCollision(List<Tile> globalTiles, Collider encompassCol) {
+	private void checkPlayerCollision(List<Tile> globalTiles, Collider encompassCol) {
 		List<Tile> surroundTile = generateSurroundingTiles(globalTiles, encompassCol);
 		if(surroundTile.size() == 0) return;
 		
@@ -179,15 +182,7 @@ public class Collider {
 		
 		for (Tile tile : surroundTile) {
 			if(isCollidingLeft(this, tile)) { // if the tile is on my left
-				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x+1, tile.y)) {
-				
-//					if(this.ent instanceof Rat) {
-//						((Rat)this.ent).wallWalk = true;
-//						this.ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
-//						((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x;
-//						((Rat) this.ent).getVelocity().x = 0;
-//					}
-					
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x+1, tile.y)) {					
 					// I'm on the perfect right of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
 						// My bottom is between the tile height
@@ -199,22 +194,21 @@ public class Collider {
 							// There is no block to prevent the StepUp
 							modVel.y = 0;
 							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
-							((Character)ent).isGrounded = true;
-							((Character)ent).hasStepUp = true;
-						} else if(Input.isJumping() && !((Character)this.ent).prevGrounded && ((Player)this.ent).leftWallJump) {
+							((Player)ent).isGrounded = true;
+							((Player)ent).hasStepUp = true;
+						} else if(Input.isJumping() && !((Player)this.ent).prevGrounded && ((Player)this.ent).leftWallJump) {
 							// Jump input and previously grounded
 							((Player)this.ent).vel.y = ((Player)this.ent).jumpHeight;
 							((Player)this.ent).leftWallJump = false;
-							CharacterContinuousCollision();
+							TerrestrialContinuousCollision();
 						} else {
-							if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0) {
-								((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
-								((Character)this.ent).wallSlide = true;
+							if(!((Player)this.ent).prevGrounded && ((Player)this.ent).vel.y < 0) {
+								((Player)this.ent).vel.y = Maths.lerp(((Player)this.ent).vel.y, -5, 0.05f);
+								((Player)this.ent).wallSlide = true;
 							}
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
-							if(this.ent instanceof Player)
-								((Player)this.ent).rightWallJump = true;
+							((Player)this.ent).rightWallJump = true;
 						}
 					} else {
 						// I can't StepUp or wall jump so I block the x movement and stick to the tile
@@ -235,18 +229,8 @@ public class Collider {
 						} else modVel.y = 0;
 					}
 				}
-			}
-			if(isCollidingRight(this, tile)) { // if the tile is on my right
-				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x-1, tile.y)) {
-					
-
-//					if(this.ent instanceof Rat) {
-//						((Rat)this.ent).wallWalk = true;
-//						this.ent.pos.x = tile.x - this.getW()/2;
-//						((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x;
-//						((Rat) this.ent).getVelocity().x = 0;
-//					}
-					
+			} else if(isCollidingRight(this, tile)) { // if the tile is on my right
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x-1, tile.y)) {					
 					// I'm on the perfect left of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
 						// My bottom is between the tile height
@@ -257,22 +241,21 @@ public class Collider {
 								!checkTilePosition(globalTiles, tile.x-1, tile.y+4)) {
 							modVel.y = 0;
 							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
-							((Character)ent).isGrounded = true;
-							((Character)ent).hasStepUp = true;
-						} else if(Input.isJumping() && !((Character)this.ent).prevGrounded && ((Player)this.ent).rightWallJump) {
+							((Player)ent).isGrounded = true;
+							((Player)ent).hasStepUp = true;
+						} else if(Input.isJumping() && !((Player)this.ent).prevGrounded && ((Player)this.ent).rightWallJump) {
 							// Jump input and previously grounded
 							((Player)this.ent).vel.y = ((Player)this.ent).jumpHeight;
 							((Player)this.ent).rightWallJump = false;
-							CharacterContinuousCollision();
+							TerrestrialContinuousCollision();
 						} else {
-							if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0) {
-								((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
-								((Character)this.ent).wallSlide = true;
+							if(!((Player)this.ent).prevGrounded && ((Player)this.ent).vel.y < 0) {
+								((Player)this.ent).vel.y = Maths.lerp(((Player)this.ent).vel.y, -5, 0.05f);
+								((Player)this.ent).wallSlide = true;
 							}
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
-							if(this.ent instanceof Player)
-								((Player)this.ent).leftWallJump = true;
+							((Player)this.ent).leftWallJump = true;
 						}
 					} else {
 						// I can't StepUp or wall jump so I block the x movement and stick to the tile
@@ -293,48 +276,222 @@ public class Collider {
 						} else modVel.y = 0;
 					}
 				}
-			}
-			if(isCollidingUp(this, tile)) { //if the tile is above me
+			} else if(isCollidingUp(this, tile)) { //if the tile is above me
 				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y-1)) {
 					// I'm under the tile
 					modVel.y = 0;
 					ent.pos.y = tile.y - this.getH()/2;
 				}
-			}
-			if(isCollidingDown(this, tile)) { // if the tile is under me
+			} else if(isCollidingDown(this, tile)) { // if the tile is under me
 				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y+1)) {
-					// I'm above the tile
-					
-//					if(this.ent instanceof Rat) {
-//						((Rat)this.ent).wallWalk = false;
-//					}
-					
+					// I'm above the tile					
 					modVel.y = 0;
-					((Character)ent).isGrounded = true;
-					if(!((Character)ent).hasStepUp) ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
+					((Player)ent).isGrounded = true;
+					if(!((Player)ent).hasStepUp) ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 				}
 			}
 		}
 		
-		if(!((Character)ent).hasStepUp) ((Character)this.ent).vel.x *= modVel.x;
-		((Character)this.ent).vel.y *= modVel.y;
+		if(!((Player)ent).hasStepUp) ((Player)this.ent).vel.x *= modVel.x;
+		((Player)this.ent).vel.y *= modVel.y;
+	}
+	
+	private void checkTerrestrialCollision(List<Tile> globalTiles, Collider encompassCol) {
+		List<Tile> surroundTile = generateSurroundingTiles(globalTiles, encompassCol);
+		if(surroundTile.size() == 0) return;
+		
+		Vector2f modVel = new Vector2f(1, 1);
+		
+		for (Tile tile : surroundTile) {
+			if(isCollidingLeft(this, tile)) { // if the tile is on my left
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x+1, tile.y)) {					
+					// I'm on the perfect right of the tile
+					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
+						// My bottom is between the tile height
+						if(!checkTilePosition(globalTiles, tile.x, tile.y+1) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+2) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+3) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+4) &&
+								!checkTilePosition(globalTiles, tile.x+1, tile.y+4)) {
+							// There is no block to prevent the StepUp
+							modVel.y = 0;
+							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
+							((TerrestrialCreature)ent).isGrounded = true;
+							((Character)ent).hasStepUp = true;
+						} else {
+							if(!((TerrestrialCreature)this.ent).prevGrounded && ((TerrestrialCreature)this.ent).vel.y < 0) {
+								((TerrestrialCreature)this.ent).vel.y = Maths.lerp(((TerrestrialCreature)this.ent).vel.y, -5, 0.05f);
+							}
+							modVel.x = 0;
+							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+						}
+					} else {
+						// I can't StepUp or wall jump so I block the x movement and stick to the tile
+						modVel.x = 0;
+						ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+					}
+				} else {
+					// I'm under or above the right tile
+					if(isCollidingUp(this, tile)) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y-1) || checkTilePosition(globalTiles, tile.x, tile.y-2) || checkTilePosition(globalTiles, tile.x, tile.y-3) || checkTilePosition(globalTiles, tile.x, tile.y-4)) {
+							modVel.x = 0;
+							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+						} else modVel.y = 0;
+					} else if(isCollidingDown(this, tile)) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y+1) || checkTilePosition(globalTiles, tile.x, tile.y+2) || checkTilePosition(globalTiles, tile.x, tile.y+3) || checkTilePosition(globalTiles, tile.x, tile.y+4)) {
+							modVel.x = 0;
+							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+						} else modVel.y = 0;
+					}
+				}
+			} else if(isCollidingRight(this, tile)) { // if the tile is on my right
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x-1, tile.y)) {					
+					// I'm on the perfect left of the tile
+					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
+						// My bottom is between the tile height
+						if(!checkTilePosition(globalTiles, tile.x, tile.y+1) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+2) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+3) &&
+								!checkTilePosition(globalTiles, tile.x, tile.y+4) &&
+								!checkTilePosition(globalTiles, tile.x-1, tile.y+4)) {
+							modVel.y = 0;
+							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
+							((TerrestrialCreature)ent).isGrounded = true;
+							((TerrestrialCreature)ent).hasStepUp = true;
+						} else {
+							if(!((TerrestrialCreature)this.ent).prevGrounded && ((TerrestrialCreature)this.ent).vel.y < 0) {
+								((TerrestrialCreature)this.ent).vel.y = Maths.lerp(((TerrestrialCreature)this.ent).vel.y, -5, 0.05f);
+							}
+							modVel.x = 0;
+							ent.pos.x = tile.x - this.getW()/2;
+						}
+					} else {
+						// I can't StepUp or wall jump so I block the x movement and stick to the tile
+						modVel.x = 0;
+						ent.pos.x = tile.x - this.getW()/2;
+					}
+				} else {
+					// I'm under or above the right tile
+					if(isCollidingUp(this, tile)) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y-1) || checkTilePosition(globalTiles, tile.x, tile.y-2) || checkTilePosition(globalTiles, tile.x, tile.y-3) || checkTilePosition(globalTiles, tile.x, tile.y-4)) {
+							modVel.x = 0;
+							ent.pos.x = tile.x - this.getW()/2;
+						} else modVel.y = 0;
+					} else if(isCollidingDown(this, tile)) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y+1) || checkTilePosition(globalTiles, tile.x, tile.y+2) || checkTilePosition(globalTiles, tile.x, tile.y+3) || checkTilePosition(globalTiles, tile.x, tile.y+4)) {
+							modVel.x = 0;
+							ent.pos.x = tile.x - this.getW()/2;
+						} else modVel.y = 0;
+					}
+				}
+			} else if(isCollidingUp(this, tile)) { //if the tile is above me
+				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y-1)) {
+					// I'm under the tile
+					modVel.y = 0;
+					ent.pos.y = tile.y - this.getH()/2;
+				}
+			} else if(isCollidingDown(this, tile)) { // if the tile is under me
+				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y+1)) {
+					// I'm above the tile					
+					modVel.y = 0;
+					((TerrestrialCreature)ent).isGrounded = true;
+					if(!((TerrestrialCreature)ent).hasStepUp) ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
+				}
+			}
+		}
+		
+		if(!((TerrestrialCreature)ent).hasStepUp) ((TerrestrialCreature)this.ent).vel.x *= modVel.x;
+		((TerrestrialCreature)this.ent).vel.y *= modVel.y;
+	}
+	
+	private void checkCrawlingCollision(List<Tile> globalTiles, Collider encompassCol) {
+		boolean top = false;
+		List<Tile> surroundTile = generateSurroundingTiles(globalTiles, encompassCol);
+		if(surroundTile.size() == 0) return;
+		Vector2f modVel = new Vector2f(1, 1);
+		for (Tile tile : surroundTile) {
+			if(isCollidingLeft(this, tile)) { // if the tile is on my left
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x+1, tile.y)) {
+					// I'm on the perfect right of the tile
+					((Rat)this.ent).wallWalk = true;
+					this.ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+					((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x + GameWorld.gravity * DisplayManager.deltaTime();
+					modVel.x = 0;
+					modVel.y = 1;
+				} else {
+					// I'm under or above the right tile
+					if(isCollidingUp(this, tile)) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y-1)) {
+							modVel.x = 0;
+							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+						} else modVel.y = 0;
+					} else if(isCollidingDown(this, tile)) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y+1)) {
+							modVel.x = 0;
+							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+						} else modVel.y = 0;
+					}
+				}
+			} else if(isCollidingRight(this, tile)) { // if the tile is on my right
+				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x-1, tile.y)) {
+					// I'm on the perfect left of the tile
+					((Rat)this.ent).wallWalk = true;
+					this.ent.pos.x = tile.x - this.getW()/2;
+					((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x+ GameWorld.gravity * DisplayManager.deltaTime();
+					modVel.x = 0;
+					modVel.y = 1;
+				} else {
+					// I'm under or above the right tile
+					if(isCollidingUp(this, tile)) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y-1)) {
+							modVel.x = 0;
+							ent.pos.x = tile.x - this.getW()/2;
+						} else modVel.y = 0;
+					} else if(isCollidingDown(this, tile)) {
+						if(checkTilePosition(globalTiles, tile.x, tile.y+1)) {
+							modVel.x = 0;
+							ent.pos.x = tile.x - this.getW()/2;
+						} else modVel.y = 0;
+					}
+				}
+			} else if(isCollidingUp(this, tile)) { //if the tile is above me
+				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x) {
+					// I'm under the tile
+					top = true;
+					modVel.y = 0;
+					ent.pos.y = tile.y - this.getH()/2;
+				}
+			} else if(isCollidingDown(this, tile)) { // if the tile is under me
+				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y+1)) {
+					// I'm above the tile
+					if(!((Rat)this.ent).wallWalk) {
+						modVel.y = 0;
+						((TerrestrialCreature)ent).isGrounded = true;
+						ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
+					}
+				}
+			}
+		}
+		((TerrestrialCreature)this.ent).vel.x *= modVel.x;
+		((TerrestrialCreature)this.ent).vel.y *= modVel.y;
+		if(top) ((TerrestrialCreature)this.ent).vel.y = 0;
 	}
 	
 	/**
 	 * Check the step down of a character
 	 */
 	private void checkStepDown() {
-		if(((Character) this.ent).isGrounded == false && ((Character) this.ent).prevGrounded == true && ((Character) this.ent).vel.y < 0) {
-			Collider tmp = new Collider(new Vector2f(((Character) this.ent).col.getMinX(), ((Character) this.ent).col.getMinY()), new Vector2f(((Character) this.ent).col.getMaxX(), ((Character) this.ent).col.getMaxY()));
+		if(((TerrestrialCreature) this.ent).isGrounded == false && ((TerrestrialCreature) this.ent).prevGrounded == true && ((TerrestrialCreature) this.ent).vel.y < 0) {
+			Collider tmp = new Collider(new Vector2f(this.getMinX(), this.getMinY()), new Vector2f(this.getMaxX(), this.getMaxY()));
 			tmp.extendDown(Tile.TILE_SIZE + 0.1f);
 			Tile tmpTile = tmp.isCollidingWithMap(tmp);
 			if(tmpTile != null) {
-				((Character) this.ent).vel.y = 0;
-				((Character) this.ent).pos.y = tmpTile.y + Tile.TILE_SIZE + ((Character) this.ent).col.getH()/2;
-				((Character) this.ent).isGrounded = true;
+				((TerrestrialCreature) this.ent).vel.y = 0;
+				((TerrestrialCreature) this.ent).pos.y = tmpTile.y + Tile.TILE_SIZE + this.getH()/2;
+				((TerrestrialCreature) this.ent).isGrounded = true;
 			}
 		}
-		((Character) this.ent).prevGrounded = ((Character) this.ent).isGrounded;
+		((TerrestrialCreature) this.ent).prevGrounded = ((TerrestrialCreature) this.ent).isGrounded;
 	}
 	
 	private int initStepCollision(Vector2f vel) {
@@ -357,10 +514,8 @@ public class Collider {
 		float stepX = ammo.col.minX + this.getW()/2;
 		float stepY = ammo.col.minY + this.getH()/2;
 		
-		Collider globalCollider = encompassTrajectory(new Vector2f(ammo.col.minX + this.getW()/2, ammo.col.minY + this.getH()/2),
-													new Vector2f(ammo.col.minX + this.getW()/2 + ammo.getVelocity().x * DisplayManager.deltaTime(), ammo.col.minY + this.getH()/2 + ammo.getVelocity().y * DisplayManager.deltaTime()));
+		Collider globalCollider = encompassCollider(ammo.col, new Vector2f(ammo.col.minX + this.getW()/2 + ammo.getVelocity().x * DisplayManager.deltaTime(), ammo.col.minY + this.getH()/2 + ammo.getVelocity().y * DisplayManager.deltaTime()), 3);
 		
-		globalCollider.extendAll(this.getW()*3, this.getH()*3);
 		List<Tile> globalTiles = generateGlobalSurroundingTiles(globalCollider);
 		
 		for (int step = continuousStep; step > 0; step--) {
@@ -368,7 +523,7 @@ public class Collider {
 			stepY += stepYtoAdd;
 			Vector2f nextPos = new Vector2f(stepX, stepY);
 			
-			Collider encompassCol = encompassCollider(ammo.col, nextPos);
+			Collider encompassCol = encompassCollider(ammo.col, nextPos, 0.5f);
 			
 			Tile tileColliding = isCollidingWithReducedMap(globalTiles, encompassCol);
 			Entity entColliding = isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.MOBS), GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION)});
@@ -394,9 +549,9 @@ public class Collider {
 		return null;
 	}
 	
-	private Collider encompassCollider(Collider entCollider, Vector2f nextPos) {
+	private Collider encompassCollider(Collider entCollider, Vector2f nextPos, float extendValue) {
 		Collider encompassCol = encompassTrajectory(new Vector2f(entCollider.minX + entCollider.getW()/2, entCollider.minY + entCollider.getH()/2), nextPos);
-		encompassCol.extendAll(entCollider.getW()/2, entCollider.getH()/2);
+		encompassCol.extendAll(entCollider.getW()*extendValue, entCollider.getH()*extendValue);
 		return encompassCol;
 	}
 

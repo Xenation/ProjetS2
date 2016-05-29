@@ -52,6 +52,8 @@ public class TerrestrialCreature extends LivingEntity {
 		this.vel.x = Maths.lerp(this.vel.x, 0, 0.25f);
 		this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
 		
+		this.col.checkContinuousCollision();
+		
 		if(this.dirRight)
 			this.scale.setX(Maths.fastAbs(this.scale.x));
 		else if(this.dirLeft)

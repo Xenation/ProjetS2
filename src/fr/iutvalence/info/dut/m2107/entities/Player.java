@@ -63,12 +63,14 @@ public class Player extends Character{
 	/**
 	 * The player's state for the right wall jump (true is currently wallJumping)
 	 */
-	public boolean rightWallJump = false;
+	protected boolean rightWallJump = false;
 	
 	/**
 	 * The player's state for the left wall jump (true is currently wallJumping)
 	 */
-	public boolean leftWallJump = false;
+	protected boolean leftWallJump = false;
+	
+	protected boolean wallSlide = false;
 	
 	/**
 	 * The index of the player's atlas

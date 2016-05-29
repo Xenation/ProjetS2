@@ -26,20 +26,22 @@ public class Rat extends TerrestrialCreature {
 
 	@Override
 	public void update(Layer layer) {
+		
 		if(wallWalk) {
 			this.rot = -90;
-			if(this.scale.x > 0) {
-				this.vel.x += GameWorld.gravity * DisplayManager.deltaTime();
-				this.vel.y += this.spd;
-			} else if(this.scale.x < 0) {
-				this.vel.x -= GameWorld.gravity * DisplayManager.deltaTime();
-				this.vel.y += this.spd;
-			}
-			
-			this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
+//			if(this.scale.x > 0) {
+//				this.vel.x += GameWorld.gravity * DisplayManager.deltaTime();
+//				this.vel.y -= this.spd;
+//			} else if(this.scale.x < 0) {
+//				this.vel.x -= GameWorld.gravity * DisplayManager.deltaTime();
+//				this.vel.y -= this.spd;
+//			}
+			this.vel.y += this.spd * this.scale.x;
+			this.vel.y += GameWorld.gravity * DisplayManager.deltaTime();
 		} else {
 			this.rot = 0;
 		}
+		this.vel.x += this.spd * this.scale.x;
 		super.update(layer);
 	}
 }
