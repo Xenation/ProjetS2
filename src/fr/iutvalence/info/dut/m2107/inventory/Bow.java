@@ -75,12 +75,7 @@ public class Bow extends Weapon {
 	@Override
 	public void use(Character owner) {
 		if(this.remainingTime <= 0) {
-			try {
-				OpenAL.source.play(AudioDataBase.arrow());
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			OpenAL.source.play(AudioDataBase.arrow());
 			if(owner instanceof Player) {
 				Arrow arrow = null;
 				for (int i = 0; i < ((Player)owner).getQuickBarLength() ; i++) {

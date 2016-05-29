@@ -114,50 +114,57 @@ public class Collider {
 		checkCharacterCollision(encompassCol);
 	}*/
 	
+	public void checkContinuousCollision() {
+		if(this.ent instanceof Ammunition)
+			AmmunitionContinuousCollision(((Ammunition)this.ent));
+		else if(this.ent instanceof TerrestrialCreature)
+			CharacterContinuousCollision();
+		else return;
+	}
+	
 	/**
 	 * Check the continuous collision of a character
 	 */
-	public void checkCharacterContinuousCollision() {
+	private void CharacterContinuousCollision() {
 		updateColPos();
 		
-		((Character)ent).hasStepUp = false;
-		((Character)ent).isGrounded = false;
-		((Character)ent).wallSlide = false;
+		((TerrestrialCreature)ent).hasStepUp = false;
+		((TerrestrialCreature)ent).isGrounded = false;
+		if(this.ent instanceof Character)((Character)ent).wallSlide = false;
 		
 		Collider globalCollider = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2),
-													new Vector2f(this.ent.col.minX + this.getW()/2 + ((Character)this.ent).vel.x * DisplayManager.deltaTime(), this.ent.col.minY + this.getH()/2 + ((Character)this.ent).vel.y * DisplayManager.deltaTime()));
+													new Vector2f(this.ent.col.minX + this.getW()/2 + ((TerrestrialCreature)this.ent).vel.x * DisplayManager.deltaTime(), this.ent.col.minY + this.getH()/2 + ((TerrestrialCreature)this.ent).vel.y * DisplayManager.deltaTime()));
 		globalCollider.extendAll(this.getW()*3, this.getH()*3);
 		List<Tile> globalTiles = generateGlobalSurroundingTiles(globalCollider);
 		
-		int continuousStep = (int) ((Maths.fastAbs(((Character)this.ent).vel.x) + Math.abs(((Character)this.ent).vel.y))/8+1);
-		continuousStep *= DisplayManager.deltaTime()*20;
-		if(continuousStep < 1) continuousStep = 1;
+		int continuousStep = initStepCollision(((TerrestrialCreature)this.ent).vel);
 		
-		float stepXtoAdd = ((Character)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
-		float stepYtoAdd = ((Character)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
+		float stepXtoAdd = ((TerrestrialCreature)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
+		float stepYtoAdd = ((TerrestrialCreature)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
 		float stepX = this.ent.pos.x;
 		float stepY = this.ent.pos.y;
 		
 		for (int step = continuousStep; step > 0; step--) {
-			if(((Character)this.ent).vel.x != 0) stepX += stepXtoAdd;
-			if(((Character)this.ent).vel.y != 0) stepY += stepYtoAdd;
+			if(((TerrestrialCreature)this.ent).vel.x != 0) stepX += stepXtoAdd;
+			if(((TerrestrialCreature)this.ent).vel.y != 0) stepY += stepYtoAdd;
 			Vector2f nextPos = new Vector2f(stepX, stepY);
 			
-			Collider encompassCol = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2), nextPos);
-			encompassCol.extendAll(this.getW()/2, this.getH()/2);
+			Collider encompassCol = encompassCollider(this.ent.col, nextPos);
 			
 			checkCharacterCollision(globalTiles, encompassCol);
 			
 			updateColPos();
-			if(((Character)this.ent).vel.x != 0) {
+			if(((TerrestrialCreature)this.ent).vel.x != 0) {
 				this.minX += stepXtoAdd;
 				this.maxX += stepXtoAdd;
 			}
-			if(((Character)this.ent).vel.y != 0) {
+			if(((TerrestrialCreature)this.ent).vel.y != 0) {
 				this.minY += stepYtoAdd;
 				this.maxY += stepYtoAdd;
 			}
 		}
+		
+		checkStepDown();
 	}
 	
 	/**
@@ -173,6 +180,12 @@ public class Collider {
 		for (Tile tile : surroundTile) {
 			if(isCollidingLeft(this, tile)) { // if the tile is on my left
 				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x+1, tile.y)) {
+				
+//					if(this.ent instanceof Rat) {
+//						((Rat)this.ent).wallWalk = true;
+//						this.ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
+//					}
+					
 					// I'm on the perfect right of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
 						// My bottom is between the tile height
@@ -190,7 +203,7 @@ public class Collider {
 							// Jump input and previously grounded
 							((Player)this.ent).vel.y = ((Player)this.ent).jumpHeight;
 							((Player)this.ent).leftWallJump = false;
-							checkCharacterContinuousCollision();
+							CharacterContinuousCollision();
 						} else {
 							if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0) {
 								((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
@@ -223,6 +236,15 @@ public class Collider {
 			}
 			if(isCollidingRight(this, tile)) { // if the tile is on my right
 				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x-1, tile.y)) {
+					
+
+//					if(this.ent instanceof Rat) {
+//						((Rat)this.ent).wallWalk = true;
+//						this.ent.pos.x = tile.x - this.getW()/2;
+//						((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x;
+//						((Rat) this.ent).getVelocity().x = 0;
+//					}
+					
 					// I'm on the perfect left of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
 						// My bottom is between the tile height
@@ -239,7 +261,7 @@ public class Collider {
 							// Jump input and previously grounded
 							((Player)this.ent).vel.y = ((Player)this.ent).jumpHeight;
 							((Player)this.ent).rightWallJump = false;
-							checkCharacterContinuousCollision();
+							CharacterContinuousCollision();
 						} else {
 							if(!((Character)this.ent).prevGrounded && ((Character)this.ent).vel.y < 0) {
 								((Character)this.ent).vel.y = Maths.lerp(((Character)this.ent).vel.y, -5, 0.05f);
@@ -280,6 +302,14 @@ public class Collider {
 			if(isCollidingDown(this, tile)) { // if the tile is under me
 				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y+1)) {
 					// I'm above the tile
+					
+//					if(this.ent instanceof Rat) {
+//						((Rat)this.ent).wallWalk = false;
+//						this.ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
+//						((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x;
+//						((Rat) this.ent).getVelocity().x = 0;
+//					}
+					
 					modVel.y = 0;
 					((Character)ent).isGrounded = true;
 					if(!((Character)ent).hasStepUp) ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
@@ -294,7 +324,7 @@ public class Collider {
 	/**
 	 * Check the step down of a character
 	 */
-	public void checkStepDown() {
+	private void checkStepDown() {
 		if(((Character) this.ent).isGrounded == false && ((Character) this.ent).prevGrounded == true && ((Character) this.ent).vel.y < 0) {
 			Collider tmp = new Collider(new Vector2f(((Character) this.ent).col.getMinX(), ((Character) this.ent).col.getMinY()), new Vector2f(((Character) this.ent).col.getMaxX(), ((Character) this.ent).col.getMaxY()));
 			tmp.extendDown(Tile.TILE_SIZE + 0.1f);
@@ -308,40 +338,53 @@ public class Collider {
 		((Character) this.ent).prevGrounded = ((Character) this.ent).isGrounded;
 	}
 	
+	private int initStepCollision(Vector2f vel) {
+		int continuousStep = (int) ((Maths.fastAbs(vel.x) + Maths.fastAbs(vel.y))/8+1)*2;
+		continuousStep *= DisplayManager.deltaTime()*20;
+		if(continuousStep < 1) continuousStep = 1;
+		
+		return continuousStep;
+	}
+	
 	/**
 	 * Check the continuous collision with the map
 	 * @return true when colliding otherwise false
 	 */
-	public Entity isContinuousColliding(Tile tile) {
-		int continuousStep = (int) ((Maths.fastAbs(((Ammunition)this.ent).getVelocity().x) + Maths.fastAbs(((Ammunition)this.ent).getVelocity().y))/8+1)*2;
-		continuousStep *= DisplayManager.deltaTime()*20;
-		if(continuousStep < 1) continuousStep = 1;
+	private Entity AmmunitionContinuousCollision(Ammunition ammo) {
+		int continuousStep = initStepCollision(ammo.getVelocity());
 		
-		float stepXtoAdd = ((Ammunition)this.ent).getVelocity().x * DisplayManager.deltaTime() / continuousStep;
-		float stepYtoAdd = ((Ammunition)this.ent).getVelocity().y * DisplayManager.deltaTime() / continuousStep;
-		float stepX = this.ent.col.minX + this.getW()/2;
-		float stepY = this.ent.col.minY + this.getH()/2;
+		float stepXtoAdd = ammo.getVelocity().x * DisplayManager.deltaTime() / continuousStep;
+		float stepYtoAdd = ammo.getVelocity().y * DisplayManager.deltaTime() / continuousStep;
+		float stepX = ammo.col.minX + this.getW()/2;
+		float stepY = ammo.col.minY + this.getH()/2;
+		
+		Collider globalCollider = encompassTrajectory(new Vector2f(ammo.col.minX + this.getW()/2, ammo.col.minY + this.getH()/2),
+													new Vector2f(ammo.col.minX + this.getW()/2 + ammo.getVelocity().x * DisplayManager.deltaTime(), ammo.col.minY + this.getH()/2 + ammo.getVelocity().y * DisplayManager.deltaTime()));
+		
+		globalCollider.extendAll(this.getW()*3, this.getH()*3);
+		List<Tile> globalTiles = generateGlobalSurroundingTiles(globalCollider);
 		
 		for (int step = continuousStep; step > 0; step--) {
 			stepX += stepXtoAdd;
 			stepY += stepYtoAdd;
 			Vector2f nextPos = new Vector2f(stepX, stepY);
 			
-			Collider encompassCol = encompassTrajectory(new Vector2f(this.ent.col.minX + this.getW()/2, this.ent.col.minY + this.getH()/2), nextPos);
-			encompassCol.extendAll(this.getW()/2, this.getH()/2);
+			Collider encompassCol = encompassCollider(ammo.col, nextPos);
 			
-			Tile tileColliding = isCollidingWithMap(encompassCol);
-			Entity entColliding = isCollidingWithEntity(GameWorld.layerMap.getStoredLayer(LayerStore.MOBS));
+			Tile tileColliding = isCollidingWithReducedMap(globalTiles, encompassCol);
+			Entity entColliding = isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.MOBS), GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION)});
+			
 			if(tileColliding != null || entColliding != null) {
-				((Ammunition)this.ent).setVelocity(new Vector2f(0, 0));
-				this.ent.pos.x = nextPos.x -(float) (Math.cos((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().x/2.5f);
-				this.ent.pos.y = nextPos.y -(float) -(Math.sin((this.ent.rot)*Math.PI/180)*this.ent.spr.getSize().y/2.5f);
+				ammo.setVelocity(new Vector2f(0, 0));
+				ammo.pos.x = nextPos.x -(float) (Math.cos((ammo.rot)*Math.PI/180)*ammo.spr.getSize().x/2.5f);
+				ammo.pos.y = nextPos.y -(float) -(Math.sin((ammo.rot)*Math.PI/180)*ammo.spr.getSize().y/2.5f);
 				if(entColliding != null) {
-					this.ent.pos = new Vector2f(this.ent.pos.x - entColliding.pos.x, this.ent.pos.y - entColliding.pos.y);
+					ammo.pos = new Vector2f(ammo.pos.x - entColliding.pos.x, ammo.pos.y - entColliding.pos.y);
 					return entColliding;
 				}
-				((Arrow)this.ent).setPiercingTile(tileColliding);
-				return null;
+				if(ammo instanceof Arrow)
+					((Arrow)this.ent).setPiercingTile(tileColliding);
+				return entColliding;
 			}
 			
 			this.minX += stepXtoAdd;
@@ -352,6 +395,12 @@ public class Collider {
 		return null;
 	}
 	
+	private Collider encompassCollider(Collider entCollider, Vector2f nextPos) {
+		Collider encompassCol = encompassTrajectory(new Vector2f(entCollider.minX + entCollider.getW()/2, entCollider.minY + entCollider.getH()/2), nextPos);
+		encompassCol.extendAll(entCollider.getW()/2, entCollider.getH()/2);
+		return encompassCol;
+	}
+
 	/**
 	 * Encompass the current position and the next position in a new collider
 	 * @param actualPos The actual position
@@ -388,15 +437,24 @@ public class Collider {
 		return null;
 	}
 	
+	public Tile isCollidingWithReducedMap(List<Tile> globalTiles, Collider encompassCol) {
+		for (Tile tile : globalTiles)
+			if(!isColliding(encompassCol, tile))
+				return tile;
+		return null;
+	}
+	
 	/**
 	 * Check if this entity collide with an other
 	 * @param layer The layer to check in
 	 * @return The entity colliding
 	 */
-	public Entity isCollidingWithEntity(Layer layer) {
-		for (Entity ent : layer)
-			if(!isColliding(this, ent.col))
-				return ent;
+	public Entity isCollidingWithEntity(Layer[] layer) {
+		for (Layer lay : layer) {			
+			for (Entity ent : lay)
+				if(!isColliding(this, ent.col))
+					return ent;
+		}
 		return null;
 	}
 	

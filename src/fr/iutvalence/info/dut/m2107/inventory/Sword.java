@@ -12,6 +12,7 @@ import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.sound.AudioDataBase;
 import fr.iutvalence.info.dut.m2107.sound.OpenAL;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 public class Sword extends Weapon {
@@ -72,16 +73,11 @@ public class Sword extends Weapon {
 	@Override
 	public void use(Character owner) {
 		if(remainingTime <= 0) {
-			try {
-				OpenAL.source.play(AudioDataBase.sword());
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			OpenAL.source.play(AudioDataBase.sword());
 			Collider tmpCol = new Collider(owner.getCollider().getMin(), owner.getCollider().getMax());
 			if(owner.getScale().x == 1) tmpCol.extendRight(range);
 			else tmpCol.extendLeft(range);
-			Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getStoredLayer(LayerStore.MOBS));
+			Entity ent = tmpCol.isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.MOBS)});
 			if(ent != owner && ent instanceof LivingEntity) {
 				((LivingEntity) ent).takeKnockback(this.knockback * (int)owner.getScale().x);
 				((LivingEntity) ent).takeDamage(this.damage);
