@@ -8,25 +8,18 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 public class Zombie extends Character {
-	
-	public Zombie() {
-		// TODO Auto-generated constructor stub
-	}
 
 	public Zombie(Vector2f pos, EntitySprite spr) {
 		super(pos, spr);
-		// TODO Auto-generated constructor stub
 	}
 
 	public Zombie(Vector2f pos, EntitySprite spr, Collider col) {
 		super(pos, spr, col);
-		// TODO Auto-generated constructor stub
 	}
 
 	public Zombie(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd, int health, int armor,
 			int jumpHeight) {
 		super(pos, rot, spr, col, vel, spd, health, armor, jumpHeight);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -39,7 +32,7 @@ public class Zombie extends Character {
 				Collider tmpCol = new Collider(this.col.getMin(), this.col.getMax());
 				if(this.scale.x == 1) tmpCol.extendRight(2);
 				else tmpCol.extendLeft(2);
-				Entity ent = tmpCol.isCollidingWithEntity(GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER));
+				Entity ent = tmpCol.isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER)});
 				if(ent == GameWorld.player) {
 					((LivingEntity) ent).takeKnockback(10 * (int)this.scale.x);
 					((LivingEntity) ent).takeDamage(1);

@@ -24,37 +24,11 @@ public class OpenAL {
 	public static void init() {
 		try {
 			AL.create();
-		} catch (LWJGLException e1) {
-			e1.printStackTrace();
-		}
-		try {
-			int arrow = OpenAL.loadSound("arrow");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
 		
 		source = new Source();
-//		InputStream audioSrc = null;
-//		try {
-//			audioSrc = new FileInputStream("res/audio/arrow.wav");
-//		} catch (FileNotFoundException e1) {
-//			e1.printStackTrace();
-//		}
-//		//add buffer for mark/reset support
-//		InputStream bufferedIn = new BufferedInputStream(audioSrc);
-//		AudioInputStream audioStream = null;
-//		try {
-//			audioStream = AudioSystem.getAudioInputStream(bufferedIn);
-//		} catch (UnsupportedAudioFileException | IOException e) {
-//			e.printStackTrace();
-//		}
-//		WaveData data = WaveData.create(audioStream);
-//		buffer = alGenBuffers();
-//		alBufferData(buffer, data.format, data.data, data.samplerate);
-//		data.dispose();
-//		source = alGenSources();
-//		alSourcei(source, AL_BUFFER, buffer);
 	}
 	
 	
@@ -65,10 +39,15 @@ public class OpenAL {
 		AL.destroy();
 	}
 	
-	public static int loadSound (String file) throws FileNotFoundException{
+	public static int loadSound (String file) {
 		int buffer = alGenBuffers();
 		buffers.add(buffer);
-		BufferedInputStream is = new BufferedInputStream(new FileInputStream(new File("res/audio/" + file + ".wav")));
+		BufferedInputStream is = null;
+		try {
+			is = new BufferedInputStream(new FileInputStream(new File("res/audio/" + file + ".wav")));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		WaveData waveFile = WaveData.create(is);
 		alBufferData(buffer, waveFile.format, waveFile.data, waveFile.samplerate);
 		waveFile.dispose();

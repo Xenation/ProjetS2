@@ -34,14 +34,20 @@ public class SpriteDatabase {
 	private final static EntitySprite lightningArrowSpr = new EntitySprite("item/lightning_arrow", new Vector2f(1, 1));
 	public static EntitySprite getLightningArrowSpr() {return lightningArrowSpr;}
 	
+	private final static EntitySprite frozenArrowSpr = new EntitySprite("item/frozen_arrow", new Vector2f(1, 1));
+	public static EntitySprite getFrozenArrowSpr() {return frozenArrowSpr;}
+	
+	private final static EntitySprite burningArrowSpr = new EntitySprite("item/burning_arrow", new Vector2f(1, 1));
+	public static EntitySprite getBurningArrowSpr() {return burningArrowSpr;}
+	
 	private final static EntitySprite chestSpr = new EntitySprite("entities/chest", new Vector2f(2, 2));
 	public static EntitySprite getChestSpr() {return chestSpr;}
 	
 	private final static String heartStr = "gui/heart";
 	public static String getHeartStr() {return heartStr;}
 	
-	private final static String quickBarSlotStr = "gui/quick_bar_slot";
-	public static String getQuickBarSlotStr() {return quickBarSlotStr;}
+	private final static String quickBarStr = "gui/quick_bar";
+	public static String getQuickBarStr() {return quickBarStr;}
 	
 	private final static String selectQuickBarSlotStr = "gui/select_quick_bar_slot";
 	public static String getSelectQuickBarSlotStr() {return selectQuickBarSlotStr;}

@@ -75,12 +75,7 @@ public class Bow extends Weapon {
 	@Override
 	public void use(Character owner) {
 		if(this.remainingTime <= 0) {
-			try {
-				OpenAL.source.play(AudioDataBase.arrow());
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			OpenAL.source.play(AudioDataBase.arrow());
 			if(owner instanceof Player) {
 				Arrow arrow = null;
 				for (int i = 0; i < ((Player)owner).getQuickBarLength() ; i++) {
@@ -88,7 +83,7 @@ public class Bow extends Weapon {
 						arrow = new Arrow ((Arrow)((Player)owner).getQuickBarItem(i));
 						((Player)owner).removeQuickBarItem(i, 1);
 						arrow.addWeaponStats(this);
-						arrow.initLaunch();
+						arrow.initLaunch(owner);
 						GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).add(arrow);
 						break;
 					}
@@ -98,7 +93,7 @@ public class Bow extends Weapon {
 					if(arrow != null) {
 						GameWorld.player.getInventory().remove(arrow, 1);
 						arrow.addWeaponStats(this);
-						arrow.initLaunch();
+						arrow.initLaunch(owner);
 						GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).add(arrow);
 					} else System.out.println("No more arrow in inventory");
 				}

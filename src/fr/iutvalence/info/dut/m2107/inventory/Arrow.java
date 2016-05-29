@@ -19,6 +19,8 @@ import fr.iutvalence.info.dut.m2107.tiles.Tile;
  */
 public class Arrow extends Ammunition {
 	
+	private Entity piercingEntity = null;
+	
 	private Tile piercingTile = null;
 	
 	/**
@@ -75,7 +77,7 @@ public class Arrow extends Ammunition {
 	 * @see fr.iutvalence.info.dut.m2107.entities.Ammunition#update(fr.iutvalence.info.dut.m2107.storage.Layer)
 	 */
 	@Override
-	public void update(Layer layer) {		
+	public void update(Layer layer) {
 		if(!isPierce) {
 			this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
 			
@@ -83,37 +85,30 @@ public class Arrow extends Ammunition {
 			else this.rot = (float) (Math.atan(this.vel.x / this.vel.y)*180/Math.PI+90);
 			
 			this.col.updateColPos();
-			this.col.extendRight((float) (Math.cos((rot)*Math.PI/180)*this.spr.getSize().x/2.5f));
-			this.col.extendLeft(-(float) (Math.cos((rot)*Math.PI/180)*this.spr.getSize().x/2.5f));
-			this.col.extendUp(-(float) (Math.sin((rot)*Math.PI/180)*this.spr.getSize().y/2.5f));
-			this.col.extendDown((float) (Math.sin((rot)*Math.PI/180)*this.spr.getSize().y/2.5f));
-			Entity entColliding = null;
-			if((entColliding = this.col.isContinuousColliding(this.getPiercingTile())) != null) {
-				this.isPierce = true;
-				if(entColliding instanceof LivingEntity) {
-					if(this.rot < 90 && this.rot > -90)
-						((LivingEntity)entColliding).takeKnockback(this.knockback);
-					else
-						((LivingEntity)entColliding).takeKnockback(-this.knockback);
-					((LivingEntity)entColliding).takeDamage(this.damage);
-				}
-				if(entColliding.getLayer() == null)
-					entColliding.initLayer();
-				entColliding.getLayer().add(this);
-				GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
-			}
-			if(getPiercingTile() != null) {
-				this.isPierce = true;
-
-			}
 			
-			// temporary code for entity collision detection
-			/*for (Entity entity : layer) {
-				if(entity != this && GameWorld.player != entity && !this.col.isColliding(this.col, entity.col)) {
-					this.isPierce = true;
-					this.vel = new Vector2f();
+			float extendSideX = (float) (Math.cos((rot)*Math.PI/180)*this.spr.getSize().x/2.5f);
+			this.col.extendRight(extendSideX);
+			this.col.extendLeft(-extendSideX);
+			
+			float extendSideY = (float) (Math.sin((rot)*Math.PI/180)*this.spr.getSize().y/2.5f);
+			this.col.extendUp(-extendSideY);
+			this.col.extendDown(extendSideY);
+			
+			this.col.checkContinuousCollision();
+			
+			if(piercingEntity != null) {
+				this.isPierce = true;
+				if(piercingEntity instanceof LivingEntity) {
+					if(this.rot < 90 && this.rot > -90)
+						((LivingEntity)piercingEntity).takeKnockback(this.knockback);
+					else
+						((LivingEntity)piercingEntity).takeKnockback(-this.knockback);
+					((LivingEntity)piercingEntity).takeDamage(this.damage);
 				}
-			}*/
+				this.setParent(piercingEntity);
+				GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
+			} else if(this.piercingEntity != null)
+				this.isPierce = true;
 		}
 		super.update(layer);
 	}

@@ -16,22 +16,7 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
  * @author Voxelse
  *
  */
-public class Character extends LivingEntity{
-	
-	/**
-	 * The character is or not grounded
-	 */
-	protected boolean isGrounded = true;
-	
-	/**
-	 * The previous state of isGrounded
-	 */
-	protected boolean prevGrounded = true;
-	
-	/**
-	 * The character has or not step up
-	 */
-	protected boolean hasStepUp;
+public class Character extends TerrestrialCreature{
 	
 	/**
 	 * The item on hand
@@ -44,13 +29,6 @@ public class Character extends LivingEntity{
 	protected Entity pivot = new Entity(new Vector2f(.725f, -.3f), SpriteDatabase.getEmptySpr(), null);
 
 	protected boolean wallSlide = false;
-	
-	/**
-	 * Constructor of a character
-	 */
-	public Character() {
-		super();
-	}
 	
 	/**
 	 * Constructor of a character
@@ -96,22 +74,15 @@ public class Character extends LivingEntity{
 		
 		if(this.itemOnHand != null) this.itemOnHand.update(layer); 
 		
-		this.vel.x = Maths.lerp(this.vel.x, 0, 0.25f);
-		this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
+		this.col.checkContinuousCollision();
 		
-		this.col.checkCharacterContinuousCollision();
-		
-		this.col.checkStepDown();
-		
-		if(this.vel.x > 0 && this.recoil == 0) {
-			this.scale.setX(Maths.fastAbs(this.scale.x));
+		if(this.dirRight) {
 			this.pivot.pos.x = Maths.fastAbs(this.pivot.pos.x);
 			if(this.itemOnHand != null) {
 				if(this.itemOnHand instanceof Bow) this.pivot.rot = 20;
 				if(this.itemOnHand instanceof Sword) this.pivot.rot = -20;
 			}
-		} else if(this.vel.x < 0 && this.recoil == 0) {
-			this.scale.setX(-Maths.fastAbs(this.scale.x));
+		} else if(this.dirLeft) {
 			this.pivot.pos.x = -Maths.fastAbs(this.pivot.pos.x);
 			if(this.itemOnHand != null) {
 				if(this.itemOnHand instanceof Bow) this.pivot.rot = -200;
@@ -144,17 +115,5 @@ public class Character extends LivingEntity{
 	 * @return the item on hand of the character
 	 */
 	public Item getItemOnHand() {return this.itemOnHand;}
-
-	/**
-	 * Return the state of grounded of the character
-	 * @return the state of grounded of the character
-	 */
-	public boolean isGrounded() {return isGrounded;}
-
-	/**
-	 * Return the previous state of grounded of the character
-	 * @return the previous state of grounded of the character
-	 */
-	public boolean isPrevGrounded() {return prevGrounded;}
 	
 }

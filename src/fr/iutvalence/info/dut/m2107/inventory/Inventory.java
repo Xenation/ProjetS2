@@ -5,8 +5,8 @@ import java.util.*;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
+import fr.iutvalence.info.dut.m2107.gui.GUIButton;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
-import fr.iutvalence.info.dut.m2107.gui.GUIMovable;
 import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
@@ -30,6 +30,8 @@ public class Inventory {
 
 	public static final float height = 0.075f;
 	
+	private final GUIButton exitButton = new GUIButton(new GUISprite(SpriteDatabase.getEmptySpr().getAtlas(), SpriteDatabase.getEmptySpr().getSize()), new Vector2f(0.185f, 0.75f), width/1.5f, height/1.5f, "");
+	
 	private final GUIElement inventoryGUI = new GUIElement(SpriteDatabase.getInventoryGUIStr(), new Vector2f(0.7f, 0), width*(inventoryWidth+1)*1.25f, height*(inventoryWidth+1)*2*1.25f);
 	
 	/**
@@ -42,6 +44,8 @@ public class Inventory {
 		
 		GameWorld.player.initQuickBar();
 		GameWorld.player.initInventory();
+		
+		this.exitButton.setParent(this.inventoryGUI);
 	}
 	
 	/**
@@ -242,5 +246,7 @@ public class Inventory {
 	 * @return
 	 */
 	public GUIElement getInventoryGUI() {return inventoryGUI;}
+	
+	public GUIButton getExitButton() {return exitButton;}
 	
 }

@@ -2,6 +2,7 @@ package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.entities.Character;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
@@ -127,13 +128,16 @@ public abstract class Ammunition extends Item {
 	
 	/**
 	 * Initialize the collision, the position, rotation and velocity of the ammunition
+	 * @param owner 
 	 */
-	public void initLaunch() {
+	public void initLaunch(Character owner) {
 		this.col = new Collider(this.col);
 		this.pos = new Vector2f(GameWorld.player.getPosition().x + GameWorld.player.getPivot().getPosition().x, GameWorld.player.getPosition().y + GameWorld.player.getPivot().getPosition().y);
 		this.rot = GameWorld.player.getDegreeShoot();
 		this.vel = new Vector2f(GameWorld.player.getShoot().x, GameWorld.player.getShoot().y);
 		this.vel.scale(this.speed);
+		this.vel.x += GameWorld.player.getVelocity().x/2;
+		this.vel.y += GameWorld.player.getVelocity().y/2;
 	}
 	
 	/**
