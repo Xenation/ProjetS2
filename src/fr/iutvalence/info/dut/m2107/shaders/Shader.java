@@ -42,6 +42,8 @@ public class Shader extends ShaderProgram {
 	 */
 	private int location_depth;
 	
+	private int location_sides;
+	
 	/**
 	 * Creates a new ShaderProgram using the vertex and fragment files
 	 */
@@ -87,6 +89,23 @@ public class Shader extends ShaderProgram {
 		super.loadFloat(location_depth, depth);
 	}
 	
+	public void loadSides(boolean[] sides) {
+		if (sides != null && sides.length != 4) throw new IllegalArgumentException();
+		int fillIndex = 4;
+		boolean[] toLoad = new boolean[16];
+		if (sides != null) {
+			for (int i = 0; i < sides.length; i++) {
+				toLoad[i] = sides[i];
+			}
+		} else {
+			fillIndex = 0;
+		}
+		for (int i = fillIndex; i < toLoad.length; i++) {
+			toLoad[i] = false;
+		}
+		super.load16Booleans(location_sides, toLoad);
+	}
+	
 	/**
 	 * Gets the location of all the uniform variables of the shader
 	 */
@@ -97,6 +116,7 @@ public class Shader extends ShaderProgram {
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_alpha = super.getUniformLocation("alpha");
 		location_depth = super.getUniformLocation("depth");
+		location_sides = super.getUniformLocation("sides");
 	}
 	
 	/**

@@ -2,9 +2,12 @@
 
 in vec2 position;
 in vec2 textureUVs;
+in int gl_VertexID;
 
 out vec2 textureCoords;
 out float alphaPass;
+out float colorInt[4];
+out vec2 fragPos;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
@@ -12,7 +15,30 @@ uniform mat4 viewMatrix;
 uniform float alpha;
 uniform float depth;
 
+uniform int sides;
+
 void main(void) {
+	
+	fragPos = position;
+	
+	bvec4 bsides;
+	for (int i = 0; i < 4; i++) {
+		if (((sides >> i) & 1) == 1) {
+			bsides[i] = true;
+		}
+		else {
+			bsides[i] = false;
+		}
+	}
+	
+	for (int i = 0; i < 4; i++) {
+		if (bsides[i]) {
+			colorInt[i] = 0.0;
+		} else {
+			colorInt[i] = 1.0;
+		}
+	}
+	
 	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, depth, 1.0);
 	textureCoords = textureUVs;
 	alphaPass = alpha;

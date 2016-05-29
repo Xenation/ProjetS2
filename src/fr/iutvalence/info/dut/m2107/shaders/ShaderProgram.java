@@ -104,6 +104,21 @@ public abstract class ShaderProgram {
 	}
 	
 	/**
+	 * loads up to 16 booleans in a single int to optimise CPU/GPU transfers
+	 * @param location the location of the int
+	 * @param values the array of 16 booleans
+	 */
+	protected void load16Booleans(int location, boolean[] values) {
+		if (values.length != 16) throw new IllegalArgumentException("load16Booleans() handles only 16 booleans arrays");
+		int fInt = 0;
+		for (int i = 0; i < values.length; i++) {
+			if (values[i])
+				fInt |= 1 << i;
+		}
+		GL20.glUniform1i(location, fInt);
+	}
+	
+	/**
 	 * loads a matrix at the specified location in the shader
 	 * @param location the location of the uniform variable in which to load the matrix
 	 * @param matrix the matrix to load

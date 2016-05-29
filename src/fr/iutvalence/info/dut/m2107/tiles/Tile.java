@@ -36,7 +36,18 @@ public class Tile {
 	 */
 	protected TileOrientation orientation;
 	
+	/**
+	 * Whether this tile needs to be updated
+	 */
 	protected boolean toUpdate;
+	public boolean updateLight;
+	
+	private boolean[] sides = new boolean[4];
+	
+	private Tile top;
+	private Tile right;
+	private Tile bottom;
+	private Tile left;
 	
 	/**
 	 * A Tile with the specified type and coordinates
@@ -108,6 +119,7 @@ public class Tile {
 	
 	public boolean heavyUpdate() {
 		this.toUpdate = false;
+		resetAdjacentLinks();
 		return this.type.updateBehaviors(this);
 	}
 	
@@ -117,6 +129,75 @@ public class Tile {
 	
 	public void toUpdate(boolean toUpdate) {
 		this.toUpdate = toUpdate;
+	}
+	
+	public void updateSides() {
+		for (int i = 0; i < sides.length; i++) {
+			sides[i] = false;
+		}
+		if (top != null && left != null && top.left != null && top.top != null && left.left != null
+				&& right != null && bottom != null
+				&& top.right != null && left.bottom != null
+				&& top.top.left != null && left.left.top != null) {
+			sides[0] = true;
+		}
+		if (top != null && right != null && top.right != null && top.top != null && right.right != null
+				&& bottom != null && left != null
+				&& top.left != null && right.bottom != null
+				&& top.top.right != null && right.right.top != null) {
+			sides[1] = true;
+		}
+		if (bottom != null && right != null && bottom.right != null && bottom.bottom != null && right.right != null
+				&& left != null && top != null
+				&& bottom.left != null && right.top != null
+				&& bottom.bottom.right != null && right.right.bottom != null) {
+			sides[2] = true;
+		}
+		if (bottom != null && left != null && bottom.left != null && bottom.bottom != null && left.left != null
+				&& top != null && right != null
+				&& bottom.right != null && left.top != null
+				&& bottom.bottom.left != null && left.left.bottom != null) {
+			sides[3] = true;
+		}
+	}
+	
+	public void adjacentsToUpdate() {
+		if (top != null) {
+			top.toUpdate = true;
+//			if (top.right != null) top.right.toUpdate = true;
+//			if (top.left != null) top.left.toUpdate = true;
+//			if (top.top != null) {
+//				top.top.toUpdate = true;
+//				if (top.top.left != null) top.top.left.toUpdate = true;
+//				if (top.top.right != null) top.top.right.toUpdate = true;
+//			}
+		}
+		if (bottom != null) {
+			bottom.toUpdate = true;
+//			if (bottom.right != null) bottom.right.toUpdate = true;
+//			if (bottom.left != null) bottom.left.toUpdate = true;
+//			if (bottom.bottom != null) {
+//				bottom.bottom.toUpdate = true;
+//				if (bottom.bottom.left != null) bottom.bottom.left.toUpdate = true;
+//				if (bottom.bottom.right != null) bottom.bottom.right.toUpdate = true;
+//			}
+		}
+		if (right != null) {
+			right.toUpdate = true;
+//			if (right.right != null) {
+//				right.right.toUpdate = true;
+//				if (right.right.top != null) right.right.top.toUpdate = true;
+//				if (right.right.bottom != null) right.right.bottom.toUpdate = true;
+//			}
+		}
+		if (left != null) {
+			left.toUpdate = true;
+//			if (left.left != null) {
+//				left.left.toUpdate = true;
+//				if (left.left.top != null) left.left.top.toUpdate = true;
+//				if (left.left.bottom != null) left.left.bottom.toUpdate = true;
+//			}
+		}
 	}
 
 	/**
@@ -177,6 +258,30 @@ public class Tile {
 	public void setOrientation(TileOrientation orientation) {
 		this.orientation = orientation;
 	}
+	
+	public Tile getTop() {return top;}
+
+	protected void setTop(Tile top) {this.top = top;}
+
+	public Tile getRight() {return right;}
+
+	protected void setRight(Tile right) {this.right = right;}
+
+	public Tile getBottom() {return bottom;}
+
+	protected void setBottom(Tile bottom) {this.bottom = bottom;}
+
+	public Tile getLeft() {return left;}
+
+	protected void setLeft(Tile left) {this.left = left;}
+	
+	public void resetAdjacentLinks() {
+		this.top = GameWorld.chunkMap.getTopTile(this);
+		this.right = GameWorld.chunkMap.getRightTile(this);
+		this.bottom = GameWorld.chunkMap.getBottomTile(this);
+		this.left = GameWorld.chunkMap.getLeftTile(this);
+		updateLight = true;
+	}
 
 	/**
 	 * Returns the x coordinate of this tile relative to a specified chunk
@@ -195,6 +300,8 @@ public class Tile {
 	public int getRelY(Chunk chk) {
 		return y-chk.getY()*Chunk.CHUNK_SIZE;
 	}
+	
+	public boolean[] getSides() {return sides;}
 	
 	/**
 	 * Returns the x coordinate of the tile in front

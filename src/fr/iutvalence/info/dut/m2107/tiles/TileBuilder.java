@@ -104,6 +104,7 @@ public class TileBuilder {
 //			EventManager.unregister(tile);
 			break;
 		}
+		tile.adjacentsToUpdate();
 	}
 	
 	/**
@@ -119,6 +120,14 @@ public class TileBuilder {
 		stats.add("y = "+tile.y);
 		stats.add("Ori = "+tile.orientation.name());
 		stats.add("toUp = "+tile.toUpdate());
+		stats.add("top = "+tile.getTop());
+		stats.add("right = "+tile.getRight());
+		stats.add("bottom = "+tile.getBottom());
+		stats.add("left = "+tile.getLeft());
+		stats.add("sides[0] = "+tile.getSides()[0]);
+		stats.add("sides[1] = "+tile.getSides()[1]);
+		stats.add("sides[2] = "+tile.getSides()[2]);
+		stats.add("sides[3] = "+tile.getSides()[3]);
 		switch (tile.type) {
 		case Dirt:
 		case Stone:

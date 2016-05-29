@@ -121,6 +121,7 @@ public class Renderer {
 					
 					Matrix4f matrix = Maths.createTransformationMatrix(tile.x, tile.y, tile.getOrientation());
 					shader.loadTransformation(matrix);
+					shader.loadSides(tile.getSides());
 					
 					// Draws the sprite
 					glDrawArrays(GL_QUADS, 0, 4);
@@ -130,6 +131,7 @@ public class Renderer {
 			}
 		}
 		
+		shader.loadSides(null);
 		// Layers rendering
 		for (int i = GameWorld.layerMap.getLayersCount()-1; i >= 0; i--) {
 			Layer layer = GameWorld.layerMap.getLayer(i);

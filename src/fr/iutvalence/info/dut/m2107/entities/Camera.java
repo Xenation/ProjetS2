@@ -129,6 +129,10 @@ public class Camera {
 		
 		//// Build Mode
 		if (target == null && preview != null) {
+			if (pointed != null && Input.isKeyU()) {
+				pointed.toUpdate(true);
+			}
+			
 			//// Movement
 			if (Input.isMoveUp()) 	this.position.y += 20 * DisplayManager.deltaTime();
 			if (Input.isMoveDown()) this.position.y -= 20 * DisplayManager.deltaTime();

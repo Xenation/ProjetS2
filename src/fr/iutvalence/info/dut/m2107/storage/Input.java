@@ -67,6 +67,9 @@ public class Input {
 	/** Boolean for input 9 */
 	private static boolean isKey9;
 	
+	/** Boolean for input U */
+	private static boolean isKeyU;
+	
 	/** Boolean for input water */
 	private static boolean isKeyWater;
 	
@@ -182,6 +185,7 @@ public class Input {
 		        if(Keyboard.getEventKey() == Keyboard.KEY_7)		isKey7 = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_8)		isKey8 = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_9)		isKey9 = true;
+		        if(Keyboard.getEventKey() == Keyboard.KEY_U)		isKeyU = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_W)		isKeyWater = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_NUMPAD0)	isNumPad0 = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_R)		isTileRotate = true;
@@ -251,6 +255,9 @@ public class Input {
 
 	/** @return input 9 */
 	public static boolean isKey9() {return isKey9;}
+	
+	/** @return input U */
+	public static boolean isKeyU() {return isKeyU;}
 	
 	/** @return input water */
 	public static boolean isKeyWater() {return isKeyWater;}
