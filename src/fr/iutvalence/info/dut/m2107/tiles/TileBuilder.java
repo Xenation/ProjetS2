@@ -28,6 +28,7 @@ public class TileBuilder {
 		case Grass:
 		case Log:
 		case Leaves:
+		case Sand:
 			return new Tile(type, x, y);
 		case Fader:
 			return new FadingTile(type, x, y);
@@ -35,8 +36,6 @@ public class TileBuilder {
 			DamagingSupportedTile spike = new DamagingSupportedTile(type, x, y);
 			spike.setDepending(GameWorld.chunkMap.getBottomTile(spike));
 			return spike;
-		case Sand:
-			return new FallingTile(type, x, y);
 		case Creator:
 			return new CreatingTile(type, x, y, TileType.Sand);
 		case Piston:
@@ -62,6 +61,7 @@ public class TileBuilder {
 		case Grass:
 		case Log:
 		case Leaves:
+		case Sand:
 			EventManager.sendEvent(new TileDestroyedEvent(tile));
 //			EventManager.unregister(tile);
 			break;
@@ -74,11 +74,6 @@ public class TileBuilder {
 			DamagingSupportedTile spike = (DamagingSupportedTile) tile;
 			EventManager.sendEvent(new TileDestroyedEvent(spike));
 //			EventManager.unregister(damaging);
-			break;
-		case Sand:
-			FallingTile falling = (FallingTile) tile;
-			EventManager.sendEvent(new TileDestroyedEvent(falling));
-//			EventManager.unregister(falling);
 			break;
 		case Creator:
 			CreatingTile creating = (CreatingTile) tile;
@@ -134,15 +129,13 @@ public class TileBuilder {
 		case Grass:
 		case Log:
 		case Leaves:
+		case Sand:
 			break;
 		case Fader:
 			stats.add("time = "+((TimedTile)tile).time);
 			break;
 		case Spikes:
 			stats.add("dmg = "+((DamagingSupportedTile)tile).damage);
-			break;
-		case Sand:
-			stats.add("fallTime = "+((FallingTile)tile).time);
 			break;
 		case Creator:
 			stats.add("created = "+((CreatingTile)tile).createdType);

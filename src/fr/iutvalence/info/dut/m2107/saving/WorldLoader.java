@@ -70,7 +70,9 @@ public class WorldLoader {
 			ByteBuffer buffer = ByteBuffer.wrap(data);
 			
 			TileType typ = TileType.Dirt;
-			while (buffer.hasRemaining()) {
+			long chunkMapSize = buffer.getLong();
+			long backChunkMapSize = buffer.getLong();
+			for (int i = 0; i < chunkMapSize && buffer.hasRemaining(); i++) {
 				byte t = buffer.get();
 				byte v = buffer.get();
 				byte o = buffer.get();
@@ -83,6 +85,20 @@ public class WorldLoader {
 					tile.setVariantUnsafe(TileVariant.getVariantById(v));
 				tile.setOrientation(TileOrientation.getOrientationById(o));
 				GameWorld.chunkMap.setTilenChunk(tile);
+			}
+			for (int i = 0; i < backChunkMapSize && buffer.hasRemaining(); i++) {
+				byte t = buffer.get();
+				byte v = buffer.get();
+				byte o = buffer.get();
+				int x = buffer.getInt();
+				int y = buffer.getInt();
+				
+				typ = TileType.getTypeById(t);
+				Tile tile = TileBuilder.buildTile(typ, x, y);
+				if (v != 0)
+					tile.setVariantUnsafe(TileVariant.getVariantById(v));
+				tile.setOrientation(TileOrientation.getOrientationById(o));
+				GameWorld.backChunkMap.setTilenChunk(tile);
 			}
 			
 			try {

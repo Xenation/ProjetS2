@@ -110,6 +110,28 @@ public class Renderer {
 		shader.loadViewMatrix(GameWorld.camera);
 		shader.loadDepth(0);
 		shader.loadAlpha(1);
+		shader.loadIntensityMultiplier(0.7f);
+		
+		// Background Chunks Rendering
+		prepareAtlas(Atlas.TILE_ATLAS);
+		for (Chunk chk : GameWorld.backChunkMap.getSurroundingChunks(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_TOP, BOUNDARY_BOTTOM, GameWorld.camera.getPosition())) {
+			for (TileVariant var : chk.variants()) {
+				prepareSprite(var.sprite);
+				
+				for (Tile tile : chk.getTiles(var)) {
+					
+					Matrix4f matrix = Maths.createTransformationMatrix(tile.x+GameWorld.backChunkMap.getTilesPositionOffset(), tile.y+GameWorld.backChunkMap.getTilesPositionOffset(), tile.getOrientation());
+					shader.loadTransformation(matrix);
+					shader.loadSides(tile.getSides());
+					
+					// Draws the sprite
+					glDrawArrays(GL_QUADS, 0, 4);
+				}
+				
+				unbindSprite();
+			}
+		}
+		shader.loadIntensityMultiplier(1);
 		
 		// Chunks Rendering
 		prepareAtlas(Atlas.TILE_ATLAS);

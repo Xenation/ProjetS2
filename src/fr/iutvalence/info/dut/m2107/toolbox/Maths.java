@@ -115,7 +115,7 @@ public class Maths {
 	 * @param orientation the orientation to apply
 	 * @return a transformation matrix using x and y coordinates
 	 */
-	public static Matrix4f createTransformationMatrix(int x, int y, TileOrientation orientation) {
+	public static Matrix4f createTransformationMatrix(float x, float y, TileOrientation orientation) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		switch (orientation) {
