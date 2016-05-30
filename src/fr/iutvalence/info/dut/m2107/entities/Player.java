@@ -180,7 +180,7 @@ public class Player extends Character{
 	 * Update the usage of the player's hand item
 	 */
 	private void useItem() {
-		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.isFree() && !Input.isOverGUI) {
+		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.getTarget() == this && !Input.isOverGUI) {
 			if(this.itemOnHand instanceof Bow)
 				((Bow) this.itemOnHand).use(this);
 			if(this.itemOnHand instanceof Sword)
@@ -367,8 +367,12 @@ public class Player extends Character{
 		
 		if(Input.isInventory() || this.inventory.getExitButton().clicked()) this.inventory.changeDisplay();
 		
-		if (GameWorld.camera.isFree()) {
+		if (GameWorld.camera.isFocusing()) {
 			if (Input.isJumping() && this.isGrounded) this.vel.y = this.jumpHeight;
+			
+			if (Input.isMoveUp()) {
+				this.vel.y += this.spd;
+			}
 			
 			if (Input.isMoveRight()) {
 				if(!rightWallJump || !leftWallJump) this.vel.x += this.spd/6;

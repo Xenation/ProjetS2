@@ -8,6 +8,7 @@ import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.gui.GUIButton;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
 import fr.iutvalence.info.dut.m2107.gui.GUISprite;
+import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
@@ -78,7 +79,7 @@ public class Inventory {
 		item.stack = stack;
 		
 		if(inventorySlot.isEmpty()) {
-			newSlot = new InventorySlot(item, new Vector2f(-width*inventoryWidth/2+.005f, height*(inventoryWidth+3.25f)));
+			newSlot = new InventorySlot(item, new Vector2f(-width*inventoryWidth/2+.005f, height*(inventoryWidth+.125f)*DisplayManager.aspectRatio));
 		} else {
 			lastSlot = inventorySlot.get(inventorySlot.size()-1);
 			newSlot = new InventorySlot(item, new Vector2f(lastSlot.getItemSprite().getPosition().x + width*1.3f, lastSlot.getItemSprite().getPosition().y));
