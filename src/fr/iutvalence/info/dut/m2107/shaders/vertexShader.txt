@@ -1,12 +1,11 @@
-#version 400 core
+#version 150 core
 
 in vec2 position;
 in vec2 textureUVs;
-in int gl_VertexID;
 
 out vec2 textureCoords;
 out float alphaPass;
-out float colorInt[4];
+out vec4 colorInt;
 out vec2 fragPos;
 
 uniform mat4 transformationMatrix;
@@ -26,14 +25,13 @@ void main(void) {
 	for (int i = 0; i < 4; i++) {
 		if (((sides >> i) & 1) == 1) {
 			bsides[i] = true;
-		}
-		else {
+		} else {
 			bsides[i] = false;
 		}
 	}
 	
 	for (int i = 0; i < 4; i++) {
-		if (bsides[i]) {
+		if (bsides[i] == true) {
 			colorInt[i] = 0.0;
 		} else {
 			colorInt[i] = intensityMultiplier;

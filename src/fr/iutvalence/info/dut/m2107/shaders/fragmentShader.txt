@@ -2,18 +2,18 @@
 
 in vec2 textureCoords;
 in float alphaPass;
-in float colorInt[4];
+in vec4 colorInt;
 in vec2 fragPos;
 
 out vec4 out_Color;
 
 uniform sampler2D textur;
 
-float biLin(float x, float y, float intArr[4]) {
-	float ye = (1-x)*y * intArr[0];
-	float bl = x*y * intArr[1];
-	float or = x*(1-y) * intArr[2];
-	float gr = (1-x)*(1-y) * intArr[3];
+float biLin(float x, float y, vec4 intVec) {
+	float ye = (1-x)*y * intVec[0];
+	float bl = x*y * intVec[1];
+	float or = x*(1-y) * intVec[2];
+	float gr = (1-x)*(1-y) * intVec[3];
 	return ye + bl + or + gr;
 }
 
@@ -22,6 +22,6 @@ void main(void) {
 	float intensity = biLin(fragPos.x, fragPos.y, colorInt);
 	vec4 colorIntensity = vec4(intensity, intensity, intensity, alphaPass);
 	
-	out_Color = texture(textur,textureCoords) * colorIntensity;
+	out_Color = texture(textur, textureCoords) * colorIntensity;
 	
 }
