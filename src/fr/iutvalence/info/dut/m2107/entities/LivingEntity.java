@@ -32,6 +32,8 @@ public class LivingEntity extends MovableEntity {
 	
 	protected float recoil = 0;
 	
+	protected float recoilVel;
+	
 	/**
 	 * Constructor of a LivingEntity
 	 * @param pos The position of the entity
@@ -95,10 +97,10 @@ public class LivingEntity extends MovableEntity {
 	public void update(Layer layer) {
 		if(this.health <= 0) layer.remove(this);
 		
-		if(this instanceof Character) {			
+		if(this instanceof TerrestrialCreature) {
 			if(this.recoil != 0) {
-				if(!((Character)this).isGrounded) {
-					this.vel.x = this.recoil;
+				if(!((TerrestrialCreature)this).isGrounded) {
+					this.vel.x = this.recoil/2 + recoilVel;
 					if(this.col != null) this.col.checkContinuousCollision();
 				} else {
 					this.vel.x = 0;
@@ -114,6 +116,7 @@ public class LivingEntity extends MovableEntity {
 	 * @param damage The amount of life take off
 	 */
 	public void takeDamage(int damage) {
+		recoilVel = this.vel.x;
 		if(this instanceof Player) {
 			if(((Player)this).invulnerabilityTime < Sys.getTime()/1000f) {
 				if(damage > 0) this.health -= damage;

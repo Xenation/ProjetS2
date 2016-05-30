@@ -106,6 +106,8 @@ public class Arrow extends Ammunition {
 					((LivingEntity)piercingEntity).takeDamage(this.damage);
 				}
 				this.setParent(piercingEntity);
+				System.out.println(piercingEntity);
+				System.out.println(this.getParent());
 				GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
 			} else if(this.piercingTile != null)
 				this.isPierce = true;
@@ -115,4 +117,7 @@ public class Arrow extends Ammunition {
 
 	public Tile getPiercingTile() {return piercingTile;}
 	public void setPiercingTile(Tile piercingTile) {this.piercingTile = piercingTile;}
+	
+	public Entity getPiercingEntity() {return piercingEntity;}
+	public void setPiercingEntity(Entity piercingEntity) {this.piercingEntity = piercingEntity;}
 }
