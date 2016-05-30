@@ -75,7 +75,6 @@ public class Bow extends Weapon {
 	@Override
 	public void use(Character owner) {
 		if(this.remainingTime <= 0) {
-			OpenAL.source.play(AudioDataBase.arrow());
 			if(owner instanceof Player) {
 				Arrow arrow = null;
 				for (int i = 0; i < ((Player)owner).getQuickBarLength() ; i++) {
@@ -85,12 +84,14 @@ public class Bow extends Weapon {
 						arrow.addWeaponStats(this);
 						arrow.initLaunch(owner);
 						GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).add(arrow);
+						OpenAL.source.play(AudioDataBase.arrow());
 						break;
 					}
 				}
 				if(arrow == null) {
 					arrow = GameWorld.player.getInventory().getArrow();
 					if(arrow != null) {
+						OpenAL.source.play(AudioDataBase.arrow());
 						GameWorld.player.getInventory().remove(arrow, 1);
 						arrow.addWeaponStats(this);
 						arrow.initLaunch(owner);

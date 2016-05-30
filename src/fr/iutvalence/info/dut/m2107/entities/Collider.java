@@ -508,7 +508,7 @@ public class Collider {
 	 * Check the continuous collision with the map
 	 * @return true when colliding otherwise false
 	 */
-	private Entity AmmunitionContinuousCollision(Ammunition ammo) {
+	private void AmmunitionContinuousCollision(Ammunition ammo) {
 		int continuousStep = initStepCollision(ammo.getVelocity());
 		
 		float stepXtoAdd = ammo.getVelocity().x * DisplayManager.deltaTime() / continuousStep;
@@ -536,11 +536,12 @@ public class Collider {
 				ammo.pos.y = nextPos.y -(float) -(Math.sin((ammo.rot)*Math.PI/180)*ammo.spr.getSize().y/2.5f);
 				if(entColliding != null) {
 					ammo.pos = new Vector2f(ammo.pos.x - entColliding.pos.x, ammo.pos.y - entColliding.pos.y);
-					return entColliding;
+					((Arrow)this.ent).setPiercingEntity(entColliding);
+					return;
 				}
 				if(ammo instanceof Arrow)
 					((Arrow)this.ent).setPiercingTile(tileColliding);
-				return entColliding;
+				return;
 			}
 			
 			this.minX += stepXtoAdd;
@@ -548,7 +549,6 @@ public class Collider {
 			this.maxX += stepXtoAdd;
 			this.maxY += stepYtoAdd;
 		}
-		return null;
 	}
 	
 	private Collider encompassCollider(Collider entCollider, Vector2f nextPos, float extendValue) {
