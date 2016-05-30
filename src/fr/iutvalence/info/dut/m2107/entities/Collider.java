@@ -157,7 +157,6 @@ public class Collider {
 			else 
 				checkTerrestrialCollision(globalTiles, encompassCol);
 			
-			updateColPos();
 			if(((TerrestrialCreature)this.ent).vel.x != 0) {
 				this.minX += stepXtoAdd;
 				this.maxX += stepXtoAdd;
@@ -166,6 +165,7 @@ public class Collider {
 				this.minY += stepYtoAdd;
 				this.maxY += stepYtoAdd;
 			}
+			updateColPos();
 		}
 		if(!(this.ent instanceof Rat)) checkStepDown();
 	}
@@ -181,7 +181,7 @@ public class Collider {
 		Vector2f modVel = new Vector2f(1, 1);
 		
 		for (Tile tile : surroundTile) {
-			if(isCollidingLeft(this, tile)) { // if the tile is on my left
+			if(isOnLeft(this, tile)) { // if the tile is on my left
 				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x+1, tile.y)) {					
 					// I'm on the perfect right of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
@@ -217,19 +217,19 @@ public class Collider {
 					}
 				} else {
 					// I'm under or above the right tile
-					if(isCollidingUp(this, tile)) {
+					if(isOnUp(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y-1) || checkTilePosition(globalTiles, tile.x, tile.y-2) || checkTilePosition(globalTiles, tile.x, tile.y-3) || checkTilePosition(globalTiles, tile.x, tile.y-4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						} else modVel.y = 0;
-					} else if(isCollidingDown(this, tile)) {
+					} else if(isOnDown(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y+1) || checkTilePosition(globalTiles, tile.x, tile.y+2) || checkTilePosition(globalTiles, tile.x, tile.y+3) || checkTilePosition(globalTiles, tile.x, tile.y+4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						} else modVel.y = 0;
 					}
 				}
-			} else if(isCollidingRight(this, tile)) { // if the tile is on my right
+			} else if(isOnRight(this, tile)) { // if the tile is on my right
 				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x-1, tile.y)) {					
 					// I'm on the perfect left of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
@@ -264,25 +264,25 @@ public class Collider {
 					}
 				} else {
 					// I'm under or above the right tile
-					if(isCollidingUp(this, tile)) {
+					if(isOnUp(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y-1) || checkTilePosition(globalTiles, tile.x, tile.y-2) || checkTilePosition(globalTiles, tile.x, tile.y-3) || checkTilePosition(globalTiles, tile.x, tile.y-4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						} else modVel.y = 0;
-					} else if(isCollidingDown(this, tile)) {
+					} else if(isOnDown(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y+1) || checkTilePosition(globalTiles, tile.x, tile.y+2) || checkTilePosition(globalTiles, tile.x, tile.y+3) || checkTilePosition(globalTiles, tile.x, tile.y+4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						} else modVel.y = 0;
 					}
 				}
-			} else if(isCollidingUp(this, tile)) { //if the tile is above me
+			} else if(isOnUp(this, tile)) { //if the tile is above me
 				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y-1)) {
 					// I'm under the tile
 					modVel.y = 0;
 					ent.pos.y = tile.y - this.getH()/2;
 				}
-			} else if(isCollidingDown(this, tile)) { // if the tile is under me
+			} else if(isOnDown(this, tile)) { // if the tile is under me
 				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y+1)) {
 					// I'm above the tile					
 					modVel.y = 0;
@@ -303,7 +303,7 @@ public class Collider {
 		Vector2f modVel = new Vector2f(1, 1);
 		
 		for (Tile tile : surroundTile) {
-			if(isCollidingLeft(this, tile)) { // if the tile is on my left
+			if(isOnLeft(this, tile)) { // if the tile is on my left
 				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x+1, tile.y)) {					
 					// I'm on the perfect right of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
@@ -332,19 +332,19 @@ public class Collider {
 					}
 				} else {
 					// I'm under or above the right tile
-					if(isCollidingUp(this, tile)) {
+					if(isOnUp(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y-1) || checkTilePosition(globalTiles, tile.x, tile.y-2) || checkTilePosition(globalTiles, tile.x, tile.y-3) || checkTilePosition(globalTiles, tile.x, tile.y-4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						} else modVel.y = 0;
-					} else if(isCollidingDown(this, tile)) {
+					} else if(isOnDown(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y+1) || checkTilePosition(globalTiles, tile.x, tile.y+2) || checkTilePosition(globalTiles, tile.x, tile.y+3) || checkTilePosition(globalTiles, tile.x, tile.y+4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						} else modVel.y = 0;
 					}
 				}
-			} else if(isCollidingRight(this, tile)) { // if the tile is on my right
+			} else if(isOnRight(this, tile)) { // if the tile is on my right
 				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x-1, tile.y)) {					
 					// I'm on the perfect left of the tile
 					if(this.minY >= tile.y && this.minY <= tile.y + Tile.TILE_SIZE) {
@@ -372,25 +372,25 @@ public class Collider {
 					}
 				} else {
 					// I'm under or above the right tile
-					if(isCollidingUp(this, tile)) {
+					if(isOnUp(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y-1) || checkTilePosition(globalTiles, tile.x, tile.y-2) || checkTilePosition(globalTiles, tile.x, tile.y-3) || checkTilePosition(globalTiles, tile.x, tile.y-4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						} else modVel.y = 0;
-					} else if(isCollidingDown(this, tile)) {
+					} else if(isOnDown(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y+1) || checkTilePosition(globalTiles, tile.x, tile.y+2) || checkTilePosition(globalTiles, tile.x, tile.y+3) || checkTilePosition(globalTiles, tile.x, tile.y+4)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						} else modVel.y = 0;
 					}
 				}
-			} else if(isCollidingUp(this, tile)) { //if the tile is above me
+			} else if(isOnUp(this, tile)) { //if the tile is above me
 				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y-1)) {
 					// I'm under the tile
 					modVel.y = 0;
 					ent.pos.y = tile.y - this.getH()/2;
 				}
-			} else if(isCollidingDown(this, tile)) { // if the tile is under me
+			} else if(isOnDown(this, tile)) { // if the tile is under me
 				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y+1)) {
 					// I'm above the tile					
 					modVel.y = 0;
@@ -410,7 +410,7 @@ public class Collider {
 		if(surroundTile.size() == 0) return;
 		Vector2f modVel = new Vector2f(1, 1);
 		for (Tile tile : surroundTile) {
-			if(isCollidingLeft(this, tile)) { // if the tile is on my left
+			if(isOnLeft(this, tile)) { // if the tile is on my left
 				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x+1, tile.y)) {
 					// I'm on the perfect right of the tile
 					((Rat)this.ent).wallWalk = true;
@@ -420,48 +420,50 @@ public class Collider {
 					modVel.y = 1;
 				} else {
 					// I'm under or above the right tile
-					if(isCollidingUp(this, tile)) {
+					if(isOnUp(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y-1)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						} else modVel.y = 0;
-					} else if(isCollidingDown(this, tile)) {
+					} else if(isOnDown(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y+1)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						} else modVel.y = 0;
 					}
 				}
-			} else if(isCollidingRight(this, tile)) { // if the tile is on my right
+			} else if(isOnRight(this, tile)) { // if the tile is on my right
 				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x-1, tile.y)) {
 					// I'm on the perfect left of the tile
-					((Rat)this.ent).wallWalk = true;
-					this.ent.pos.x = tile.x - this.getW()/2;
-					((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x+ GameWorld.gravity * DisplayManager.deltaTime();
-					modVel.x = 0;
-					modVel.y = 1;
+					if(!((Rat)this.ent).wallWalk) {
+						((Rat)this.ent).wallWalk = true;
+						this.ent.pos.x = tile.x - this.getW()/2;
+						((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x + GameWorld.gravity * DisplayManager.deltaTime();
+						modVel.x = 0;
+						modVel.y = 1;
+					}
 				} else {
 					// I'm under or above the right tile
-					if(isCollidingUp(this, tile)) {
+					if(isOnUp(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y-1)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						} else modVel.y = 0;
-					} else if(isCollidingDown(this, tile)) {
+					} else if(isOnDown(this, tile)) {
 						if(checkTilePosition(globalTiles, tile.x, tile.y+1)) {
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						} else modVel.y = 0;
 					}
 				}
-			} else if(isCollidingUp(this, tile)) { //if the tile is above me
-				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x) {
+			} else if(isOnUp(this, tile)) { //if the tile is above me
+				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x  && !checkTilePosition(globalTiles, tile.x, tile.y-1)) {
 					// I'm under the tile
 					top = true;
 					modVel.y = 0;
 					ent.pos.y = tile.y - this.getH()/2;
 				}
-			} else if(isCollidingDown(this, tile)) { // if the tile is under me
+			} else if(isOnDown(this, tile)) { // if the tile is under me
 				if(this.minX < tile.x + Tile.TILE_SIZE && this.maxX > tile.x && !checkTilePosition(globalTiles, tile.x, tile.y+1)) {
 					// I'm above the tile
 					if(!((Rat)this.ent).wallWalk) {
@@ -585,7 +587,7 @@ public class Collider {
 	public Tile isCollidingWithMap(Collider encompassCol) {
 		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(this.minX, this.minY))) { 
 			for (Tile tile : chunk)
-				if(!isColliding(encompassCol, tile))
+				if(isColliding(encompassCol, tile))
 					return tile;
 		}
 		return null;
@@ -593,7 +595,7 @@ public class Collider {
 	
 	public Tile isCollidingWithReducedMap(List<Tile> globalTiles, Collider encompassCol) {
 		for (Tile tile : globalTiles)
-			if(!isColliding(encompassCol, tile))
+			if(isColliding(encompassCol, tile))
 				return tile;
 		return null;
 	}
@@ -606,7 +608,7 @@ public class Collider {
 	public Entity isCollidingWithEntity(Layer[] layer) {
 		for (Layer lay : layer) {			
 			for (Entity ent : lay)
-				if(!isColliding(this, ent.col))
+				if(isColliding(this, ent.col))
 					return ent;
 		}
 		return null;
@@ -627,7 +629,7 @@ public class Collider {
 		List<Tile> tiles = new ArrayList<Tile>();
 		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(col.localMinX + col.getW()/2, col.localMinY + col.getH()/2))) { 
 			for (Tile tile : chunk)
-				if(!isColliding(col, tile) && tile.getType().isSolid())
+				if(isColliding(col, tile) && tile.getType().isSolid())
 					tiles.add(tile);
 		}
 		return tiles;
@@ -642,7 +644,7 @@ public class Collider {
 	public List<Tile> generateSurroundingTiles(List<Tile> globalTiles, Collider col) {
 		List<Tile> tiles = new ArrayList<Tile>();
 		for (Tile tile : globalTiles)
-			if(!isColliding(col, tile))
+			if(isColliding(col, tile))
 				tiles.add(tile);
 		return tiles;
 	}
@@ -654,8 +656,8 @@ public class Collider {
 	 * @return true if colliding otherwise false
 	 */
 	public boolean isColliding(Collider col, Tile tile) {
-		return isCollidingLeft(col, tile) || isCollidingRight(col, tile) ||
-				isCollidingUp(col, tile) || isCollidingDown(col, tile);
+		return !(isOnLeft(col, tile) || isOnRight(col, tile) ||
+				isOnUp(col, tile) || isOnDown(col, tile));
 	}
 	
 	/**
@@ -664,7 +666,7 @@ public class Collider {
 	 * @param tile The tile to check
 	 * @return true if colliding otherwise false
 	 */
-	public boolean isCollidingLeft(Collider col, Tile tile) {
+	public boolean isOnLeft(Collider col, Tile tile) {
 		float tileMaxX = tile.x + Tile.TILE_SIZE;
 		return tileMaxX <= col.minX;
 	}
@@ -675,7 +677,7 @@ public class Collider {
 	 * @param tile The tile to check
 	 * @return true if colliding otherwise false
 	 */
-	public boolean isCollidingRight(Collider col, Tile tile) {
+	public boolean isOnRight(Collider col, Tile tile) {
 		float tileMinX = tile.x;
 		return col.maxX <= tileMinX;
 	}
@@ -686,7 +688,7 @@ public class Collider {
 	 * @param tile The tile to check
 	 * @return true if colliding otherwise false
 	 */
-	public boolean isCollidingUp(Collider col, Tile tile) {
+	public boolean isOnUp(Collider col, Tile tile) {
 		float tileMinY = tile.y;
 		return col.maxY <= tileMinY;
 	}
@@ -697,7 +699,7 @@ public class Collider {
 	 * @param tile The tile to check
 	 * @return true if colliding otherwise false
 	 */
-	public boolean isCollidingDown(Collider col, Tile tile) {
+	public boolean isOnDown(Collider col, Tile tile) {
 		float tileMaxY = tile.y + Tile.TILE_SIZE;
 		return tileMaxY <= col.minY;
 	}
@@ -709,8 +711,8 @@ public class Collider {
 	 * @return true if colliding otherwise false
 	 */
 	public boolean isColliding(Collider col, Collider other) {
-		return isCollidingLeft(col, other) || isCollidingRight(col, other) ||
-				isCollidingUp(col, other) || isCollidingDown(col, other);
+		return !(isOnLeft(col, other) || isOnRight(col, other) ||
+				isOnUp(col, other) || isOnDown(col, other));
 	}
 	
 	/**
@@ -719,7 +721,7 @@ public class Collider {
 	 * @param other The other collider to check
 	 * @return true if colliding otherwise false
 	 */
-	public boolean isCollidingLeft(Collider col, Collider other) {
+	public boolean isOnLeft(Collider col, Collider other) {
 		float otherMaxX = other.maxX;
 		return otherMaxX <= col.minX;
 	}
@@ -730,7 +732,7 @@ public class Collider {
 	 * @param other The other collider to check
 	 * @return true if colliding otherwise false
 	 */
-	public boolean isCollidingRight(Collider col, Collider other) {
+	public boolean isOnRight(Collider col, Collider other) {
 		float otherMinX = other.minX;
 		return col.maxX <= otherMinX;
 	}
@@ -741,7 +743,7 @@ public class Collider {
 	 * @param other The other collider to check
 	 * @return true if colliding otherwise false
 	 */
-	public boolean isCollidingUp(Collider col, Collider other) {
+	public boolean isOnUp(Collider col, Collider other) {
 		float otherMinY = other.minY;
 		return col.maxY <= otherMinY;
 	}
@@ -752,7 +754,7 @@ public class Collider {
 	 * @param other The other collider to check
 	 * @return true if colliding otherwise false
 	 */
-	public boolean isCollidingDown(Collider col, Collider other) {
+	public boolean isOnDown(Collider col, Collider other) {
 		float otherMaxY = other.maxY;
 		return otherMaxY <= col.minY;
 	}

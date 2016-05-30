@@ -65,7 +65,7 @@ public class MainGameTester {
 		Entity chest = new Entity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider);
 		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(chest);
 		
-		Rat rat = new Rat(new Vector2f(), SpriteDatabase.getArrowSpr());
+		Rat rat = new Rat(new Vector2f(), SpriteDatabase.getRatSpr() , new Collider(-.25f, -.25f, .25f, .25f));
 		GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(rat);
 		
 		// Events Initialisation

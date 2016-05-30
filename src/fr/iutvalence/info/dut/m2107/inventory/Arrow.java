@@ -107,7 +107,7 @@ public class Arrow extends Ammunition {
 				}
 				this.setParent(piercingEntity);
 				GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
-			} else if(this.piercingEntity != null)
+			} else if(this.piercingTile != null)
 				this.isPierce = true;
 		}
 		super.update(layer);

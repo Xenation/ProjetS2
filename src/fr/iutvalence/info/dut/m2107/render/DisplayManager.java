@@ -233,7 +233,7 @@ public class DisplayManager {
 	 * @return the current delta time
 	 */
 	public static float deltaTime() {
-		if(isPaused || (int)(Sys.getTime()/1000) < startTime+1) return 0;
+		if(isPaused || (int)(Sys.getTime()/1000) < startTime+1.5f) return 0;
 		else return (smoothDelta/1000);
 	}
 	

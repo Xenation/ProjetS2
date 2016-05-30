@@ -43,6 +43,9 @@ public class SpriteDatabase {
 	private final static EntitySprite chestSpr = new EntitySprite("entities/chest", new Vector2f(2, 2));
 	public static EntitySprite getChestSpr() {return chestSpr;}
 	
+	private final static EntitySprite ratSpr = new EntitySprite("entities/rat", new Vector2f(1, .5f));
+	public static EntitySprite getRatSpr() {return ratSpr;}
+	
 	private final static String heartStr = "gui/heart";
 	public static String getHeartStr() {return heartStr;}
 	
