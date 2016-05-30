@@ -9,6 +9,7 @@ import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
+import fr.iutvalence.info.dut.m2107.storage.ChunkMap;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Vector2i;
@@ -64,6 +65,10 @@ public class Camera {
 	 * Whether the selection in progress is a removal (true) or not (false)
 	 */
 	private boolean isRemoving = false;
+	/**
+	 * The chunk map to draw and debug on.
+	 */
+	private ChunkMap targetChunkMap;
 	
 	private Entity preview;
 	
@@ -76,6 +81,7 @@ public class Camera {
 		this.position = new Vector2f();
 		this.rotation = 0;
 		this.type = TileType.Dirt;
+		this.targetChunkMap = GameWorld.chunkMap;
 	}
 	
 	/**
@@ -98,6 +104,9 @@ public class Camera {
 	 */
 	public void update() {
 		
+		float mWorldX = getMouseWorldX();
+		float mWorldY = getMouseWorldY();
+		
 		if (this.preview == null) {
 			EntitySprite spr = new EntitySprite("entities/selection", new Vector2f(1, 1));
 			this.preview = new Entity(spr);
@@ -105,6 +114,7 @@ public class Camera {
 		}
 		
 		GameWorld.chunkMap.generateSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, position);
+		GameWorld.backChunkMap.generateSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, position);
 		
 		//// Lerp to target
 		if (target != null) {
@@ -125,12 +135,19 @@ public class Camera {
 			}
 		}
 		
-		pointed = GameWorld.chunkMap.getTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+		pointed = targetChunkMap.getTileAt(mWorldX, mWorldY);
 		
 		//// Build Mode
 		if (target == null && preview != null) {
 			if (pointed != null && Input.isKeyU()) {
 				pointed.toUpdate(true);
+			}
+			if (Input.isKeyB()) {
+				if (targetChunkMap == GameWorld.chunkMap) {
+					targetChunkMap = GameWorld.backChunkMap;
+				} else {
+					targetChunkMap = GameWorld.chunkMap;
+				}
 			}
 			
 			//// Movement
@@ -159,10 +176,10 @@ public class Camera {
 			
 			//// Tile Rotation
 			if (Input.isTileRotate() && pointed != null)
-				GameWorld.chunkMap.rotateTileAt(pointed.x, pointed.y, pointed.getOrientation().getNext());
+				targetChunkMap.rotateTileAt(pointed.x, pointed.y, pointed.getOrientation().getNext());
 			
-			this.preview.pos.x = Maths.fastFloor(getMouseWorldX()) + Tile.TILE_SIZE/2;
-			this.preview.pos.y = Maths.fastFloor(getMouseWorldY()) + Tile.TILE_SIZE/2;
+			this.preview.pos.x = targetChunkMap.toTileCenterVisualPosition(mWorldX) + Tile.TILE_SIZE/2;
+			this.preview.pos.y = targetChunkMap.toTileCenterVisualPosition(mWorldY) + Tile.TILE_SIZE/2;
 			
 			//// Drawing
 			if (Input.isLShift() && (Input.isMouseLeftDown() || Input.isMouseRightDown())) {
@@ -170,18 +187,18 @@ public class Camera {
 					if (Input.isMouseLeftDown()) isRemoving = false;
 					else if (Input.isMouseRightDown()) isRemoving = true;
 					
-					drawStart = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+					drawStart = new Vector2i(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
 					isSelecting = true;
 				} else {
-					drawEnd = new Vector2i(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+					drawEnd = new Vector2i(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
 					calculateSelectionCenter();
 				}
 			} else if (isSelecting) {
 				isSelecting = false;
 				if (!isRemoving) {
-					GameWorld.chunkMap.fillZone(type, drawStart, drawEnd);
+					targetChunkMap.fillZone(type, drawStart, drawEnd);
 				} else {
-					GameWorld.chunkMap.emptyZone(drawStart, drawEnd);
+					targetChunkMap.emptyZone(drawStart, drawEnd);
 				}
 				preview.setScale(1, 1);
 				isRemoving = false;
@@ -189,10 +206,10 @@ public class Camera {
 			}
 			if (!isSelecting) {
 				if (Input.isMouseLeftDown()) {
-					GameWorld.chunkMap.setTile(TileBuilder.buildTile(type, Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY())));
+					targetChunkMap.setTile(TileBuilder.buildTile(type, targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY)));
 				}
 				if (Input.isMouseRightDown()) {
-					GameWorld.chunkMap.removeTileAt(Maths.fastFloor(getMouseWorldX()), Maths.fastFloor(getMouseWorldY()));
+					targetChunkMap.removeTileAt(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
 				}
 			}
 		} else {

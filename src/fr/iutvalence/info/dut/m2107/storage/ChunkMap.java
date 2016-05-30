@@ -28,6 +28,16 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
  */
 public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	
+	private float tilesPositionOffset;
+	
+	public ChunkMap() {
+		this.tilesPositionOffset = 0;
+	}
+	
+	public ChunkMap(float tilesPositionOffset) {
+		this.tilesPositionOffset = tilesPositionOffset;
+	}
+	
 	//// CHUNKMAP \\\\
 	/**
 	 * Updates every chunk of this chunkMap
@@ -280,6 +290,26 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 			return chk.getTileAt(x, y);
 		}
 		return null;
+	}
+	
+	public float getTilesPositionOffset() {
+		return tilesPositionOffset;
+	}
+	
+	public Tile getTileAt(float x, float y) {
+		Chunk chk = getChunkAt(Chunk.toChunkPosition((int) (x+tilesPositionOffset)), Chunk.toChunkPosition((int) (y+tilesPositionOffset)));
+		if (chk != null) {
+			return chk.getTileAt(toTilePosition(x), toTilePosition(y));
+		}
+		return null;
+	}
+	
+	public int toTilePosition(float f) {
+		return Maths.fastFloor(f-tilesPositionOffset);
+	}
+	
+	public float toTileCenterVisualPosition(float f) {
+		return Maths.fastFloor(f-tilesPositionOffset)+tilesPositionOffset;
 	}
 	
 	/**

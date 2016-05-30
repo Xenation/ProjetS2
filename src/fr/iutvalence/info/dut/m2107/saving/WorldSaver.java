@@ -67,10 +67,21 @@ public class WorldSaver {
 				return;
 			}
 			
-			ByteBuffer buffer = BufferUtils.createByteBuffer(GameWorld.chunkMap.getTilesCount()*tileByteSize);
+			ByteBuffer buffer = BufferUtils.createByteBuffer(GameWorld.chunkMap.getTilesCount()*tileByteSize + GameWorld.backChunkMap.getTilesCount()*tileByteSize + Long.BYTES*2);
 			buffer.order(ByteOrder.BIG_ENDIAN);
 			buffer.rewind();
+			buffer.putLong(GameWorld.chunkMap.getTilesCount());
+			buffer.putLong(GameWorld.backChunkMap.getTilesCount());
 			for (Chunk chk : GameWorld.chunkMap) {
+				for (Tile tile : chk) {
+					buffer.put(tile.getType().getId());
+					buffer.put(tile.getVariant().id);
+					buffer.put(tile.getOrientation().getId());
+					buffer.putInt(tile.x);
+					buffer.putInt(tile.y);
+				}
+			}
+			for (Chunk chk : GameWorld.backChunkMap) {
 				for (Tile tile : chk) {
 					buffer.put(tile.getType().getId());
 					buffer.put(tile.getVariant().id);

@@ -44,6 +44,8 @@ public class Shader extends ShaderProgram {
 	
 	private int location_sides;
 	
+	private int location_intensityMultiplier;
+	
 	/**
 	 * Creates a new ShaderProgram using the vertex and fragment files
 	 */
@@ -106,6 +108,10 @@ public class Shader extends ShaderProgram {
 		super.load16Booleans(location_sides, toLoad);
 	}
 	
+	public void loadIntensityMultiplier(float intensity) {
+		super.loadFloat(location_intensityMultiplier, intensity);
+	}
+	
 	/**
 	 * Gets the location of all the uniform variables of the shader
 	 */
@@ -117,6 +123,7 @@ public class Shader extends ShaderProgram {
 		location_alpha = super.getUniformLocation("alpha");
 		location_depth = super.getUniformLocation("depth");
 		location_sides = super.getUniformLocation("sides");
+		location_intensityMultiplier = super.getUniformLocation("intensityMultiplier");
 	}
 	
 	/**

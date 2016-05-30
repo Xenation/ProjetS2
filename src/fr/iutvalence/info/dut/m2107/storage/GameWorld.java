@@ -34,6 +34,10 @@ public class GameWorld {
 	 */
 	public static ChunkMap chunkMap;
 	/**
+	 * The map of all background chunks
+	 */
+	public static ChunkMap backChunkMap;
+	/**
 	 * The map of all layers of entities
 	 */
 	public static LayerMap layerMap;
@@ -50,6 +54,8 @@ public class GameWorld {
 	
 	public static void init() {
 		chunkMap = new ChunkMap();
+		
+		backChunkMap = new ChunkMap(-.5f);
 		
 		layerMap = new LayerMap();
 		layerMap.addEmpty(4);
