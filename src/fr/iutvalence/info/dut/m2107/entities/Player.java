@@ -180,7 +180,7 @@ public class Player extends Character{
 	 * Update the usage of the player's hand item
 	 */
 	private void useItem() {
-		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.getTarget() == this && !Input.isOverGUI) {
+		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.getTarget() == this && !Input.isOverGUI && !Input.isDragingGUI) {
 			if(this.itemOnHand instanceof Bow)
 				((Bow) this.itemOnHand).use(this);
 			if(this.itemOnHand instanceof Sword)

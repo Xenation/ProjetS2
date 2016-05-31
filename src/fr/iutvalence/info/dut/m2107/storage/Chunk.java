@@ -46,18 +46,7 @@ public class Chunk implements Iterable<Tile> {
 	 */
 	public Chunk(Vector2i pos) {
 		this.position = pos;
-		// Creates the Chunk VAO
-		//this.vaoID = ChunkLoader.CHUNK_LOADER.createChunkVao();
-		//this.textureID = ChunkLoader.CHUNK_LOADER.loadTexture("tile_dirt");
 	}
-	
-//	public int getVaoID() {
-//		return vaoID;
-//	}
-//	
-//	public int getTextureID() {
-//		return textureID;
-//	}
 	
 	/**
 	 * Updates each tile of this chunk and deletes the tiles that have returned false for their update.
@@ -167,8 +156,7 @@ public class Chunk implements Iterable<Tile> {
 				tiles.put(til.getVariant(), listAdd);
 			}
 			listAdd.add(til);
-			// To update the chunk VAO (not complete)
-			//ChunkLoader.CHUNK_LOADER.addToVao(vaoID, til.getRelX(this), til.getRelY(this), TileSprite.POSITIONS, TileSprite.TEXTUREUVS);
+			til.setChunk(this);
 			tilesCount++;
 			return til;
 		}
@@ -197,6 +185,7 @@ public class Chunk implements Iterable<Tile> {
 			} else {
 				listAdd.set(listAdd.indexOf(cur), til);
 			}
+			til.setChunk(this);
 			TileBuilder.destroyTile(cur);
 			return til;
 		}

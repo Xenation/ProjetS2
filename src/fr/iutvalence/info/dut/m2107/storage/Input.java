@@ -10,6 +10,8 @@ public class Input {
 	
 	public static boolean isDragingGUI;
 	
+	public static boolean isWritingGUI;
+	
 	/** Boolean for player's jumping input */
 	private static boolean isJumping;
 	
@@ -72,6 +74,9 @@ public class Input {
 	
 	/** Boolean for input B */
 	private static boolean isKeyB;
+
+	/** Boolean for input C */
+	private static boolean isKeyC;
 	
 	/** Boolean for input water */
 	private static boolean isKeyWater;
@@ -106,13 +111,15 @@ public class Input {
 	/** Integer for wheel scroll */
 	private static int wheelScrolling;
 	
-	
-	
+	private static char character = 27;
 	
 	/**
 	 * Boolean for inventory show/hide
 	 */
 	private static boolean isInventory;
+	
+	private static boolean isKeyPressed;
+	
 	
 	/**
 	 * Update the keyboard and mouse input
@@ -136,10 +143,13 @@ public class Input {
 		isKey9 = false;
 		isKeyU = false;
 		isKeyB = false;
+		isKeyC = false;
 		isKeyWater = false;
 		isNumPad0 = false;
 		isTileRotate = false;
 		isInventory = false;
+		
+		isKeyPressed = false;
 		
 		// Check button stay down
 		if(Keyboard.isKeyDown(Keyboard.KEY_Z)) isMoveUp = true;
@@ -175,6 +185,8 @@ public class Input {
 		// Check button down or up
 		while(Keyboard.next()){
 			if (Keyboard.getEventKeyState()) {
+				isKeyPressed = true;
+				character = Keyboard.getEventCharacter();
 		        if(Keyboard.getEventKey() == Keyboard.KEY_SPACE)	isJumping = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_TAB)     	isFocusOnPlayer = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_V)       	isVSync = true;
@@ -192,13 +204,17 @@ public class Input {
 		        if(Keyboard.getEventKey() == Keyboard.KEY_9)		isKey9 = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_U)		isKeyU = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_B)		isKeyB = true;
+		        if(Keyboard.getEventKey() == Keyboard.KEY_C)		isKeyC = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_W)		isKeyWater = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_NUMPAD0)	isNumPad0 = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_R)		isTileRotate = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_P)		isPaused = !isPaused;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_I)		isInventory = !isInventory;
 		    } else {
+		    	isKeyPressed = false;
+		    	character = 0;
 		    	// Do ... when released
+		    	
 		    }
 		}
 		
@@ -267,6 +283,9 @@ public class Input {
 
 	/** @return input B */
 	public static boolean isKeyB() {return isKeyB;}
+
+	/** @return input B */
+	public static boolean isKeyC() {return isKeyC;}
 	
 	/** @return input water */
 	public static boolean isKeyWater() {return isKeyWater;}
@@ -304,10 +323,14 @@ public class Input {
 	/** @return wheel scroll value */
 	public static int WheelScrolling() {return wheelScrolling;}
 	
+	public static char getCharacter() {return character;}
+	
 	/** @return the mouse's x position */
 	public static float getMouseGUIPosX() {return ((Mouse.getX()/(float) Display.getWidth())-.5f)*2;}
 	
 	/** @return the mouse's y position */
 	public static float getMouseGUIPosY() {return ((Mouse.getY()/(float) Display.getHeight())-.5f)*2;}
+	
+	public static boolean isKeyPressed() {return isKeyPressed;}
 	
 }

@@ -49,6 +49,8 @@ public class Tile {
 	private Tile bottom;
 	private Tile left;
 	
+	private Chunk chunk;
+	
 	/**
 	 * A Tile with the specified type and coordinates
 	 * @param type the type of the tile
@@ -132,6 +134,7 @@ public class Tile {
 	}
 	
 	public void updateSides() {
+		if (this.variant.isTransparent) return;
 		for (int i = 0; i < sides.length; i++) {
 			sides[i] = false;
 		}
@@ -215,7 +218,7 @@ public class Tile {
 	public void setVariant(TileVariant var) {
 		TileVariant old = this.variant;
 		this.variant = var;
-		GameWorld.chunkMap.get(Chunk.toChunkPosition(x, y)).updateVariant(this, old);
+		chunk.updateVariant(this, old);
 		EventManager.sendEvent(new TileVariantChangedEvent(this, old));
 	}
 	
@@ -260,20 +263,19 @@ public class Tile {
 	}
 	
 	public Tile getTop() {return top;}
-
 	protected void setTop(Tile top) {this.top = top;}
 
 	public Tile getRight() {return right;}
-
 	protected void setRight(Tile right) {this.right = right;}
 
 	public Tile getBottom() {return bottom;}
-
 	protected void setBottom(Tile bottom) {this.bottom = bottom;}
 
 	public Tile getLeft() {return left;}
-
 	protected void setLeft(Tile left) {this.left = left;}
+	
+	public Chunk getChunk() {return chunk;}
+	public void setChunk(Chunk chunk) {this.chunk = chunk;}
 	
 	public void resetAdjacentLinks() {
 		this.top = GameWorld.chunkMap.getTopTile(this);
