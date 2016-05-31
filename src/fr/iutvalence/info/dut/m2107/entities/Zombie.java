@@ -6,6 +6,7 @@ import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
+import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Zombie extends Character {
 
@@ -34,12 +35,9 @@ public class Zombie extends Character {
 				else tmpCol.extendLeft(2);
 				Entity ent = tmpCol.isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER)});
 				if(ent == GameWorld.player)
-					((LivingEntity) ent).doDamage(1, 10 * (int)this.scale.x);
+					((LivingEntity) ent).doDamage(1, 10 * (int)(this.scale.x/Maths.fastAbs(this.scale.x)));
 			}
 		}
 		super.update(layer);
 	}
-	
-	
-
 }

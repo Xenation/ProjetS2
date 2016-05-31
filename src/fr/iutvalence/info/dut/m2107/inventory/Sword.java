@@ -36,6 +36,7 @@ public class Sword extends Weapon {
 				int id, String name, String description, Rarity rarity, int maxStack, int value,
 				int damage, int range, float useTime, int knockback) {
 		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback);
+		handRotation = -20;
 	}
 	
 	/**
@@ -56,6 +57,7 @@ public class Sword extends Weapon {
 				int id, String name, String description, Rarity rarity, int maxStack, int value,
 				int damage, int range, float useTime, int knockback) {
 		super(spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback);
+		handRotation = -20;
 	}
 
 	/**
@@ -64,6 +66,7 @@ public class Sword extends Weapon {
 	 */
 	public Sword(Sword sword) {
 		super(sword);
+		handRotation = -20;
 	}
 
 	/* (non-Javadoc)
@@ -74,10 +77,7 @@ public class Sword extends Weapon {
 		if(remainingTime <= 0) {
 			OpenAL.source.play(AudioDataBase.sword());
 			
-			if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
-				owner.getPivot().setRotation(GameWorld.player.getDegreeShoot());
-			else if(GameWorld.player.getDegreeShoot() > 90) owner.getPivot().setRotation(180 - GameWorld.player.getDegreeShoot());
-			else owner.getPivot().setRotation(-(GameWorld.player.getDegreeShoot()+ 180));
+			owner.getPivot().setRotation(-75);
 			this.lockTime = Sys.getTime()+500;
 			if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
 				owner.getScale().x = 1;

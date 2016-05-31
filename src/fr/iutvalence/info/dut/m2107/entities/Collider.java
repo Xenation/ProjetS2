@@ -15,7 +15,9 @@ import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
+import fr.iutvalence.info.dut.m2107.tiles.DamagingSupportedTile;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
+import fr.iutvalence.info.dut.m2107.tiles.TileBehavior;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Collider {
@@ -135,6 +137,12 @@ public class Collider {
 		Collider globalCollider = encompassCollider(this, new Vector2f(this.minX + this.getW()/2 + ((TerrestrialCreature)this.ent).vel.x * DisplayManager.deltaTime(), this.minY + this.getH()/2 + ((TerrestrialCreature)this.ent).vel.y * DisplayManager.deltaTime()), 3);
 		
 		List<Tile> globalTiles = generateGlobalSurroundingTiles(globalCollider);
+		List<Tile> nonSolidTiles = new ArrayList<Tile>();
+		for (Tile tile : globalTiles) {
+			if(!tile.getType().isSolid())
+				nonSolidTiles.add(tile);
+		}
+		globalTiles.removeAll(nonSolidTiles);
 		
 		int continuousStep = initStepCollision(((TerrestrialCreature)this.ent).vel);
 		
@@ -151,7 +159,7 @@ public class Collider {
 			Collider encompassCol = encompassCollider(this, nextPos, 0.5f);
 			
 			if(this.ent instanceof Player)
-				checkPlayerCollision(globalTiles, encompassCol);
+				checkPlayerCollision(globalTiles, nonSolidTiles, encompassCol);
 			else if(this.ent instanceof Rat)
 				checkCrawlingCollision(globalTiles, encompassCol);
 			else 
@@ -167,15 +175,23 @@ public class Collider {
 			}
 			updateColPos();
 		}
-		if(!(this.ent instanceof Rat)) checkStepDown();
+		if(!(this.ent instanceof Rat)) checkStepDown(globalTiles);
 	}
 	
 	/**
 	 * Check the collision of character
 	 * @param encompassCol The collider which encompass the current position and the next position
 	 */
-	private void checkPlayerCollision(List<Tile> globalTiles, Collider encompassCol) {
+	private void checkPlayerCollision(List<Tile> globalTiles, List<Tile> nonSolidTiles, Collider encompassCol) {
 		List<Tile> surroundTile = generateSurroundingTiles(globalTiles, encompassCol);
+		
+		List<Tile> surroundNonSolidTile = generateSurroundingTiles(nonSolidTiles, encompassCol);
+		for (Tile tile : surroundNonSolidTile) {
+			if(tile.getType().getBehaviors().contains(TileBehavior.DAMAGING)) {
+				((Player)this.ent).doDamage(((DamagingSupportedTile)tile).getDamage(), tile.x + Tile.TILE_SIZE/2 > this.ent.pos.x + this.getW()/2 ? -((DamagingSupportedTile)tile).getKnockback() : ((DamagingSupportedTile)tile).getKnockback());
+				nonSolidTiles.remove(tile);
+			}
+		}
 		if(surroundTile.size() == 0) return;
 		
 		Vector2f modVel = new Vector2f(1, 1);
@@ -482,11 +498,11 @@ public class Collider {
 	/**
 	 * Check the step down of a character
 	 */
-	private void checkStepDown() {
+	private void checkStepDown(List<Tile> globalTiles) {
 		if(((TerrestrialCreature) this.ent).isGrounded == false && ((TerrestrialCreature) this.ent).prevGrounded == true && ((TerrestrialCreature) this.ent).vel.y < 0) {
 			Collider tmp = new Collider(new Vector2f(this.getMinX(), this.getMinY()), new Vector2f(this.getMaxX(), this.getMaxY()));
 			tmp.extendDown(Tile.TILE_SIZE + 0.1f);
-			Tile tmpTile = tmp.isCollidingWithMap(tmp);
+			Tile tmpTile = tmp.isCollidingWithReducedMap(globalTiles, tmp);
 			if(tmpTile != null) {
 				((TerrestrialCreature) this.ent).vel.y = 0;
 				((TerrestrialCreature) this.ent).pos.y = tmpTile.y + Tile.TILE_SIZE + this.getH()/2;
@@ -629,7 +645,7 @@ public class Collider {
 		List<Tile> tiles = new ArrayList<Tile>();
 		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(col.localMinX + col.getW()/2, col.localMinY + col.getH()/2))) { 
 			for (Tile tile : chunk)
-				if(isColliding(col, tile) && tile.getType().isSolid())
+				if(isColliding(col, tile))
 					tiles.add(tile);
 		}
 		return tiles;

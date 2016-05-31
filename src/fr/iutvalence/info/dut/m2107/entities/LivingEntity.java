@@ -34,6 +34,8 @@ public class LivingEntity extends MovableEntity {
 	
 	protected float recoilVel;
 	
+	protected int[] getHit = new int[2];
+	
 	/**
 	 * Constructor of a LivingEntity
 	 * @param pos The position of the entity
@@ -95,7 +97,14 @@ public class LivingEntity extends MovableEntity {
 	 */
 	@Override
 	public void update(Layer layer) {
-		if(this.health <= 0) layer.remove(this);
+		if(this.health <= 0 || this.pos.y < -500) layer.remove(this);
+		
+		if(this.getHit[0] != 0 || this.getHit[1] != 0) {
+			takeKnockback(this.getHit[0]);
+			takeDamage(this.getHit[1]);
+			this.getHit[0] = 0;
+			this.getHit[1] = 0;
+		}
 		
 		if(this instanceof TerrestrialCreature) {
 			if(this.recoil != 0) {
@@ -115,12 +124,12 @@ public class LivingEntity extends MovableEntity {
 		if(this instanceof Player) {
 			if(((Player)this).invulnerabilityTime < Sys.getTime()/1000f) {
 				((Player)this).invulnerabilityTime = Sys.getTime()/1000f+.5f;
-				takeKnockback(knockback);
-				takeDamage(damage);
+				this.getHit[0] = knockback;
+				this.getHit[1] = damage;
 			}
 		} else {
-			takeKnockback(knockback);
-			takeDamage(damage);
+			this.getHit[0] = knockback;
+			this.getHit[1] = damage;
 		}
 	}
 	
@@ -132,6 +141,7 @@ public class LivingEntity extends MovableEntity {
 		recoilVel = this.vel.x;
 		if(damage > 0) this.health -= damage;
 		this.vel.y += this.jumpHeight/2;
+		if(this instanceof TerrestrialCreature) ((TerrestrialCreature)this).isGrounded = false;
 	}
 	
 	private void takeKnockback(int knockback) {

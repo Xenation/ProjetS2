@@ -13,10 +13,10 @@ import java.util.TreeSet;
  */
 public enum TileType {
 	Dirt(1, TileVariant.Dirt),
-	Stone(2, TileVariant.Stone, TileVariant.Stone_bricks),
+	Stone(2, TileVariant.Stone, TileVariant.Stone_bricks, TileVariant.Stone_bricks_corner),
 	Grass(3, TileVariant.Grass, TileVariant.Grass_inner, TileVariant.Grass_outer),
 	Log(4, TileVariant.Log),
-	Leaves(5, TileVariant.Leaves),
+	Leaves(5, TileVariant.Leaves, TileVariant.Leaves_corner),
 	Fader(6, TileVariant.Fader, true, TileBehavior.FADING),
 	Spikes(7, TileVariant.Spikes, false, TileBehavior.DAMAGING, TileBehavior.DEPENDANT),
 	Sand(8, TileVariant.Sand, TileVariant.Sand_corner),
@@ -24,8 +24,7 @@ public enum TileType {
 	Piston(10, TileVariant.Piston_retracted, true, TileBehavior.PISTON),
 	PistonArm(11, TileVariant.Piston_arm, true, TileBehavior.FIXEDDEPENDANT),
 	Water(12, TileVariant.Water, false, TileBehavior.LIQUID),
-	Cobweb(13, TileVariant.Cobweb),
-	Shelf(14, TileVariant.Shelf);
+	Planks(13, TileVariant.Planks);
 	
 	static {
 		//// Add variants here

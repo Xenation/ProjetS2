@@ -49,11 +49,17 @@ public class TerrestrialCreature extends LivingEntity {
 		
 		this.col.checkContinuousCollision();
 		
-		if(this.vel.x > 0 && this.recoil == 0 && this instanceof Character && ((Character)this).itemOnHand != null && ((Weapon)((Character)this).itemOnHand).lockTime < Sys.getTime())
-			this.scale.setX(Maths.fastAbs(this.scale.x));
-		if(this.vel.x < 0 && this.recoil == 0 && this instanceof Character && ((Character)this).itemOnHand != null &&((Weapon)((Character)this).itemOnHand).lockTime < Sys.getTime())
-			this.scale.setX(-Maths.fastAbs(this.scale.x));
-		
+		if(this.vel.x > 0 && this.recoil == 0)
+			if(this instanceof Character && ((Character)this).itemOnHand != null && ((Character)this).itemOnHand instanceof Weapon) {
+				if(((Weapon)((Character)this).itemOnHand).lockTime < Sys.getTime())
+					this.scale.setX(Maths.fastAbs(this.scale.x));
+			} else this.scale.setX(Maths.fastAbs(this.scale.x));
+		if(this.vel.x < 0 && this.recoil == 0) {
+			if(this instanceof Character && ((Character)this).itemOnHand != null && ((Character)this).itemOnHand instanceof Weapon) {
+				if(((Weapon)((Character)this).itemOnHand).lockTime < Sys.getTime())
+					this.scale.setX(-Maths.fastAbs(this.scale.x));
+			} else this.scale.setX(-Maths.fastAbs(this.scale.x));
+		}
 		super.update(layer);
 	}
 	

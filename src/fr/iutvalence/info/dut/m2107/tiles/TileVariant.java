@@ -10,23 +10,24 @@ import fr.iutvalence.info.dut.m2107.models.TileSprite;
 public enum TileVariant {
 	Dirt(1),
 	Stone(2),
-	Stone_bricks(14),
 	Grass(3),
-	Grass_inner(15),
-	Grass_outer(16),
 	Log(4),
 	Leaves(5),
 	Fader(6),
 	Spikes(7),
 	Sand(8),
-	Sand_corner(17),
 	Creator(9),
 	Piston_retracted(10),
 	Piston_extended(11),
 	Piston_arm(12),
 	Water(13),
-	Cobweb(18, true),
-	Shelf(19, true);
+	Stone_bricks(14),
+	Grass_inner(15),
+	Grass_outer(16),
+	Sand_corner(17),
+	Leaves_corner(18),
+	Stone_bricks_corner(19),
+	Planks(20);
 	
 	/**
 	 * The sprite of this variant

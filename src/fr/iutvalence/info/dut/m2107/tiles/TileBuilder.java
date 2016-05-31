@@ -33,7 +33,7 @@ public class TileBuilder {
 		case Fader:
 			return new FadingTile(type, x, y);
 		case Spikes:
-			DamagingSupportedTile spike = new DamagingSupportedTile(type, x, y);
+			DamagingSupportedTile spike = new DamagingSupportedTile(type, x, y, 1, 10);
 			spike.setDepending(GameWorld.chunkMap.getBottomTile(spike));
 			return spike;
 		case Creator:
