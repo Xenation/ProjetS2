@@ -72,7 +72,7 @@ public class Camera {
 	
 	private Entity preview;
 	
-	private boolean isFree = true;
+	private boolean isFocusing = true;
 	
 	/**
 	 * A new Camera at 0,0 and with a rotation of 0
@@ -126,11 +126,11 @@ public class Camera {
 		if (Input.isFocusOnPlayer()) {
 			if (target == null) {
 				target = GameWorld.player;
-				this.isFree = true;
+				this.isFocusing = true;
 				GameWorld.layerMap.getLayer(1).remove(preview);
 			} else {
 				target = null;
-				this.isFree = false;
+				this.isFocusing = false;
 				GameWorld.layerMap.getLayer(1).add(preview);
 			}
 		}
@@ -331,6 +331,8 @@ public class Camera {
 		this.target = target;
 	}
 	
+	public Entity getTarget() { return target; }
+	
 	public Tile getPointed() {return pointed;}
 	
 	/**
@@ -353,7 +355,7 @@ public class Camera {
 	 * Return whether the camera is free or not
 	 * @return whether the camera is free or not
 	 */
-	public boolean isFree() {return isFree;}
+	public boolean isFocusing() {return isFocusing;}
 	
 	public boolean isSelecting() {return isSelecting;}
 	

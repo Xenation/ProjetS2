@@ -6,6 +6,7 @@ import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 public class Rat extends TerrestrialCreature {
 
@@ -40,6 +41,15 @@ public class Rat extends TerrestrialCreature {
 			this.rot = 0;
 		}
 		this.vel.x += this.spd * this.scale.x;
+		
+		Collider tmpCol = new Collider(this.col.getMin(), this.col.getMax());
+		
+		if(this.scale.x > 0) tmpCol.extendRight(this.col.getW());
+		else tmpCol.extendLeft(this.col.getW());
+		Entity ent = tmpCol.isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER)});
+		if(ent == GameWorld.player)
+			((LivingEntity) ent).doDamage(0, 10 * (int)this.scale.x);
+		
 		super.update(layer);
 	}
 }

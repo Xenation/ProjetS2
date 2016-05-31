@@ -75,13 +75,12 @@ public class Sword extends Weapon {
 		if(remainingTime <= 0) {
 			OpenAL.source.play(AudioDataBase.sword());
 			Collider tmpCol = new Collider(owner.getCollider().getMin(), owner.getCollider().getMax());
-			if(owner.getScale().x == 1) tmpCol.extendRight(range);
+			if(owner.getScale().x > 0) tmpCol.extendRight(range);
 			else tmpCol.extendLeft(range);
 			Entity ent = tmpCol.isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.MOBS)});
-			if(ent != owner && ent instanceof LivingEntity) {
-				((LivingEntity) ent).takeKnockback(this.knockback * (int)owner.getScale().x);
-				((LivingEntity) ent).takeDamage(this.damage);
-			}
+			if(ent != owner && ent instanceof LivingEntity)
+				((LivingEntity) ent).doDamage(this.damage, this.knockback * (int)owner.getScale().x);
+			
 			this.remainingTime = this.useTime;
 		}
 		super.use(owner);

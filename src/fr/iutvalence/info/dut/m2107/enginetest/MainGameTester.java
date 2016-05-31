@@ -90,7 +90,7 @@ public class MainGameTester {
 		while (!Display.isCloseRequested()) {
 			Input.input();
 			
-			if(Input.isKeyWater() && !GameWorld.camera.isFree())
+			if(Input.isKeyWater() && GameWorld.camera.isFocusing())
 				GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f(0, 0), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f)));
 			
 			GameWorld.update();

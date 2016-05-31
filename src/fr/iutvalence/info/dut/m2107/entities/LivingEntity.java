@@ -111,31 +111,33 @@ public class LivingEntity extends MovableEntity {
 		super.update(layer);
 	}
 
+	public void doDamage(int damage, int knockback) {
+		if(this instanceof Player) {
+			if(((Player)this).invulnerabilityTime < Sys.getTime()/1000f) {
+				((Player)this).invulnerabilityTime = Sys.getTime()/1000f+.5f;
+				takeKnockback(knockback);
+				takeDamage(damage);
+			}
+		} else {
+			takeKnockback(knockback);
+			takeDamage(damage);
+		}
+	}
+	
 	/**
 	 * Remove health from entity
 	 * @param damage The amount of life take off
 	 */
-	public void takeDamage(int damage) {
+	private void takeDamage(int damage) {
 		recoilVel = this.vel.x;
-		if(this instanceof Player) {
-			if(((Player)this).invulnerabilityTime < Sys.getTime()/1000f) {
-				if(damage > 0) this.health -= damage;
-				((Player)this).invulnerabilityTime = Sys.getTime()/1000f+.5f;
-				this.vel.y += this.jumpHeight/2;
-			}
-		} else {
-			if(damage > 0) this.health -= damage;
-			this.vel.y += this.jumpHeight/2;
-		}
+		if(damage > 0) this.health -= damage;
+		this.vel.y += this.jumpHeight/2;
 	}
 	
-	public void takeKnockback(int knockback) {
-		if(this instanceof Player) {
-			if(((Player)this).invulnerabilityTime < Sys.getTime()/1000f)
-				this.recoil = knockback;
-		} else this.recoil = knockback;
+	private void takeKnockback(int knockback) {
+		this.recoil = knockback;
 	}
-
+	
 	/**
 	 * Return the health of the entity
 	 * @return the health of the entity

@@ -98,13 +98,9 @@ public class Arrow extends Ammunition {
 			
 			if(piercingEntity != null) {
 				this.isPierce = true;
-				if(piercingEntity instanceof LivingEntity) {
-					if(this.rot < 90 && this.rot > -90)
-						((LivingEntity)piercingEntity).takeKnockback(this.knockback);
-					else
-						((LivingEntity)piercingEntity).takeKnockback(-this.knockback);
-					((LivingEntity)piercingEntity).takeDamage(this.damage);
-				}
+				if(piercingEntity instanceof LivingEntity)
+					((LivingEntity)piercingEntity).doDamage(this.damage, this.rot < 90 && this.rot > -90 ? this.knockback : -this.knockback);
+				
 				this.setParent(piercingEntity);
 				System.out.println(piercingEntity);
 				System.out.println(this.getParent());
