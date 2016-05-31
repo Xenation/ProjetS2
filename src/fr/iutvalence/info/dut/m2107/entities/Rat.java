@@ -14,6 +14,8 @@ public class Rat extends TerrestrialCreature {
 	public boolean wallWalk = false;
 	public boolean previousWalk = false;
 	
+	private float atlasCount;
+	
 	public Rat(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd, int health, int armor,
 			int jumpHeight) {
 		super(pos, rot, spr, col, vel, spd, health, armor, jumpHeight);
@@ -31,6 +33,10 @@ public class Rat extends TerrestrialCreature {
 	public void update(Layer layer) {
 		if(!wallWalk && previousWalk)
 			this.vel.y = -this.spd * this.scale.x;
+		
+		if(this.isGrounded || wallWalk) atlasCount += DisplayManager.deltaTime()*10;
+		if(atlasCount >= 3) atlasCount -= 3;
+		this.getSprite().updateAtlasIndex(Maths.fastFloor(atlasCount));
 		
 		previousWalk = wallWalk;
 		
