@@ -84,7 +84,7 @@ public class DisplayManager {
 	
 	public static boolean isPaused = false;
 	
-	private static int startTime;
+	private static float startTime;
 
 	/**
 	 * Creates a new display window
@@ -233,7 +233,7 @@ public class DisplayManager {
 	 * @return the current delta time
 	 */
 	public static float deltaTime() {
-		if(isPaused || (int)(Sys.getTime()/1000) < startTime+1.5f) return 0;
+		if(isPaused || Sys.getTime() < startTime+1000) return 0;
 		else return (smoothDelta/1000);
 	}
 	
@@ -279,6 +279,6 @@ public class DisplayManager {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
 	
-	public static void setStartTime(int startTime) { DisplayManager.startTime = startTime; }
+	public static void setStartTime(float startTime) { DisplayManager.startTime = startTime; }
 	
 }

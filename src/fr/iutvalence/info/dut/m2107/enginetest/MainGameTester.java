@@ -79,7 +79,7 @@ public class MainGameTester {
 		
 		GUI gui = new GUI();
 		
-		DisplayManager.setStartTime((int)(Sys.getTime()/1000));
+		DisplayManager.setStartTime((float)Sys.getTime());
 		
 		// Game Loop
 		while (!Display.isCloseRequested()) {

@@ -1,7 +1,6 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
-import java.io.FileNotFoundException;
-
+import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Character;
@@ -74,6 +73,21 @@ public class Sword extends Weapon {
 	public void use(Character owner) {
 		if(remainingTime <= 0) {
 			OpenAL.source.play(AudioDataBase.sword());
+			
+			if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
+				owner.getPivot().setRotation(GameWorld.player.getDegreeShoot());
+			else if(GameWorld.player.getDegreeShoot() > 90) owner.getPivot().setRotation(180 - GameWorld.player.getDegreeShoot());
+			else owner.getPivot().setRotation(-(GameWorld.player.getDegreeShoot()+ 180));
+			this.lockTime = Sys.getTime()+500;
+			if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
+				owner.getScale().x = 1;
+			else owner.getScale().x = -1;
+			if(owner.getVelocity().x < 0.1f && owner.getVelocity().x > -0.1f) owner.getVelocity().x = 0;
+			if(owner.getPivot().getScale().x != owner.getScale().x) {
+				owner.getPivot().getPosition().x = -owner.getPivot().getPosition().x; 
+				owner.getPivot().getScale().x = owner.getScale().x;
+			}
+			
 			Collider tmpCol = new Collider(owner.getCollider().getMin(), owner.getCollider().getMax());
 			if(owner.getScale().x > 0) tmpCol.extendRight(range);
 			else tmpCol.extendLeft(range);

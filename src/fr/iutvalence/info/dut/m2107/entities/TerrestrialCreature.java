@@ -1,7 +1,9 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
+import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.inventory.Weapon;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
@@ -25,10 +27,6 @@ public class TerrestrialCreature extends LivingEntity {
 	 */
 	protected boolean hasStepUp;
 	
-	protected boolean dirLeft;
-	
-	protected boolean dirRight;
-	
 	
 	public TerrestrialCreature(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd, int health,
 			int armor, int jumpHeight) {
@@ -46,17 +44,14 @@ public class TerrestrialCreature extends LivingEntity {
 	@Override
 	public void update(Layer layer) {
 		
-		this.dirRight = (this.vel.x > 0 && this.recoil == 0);
-		this.dirLeft = (this.vel.x < 0 && this.recoil == 0);
-		
 		this.vel.x = Maths.lerp(this.vel.x, 0, 0.25f);
 		this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
 		
 		this.col.checkContinuousCollision();
 		
-		if(this.dirRight)
+		if(this.vel.x > 0 && this.recoil == 0 && this instanceof Character && ((Character)this).itemOnHand != null && ((Weapon)((Character)this).itemOnHand).lockTime < Sys.getTime())
 			this.scale.setX(Maths.fastAbs(this.scale.x));
-		else if(this.dirLeft)
+		if(this.vel.x < 0 && this.recoil == 0 && this instanceof Character && ((Character)this).itemOnHand != null &&((Weapon)((Character)this).itemOnHand).lockTime < Sys.getTime())
 			this.scale.setX(-Maths.fastAbs(this.scale.x));
 		
 		super.update(layer);

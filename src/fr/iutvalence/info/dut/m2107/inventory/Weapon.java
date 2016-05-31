@@ -38,6 +38,10 @@ public abstract class Weapon extends Item {
 	 * The remaining time before the next usage
 	 */
 	protected float remainingTime = 0;
+	
+	public float lockTime;
+	
+	public float handRotation;
 
 	/**
 	 * Constructor of a weapon

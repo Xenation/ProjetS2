@@ -1,13 +1,11 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
+import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.inventory.Bow;
 import fr.iutvalence.info.dut.m2107.inventory.Item;
-import fr.iutvalence.info.dut.m2107.inventory.Sword;
+import fr.iutvalence.info.dut.m2107.inventory.Weapon;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
-import fr.iutvalence.info.dut.m2107.render.DisplayManager;
-import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
@@ -70,20 +68,19 @@ public class Character extends TerrestrialCreature{
 	@Override
 	public void update(Layer layer) {
 		
-		if(this.itemOnHand != null) this.itemOnHand.update(layer); 
+		if(this.itemOnHand != null) {
+			if(this.itemOnHand instanceof Weapon) this.pivot.rot = Maths.lerp(this.pivot.rot, ((Weapon)this.itemOnHand).handRotation, 0.05f);
+			this.itemOnHand.update(layer);
+		}
 		
-		if(this.dirRight) {
+		if(this.vel.x > 0 && this.recoil == 0 && this.itemOnHand != null && ((Weapon)this.itemOnHand).lockTime < Sys.getTime()) {
 			this.pivot.pos.x = Maths.fastAbs(this.pivot.pos.x);
-			if(this.itemOnHand != null) {
-				if(this.itemOnHand instanceof Bow) this.pivot.rot = 20;
-				if(this.itemOnHand instanceof Sword) this.pivot.rot = -20;
-			}
-		} else if(this.dirLeft) {
+			if(this.itemOnHand != null)
+				this.pivot.scale.x = 1;
+		} else if(this.vel.x < 0 && this.recoil == 0 && this.itemOnHand != null && ((Weapon)this.itemOnHand).lockTime < Sys.getTime()) {
 			this.pivot.pos.x = -Maths.fastAbs(this.pivot.pos.x);
-			if(this.itemOnHand != null) {
-				if(this.itemOnHand instanceof Bow) this.pivot.rot = -200;
-				if(this.itemOnHand instanceof Sword) this.pivot.rot = -160;
-			}
+			if(this.itemOnHand != null)
+				this.pivot.scale.x = -1;
 		}
 		
 		super.update(layer);

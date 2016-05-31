@@ -100,7 +100,7 @@ public class LivingEntity extends MovableEntity {
 		if(this instanceof TerrestrialCreature) {
 			if(this.recoil != 0) {
 				if(!((TerrestrialCreature)this).isGrounded) {
-					this.vel.x = this.recoil/2 + recoilVel;
+					this.vel.x = this.recoil + recoilVel;
 					if(this.col != null) this.col.checkContinuousCollision();
 				} else {
 					this.vel.x = 0;
