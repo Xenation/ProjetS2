@@ -1,5 +1,7 @@
 package fr.iutvalence.info.dut.m2107.enginetest;
 
+import java.io.PrintStream;
+
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
@@ -23,6 +25,7 @@ import fr.iutvalence.info.dut.m2107.sound.OpenAL;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
+import fr.iutvalence.info.dut.m2107.toolbox.TrackingPrintStream;
 
 public class MainGameTester {
 	
@@ -35,6 +38,8 @@ public class MainGameTester {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
+		System.setOut(new TrackingPrintStream(new PrintStream(System.out)));
+		
 		// Display Window initialisation
 		if (args.length == 0) {
 			DisplayManager.createDisplay();

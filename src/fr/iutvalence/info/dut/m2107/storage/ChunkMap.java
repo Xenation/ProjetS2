@@ -297,7 +297,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	}
 	
 	public Tile getTileAt(float x, float y) {
-		Chunk chk = getChunkAt(Chunk.toChunkPosition((int) (x+tilesPositionOffset)), Chunk.toChunkPosition((int) (y+tilesPositionOffset)));
+		Chunk chk = getChunkAt(Chunk.toChunkPosition(toTilePosition(x)), Chunk.toChunkPosition(toTilePosition(y)));
 		if (chk != null) {
 			return chk.getTileAt(toTilePosition(x), toTilePosition(y));
 		}

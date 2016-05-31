@@ -178,6 +178,10 @@ public class Camera {
 			if (Input.isTileRotate() && pointed != null)
 				targetChunkMap.rotateTileAt(pointed.x, pointed.y, pointed.getOrientation().getNext());
 			
+			//// Tile Variant change
+			if (Input.isKeyC() && pointed != null)
+				pointed.setVariant(pointed.getType().getNext(pointed.getVariant()));
+			
 			this.preview.pos.x = targetChunkMap.toTileCenterVisualPosition(mWorldX) + Tile.TILE_SIZE/2;
 			this.preview.pos.y = targetChunkMap.toTileCenterVisualPosition(mWorldY) + Tile.TILE_SIZE/2;
 			

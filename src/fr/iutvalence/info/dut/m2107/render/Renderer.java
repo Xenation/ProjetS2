@@ -131,9 +131,9 @@ public class Renderer {
 				unbindSprite();
 			}
 		}
-		shader.loadIntensityMultiplier(1);
 		
 		// Chunks Rendering
+		shader.loadIntensityMultiplier(1);
 		prepareAtlas(Atlas.TILE_ATLAS);
 		for (Chunk chk : GameWorld.chunkMap.getSurroundingChunks(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_TOP, BOUNDARY_BOTTOM, GameWorld.camera.getPosition())) {
 			for (TileVariant var : chk.variants()) {

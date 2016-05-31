@@ -1,6 +1,7 @@
 package fr.iutvalence.info.dut.m2107.tiles;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -12,17 +13,19 @@ import java.util.TreeSet;
  */
 public enum TileType {
 	Dirt(1, TileVariant.Dirt),
-	Stone(2, TileVariant.Stone),
-	Grass(3, TileVariant.Grass),
+	Stone(2, TileVariant.Stone, TileVariant.Stone_bricks),
+	Grass(3, TileVariant.Grass, TileVariant.Grass_inner, TileVariant.Grass_outer),
 	Log(4, TileVariant.Log),
 	Leaves(5, TileVariant.Leaves),
 	Fader(6, TileVariant.Fader, true, TileBehavior.FADING),
 	Spikes(7, TileVariant.Spikes, false, TileBehavior.DAMAGING, TileBehavior.DEPENDANT),
-	Sand(8, TileVariant.Sand, true, TileBehavior.FALLING),
+	Sand(8, TileVariant.Sand, TileVariant.Sand_corner),
 	Creator(9, TileVariant.Creator, true, TileBehavior.CREATOR),
 	Piston(10, TileVariant.Piston_retracted, true, TileBehavior.PISTON),
 	PistonArm(11, TileVariant.Piston_arm, true, TileBehavior.FIXEDDEPENDANT),
-	Water(12, TileVariant.Water, false, TileBehavior.LIQUID);
+	Water(12, TileVariant.Water, false, TileBehavior.LIQUID),
+	Cobweb(13, TileVariant.Cobweb),
+	Shelf(14, TileVariant.Shelf);
 	
 	static {
 		//// Add variants here
@@ -41,7 +44,7 @@ public enum TileType {
 	/**
 	 * All the variants available for this type (including base)
 	 */
-	private final Set<TileVariant> variants = new HashSet<TileVariant>();
+	private final List<TileVariant> variants = new ArrayList<TileVariant>();
 	/**
 	 * Whether this type is solid (entities collide with it)
 	 */
@@ -54,12 +57,15 @@ public enum TileType {
 	/**
 	 * A type of tile with a normal behavior
 	 * @param id the id of the type
-	 * @param spr the sprite of the type
+	 * @param variants the available variants of the type
 	 */
-	private TileType(int id, TileVariant variant) {
+	private TileType(int id, TileVariant... variants) {
 		this.id = (byte) id;
-		this.baseVariant = variant;
-		this.variants.add(variant);
+		if (variants.length == 0) throw new IllegalArgumentException("One variant at least must be given");
+		this.baseVariant = variants[0];
+		for (TileVariant var : variants) {
+			this.variants.add(var);
+		}
 		this.isSolid = true;
 		this.behaviors.add(TileBehavior.NORMAL);
 	}
@@ -92,7 +98,7 @@ public enum TileType {
 	 * Returns the sprite of this type
 	 * @return the sprite of this type
 	 */
-	public Set<TileVariant> getVariants() {
+	public List<TileVariant> getVariants() {
 		return this.variants;
 	}
 	
@@ -102,6 +108,17 @@ public enum TileType {
 	 */
 	public TileVariant getBaseVariant() {
 		return baseVariant;
+	}
+	
+	/**
+	 * Returns the next possible variant of this type starting from the given variant.<br>Returns the given variant if it doesn't belong to this type.
+	 * @param var the current variant
+	 * @return the variant right after the current variant
+	 */
+	public TileVariant getNext(TileVariant var) {
+		if (!variants.contains(var)) return var;
+		if (variants.indexOf(var) == variants.size()-1) return variants.get(0);
+		return variants.get(variants.indexOf(var)+1);
 	}
 	
 	/**

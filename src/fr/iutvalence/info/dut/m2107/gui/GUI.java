@@ -15,6 +15,7 @@ import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
+import fr.iutvalence.info.dut.m2107.toolbox.TrackingPrintStream;
 
 public class GUI implements Listener {
 	
@@ -23,17 +24,20 @@ public class GUI implements Listener {
 	private GUIText loaderStatsLabel;
 	private GUIText loaderStats;
 	private GUIText cameraStats;
+	private GUIText debugConsole;
 	
 	private GUIButton btn_debug;
 	private GUIButton btn_save;
 	private GUIButton btn_load;
 	
+	private GUIField field_save;
+	
 	private boolean debugOn;
 	
 	public GUI() {
 		this.btn_debug = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .9f), .2f, .05f, "Debug");
-		this.btn_save = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .8f), .2f, .05f, "Save");
-		this.btn_load = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .7f), .2f, .05f, "Load");
+		this.btn_save = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .7f), .2f, .05f, "Save");
+		this.btn_load = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .6f), .2f, .05f, "Load");
 		GameWorld.guiLayerMap.getLayer(1).add(btn_debug);
 		GameWorld.guiLayerMap.getLayer(1).add(btn_save);
 		GameWorld.guiLayerMap.getLayer(1).add(btn_load);
@@ -52,15 +56,32 @@ public class GUI implements Listener {
 		
 		cameraStats = new GUIText("", .8f, -1, 1, .5f, false, true);
 		
+		field_save = new GUIField(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .8f), .2f, .05f);
+		GameWorld.guiLayerMap.getLayer(1).add(field_save);
+		
+		debugConsole = new GUIText("", .5f, .5f, 1, .5f, false, true);
+		debugConsole.setLineHeight(0.024);
+		
 	}
 	
 	public void onGUIMouseLeftDown(GUIMouseLeftDownEvent event) {
 		GUIElement btn = event.getElement();
 		if (btn == btn_save) {
-			WorldSaver.writeWorld();
+			if (field_save.getEffectiveText().length() != 0) {
+				WorldSaver.setFilePath("saves/"+field_save.getEffectiveText()+".eagl");
+				WorldSaver.writeWorld();
+			} else {
+				System.out.println("ERROR: Empty Save File Name");
+			}
 		} else if (btn == btn_load) {
-			GameWorld.chunkMap.clear();
-			WorldLoader.loadWorld();
+			if (field_save.getEffectiveText().length() != 0) {
+				GameWorld.chunkMap.clear();
+				GameWorld.backChunkMap.clear();
+				WorldLoader.setFilePath("saves/"+field_save.getEffectiveText()+".eagl");
+				WorldLoader.loadWorld();
+			} else {
+				System.out.println("ERROR: Empty Save File Name");
+			}
 		} else if (btn == btn_debug) {
 			if (debugOn)
 				hideDebugTexts();
@@ -93,6 +114,7 @@ public class GUI implements Listener {
 				}
 			}
 			cameraStats.updateText(updateStr);
+			debugConsole.updateText(((TrackingPrintStream)System.out).getLastWrittenLines(60));
 		}
 	}
 	
@@ -103,6 +125,7 @@ public class GUI implements Listener {
 		GUIMaster.removeFromLayer(loaderStatsLabel);
 		GUIMaster.removeFromLayer(loaderStats);
 		GUIMaster.removeFromLayer(cameraStats);
+		GUIMaster.removeFromLayer(debugConsole);
 	}
 	
 	public void showDebugTexts() {
@@ -112,6 +135,7 @@ public class GUI implements Listener {
 		GUIMaster.addText(loaderStatsLabel);
 		GUIMaster.addText(loaderStats);
 		GUIMaster.addText(cameraStats);
+		GUIMaster.addText(debugConsole);
 	}
 	
 }
