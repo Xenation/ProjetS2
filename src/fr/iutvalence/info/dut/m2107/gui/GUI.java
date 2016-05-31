@@ -29,21 +29,22 @@ public class GUI implements Listener {
 	private GUIButton btn_debug;
 	private GUIButton btn_save;
 	private GUIButton btn_load;
+	private GUIButton btn_clear;
 	
 	private GUIField field_save;
 	
 	private boolean debugOn;
+	private boolean isLoaded;
 	
 	public GUI() {
 		this.btn_debug = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .9f), .2f, .05f, "Debug");
 		this.btn_save = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .7f), .2f, .05f, "Save");
 		this.btn_load = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .6f), .2f, .05f, "Load");
-		GameWorld.guiLayerMap.getLayer(1).add(btn_debug);
-		GameWorld.guiLayerMap.getLayer(1).add(btn_save);
-		GameWorld.guiLayerMap.getLayer(1).add(btn_load);
+		this.btn_clear = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .5f), .2f, .05f, "Clear");
 		btn_debug.registerListener(this);
 		btn_save.registerListener(this);
 		btn_load.registerListener(this);
+		btn_clear.registerListener(this);
 		
 		// Debug Texts
 		chunkStatsLabel = new GUIText("Chunks :", 1, -1, -.60f, 0.5f, false, true);
@@ -57,7 +58,6 @@ public class GUI implements Listener {
 		cameraStats = new GUIText("", .8f, -1, 1, .5f, false, true);
 		
 		field_save = new GUIField(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .8f), .2f, .05f);
-		GameWorld.guiLayerMap.getLayer(1).add(field_save);
 		
 		debugConsole = new GUIText("", .5f, .5f, 1, .5f, false, true);
 		debugConsole.setLineHeight(0.024);
@@ -87,6 +87,9 @@ public class GUI implements Listener {
 				hideDebugTexts();
 			else
 				showDebugTexts();
+		} else if (btn == btn_clear) {
+			GameWorld.chunkMap.clear();
+			GameWorld.backChunkMap.clear();
 		}
 	}
 	
@@ -136,6 +139,31 @@ public class GUI implements Listener {
 		GUIMaster.addText(loaderStats);
 		GUIMaster.addText(cameraStats);
 		GUIMaster.addText(debugConsole);
+	}
+	
+	public void loadGUIElements() {
+		GameWorld.guiLayerMap.getLayer(1).add(btn_debug);
+		GameWorld.guiLayerMap.getLayer(1).add(btn_save);
+		GameWorld.guiLayerMap.getLayer(1).add(btn_load);
+		GameWorld.guiLayerMap.getLayer(1).add(btn_clear);
+		GameWorld.guiLayerMap.getLayer(1).add(field_save);
+		isLoaded = true;
+	}
+	
+	public void unloadGUIElements() {
+		GameWorld.guiLayerMap.getLayer(1).remove(btn_debug);
+		GameWorld.guiLayerMap.getLayer(1).remove(btn_save);
+		GameWorld.guiLayerMap.getLayer(1).remove(btn_load);
+		GameWorld.guiLayerMap.getLayer(1).remove(btn_clear);
+		GameWorld.guiLayerMap.getLayer(1).remove(field_save);
+		if (debugOn) {
+			hideDebugTexts();
+		}
+		isLoaded = false;
+	}
+	
+	public boolean isLoaded() {
+		return isLoaded;
 	}
 	
 }

@@ -48,6 +48,12 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		}
 	}
 	
+	public void updateWhole() {
+		for (Chunk chk : this) {
+			chk.update();
+		}
+	}
+	
 	/**
 	 * Adds a tile in this chunkMap
 	 * @param til the tile to add

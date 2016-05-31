@@ -1,5 +1,7 @@
 package fr.iutvalence.info.dut.m2107.tiles;
 
+import java.util.Arrays;
+
 import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.TileVariantChangedEvent;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
@@ -162,6 +164,28 @@ public class Tile {
 				&& bottom.bottom.left != null && left.left.bottom != null) {
 			sides[3] = true;
 		}
+		boolean[] sidesCp = Arrays.copyOf(sides, 4);
+		switch (orientation) {
+		case DOWN:
+			sides[0] = sidesCp[1];
+			sides[1] = sidesCp[2];
+			sides[2] = sidesCp[3];
+			sides[3] = sidesCp[0];
+			break;
+		case LEFT:
+			break;
+		case RIGHT:
+			break;
+		case UP:
+			sides[0] = sidesCp[3];
+			sides[1] = sidesCp[0];
+			sides[2] = sidesCp[1];
+			sides[3] = sidesCp[2];
+			break;
+		default:
+			break;
+		}
+		updateLight = false;
 	}
 	
 	public void adjacentsToUpdate() {
