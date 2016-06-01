@@ -10,6 +10,7 @@ import fr.iutvalence.info.dut.m2107.gui.GUIElement;
 import fr.iutvalence.info.dut.m2107.gui.GUIMovable;
 import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.inventory.Bow;
+import fr.iutvalence.info.dut.m2107.inventory.Gun;
 import fr.iutvalence.info.dut.m2107.inventory.Inventory;
 import fr.iutvalence.info.dut.m2107.inventory.InventorySlot;
 import fr.iutvalence.info.dut.m2107.inventory.Item;
@@ -122,6 +123,7 @@ public class Player extends Character{
 		addItem(ItemDatabase.get(1), 5);
 		addItem(ItemDatabase.get(4), 5);
 		addItem(ItemDatabase.get(5), 5);
+		addItem(ItemDatabase.get(7), 500);
 	}
 	
 	/**
@@ -133,6 +135,7 @@ public class Player extends Character{
 		
 		this.quickBar[0].setItem(ItemDatabase.get(2));
 		this.quickBar[1].setItem(ItemDatabase.get(3));
+		this.quickBar[2].setItem(ItemDatabase.get(6));
 		
 		for (int slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++) {
 			if(this.quickBar[slotNumber].getItem() != null) {
@@ -180,12 +183,14 @@ public class Player extends Character{
 	 * Update the usage of the player's hand item
 	 */
 	private void useItem() {
-		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.getTarget() == this && !Input.isOverGUI && !Input.isDragingGUI) {
+		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.getTarget() == this && !Input.isDragingGUI) {
 			if(this.itemOnHand instanceof Bow)
 				((Bow) this.itemOnHand).use(this);
 			if(this.itemOnHand instanceof Sword)
 				((Sword) this.itemOnHand).use(this);
-		}			
+			if(this.itemOnHand instanceof Gun)
+				((Gun) this.itemOnHand).use(this);
+		}
 	}
 	
 	/**
@@ -349,6 +354,7 @@ public class Player extends Character{
 					this.itemOnHand = this.quickBar[selectSlot].getItem();
 					if(this.itemOnHand instanceof Bow)	this.itemOnHand.setPosition(new Vector2f(-.3f, 0));
 					if(this.itemOnHand instanceof Sword)this.itemOnHand.setPosition(new Vector2f(.7f, -0.02f));
+					if(this.itemOnHand instanceof Gun)this.itemOnHand.setPosition(new Vector2f(.7f, -0.02f));
 					this.itemOnHand.setParent(this.pivot);
 				}
 			} else {

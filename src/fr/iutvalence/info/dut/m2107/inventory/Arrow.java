@@ -19,10 +19,6 @@ import fr.iutvalence.info.dut.m2107.tiles.Tile;
  */
 public class Arrow extends Ammunition {
 	
-	private Entity piercingEntity = null;
-	
-	private Tile piercingTile = null;
-	
 	/**
 	 * Constructor of an arrow
 	 * @param pos The position of the ammo
@@ -78,7 +74,7 @@ public class Arrow extends Ammunition {
 	 */
 	@Override
 	public void update(Layer layer) {
-		if(!isPierce) {
+		if(piercingEntity == null && piercingTile == null) {
 			this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
 			
 			if(this.vel.y >= 0) this.rot = (float) (Math.atan(this.vel.x / this.vel.y)*180/Math.PI-90);
@@ -97,21 +93,14 @@ public class Arrow extends Ammunition {
 			this.col.checkContinuousCollision();
 			
 			if(piercingEntity != null) {
-				this.isPierce = true;
 				if(piercingEntity instanceof LivingEntity)
 					((LivingEntity)piercingEntity).doDamage(this.damage, this.rot < 90 && this.rot > -90 ? this.knockback : -this.knockback);
 				
 				this.setParent(piercingEntity);
 				GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
-			} else if(this.piercingTile != null)
-				this.isPierce = true;
+			}
 		}
 		super.update(layer);
 	}
 
-	public Tile getPiercingTile() {return piercingTile;}
-	public void setPiercingTile(Tile piercingTile) {this.piercingTile = piercingTile;}
-	
-	public Entity getPiercingEntity() {return piercingEntity;}
-	public void setPiercingEntity(Entity piercingEntity) {this.piercingEntity = piercingEntity;}
 }

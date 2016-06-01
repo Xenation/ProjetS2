@@ -4,10 +4,12 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Character;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
+import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 /**
  * An ammunition item
@@ -48,10 +50,9 @@ public abstract class Ammunition extends Item {
 	 */
 	protected int speed;
 	
-	/**
-	 * The ammunition is or not stick into an object
-	 */
-	protected boolean isPierce = false;
+	protected Entity piercingEntity = null;
+	
+	protected Tile piercingTile = null;
 	
 	/**
 	 * Constructor of an ammunition
@@ -179,4 +180,11 @@ public abstract class Ammunition extends Item {
 	 */
 	public int getSpeed() {return speed;}
 
+
+	public Tile getPiercingTile() {return piercingTile;}
+	public void setPiercingTile(Tile piercingTile) {this.piercingTile = piercingTile;}
+	
+	public Entity getPiercingEntity() {return piercingEntity;}
+	public void setPiercingEntity(Entity piercingEntity) {this.piercingEntity = piercingEntity;}
+	
 }

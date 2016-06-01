@@ -30,10 +30,13 @@ public class ItemDatabase {
 		// WEAPON
 		//					TYPE	SPR								ID	NAME		DESC				RARITY			MAX		VAL		DMG 	RNG		USE		KNOC
 		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	2,	"Bow",		"A simple bow",		Rarity.POOR,	1,		3, 		3, 		0, 		.5f,	3));
-		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	3,	"Sword",	"A simple Sword",	Rarity.POOR,	1,		3, 		5, 		3, 		.25f,	7));
+		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	3,	"Sword",	"A simple Sword",	Rarity.POOR,	1,		3, 		5, 		3, 		.5f,	7));
 		
 		itemDatabase.add(new Arrow	(SpriteDatabase.getFrozenArrowSpr(),	new Collider(-.01f, -.01f, .01f, .01f),		4,	"Frozen Arrow", 	"A frozen arrow",		Rarity.UNCOMMON,	25,		5,		2,		3,		38));
 		itemDatabase.add(new Arrow	(SpriteDatabase.getBurningArrowSpr(),	new Collider(-.01f, -.01f, .01f, .01f),		5,	"Burning Arrow", 	"A burning arrow",		Rarity.UNCOMMON,	25,		5,		2,		3,		38));
+		
+		itemDatabase.add(new Gun(SpriteDatabase.getGunSpr(), 6, "Gun", "Basic gun", Rarity.COMMON, 1, 5, 5, 0, .25f, 5));
+		itemDatabase.add(new Bullet(SpriteDatabase.getBulletSpr(), new Collider(-.01f, -.01f, .01f, .01f), 7, "A bullet", "A bullet", Rarity.COMMON, 500, 1, 2, 5, 50));
 	}
 	
 	/**
@@ -140,6 +143,8 @@ public class ItemDatabase {
 			return new Bow((Bow)item);
 		if(item instanceof Sword)
 			return new Sword((Sword)item);
+		if(item instanceof Gun)
+			return new Gun((Gun)item);
 		return null;
 	}
 }

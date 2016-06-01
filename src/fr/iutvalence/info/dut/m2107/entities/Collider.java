@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.inventory.Ammunition;
 import fr.iutvalence.info.dut.m2107.inventory.Arrow;
+import fr.iutvalence.info.dut.m2107.inventory.Bullet;
 import fr.iutvalence.info.dut.m2107.models.AbstractSprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
@@ -555,15 +556,16 @@ public class Collider {
 			
 			if(tileColliding != null || entColliding != null) {
 				ammo.setVelocity(new Vector2f(0, 0));
-				ammo.pos.x = nextPos.x -(float) (Math.cos((ammo.rot)*Math.PI/180)*ammo.spr.getSize().x/2.5f);
-				ammo.pos.y = nextPos.y -(float) -(Math.sin((ammo.rot)*Math.PI/180)*ammo.spr.getSize().y/2.5f);
 				if(entColliding != null) {
 					ammo.pos = new Vector2f(ammo.pos.x - entColliding.pos.x, ammo.pos.y - entColliding.pos.y);
-					((Arrow)this.ent).setPiercingEntity(entColliding);
+					((Ammunition)this.ent).setPiercingEntity(entColliding);
 					return;
 				}
-				if(ammo instanceof Arrow)
-					((Arrow)this.ent).setPiercingTile(tileColliding);
+				if(this.ent instanceof Arrow) {
+					ammo.pos.x = nextPos.x -(float) (Math.cos((ammo.rot)*Math.PI/180)*ammo.spr.getSize().x/2.5f);
+					ammo.pos.y = nextPos.y -(float) -(Math.sin((ammo.rot)*Math.PI/180)*ammo.spr.getSize().y/2.5f);
+				}
+				((Ammunition)this.ent).setPiercingTile(tileColliding);
 				return;
 			}
 			
