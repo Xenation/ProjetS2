@@ -431,7 +431,9 @@ public class Collider {
 					// I'm on the perfect right of the tile
 					((Rat)this.ent).wallWalk = true;
 					this.ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
-					((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x + GameWorld.gravity * DisplayManager.deltaTime();
+					if(this.ent.scale.x > 0)
+						((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x + GameWorld.gravity * DisplayManager.deltaTime();
+					else ((Rat) this.ent).getVelocity().y = -((Rat) this.ent).getVelocity().x + GameWorld.gravity * DisplayManager.deltaTime();
 					modVel.x = 0;
 					modVel.y = 1;
 				} else {
@@ -451,13 +453,13 @@ public class Collider {
 			} else if(isOnRight(this, tile)) { // if the tile is on my right
 				if(this.minY < tile.y + Tile.TILE_SIZE && this.maxY > tile.y && !checkTilePosition(globalTiles, tile.x-1, tile.y)) {
 					// I'm on the perfect left of the tile
-					if(!((Rat)this.ent).wallWalk) {
-						((Rat)this.ent).wallWalk = true;
-						this.ent.pos.x = tile.x - this.getW()/2;
+					((Rat)this.ent).wallWalk = true;
+					this.ent.pos.x = tile.x - this.getW()/2;
+					if(this.ent.scale.x > 0)
 						((Rat) this.ent).getVelocity().y = ((Rat) this.ent).getVelocity().x + GameWorld.gravity * DisplayManager.deltaTime();
-						modVel.x = 0;
-						modVel.y = 1;
-					}
+					else ((Rat) this.ent).getVelocity().y = -((Rat) this.ent).getVelocity().x + GameWorld.gravity * DisplayManager.deltaTime();
+					modVel.x = 0;
+					modVel.y = 1;
 				} else {
 					// I'm under or above the right tile
 					if(isOnUp(this, tile)) {
@@ -492,7 +494,12 @@ public class Collider {
 		}
 		((TerrestrialCreature)this.ent).vel.x *= modVel.x;
 		((TerrestrialCreature)this.ent).vel.y *= modVel.y;
-		if(top) ((TerrestrialCreature)this.ent).vel.y = 0;
+		if(top) {
+			((TerrestrialCreature)this.ent).vel.y = 0;
+			if(((Rat)this.ent).wallWalk) {
+				((Rat)this.ent).setSpeed(-((Rat)this.ent).getSpeed());
+			}
+		}
 	}
 	
 	/**

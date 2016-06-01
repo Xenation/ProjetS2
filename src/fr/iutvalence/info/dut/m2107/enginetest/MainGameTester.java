@@ -40,15 +40,12 @@ public class MainGameTester {
 		// Main Menu Initialisation
 		GameManager.loadMainMenu();
 		
-		// Start Time Initialisation
-		DisplayManager.setStartTime((float)Sys.getTime());
-		
 		// Game Loop
 		while (!Display.isCloseRequested() && !GameManager.isQuitting) {
 			GameManager.update();
 			
 			if(Input.isKeyWater() && GameWorld.camera.isFocusing())
-				GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f(0, 0), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f)));
+				GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f(0, 0), 0, SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f), new Vector2f(), 2, 10, 1, 0));
 			
 			GameManager.render();
 			

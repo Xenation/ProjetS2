@@ -102,8 +102,6 @@ public class Arrow extends Ammunition {
 					((LivingEntity)piercingEntity).doDamage(this.damage, this.rot < 90 && this.rot > -90 ? this.knockback : -this.knockback);
 				
 				this.setParent(piercingEntity);
-				System.out.println(piercingEntity);
-				System.out.println(this.getParent());
 				GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
 			} else if(this.piercingTile != null)
 				this.isPierce = true;
