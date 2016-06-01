@@ -303,7 +303,8 @@ public class Player extends Character{
 				else atlasCount = 65;
 			}
 		}
-		this.spr.updateAtlasIndex(Maths.fastFloor(atlasCount));
+		if(Maths.fastFloor(atlasCount) != this.getSprite().getAtlasIndex())
+			this.getSprite().updateAtlasIndex(Maths.fastFloor(atlasCount));
 	}
 
 	/**

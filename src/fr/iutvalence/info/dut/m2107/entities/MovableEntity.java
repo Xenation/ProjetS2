@@ -112,6 +112,12 @@ public class MovableEntity extends Entity {
 	public Vector2f getVelocity() {return vel;}
 	
 	/**
+	 * Set the speed of the entity
+	 * @param the speed to set to the entity
+	 */
+	public void setSpeed(float spd) {this.spd = spd;}
+	
+	/**
 	 * Return the speed of the entity
 	 * @return the speed of the entity
 	 */

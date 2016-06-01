@@ -21,33 +21,29 @@ public class Rat extends TerrestrialCreature {
 		super(pos, rot, spr, col, vel, spd, health, armor, jumpHeight);
 	}
 
-	public Rat(Vector2f pos, EntitySprite spr) {
-		super(pos, spr);
-	}
-
-	public Rat(Vector2f pos, EntitySprite spr, Collider col) {
-		super(pos, spr, col);
-	}
-
 	@Override
 	public void update(Layer layer) {
-		if(!wallWalk && previousWalk)
-			this.vel.y = -this.spd * this.scale.x;
+		if(!wallWalk && previousWalk) {
+			if(this.scale.x > 0)
+				this.vel.y = -this.spd;
+			else this.vel.y = this.spd;
+		}
 		
-		if(this.isGrounded || wallWalk) atlasCount += DisplayManager.deltaTime()*10;
+		if(this.isGrounded || wallWalk) atlasCount += DisplayManager.deltaTime()*15;
 		if(atlasCount >= 3) atlasCount -= 3;
-		this.getSprite().updateAtlasIndex(Maths.fastFloor(atlasCount));
+		if(Maths.fastFloor(atlasCount) != this.getSprite().getAtlasIndex())
+			this.getSprite().updateAtlasIndex(Maths.fastFloor(atlasCount));
 		
 		previousWalk = wallWalk;
 		
 		if(wallWalk) {
 			this.rot = -90;
-			this.vel.y += this.spd * this.scale.x;
+			this.vel.y += Maths.fastAbs(this.spd);
 			this.vel.y += GameWorld.gravity * DisplayManager.deltaTime();
 		} else {
 			this.rot = 0;
 		}
-		this.vel.x += this.spd * this.scale.x;
+		this.vel.x += this.spd;
 		
 		Collider tmpCol = new Collider(this.col.getMin(), this.col.getMax());
 		

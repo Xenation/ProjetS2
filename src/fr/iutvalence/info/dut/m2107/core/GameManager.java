@@ -1,5 +1,6 @@
 package fr.iutvalence.info.dut.m2107.core;
 
+import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
@@ -11,6 +12,7 @@ import fr.iutvalence.info.dut.m2107.gui.GUI;
 import fr.iutvalence.info.dut.m2107.gui.GUIMainMenu;
 import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
 import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
+import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Loader;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
@@ -205,6 +207,9 @@ public class GameManager {
 	 * Loads the Default Entities
 	 */
 	public static void loadDefaultEntities() {
+		// Start Time Initialisation
+		DisplayManager.setStartTime((float)Sys.getTime());
+		
 		GameWorld.player.init();
 		GameWorld.camera.setTarget(GameWorld.player);
 		GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER).add(GameWorld.player);
@@ -214,7 +219,7 @@ public class GameManager {
 		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(chest);
 		
 		for (int i = 5; i < 100; i++) {
-			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Rat(new Vector2f(i/2f, i/2f), SpriteDatabase.getRatSpr() , new Collider(-.25f, -.25f, .25f, .25f)));
+			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Rat(new Vector2f(i/2f, i/2f), 0, SpriteDatabase.getRatSpr() , new Collider(-.25f, -.25f, .25f, .25f), new Vector2f(), 6, 1, 0, 0));
 		}
 	}
 	
