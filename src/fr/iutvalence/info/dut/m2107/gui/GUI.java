@@ -17,25 +17,72 @@ import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 import fr.iutvalence.info.dut.m2107.toolbox.TrackingPrintStream;
 
+/**
+ * The in-game GUI
+ * @author Xenation
+ *
+ */
 public class GUI implements Listener {
 	
+	/**
+	 * The chunks stats label
+	 */
 	private GUIText chunkStatsLabel;
+	/**
+	 * The chunk stats text
+	 */
 	private GUIText chunkStats;
+	/**
+	 * The loaders stats label
+	 */
 	private GUIText loaderStatsLabel;
+	/**
+	 * The loaders stats text
+	 */
 	private GUIText loaderStats;
+	/**
+	 * The camera stats
+	 */
 	private GUIText cameraStats;
+	/**
+	 * The console text
+	 */
 	private GUIText debugConsole;
 	
+	/**
+	 * The debug button
+	 */
 	private GUIButton btn_debug;
+	/**
+	 * The save button
+	 */
 	private GUIButton btn_save;
+	/**
+	 * The load button
+	 */
 	private GUIButton btn_load;
+	/**
+	 * The clear button
+	 */
 	private GUIButton btn_clear;
 	
+	/**
+	 * The save file name field
+	 */
 	private GUIField field_save;
 	
+	/**
+	 * Whether the debug texts are displayed
+	 */
 	private boolean debugOn;
+	/**
+	 * Whether the in-game GUI elements are loaded.
+	 */
 	private boolean isLoaded;
 	
+	/**
+	 * Creates all the elements needed to the in-game GUI
+	 */
 	public GUI() {
 		this.btn_debug = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .9f), .2f, .05f, "Debug");
 		this.btn_save = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(-.85f, .7f), .2f, .05f, "Save");
@@ -64,6 +111,11 @@ public class GUI implements Listener {
 		
 	}
 	
+	/**
+	 * Called when the left mouse button is downed on one of the buttons or fields. DO NOT CALL.<br>
+	 * This method is called automatically it doesn't need to be called.
+	 * @param event the event
+	 */
 	public void onGUIMouseLeftDown(GUIMouseLeftDownEvent event) {
 		GUIElement btn = event.getElement();
 		if (btn == btn_save) {
@@ -93,6 +145,9 @@ public class GUI implements Listener {
 		}
 	}
 	
+	/**
+	 * Updates the debug texts
+	 */
 	public void update() {
 		if (debugOn) {
 			chunkStats.updateText("Chunks: "+GameWorld.chunkMap.getChunkCount()
@@ -121,6 +176,9 @@ public class GUI implements Listener {
 		}
 	}
 	
+	/**
+	 * Hides the debug texts
+	 */
 	public void hideDebugTexts() {
 		debugOn = false;
 		GUIMaster.removeFromLayer(chunkStatsLabel);
@@ -131,6 +189,9 @@ public class GUI implements Listener {
 		GUIMaster.removeFromLayer(debugConsole);
 	}
 	
+	/**
+	 * Shows the debug texts
+	 */
 	public void showDebugTexts() {
 		debugOn = true;
 		GUIMaster.addText(chunkStatsLabel);
@@ -141,6 +202,9 @@ public class GUI implements Listener {
 		GUIMaster.addText(debugConsole);
 	}
 	
+	/**
+	 * Loads all the GUIElements to the GUI layer map.
+	 */
 	public void loadGUIElements() {
 		GameWorld.guiLayerMap.getLayer(1).add(btn_debug);
 		GameWorld.guiLayerMap.getLayer(1).add(btn_save);
@@ -150,6 +214,9 @@ public class GUI implements Listener {
 		isLoaded = true;
 	}
 	
+	/**
+	 * Unloads all the GUIElements from the GUI layer map.
+	 */
 	public void unloadGUIElements() {
 		GameWorld.guiLayerMap.getLayer(1).remove(btn_debug);
 		GameWorld.guiLayerMap.getLayer(1).remove(btn_save);
@@ -162,6 +229,10 @@ public class GUI implements Listener {
 		isLoaded = false;
 	}
 	
+	/**
+	 * Returns <tt>true</tt> if the elements are loaded into the GUI layer map, <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if the elements are loaded into the GUI layer map, <tt>false</tt> otherwise.
+	 */
 	public boolean isLoaded() {
 		return isLoaded;
 	}

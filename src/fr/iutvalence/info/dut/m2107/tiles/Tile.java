@@ -42,15 +42,42 @@ public class Tile {
 	 * Whether this tile needs to be updated
 	 */
 	protected boolean toUpdate;
+	/**
+	 * Whether the lighting of this tile needs to be updated.
+	 */
 	public boolean updateLight;
 	
+	/**
+	 * The array indicating which corner is to be lit.<br>
+	 * <tt>true</tt>: not lit<br>
+	 * <tt>false</tt>: lit<br>
+	 * - 0: top-left<br>
+	 * - 1: top-right<br>
+	 * - 2: bottom-right<br>
+	 * - 3: bottom-left<br>
+	 */
 	private boolean[] sides = new boolean[4];
 	
+	/**
+	 * The top tile
+	 */
 	private Tile top;
+	/**
+	 * The right tile
+	 */
 	private Tile right;
+	/**
+	 * The bottom tile
+	 */
 	private Tile bottom;
+	/**
+	 * The left tile
+	 */
 	private Tile left;
 	
+	/**
+	 * The Chunk that contains this tile
+	 */
 	private Chunk chunk;
 	
 	/**
@@ -117,24 +144,45 @@ public class Tile {
 		this.toUpdate = true;
 	}
 	
+	/**
+	 * Updates the attributes of this tile that change every frame.
+	 */
 	public void softUpdate() {
 		return;
 	}
 	
+	/**
+	 * Updates this tile entirely:<br>
+	 * - resets the links<br>
+	 * - updates using behaviors<br>
+	 * This update is not to be made every frame since it may be heavy on processing time.
+	 * @return <tt>true</tt> if this tile stays, <tt>false</tt> if it needs to be destroyed.
+	 */
 	public boolean heavyUpdate() {
 		this.toUpdate = false;
 		resetAdjacentLinks();
 		return this.type.updateBehaviors(this);
 	}
 	
+	/**
+	 * Returns <tt>true</tt> if this tile needs to be updated, <tt>false</tt> otherwise.
+	 * @return
+	 */
 	public boolean toUpdate() {
 		return this.toUpdate;
 	}
 	
+	/**
+	 * Sets the toUpdate state of this tile.
+	 * @param toUpdate the new toUpdate state
+	 */
 	public void toUpdate(boolean toUpdate) {
 		this.toUpdate = toUpdate;
 	}
 	
+	/**
+	 * Updates the array that indicates which corner is lit.
+	 */
 	public void updateSides() {
 		if (this.variant.isTransparent) return;
 		for (int i = 0; i < sides.length; i++) {
@@ -188,6 +236,9 @@ public class Tile {
 		updateLight = false;
 	}
 	
+	/**
+	 * Request update of adjacent tiles.
+	 */
 	public void adjacentsToUpdate() {
 		if (top != null) {
 			top.toUpdate = true;
@@ -235,10 +286,18 @@ public class Tile {
 		return type;
 	}
 	
+	/**
+	 * Returns the variant of this tile
+	 * @return the variant of this tile
+	 */
 	public TileVariant getVariant() {
 		return variant;
 	}
 	
+	/**
+	 * Sets the variant of this tile
+	 * @param var the new variant
+	 */
 	public void setVariant(TileVariant var) {
 		TileVariant old = this.variant;
 		this.variant = var;
@@ -301,6 +360,9 @@ public class Tile {
 	public Chunk getChunk() {return chunk;}
 	public void setChunk(Chunk chunk) {this.chunk = chunk;}
 	
+	/**
+	 * Reset the adjacent tiles links.
+	 */
 	public void resetAdjacentLinks() {
 		this.top = GameWorld.chunkMap.getTopTile(this);
 		this.right = GameWorld.chunkMap.getRightTile(this);
@@ -327,6 +389,10 @@ public class Tile {
 		return y-chk.getY()*Chunk.CHUNK_SIZE;
 	}
 	
+	/**
+	 * Returns the array indicating which corner of the tile is lit.
+	 * @return the array indicating which corner of the tile is lit.
+	 */
 	public boolean[] getSides() {return sides;}
 	
 	/**

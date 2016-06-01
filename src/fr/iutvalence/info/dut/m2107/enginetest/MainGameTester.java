@@ -35,6 +35,7 @@ public class MainGameTester {
 			DisplayManager.updateDisplay();
 		}
 		
+		// Initialises the game components
 		GameManager.init();
 		
 		// Main Menu Initialisation

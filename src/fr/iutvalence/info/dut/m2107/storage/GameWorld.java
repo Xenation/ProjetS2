@@ -51,6 +51,9 @@ public class GameWorld {
 	 */
 	public static LayerMap guiLayerMap;
 	
+	/**
+	 * Initialises the chunk maps, layer maps, camera and player
+	 */
 	public static void init() {
 		chunkMap = new ChunkMap();
 		

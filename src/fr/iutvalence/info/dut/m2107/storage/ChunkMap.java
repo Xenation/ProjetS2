@@ -28,19 +28,29 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
  */
 public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	
+	/**
+	 * The Offset of position of the tiles. (same in x and y)
+	 */
 	private float tilesPositionOffset;
 	
+	/**
+	 * Creates an empty ChunkMap
+	 */
 	public ChunkMap() {
 		this.tilesPositionOffset = 0;
 	}
 	
+	/**
+	 * Creates a ChunkMap that has the specified tiles position offset
+	 * @param tilesPositionOffset the tiles position offset
+	 */
 	public ChunkMap(float tilesPositionOffset) {
 		this.tilesPositionOffset = tilesPositionOffset;
 	}
 	
 	//// CHUNKMAP \\\\
 	/**
-	 * Updates every chunk of this chunkMap
+	 * Updates the chunks on screen
 	 */
 	public void update() {
 		for (Chunk chk : getScreenChunks()) {
@@ -48,6 +58,9 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		}
 	}
 	
+	/**
+	 * Updates every chunk of this chunkMap
+	 */
 	public void updateWhole() {
 		for (Chunk chk : this) {
 			chk.update();
@@ -115,7 +128,10 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 			chk.removeAt(x, y);
 		}
 	}
-	
+	/**
+	 * Removes a tile using its reference.
+	 * @param tile the tile to remove
+	 */
 	public void removeTile(Tile tile) {
 		Chunk chk = get(Chunk.toChunkPosition(tile.x, tile.y));
 		if (chk != null) {
@@ -298,10 +314,20 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		return null;
 	}
 	
+	/**
+	 * Returns the position offset of the tiles in this chunk
+	 * @return the position offset of the tiles in this chunk
+	 */
 	public float getTilesPositionOffset() {
 		return tilesPositionOffset;
 	}
 	
+	/**
+	 * Returns the tile located at the given position
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @return the tile at the given position (may be null)
+	 */
 	public Tile getTileAt(float x, float y) {
 		Chunk chk = getChunkAt(Chunk.toChunkPosition(toTilePosition(x)), Chunk.toChunkPosition(toTilePosition(y)));
 		if (chk != null) {
@@ -310,10 +336,20 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		return null;
 	}
 	
+	/**
+	 * Converts the given float to a tile position
+	 * @param f the float to convert
+	 * @return the integer that corresponds to the given float in this chunk map coordinates
+	 */
 	public int toTilePosition(float f) {
 		return Maths.fastFloor(f-tilesPositionOffset);
 	}
 	
+	/**
+	 * Returns the float that is the center of the tile that the given float touches
+	 * @param f the float
+	 * @return the float that is the center of the tile that the given float touches
+	 */
 	public float toTileCenterVisualPosition(float f) {
 		return Maths.fastFloor(f-tilesPositionOffset)+tilesPositionOffset;
 	}

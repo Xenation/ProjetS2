@@ -70,8 +70,14 @@ public class Camera {
 	 */
 	private ChunkMap targetChunkMap;
 	
+	/**
+	 * The Entity used to preview the position where the tile is going to be created
+	 */
 	private Entity preview;
 	
+	/**
+	 * Whether the tile is focused on a target (<tt>true</tt>) or not (<tt>false</tt>)
+	 */
 	private boolean isFocusing = true;
 	
 	/**
@@ -331,8 +337,16 @@ public class Camera {
 		this.target = target;
 	}
 	
+	/**
+	 * Returns the current target of the camera (may be null)
+	 * @return the current target of the camera
+	 */
 	public Entity getTarget() { return target; }
 	
+	/**
+	 * Returns the tile pointed by the mouse
+	 * @return the tile pointed by the mouse
+	 */
 	public Tile getPointed() {return pointed;}
 	
 	/**
@@ -357,6 +371,10 @@ public class Camera {
 	 */
 	public boolean isFocusing() {return isFocusing;}
 	
+	/**
+	 * Whether the user is currently selecting a zone in edit mode
+	 * @return <tt>true</tt> if the user is selecting, <tt>false</tt> otherwise
+	 */
 	public boolean isSelecting() {return isSelecting;}
 	
 }

@@ -21,18 +21,58 @@ import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
+/**
+ * Manages the different objects of the game.<br>
+ * - Renderer<br>
+ * - GUI<br>
+ * - ChunkMap<br>
+ * - LayerMap<br>
+ * @author Xenation
+ *
+ */
 public class GameManager {
 	
+	/**
+	 * The renderer used for rendering
+	 */
 	private static Renderer renderer;
 	
+	/**
+	 * The Main Menu
+	 */
 	private static GUIMainMenu mainMenu;
+	/**
+	 * Whether the main menu needs to be unloaded.<br>
+	 * Used to avoid concurrent modifications
+	 */
 	private static boolean mainMenu_toUnload;
+	
+	/**
+	 * The game GUI
+	 */
 	private static GUI gui;
+	/**
+	 * Whether the game GUI needs to be unloaded.<br>
+	 * Used to avoid concurrent modifications
+	 */
 	private static boolean gui_toUnload;
 	
+	/**
+	 * Whether the game needs to be closed.
+	 */
 	public static boolean isQuitting;
 	
 	
+	/**
+	 * Initialises the components of the game.<br>
+	 * - GUIMaster<br>
+	 * - OpenAL<br>
+	 * - ItemDatabase<br>
+	 * - Renderer<br>
+	 * - GameWorld<br>
+	 * - EventManager<br>
+	 * - GUI<br>
+	 */
 	public static void init() {
 		// GUI Initialisation
 		GUIMaster.init();
@@ -51,11 +91,18 @@ public class GameManager {
 		gui = new GUI();
 	}
 	
+	/**
+	 * Renders the GameWorld
+	 */
 	public static void render() {
 		renderer.prepare();
 		renderer.render();
 	}
 	
+	/**
+	 * Updates the inputs and GameWorld.<br>
+	 * Also applies the requested unloads.
+	 */
 	public static void update() {
 		Input.input();
 		GameWorld.update();
@@ -65,6 +112,9 @@ public class GameManager {
 		applyUnloads();
 	}
 	
+	/**
+	 * Applies the requested unloads
+	 */
 	private static void applyUnloads() {
 		if (mainMenu_toUnload) {
 			if (mainMenu.isLoaded()) {
@@ -80,6 +130,12 @@ public class GameManager {
 		}
 	}
 	
+	/**
+	 * CleanUp the game by:<br>
+	 * - deleting OpenAL buffers<br>
+	 * - detaching the shaders<br>
+	 * - unloading all the VAOs and VBOs 
+	 */
 	public static void cleanUp() {
 		OpenAL.delete();
 		renderer.cleanUp();
@@ -89,7 +145,10 @@ public class GameManager {
 		Loader.GUI_LOADER.unloadAll();
 	}
 	
-	// MAIN MENU
+	//// MAIN MENU \\\\
+	/**
+	 * Loads the Main Menu
+	 */
 	public static void loadMainMenu() {
 		if (!mainMenu.isLoaded()) {
 			mainMenu.loadGUIElement();
@@ -99,21 +158,35 @@ public class GameManager {
 		GameWorld.chunkMap.updateWhole();
 		GameWorld.camera.setTarget(new Entity());
 	}
+	/**
+	 * Requests the unloading of the MainMenu.<br>
+	 * It will be unloaded at the end of the update() call.
+	 */
 	public static void unloadMainMenu() {
 		mainMenu_toUnload = true;
 	}
 	
-	// GUI
+	//// GUI \\\\
+	/**
+	 * Loads the game GUI
+	 */
 	public static void loadGUI() {
 		if (!gui.isLoaded()) {
 			gui.loadGUIElements();
 		}
 	}
+	/**
+	 * Requests the unloading of the game GUI.<br>
+	 * It will be unloaded at the end of the update() call.
+	 */
 	public static void unloadGUI() {
 		gui_toUnload = true;
 	}
 	
-	// CHUNKMAP
+	//// CHUNKMAP \\\\
+	/**
+	 * Loads the default ChunkMap
+	 */
 	public static void loadDefaultChunkMap() {
 		GameWorld.chunkMap.clear();
 		GameWorld.backChunkMap.clear();
@@ -121,11 +194,18 @@ public class GameManager {
 		WorldLoader.loadWorld();
 		GameWorld.chunkMap.updateWhole();
 	}
+	/**
+	 * Unloads the current ChunkMap.<br>
+	 * Simple clear() call
+	 */
 	public static void unloadChunkMap() {
 		GameWorld.chunkMap.clear();
 	}
 	
-	// LAYERMAP
+	//// LAYERMAP \\\\
+	/**
+	 * Loads the Default Entities
+	 */
 	public static void loadDefaultEntities() {
 		// Start Time Initialisation
 		DisplayManager.setStartTime((float)Sys.getTime());
