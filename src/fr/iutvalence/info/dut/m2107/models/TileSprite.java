@@ -1,5 +1,8 @@
 package fr.iutvalence.info.dut.m2107.models;
 
+import org.lwjgl.util.vector.Vector2f;
+
+import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.render.Loader;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
@@ -20,6 +23,10 @@ public class TileSprite extends AtlasSprite {
 	public void updateAtlasIndex(int atlasIndex) {
 		this.atlasIndex = atlasIndex;
 		Loader.TILE_LOADER.updateVao(vaoID, POSITIONS, atlas.getUVs(atlasIndex));
+	}
+	
+	public GUISprite getGUISprite() {
+		return new GUISprite(Atlas.TILE_ATLAS, atlasIndex, new Vector2f(1, 1));
 	}
 	
 }

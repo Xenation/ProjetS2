@@ -49,7 +49,7 @@ public class GameWorld {
 	 *  <li><b>3: </b> ?</li>
 	 * </ul>
 	 */
-	public static LayerMap guiLayerMap;
+	public static GUILayerMap guiLayerMap;
 	
 	/**
 	 * Initialises the chunk maps, layer maps, camera and player
@@ -62,7 +62,7 @@ public class GameWorld {
 		layerMap = new LayerMap();
 		layerMap.addEmpty(4);
 		
-		guiLayerMap = new LayerMap();
+		guiLayerMap = new GUILayerMap();
 		guiLayerMap.add(new GUILayer());
 		guiLayerMap.add(new GUILayer());
 		guiLayerMap.add(new GUILayer());

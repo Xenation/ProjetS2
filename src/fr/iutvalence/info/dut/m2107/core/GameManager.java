@@ -12,6 +12,7 @@ import fr.iutvalence.info.dut.m2107.gui.GUI;
 import fr.iutvalence.info.dut.m2107.gui.GUIMainMenu;
 import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
 import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
+import fr.iutvalence.info.dut.m2107.listeners.GUIListener;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Loader;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
@@ -56,6 +57,12 @@ public class GameManager {
 	 * Used to avoid concurrent modifications
 	 */
 	private static boolean gui_toUnload;
+	private static boolean gui_tileSelect_toUnload;
+	
+	/**
+	 * The listener for GUI broadcast events
+	 */
+	private static GUIListener guiListener;
 	
 	/**
 	 * Whether the game needs to be closed.
@@ -74,18 +81,21 @@ public class GameManager {
 	 * - GUI<br>
 	 */
 	public static void init() {
-		// GUI Initialisation
-		GUIMaster.init();
 		// OpenAL Initialisation
 		OpenAL.init();
 		// Database Initialisation
 		ItemDatabase.create();
 		// Renderer
 		renderer = new Renderer();
+		// GUI Initialisation
+		GUIMaster.init();
 		// GameWorld Initialisation
 		GameWorld.init();
 		// Events Initialisation
 		EventManager.init();
+		
+		guiListener = new GUIListener();
+		EventManager.register(guiListener);
 		
 		mainMenu = new GUIMainMenu();
 		gui = new GUI();
@@ -119,14 +129,22 @@ public class GameManager {
 		if (mainMenu_toUnload) {
 			if (mainMenu.isLoaded()) {
 				mainMenu.unloadGUIElement();
+				guiListener.resetCounter();
 			}
 			mainMenu_toUnload = false;
 		}
 		if (gui_toUnload) {
 			if (gui.isLoaded()) {
 				gui.unloadGUIElements();
+				guiListener.resetCounter();
 			}
 			gui_toUnload = false;
+		}
+		if (gui_tileSelect_toUnload) {
+			if (gui.isTileSelectOn()) {
+				gui.hideTileSelect();
+			}
+			gui_tileSelect_toUnload = false;
 		}
 	}
 	
@@ -181,6 +199,9 @@ public class GameManager {
 	 */
 	public static void unloadGUI() {
 		gui_toUnload = true;
+	}
+	public static void unloadGUITileSelect() {
+		gui_tileSelect_toUnload = true;
 	}
 	
 	//// CHUNKMAP \\\\

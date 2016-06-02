@@ -176,8 +176,6 @@ public class DisplayManager {
 		updateFPS();
 		updateDeltaMap();
 		
-		if(Input.isEscape()) closeDisplay();
-		
 		isPaused = Input.isPaused();
 		
 		// FPS syncing and screen update

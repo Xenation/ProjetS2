@@ -2,7 +2,6 @@ package fr.iutvalence.info.dut.m2107.enginetest;
 
 import java.io.PrintStream;
 
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 

@@ -1,5 +1,6 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
@@ -16,6 +17,7 @@ import fr.iutvalence.info.dut.m2107.storage.Vector2i;
 import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
+import fr.iutvalence.info.dut.m2107.tiles.TileVariant;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 /**
@@ -48,6 +50,11 @@ public class Camera {
 	 * The type of tile to draw
 	 */
 	private TileType type;
+	
+	/**
+	 * The variant of tile to draw
+	 */
+	private TileVariant variant;
 	
 	/**
 	 * The starting position of the selection
@@ -87,6 +94,7 @@ public class Camera {
 		this.position = new Vector2f();
 		this.rotation = 0;
 		this.type = TileType.Dirt;
+		this.variant = null;
 		this.targetChunkMap = GameWorld.chunkMap;
 	}
 	
@@ -145,7 +153,7 @@ public class Camera {
 		
 		//// Build Mode
 		if (target == null && preview != null) {
-			if (pointed != null && Input.isKeyU()) {
+			if (pointed != null && Keyboard.isKeyDown(Keyboard.KEY_H)) {
 				pointed.toUpdate(true);
 			}
 			if (Input.isKeyB()) {
@@ -180,46 +188,51 @@ public class Camera {
 			if (Input.isWriteWorld()) WorldSaver.writeWorld();
 			if (Input.isLoadWorld())  WorldLoader.loadWorld();
 			
-			//// Tile Rotation
-			if (Input.isTileRotate() && pointed != null)
-				targetChunkMap.rotateTileAt(pointed.x, pointed.y, pointed.getOrientation().getNext());
-			
-			//// Tile Variant change
-			if (Input.isKeyC() && pointed != null)
-				pointed.setVariant(pointed.getType().getNext(pointed.getVariant()));
-			
-			this.preview.pos.x = targetChunkMap.toTileCenterVisualPosition(mWorldX) + Tile.TILE_SIZE/2;
-			this.preview.pos.y = targetChunkMap.toTileCenterVisualPosition(mWorldY) + Tile.TILE_SIZE/2;
-			
-			//// Drawing
-			if (Input.isLShift() && (Input.isMouseLeftDown() || Input.isMouseRightDown())) {
-				if (drawStart == null) {
-					if (Input.isMouseLeftDown()) isRemoving = false;
-					else if (Input.isMouseRightDown()) isRemoving = true;
-					
-					drawStart = new Vector2i(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
-					isSelecting = true;
-				} else {
-					drawEnd = new Vector2i(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
-					calculateSelectionCenter();
+			if (!Input.isOverGUI && !Input.isDragingGUI && !Input.isWritingGUI) {
+				//// Tile Rotation
+				if (Input.isTileRotate() && pointed != null)
+					targetChunkMap.rotateTileAt(pointed.x, pointed.y, pointed.getOrientation().getNext());
+				
+				//// Tile Variant change
+				if (Input.isKeyC() && pointed != null)
+					pointed.setVariant(pointed.getType().getNext(pointed.getVariant()));
+				
+				this.preview.pos.x = targetChunkMap.toTileCenterVisualPosition(mWorldX) + Tile.TILE_SIZE/2;
+				this.preview.pos.y = targetChunkMap.toTileCenterVisualPosition(mWorldY) + Tile.TILE_SIZE/2;
+				
+				//// Drawing
+				if (Input.isLShift() && (Input.isMouseLeftDown() || Input.isMouseRightDown())) {
+					if (drawStart == null) {
+						if (Input.isMouseLeftDown()) isRemoving = false;
+						else if (Input.isMouseRightDown()) isRemoving = true;
+						
+						drawStart = new Vector2i(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
+						isSelecting = true;
+					} else {
+						drawEnd = new Vector2i(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
+						calculateSelectionCenter();
+					}
+				} else if (isSelecting) {
+					isSelecting = false;
+					if (!isRemoving) {
+						targetChunkMap.fillZone(type, drawStart, drawEnd);
+					} else {
+						targetChunkMap.emptyZone(drawStart, drawEnd);
+					}
+					preview.setScale(1, 1);
+					isRemoving = false;
+					drawStart = null;
 				}
-			} else if (isSelecting) {
-				isSelecting = false;
-				if (!isRemoving) {
-					targetChunkMap.fillZone(type, drawStart, drawEnd);
-				} else {
-					targetChunkMap.emptyZone(drawStart, drawEnd);
-				}
-				preview.setScale(1, 1);
-				isRemoving = false;
-				drawStart = null;
-			}
-			if (!isSelecting) {
-				if (Input.isMouseLeftDown()) {
-					targetChunkMap.setTile(TileBuilder.buildTile(type, targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY)));
-				}
-				if (Input.isMouseRightDown()) {
-					targetChunkMap.removeTileAt(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
+				if (!isSelecting) {
+					if (Input.isMouseLeftDown()) {
+						Tile t = TileBuilder.buildTile(type, targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
+						targetChunkMap.setTile(t);
+						if (variant != null)
+							t.setVariant(variant);
+					}
+					if (Input.isMouseRightDown()) {
+						targetChunkMap.removeTileAt(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
+					}
 				}
 			}
 		} else {
@@ -335,6 +348,14 @@ public class Camera {
 	 */
 	public void setTarget(Entity target) {
 		this.target = target;
+	}
+	
+	public void setType(TileType type) {
+		this.type = type;
+	}
+	
+	public void setVariant(TileVariant variant) {
+		this.variant = variant;
 	}
 	
 	/**
