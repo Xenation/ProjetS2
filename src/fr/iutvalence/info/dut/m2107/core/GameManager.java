@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.entities.Player;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.gui.GUI;
@@ -46,6 +47,7 @@ public class GameManager {
 	 * Used to avoid concurrent modifications
 	 */
 	private static boolean mainMenu_toUnload;
+	private static boolean mainMenu_toLoad;
 	
 	/**
 	 * The game GUI
@@ -57,11 +59,15 @@ public class GameManager {
 	 */
 	private static boolean gui_toUnload;
 	private static boolean gui_tileSelect_toUnload;
+	private static boolean gui_pause_toUnload;
+	private static boolean gui_player_toUnload;
 	
 	/**
 	 * The listener for GUI broadcast events
 	 */
 	private static GUIListener guiListener;
+	
+	private static boolean ent_default_toUnload;
 	
 	/**
 	 * Whether the game needs to be closed.
@@ -118,19 +124,23 @@ public class GameManager {
 		if (gui.isLoaded()) {
 			gui.update();
 		}
-		applyUnloads();
+		applyChanges();
 	}
 	
 	/**
 	 * Applies the requested unloads
 	 */
-	private static void applyUnloads() {
+	private static void applyChanges() {
 		if (mainMenu_toUnload) {
 			if (mainMenu.isLoaded()) {
 				mainMenu.unloadGUIElement();
 				guiListener.resetCounter();
 			}
 			mainMenu_toUnload = false;
+		}
+		if (mainMenu_toLoad) {
+			applyMainMenuLoad();
+			mainMenu_toLoad = false;
 		}
 		if (gui_toUnload) {
 			if (gui.isLoaded()) {
@@ -144,6 +154,23 @@ public class GameManager {
 				gui.hideTileSelect();
 			}
 			gui_tileSelect_toUnload = false;
+		}
+		if (gui_pause_toUnload) {
+			if (gui.isPauseMenuOn()) {
+				gui.hidePauseMenu();
+			}
+			gui_pause_toUnload = false;
+		}
+		if (gui_player_toUnload) {
+			if (GameWorld.player.isGUIOn()) {
+				GameWorld.player.unloadGUIElements();
+			}
+			gui_player_toUnload = false;
+		}
+		if (ent_default_toUnload) {
+			unloadEntityLayers();
+			GameWorld.player = new Player();
+			ent_default_toUnload = false;
 		}
 	}
 	
@@ -166,14 +193,18 @@ public class GameManager {
 	/**
 	 * Loads the Main Menu
 	 */
-	public static void loadMainMenu() {
+	private static void applyMainMenuLoad() {
 		if (!mainMenu.isLoaded()) {
 			mainMenu.loadGUIElement();
 		}
+		unloadChunkMap();
 		WorldLoader.setFilePath("saves/default/menu.eagl");
 		WorldLoader.loadWorld();
 		GameWorld.chunkMap.updateWhole();
 		GameWorld.camera.setTarget(new Entity());
+	}
+	public static void loadMainMenu() {
+		mainMenu_toLoad = true;
 	}
 	/**
 	 * Requests the unloading of the MainMenu.<br>
@@ -202,6 +233,12 @@ public class GameManager {
 	public static void unloadGUITileSelect() {
 		gui_tileSelect_toUnload = true;
 	}
+	public static void unloadGUIPauseMenu() {
+		gui_pause_toUnload = true;
+	}
+	public static void unloadGUIPlayer() {
+		gui_player_toUnload = true;
+	}
 	
 	//// CHUNKMAP \\\\
 	/**
@@ -220,6 +257,7 @@ public class GameManager {
 	 */
 	public static void unloadChunkMap() {
 		GameWorld.chunkMap.clear();
+		GameWorld.backChunkMap.clear();
 	}
 	
 	//// LAYERMAP \\\\
@@ -230,7 +268,8 @@ public class GameManager {
 		// Start Time Initialisation
 		DisplayManager.setStartTime((float)Sys.getTime());
 		
-		GameWorld.player.init();
+		if (GameWorld.player.getLayer() == null)
+			GameWorld.player.init();
 		GameWorld.camera.setTarget(GameWorld.player);
 		GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER).add(GameWorld.player);
 		
@@ -242,6 +281,14 @@ public class GameManager {
 			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Slime(new Vector2f(2+(float)Math.random()*i*2, 2+(float)Math.random()*i*2), 0, SpriteDatabase.getSlimeSpr() , new Collider(-.5f, -.625f, .5f, .625f), new Vector2f(), 3, 10, 15));
 			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Rat(new Vector2f(2+(float)Math.random()*i*2, 2+(float)Math.random()*i*2), 0, SpriteDatabase.getRatSpr() , new Collider(-.25f, -.25f, .25f, .25f), new Vector2f(), 6, 1, 0));
 		}*/
+	}
+	
+	public static void unloadDefaultEntities() {
+		ent_default_toUnload = true;
+	}
+	
+	public static void unloadEntityLayers() {
+		GameWorld.layerMap.reset();
 	}
 	
 }

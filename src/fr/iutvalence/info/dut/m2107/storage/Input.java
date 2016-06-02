@@ -148,6 +148,7 @@ public class Input {
 		isNumPad0 = false;
 		isTileRotate = false;
 		isInventory = false;
+		isEscape = false;
 		
 		isKeyPressed = false;
 		
@@ -179,9 +180,6 @@ public class Input {
 		if(Mouse.isButtonDown(1)) isMouseRightDown = true;
 		else isMouseRightDown = false;
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) isEscape = true;
-		else isEscape = false;
-		
 		// Check button down or up
 		while(Keyboard.next()){
 			if (Keyboard.getEventKeyState()) {
@@ -210,6 +208,7 @@ public class Input {
 		        if(Keyboard.getEventKey() == Keyboard.KEY_R)		isTileRotate = true;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_P)		isPaused = !isPaused;
 		        if(Keyboard.getEventKey() == Keyboard.KEY_I)		isInventory = !isInventory;
+		        if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE)	isEscape = true;
 		    } else {
 		    	isKeyPressed = false;
 		    	character = 0;

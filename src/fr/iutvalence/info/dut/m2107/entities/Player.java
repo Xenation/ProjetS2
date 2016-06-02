@@ -44,6 +44,7 @@ public class Player extends Character{
 	private GUIElement selectQuickBar;
 
 	private GUIElement quickBarGUI;
+	private boolean guiOn;
 	
 	protected float invulnerabilityTime;
 	protected float invulnerabilityFadeStep = -0.1f;
@@ -119,6 +120,7 @@ public class Player extends Character{
 		addItem(ItemDatabase.get(4), (short)5);
 		addItem(ItemDatabase.get(5), (short)5);
 		addItem(ItemDatabase.get(7), (short)500);
+		guiOn = true;
 	}
 	
 	/**
@@ -151,6 +153,16 @@ public class Player extends Character{
 		selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*this.quickBar.length/2 + width*.5f, 0), width, height);
 		selectQuickBar.setParent(quickBarGUI);
 	}
+	
+	public void unloadGUIElements() {
+		GameWorld.guiLayerMap.getLayer(1).remove(quickBarGUI);
+		GameWorld.guiLayerMap.getLayer(1).remove(inventory.getInventoryGUI());
+		guiOn = false;
+	}
+	
+	public boolean isGUIOn() {
+		return guiOn;
+	}
 
 	/* (non-Javadoc)
 	 * @see fr.iutvalence.info.dut.m2107.entities.Character#update(fr.iutvalence.info.dut.m2107.storage.Layer)
@@ -176,7 +188,7 @@ public class Player extends Character{
 	 * Update the usage of the player's hand item
 	 */
 	private void useItem() {
-		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.getTarget() == this && !Input.isDragingGUI) {
+		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.getTarget() == this && !Input.isDragingGUI && !Input.isOverGUI) {
 			if(this.itemOnHand instanceof Bow)
 				((Bow) this.itemOnHand).use(this);
 			else if(this.itemOnHand instanceof Sword)

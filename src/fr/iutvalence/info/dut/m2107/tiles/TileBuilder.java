@@ -29,6 +29,7 @@ public class TileBuilder {
 		case Log:
 		case Leaves:
 		case Sand:
+		case Water:
 			return new Tile(type, x, y);
 		case Fader:
 			return new FadingTile(type, x, y);
@@ -43,8 +44,6 @@ public class TileBuilder {
 			return t;
 		case PistonArm:
 			return new DependantFixedTile(type, x, y);
-		case Water:
-			return new LiquidTile(type, x, y);
 		default:
 			return new Tile(type, x, y);
 		}
@@ -62,6 +61,7 @@ public class TileBuilder {
 		case Log:
 		case Leaves:
 		case Sand:
+		case Water:
 			EventManager.sendEvent(new TileDestroyedEvent(tile));
 //			EventManager.unregister(tile);
 			break;
@@ -89,11 +89,6 @@ public class TileBuilder {
 			DependantFixedTile dependant = (DependantFixedTile) tile;
 			EventManager.sendEvent(new TileDestroyedEvent(dependant));
 //			EventManager.unregister(dependant);
-			break;
-		case Water:
-			LiquidTile liquid = (LiquidTile) tile;
-			EventManager.sendEvent(new TileDestroyedEvent(liquid));
-//			EventManager.unregister(liquid);
 			break;
 		default:
 //			EventManager.unregister(tile);

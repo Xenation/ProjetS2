@@ -12,8 +12,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-import fr.iutvalence.info.dut.m2107.storage.Input;
-
 /**
  * Static class which controls the Display
  * @author Xenation
@@ -175,8 +173,6 @@ public class DisplayManager {
 		updateDelta();
 		updateFPS();
 		updateDeltaMap();
-		
-		isPaused = Input.isPaused();
 		
 		// FPS syncing and screen update
 		Display.update();
