@@ -28,17 +28,9 @@ public class TerrestrialCreature extends LivingEntity {
 	protected boolean hasStepUp;
 	
 	
-	public TerrestrialCreature(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd, int health,
-			int armor, int jumpHeight) {
-		super(pos, rot, spr, col, vel, spd, health, armor, jumpHeight);
-	}
-
-	public TerrestrialCreature(Vector2f pos, EntitySprite spr) {
-		super(pos, spr);
-	}
-
-	public TerrestrialCreature(Vector2f pos, EntitySprite spr, Collider col) {
-		super(pos, spr, col);
+	public TerrestrialCreature(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd, int health,
+						int jumpHeight) {
+		super(pos, rot, spr, col, vel, spd, health, jumpHeight);
 	}
 
 	@Override

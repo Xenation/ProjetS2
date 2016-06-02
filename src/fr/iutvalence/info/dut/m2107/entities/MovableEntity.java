@@ -2,7 +2,7 @@ package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import fr.iutvalence.info.dut.m2107.models.EntitySprite;
+import fr.iutvalence.info.dut.m2107.models.AbstractSprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
@@ -13,8 +13,8 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
  */
 public class MovableEntity extends Entity {
 	
-	private static final Vector2f DEF_VEL = new Vector2f(0, 0);
-	private static final float DEF_SPD = 4;
+	public static final Vector2f DEF_VEL = new Vector2f(0, 0);
+	public static final short DEF_SPD = 4;
 	
 	/**
 	 * The velocity of the entity
@@ -24,7 +24,7 @@ public class MovableEntity extends Entity {
 	/**
 	 * The speed of the entity
 	 */
-	protected float spd;
+	protected short spd;
 
 	/**
 	 * Constructor of a MovableEntity
@@ -35,7 +35,7 @@ public class MovableEntity extends Entity {
 	 * @param vel The velocity of the entity
 	 * @param spd The speed of the entity
 	 */
-	public MovableEntity(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd) {
+	public MovableEntity(Vector2f pos, float rot, AbstractSprite spr, Collider col, Vector2f vel, short spd) {
 		super(pos, rot, spr, col);
 		this.vel = vel;
 		this.spd = spd;
@@ -46,7 +46,7 @@ public class MovableEntity extends Entity {
 	 * @param pos The position of the entity
 	 * @param spr The sprite of the entity
 	 */
-	public MovableEntity(Vector2f pos, EntitySprite spr) {
+	public MovableEntity(Vector2f pos, AbstractSprite spr) {
 		super(pos, spr);
 		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
 		this.spd = DEF_SPD;
@@ -58,7 +58,7 @@ public class MovableEntity extends Entity {
 	 * @param spr The sprite of the entity
 	 * @param col The collider of the entity
 	 */
-	public MovableEntity(Vector2f pos, EntitySprite spr, Collider col) {
+	public MovableEntity(Vector2f pos, AbstractSprite spr, Collider col) {
 		super(pos, spr, col);
 		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
 		this.spd = DEF_SPD;
@@ -71,9 +71,21 @@ public class MovableEntity extends Entity {
 	 * @param spr The sprite of the entity
 	 * @param vel The velocity of the entity
 	 */
-	public MovableEntity(Vector2f pos, float rot, EntitySprite spr, Vector2f vel) {
+	public MovableEntity(Vector2f pos, float rot, AbstractSprite spr, Vector2f vel) {
 		super(pos, rot, spr);
 		this.vel = vel;
+		this.spd = DEF_SPD;
+	}
+	
+	public MovableEntity(AbstractSprite spr) {
+		super(spr);
+		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
+		this.spd = DEF_SPD;
+	}
+	
+	public MovableEntity(AbstractSprite spr, Collider col) {
+		super(spr, col);
+		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
 		this.spd = DEF_SPD;
 	}
 	
@@ -86,6 +98,11 @@ public class MovableEntity extends Entity {
 		this.spd = DEF_SPD;
 	}
 	
+	public MovableEntity(AbstractSprite spr, Collider col, short spd) {
+		super(spr, col);
+		this.spd = spd;
+	}
+
 	/* (non-Javadoc)
 	 * @see fr.iutvalence.info.dut.m2107.entities.Entity#update(fr.iutvalence.info.dut.m2107.storage.Layer)
 	 */
@@ -115,11 +132,11 @@ public class MovableEntity extends Entity {
 	 * Set the speed of the entity
 	 * @param the speed to set to the entity
 	 */
-	public void setSpeed(float spd) {this.spd = spd;}
+	public void setSpeed(short spd) {this.spd = spd;}
 	
 	/**
 	 * Return the speed of the entity
 	 * @return the speed of the entity
 	 */
-	public float getSpeed() {return spd;}
+	public short getSpeed() {return spd;}
 }

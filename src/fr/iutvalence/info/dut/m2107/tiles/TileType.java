@@ -159,5 +159,11 @@ public enum TileType {
 		}
 		return null;
 	}
+	
+	public boolean hasBehavior(TileBehavior b) {
+		for (TileBehavior behavior : behaviors)
+			if (behavior == b) return true;
+		return false;
+	}
 
 }

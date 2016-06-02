@@ -34,7 +34,7 @@ public class SpriteDatabase {
 	private final static EntitySprite gunSpr = new EntitySprite("item/gun", new Vector2f(1, 1));
 	public static EntitySprite getGunSpr() {return gunSpr;}
 	
-	private final static EntitySprite bulletSpr = new EntitySprite("item/bullet", new Vector2f(1, 1));
+	private final static EntitySprite bulletSpr = new EntitySprite("item/bullet", new Vector2f(1.5f, 1.5f));
 	public static EntitySprite getBulletSpr() {return bulletSpr;}
 	
 	private final static EntitySprite staffSpr = new EntitySprite("item/staff", new Vector2f(3, 1.5f));
@@ -54,6 +54,30 @@ public class SpriteDatabase {
 	
 	private final static EntitySprite chestSpr = new EntitySprite("entities/chest", new Vector2f(2, 2));
 	public static EntitySprite getChestSpr() {return chestSpr;}
+	
+	private final static EntitySprite slime0Spr = new EntitySprite("entities/slime_0", new Vector2f(1.75f, 1.75f));
+	private final static EntitySprite slime1Spr = new EntitySprite("entities/slime_1", new Vector2f(1.75f, 1.75f));
+	private final static EntitySprite slime2Spr = new EntitySprite("entities/slime_2", new Vector2f(1.75f, 1.75f));
+	private final static EntitySprite slime3Spr = new EntitySprite("entities/slime_3", new Vector2f(1.75f, 1.75f));
+	public static EntitySprite getSlimeSpr() {
+		/*try {
+			return (EntitySprite) SpriteDatabase.class.getField("slime" + (int)(Math.random()*4) + "Spr").get(null);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}*/
+		byte rng = (byte) (Math.random()*4);
+		switch (rng) {
+			case 0:
+				return slime0Spr;
+			case 1:
+				return slime1Spr;
+			case 2:
+				return slime2Spr;
+			case 3:
+				return slime3Spr;
+		};
+		return null;
+	}
 	
 	private final static EntitySprite ratSpr = new EntitySprite(new Atlas("entities/rat_atlas", 2, 2, Loader.SPRITE_LOADER), new Vector2f(1, .5f));
 	public static EntitySprite getRatSpr() {return ratSpr;}

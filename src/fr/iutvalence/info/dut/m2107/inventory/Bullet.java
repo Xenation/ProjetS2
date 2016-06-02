@@ -1,7 +1,5 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
-import org.lwjgl.util.vector.Vector2f;
-
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
@@ -15,28 +13,6 @@ import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
  *
  */
 public class Bullet extends Ammunition {
-
-	/**
-	 * A constructor of a bullet
-	 * @param pos The position of the ammo
-	 * @param rot The rotation of the ammo
-	 * @param spr The sprite of the ammo
-	 * @param id The id of the id
-	 * @param name The name of the ammo
-	 * @param description The description of the ammo
-	 * @param rarity The rarity of the ammo
-	 * @param maxStack The max stack of the ammo
-	 * @param value The value of the ammo
-	 * @param damage The damage of the ammo
-	 * @param knockback The knocback of the ammo
-	 * @param velocity The velocity of the ammo
-	 * @param speed The speed of the ammo
-	 */
-	public Bullet(Vector2f pos, float rot, EntitySprite spr,
-			short id, String name, String description, Rarity rarity, short maxStack, short value,
-			short damage, short knockback, Vector2f velocity, short speed) {
-		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, knockback, velocity, speed);
-	}
 	
 	/**
 	 * A constructor of a bullet
@@ -52,10 +28,10 @@ public class Bullet extends Ammunition {
 	 * @param knockback The knocback of the ammo
 	 * @param speed The speed of the ammo
 	 */
-	public Bullet(EntitySprite spr, Collider col,
+	public Bullet(EntitySprite spr, Collider col, short spd,
 			short id, String name, String description, Rarity rarity, short maxStack, short value,
-			short damage, short knockback, short speed) {
-		super(spr, col, id, name, description, rarity, maxStack, value, damage, knockback, speed);
+			short damage, short knockback) {
+		super(spr, col, spd, id, name, description, rarity, maxStack, value, damage, knockback);
 	}
 
 	/**

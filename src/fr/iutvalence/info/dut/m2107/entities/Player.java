@@ -42,11 +42,7 @@ public class Player extends Character{
 	private float posY = -.85f;
 	private short selectSlot = 0;
 	private GUIElement selectQuickBar;
-	
-	
-	private GUIElement hpGUI;
-	// Temporary
-	
+
 	private GUIElement quickBarGUI;
 	private boolean guiOn;
 	
@@ -99,14 +95,12 @@ public class Player extends Character{
 	 * Constructor of a player
 	 */
 	public Player() {
-		super(new Vector2f(), SpriteDatabase.getPlayerSpr() , new Collider(-.75f, -1.75f, .75f, 1.75f));
+		super(new Vector2f(), Entity.DEF_ROT, SpriteDatabase.getPlayerSpr() ,new Collider(-.75f, -1.75f, .75f, 1.75f), new Vector2f(), MovableEntity.DEF_SPD, LivingEntity.DEF_HEALTH, LivingEntity.DEF_JUMP_HEIGHT);
 	}
 	
 	public void init() {
 		this.quickBarGUI = new GUIElement(SpriteDatabase.getQuickBarStr(), new Vector2f(0, posY), width*this.quickBar.length, height);
 		GameWorld.guiLayerMap.getLayer(1).add(this.quickBarGUI);
-		
-		this.hpGUI = new GUIElement(SpriteDatabase.getHeartStr(), new Vector2f(-1 + width, 1 - height), width/2, height/2);
 		
 		this.initLayer();
 		this.layer.add(this.pivot);

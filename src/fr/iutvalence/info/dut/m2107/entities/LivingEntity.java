@@ -13,18 +13,13 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
  */
 public class LivingEntity extends MovableEntity {
 
-	private static final int DEF_HEALTH = 10;
-	private static final int DEF_ARMOR = 10;
-	private static final int DEF_JUMP_HEIGHT = 12;
+	public static final int DEF_HEALTH = 10;
+	public static final int DEF_JUMP_HEIGHT = 12;
 	
 	/**
 	 * The health of the entity
 	 */
 	protected int health;
-	/**
-	 * The armor of the entity
-	 */
-	protected int armor;
 	/**
 	 * The jump height of the entity
 	 */
@@ -49,11 +44,10 @@ public class LivingEntity extends MovableEntity {
 	 * @param jumpHeight The jump height of the entity
 	 */
 	public LivingEntity(Vector2f pos, float rot, EntitySprite spr, Collider col,
-						Vector2f vel, float spd,
-						int health, int armor, int jumpHeight) {
+						Vector2f vel, short spd,
+						int health, int jumpHeight) {
 		super(pos, rot, spr, col, vel, spd);
 		this.health = health;
-		this.armor = armor;
 		this.jumpHeight = jumpHeight;
 	}
 	
@@ -65,7 +59,6 @@ public class LivingEntity extends MovableEntity {
 	public LivingEntity(Vector2f pos, EntitySprite spr) {
 		super(pos, spr);
 		this.health = DEF_HEALTH;
-		this.armor = DEF_ARMOR;
 		this.jumpHeight = DEF_JUMP_HEIGHT;
 	}
 	
@@ -78,7 +71,6 @@ public class LivingEntity extends MovableEntity {
 	public LivingEntity(Vector2f pos, EntitySprite spr, Collider col) {
 		super(pos, spr, col);
 		this.health = DEF_HEALTH;
-		this.armor = DEF_ARMOR;
 		this.jumpHeight = DEF_JUMP_HEIGHT;
 	}
 
@@ -88,7 +80,6 @@ public class LivingEntity extends MovableEntity {
 	public LivingEntity() {
 		super();
 		this.health = DEF_HEALTH;
-		this.armor = DEF_ARMOR;
 		this.jumpHeight = DEF_JUMP_HEIGHT;
 	}
 	
@@ -140,12 +131,12 @@ public class LivingEntity extends MovableEntity {
 	private void takeDamage(int damage) {
 		recoilVel = this.vel.x;
 		if(damage > 0) this.health -= damage;
-		this.vel.y += this.jumpHeight/2;
 		if(this instanceof TerrestrialCreature) ((TerrestrialCreature)this).isGrounded = false;
 	}
 	
 	private void takeKnockback(int knockback) {
 		this.recoil = knockback;
+		this.vel.y += this.jumpHeight/2;
 	}
 	
 	/**
@@ -153,12 +144,6 @@ public class LivingEntity extends MovableEntity {
 	 * @return the health of the entity
 	 */
 	public int getHealth() {return health;}
-	
-	/**
-	 * Return the armor of the entity
-	 * @return the armor of the entity
-	 */
-	public int getArmor() {return armor;}
 	
 	/**
 	 * Return the jump height of the entity

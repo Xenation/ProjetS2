@@ -1,13 +1,11 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.Sys;
-import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Character;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
-import fr.iutvalence.info.dut.m2107.entities.Player;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.sound.AudioDataBase;
 import fr.iutvalence.info.dut.m2107.sound.OpenAL;
@@ -16,28 +14,6 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 public class Sword extends Weapon {
-
-	/**
-	 * Constructor of a sword
-	 * @param pos The position of the sword
-	 * @param rot The rotation of the sword
-	 * @param spr The sprite of the sword
-	 * @param id The id of the sword
-	 * @param name The name of the sword
-	 * @param description The description of the sword
-	 * @param rarity The rarity of the sword
-	 * @param maxStack The max stack of the sword
-	 * @param value The value of the sword
-	 * @param damage The damage of the sword
-	 * @param range The range of the sword
-	 * @param useTime The use time of the sword
-	 * @param knockback The knockback of the sword
-	 */
-	public Sword(Vector2f pos, float rot, EntitySprite spr,
-			short id, String name, String description, Rarity rarity, short maxStack, short value,
-			short damage, short range, float useTime, short knockback , short handRotation) {
-		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback, handRotation);
-	}
 	
 	/**
 	 * Constructor of a sword

@@ -45,7 +45,7 @@ public class MainGameTester {
 			GameManager.update();
 			
 			if(Input.isKeyWater() && GameWorld.camera.isFocusing())
-				GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f(0, 0), 0, SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f), new Vector2f(), 2, 10, 1, 0));
+				GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f(0, 0), 0, SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f), new Vector2f(), (short) 2, 10, 0));
 			
 			GameManager.render();
 			
