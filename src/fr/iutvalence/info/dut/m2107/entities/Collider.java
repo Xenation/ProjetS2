@@ -7,6 +7,8 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.inventory.Ammunition;
 import fr.iutvalence.info.dut.m2107.inventory.Arrow;
+import fr.iutvalence.info.dut.m2107.inventory.Bullet;
+import fr.iutvalence.info.dut.m2107.inventory.Orb;
 import fr.iutvalence.info.dut.m2107.models.AbstractSprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
@@ -144,14 +146,14 @@ public class Collider {
 		}
 		globalTiles.removeAll(nonSolidTiles);
 		
-		int continuousStep = initStepCollision(((TerrestrialCreature)this.ent).vel);
+		short continuousStep = initStepCollision(((TerrestrialCreature)this.ent).vel);
 		
 		float stepXtoAdd = ((TerrestrialCreature)this.ent).vel.x * DisplayManager.deltaTime() / continuousStep;
 		float stepYtoAdd = ((TerrestrialCreature)this.ent).vel.y * DisplayManager.deltaTime() / continuousStep;
 		float stepX = this.ent.pos.x;
 		float stepY = this.ent.pos.y;
 		
-		for (int step = continuousStep; step > 0; step--) {
+		for (short step = continuousStep; step > 0; step--) {
 			if(((TerrestrialCreature)this.ent).vel.x != 0) stepX += stepXtoAdd;
 			if(((TerrestrialCreature)this.ent).vel.y != 0) stepY += stepYtoAdd;
 			Vector2f nextPos = new Vector2f(stepX, stepY);
@@ -519,8 +521,8 @@ public class Collider {
 		((TerrestrialCreature) this.ent).prevGrounded = ((TerrestrialCreature) this.ent).isGrounded;
 	}
 	
-	private int initStepCollision(Vector2f vel) {
-		int continuousStep = (int) ((Maths.fastAbs(vel.x) + Maths.fastAbs(vel.y))/8+1)*2;
+	private short initStepCollision(Vector2f vel) {
+		short continuousStep =  (short) (((Maths.fastAbs(vel.x) + Maths.fastAbs(vel.y))/8+1)*2);
 		continuousStep *= DisplayManager.deltaTime()*20;
 		if(continuousStep < 1) continuousStep = 1;
 		
@@ -532,7 +534,7 @@ public class Collider {
 	 * @return true when colliding otherwise false
 	 */
 	private void AmmunitionContinuousCollision(Ammunition ammo) {
-		int continuousStep = initStepCollision(ammo.getVelocity());
+		short continuousStep = initStepCollision(ammo.getVelocity());
 		
 		float stepXtoAdd = ammo.getVelocity().x * DisplayManager.deltaTime() / continuousStep;
 		float stepYtoAdd = ammo.getVelocity().y * DisplayManager.deltaTime() / continuousStep;
@@ -543,7 +545,7 @@ public class Collider {
 		
 		List<Tile> globalTiles = generateGlobalSurroundingTiles(globalCollider);
 		
-		for (int step = continuousStep; step > 0; step--) {
+		for (short step = continuousStep; step > 0; step--) {
 			stepX += stepXtoAdd;
 			stepY += stepYtoAdd;
 			Vector2f nextPos = new Vector2f(stepX, stepY);
@@ -554,16 +556,17 @@ public class Collider {
 			Entity entColliding = isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.MOBS), GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION)});
 			
 			if(tileColliding != null || entColliding != null) {
-				ammo.setVelocity(new Vector2f(0, 0));
-				ammo.pos.x = nextPos.x -(float) (Math.cos((ammo.rot)*Math.PI/180)*ammo.spr.getSize().x/2.5f);
-				ammo.pos.y = nextPos.y -(float) -(Math.sin((ammo.rot)*Math.PI/180)*ammo.spr.getSize().y/2.5f);
+				if(ammo instanceof Arrow) ammo.setVelocity(new Vector2f(0, 0));
 				if(entColliding != null) {
-					ammo.pos = new Vector2f(ammo.pos.x - entColliding.pos.x, ammo.pos.y - entColliding.pos.y);
-					((Arrow)this.ent).setPiercingEntity(entColliding);
+					if(ammo instanceof Arrow) ammo.pos = new Vector2f(ammo.pos.x - entColliding.pos.x, ammo.pos.y - entColliding.pos.y);
+					((Ammunition)this.ent).setPiercingEntity(entColliding);
 					return;
 				}
-				if(ammo instanceof Arrow)
-					((Arrow)this.ent).setPiercingTile(tileColliding);
+				if(this.ent instanceof Arrow) {
+					ammo.pos.x = nextPos.x -(float) (Math.cos((ammo.rot)*Math.PI/180)*ammo.spr.getSize().x/2.5f);
+					ammo.pos.y = nextPos.y -(float) -(Math.sin((ammo.rot)*Math.PI/180)*ammo.spr.getSize().y/2.5f);
+				}
+				((Ammunition)this.ent).setPiercingTile(tileColliding);
 				return;
 			}
 			

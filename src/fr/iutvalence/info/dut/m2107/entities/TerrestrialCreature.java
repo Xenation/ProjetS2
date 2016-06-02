@@ -51,12 +51,12 @@ public class TerrestrialCreature extends LivingEntity {
 		
 		if(this.vel.x > 0 && this.recoil == 0)
 			if(this instanceof Character && ((Character)this).itemOnHand != null && ((Character)this).itemOnHand instanceof Weapon) {
-				if(((Weapon)((Character)this).itemOnHand).lockTime < Sys.getTime())
+				if(((Weapon)((Character)this).itemOnHand).getLockTime() < Sys.getTime())
 					this.scale.setX(Maths.fastAbs(this.scale.x));
 			} else this.scale.setX(Maths.fastAbs(this.scale.x));
 		if(this.vel.x < 0 && this.recoil == 0) {
 			if(this instanceof Character && ((Character)this).itemOnHand != null && ((Character)this).itemOnHand instanceof Weapon) {
-				if(((Weapon)((Character)this).itemOnHand).lockTime < Sys.getTime())
+				if(((Weapon)((Character)this).itemOnHand).getLockTime() < Sys.getTime())
 					this.scale.setX(-Maths.fastAbs(this.scale.x));
 			} else this.scale.setX(-Maths.fastAbs(this.scale.x));
 		}

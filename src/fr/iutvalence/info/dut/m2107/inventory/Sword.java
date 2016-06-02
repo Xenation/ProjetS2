@@ -7,6 +7,7 @@ import fr.iutvalence.info.dut.m2107.entities.Character;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
+import fr.iutvalence.info.dut.m2107.entities.Player;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.sound.AudioDataBase;
 import fr.iutvalence.info.dut.m2107.sound.OpenAL;
@@ -33,10 +34,9 @@ public class Sword extends Weapon {
 	 * @param knockback The knockback of the sword
 	 */
 	public Sword(Vector2f pos, float rot, EntitySprite spr,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int range, float useTime, int knockback) {
-		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback);
-		handRotation = -20;
+			short id, String name, String description, Rarity rarity, short maxStack, short value,
+			short damage, short range, float useTime, short knockback , short handRotation) {
+		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback, handRotation);
 	}
 	
 	/**
@@ -54,10 +54,9 @@ public class Sword extends Weapon {
 	 * @param knockback The knockback of the sword
 	 */
 	public Sword(EntitySprite spr,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int range, float useTime, int knockback) {
-		super(spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback);
-		handRotation = -20;
+			short id, String name, String description, Rarity rarity, short maxStack, short value,
+			short damage, short range, float useTime, short knockback, short handRotation) {
+		super(spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback, handRotation);
 	}
 
 	/**
@@ -66,7 +65,6 @@ public class Sword extends Weapon {
 	 */
 	public Sword(Sword sword) {
 		super(sword);
-		handRotation = -20;
 	}
 
 	/* (non-Javadoc)
@@ -75,27 +73,30 @@ public class Sword extends Weapon {
 	@Override
 	public void use(Character owner) {
 		if(remainingTime <= 0) {
-			OpenAL.source.play(AudioDataBase.sword());
 			
-			owner.getPivot().setRotation(-75);
-			this.lockTime = Sys.getTime()+500;
-			if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
-				owner.getScale().x = 1;
-			else owner.getScale().x = -1;
-			if(owner.getVelocity().x < 0.1f && owner.getVelocity().x > -0.1f) owner.getVelocity().x = 0;
-			if(owner.getPivot().getScale().x != owner.getScale().x) {
-				owner.getPivot().getPosition().x = -owner.getPivot().getPosition().x; 
-				owner.getPivot().getScale().x = owner.getScale().x;
-			}
+			//if(!(owner instanceof Player) || ((owner instanceof Player) && !((Player)owner).getWallSlide())) {
 			
-			Collider tmpCol = new Collider(owner.getCollider().getMin(), owner.getCollider().getMax());
-			if(owner.getScale().x > 0) tmpCol.extendRight(range);
-			else tmpCol.extendLeft(range);
-			Entity ent = tmpCol.isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.MOBS)});
-			if(ent != owner && ent instanceof LivingEntity)
-				((LivingEntity) ent).doDamage(this.damage, this.knockback * (int)owner.getScale().x);
-			
-			this.remainingTime = this.useTime;
+				OpenAL.source.play(AudioDataBase.sword());
+				owner.getPivot().setRotation(-75);
+				this.lockTime = Sys.getTime()+500;
+				if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
+					owner.getScale().x = 1;
+				else owner.getScale().x = -1;
+				if(owner.getVelocity().x < 0.1f && owner.getVelocity().x > -0.1f) owner.getVelocity().x = 0;
+				if(owner.getPivot().getScale().x != owner.getScale().x) {
+					owner.getPivot().getPosition().x = -owner.getPivot().getPosition().x; 
+					owner.getPivot().getScale().x = owner.getScale().x;
+				}
+				
+				Collider tmpCol = new Collider(owner.getCollider().getMin(), owner.getCollider().getMax());
+				if(owner.getScale().x > 0) tmpCol.extendRight(range);
+				else tmpCol.extendLeft(range);
+				Entity ent = tmpCol.isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.MOBS)});
+				if(ent != owner && ent instanceof LivingEntity)
+					((LivingEntity) ent).doDamage(this.damage, this.knockback * (int)owner.getScale().x);
+				
+				this.remainingTime = this.useTime;
+			//}
 		}
 		super.use(owner);
 	}

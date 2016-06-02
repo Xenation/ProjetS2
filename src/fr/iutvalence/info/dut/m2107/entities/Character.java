@@ -69,15 +69,15 @@ public class Character extends TerrestrialCreature{
 	public void update(Layer layer) {
 		
 		if(this.itemOnHand != null) {
-			if(this.itemOnHand instanceof Weapon) this.pivot.rot = Maths.lerp(this.pivot.rot, ((Weapon)this.itemOnHand).handRotation, 0.05f);
+			if(this.itemOnHand instanceof Weapon) this.pivot.rot = Maths.lerp(this.pivot.rot, ((Weapon)this.itemOnHand).getHandRotation(), 0.05f);
 			this.itemOnHand.update(layer);
 		}
 		
-		if(this.vel.x > 0 && this.recoil == 0 && this.itemOnHand != null && ((Weapon)this.itemOnHand).lockTime < Sys.getTime()) {
+		if(this.vel.x > 0 && this.recoil == 0 && this.itemOnHand != null && ((Weapon)this.itemOnHand).getLockTime() < Sys.getTime()) {
 			this.pivot.pos.x = Maths.fastAbs(this.pivot.pos.x);
 			if(this.itemOnHand != null)
 				this.pivot.scale.x = 1;
-		} else if(this.vel.x < 0 && this.recoil == 0 && this.itemOnHand != null && ((Weapon)this.itemOnHand).lockTime < Sys.getTime()) {
+		} else if(this.vel.x < 0 && this.recoil == 0 && this.itemOnHand != null && ((Weapon)this.itemOnHand).getLockTime() < Sys.getTime()) {
 			this.pivot.pos.x = -Maths.fastAbs(this.pivot.pos.x);
 			if(this.itemOnHand != null)
 				this.pivot.scale.x = -1;

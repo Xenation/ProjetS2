@@ -17,7 +17,7 @@ public class Item extends Entity {
 	/**
 	 * The id of the item
 	 */
-	protected final int id;
+	protected final short id;
 	
 	/**
 	 * The name of the item
@@ -37,17 +37,17 @@ public class Item extends Entity {
 	/**
 	 * The max stack of the item
 	 */
-	protected final int MAX_STACK;
+	protected final short MAX_STACK;
 	
 	/**
 	 * The current stack of the item
 	 */
-	protected int stack = 1;
+	protected short stack = 1;
 	
 	/**
 	 * The value of the item
 	 */
-	protected final int value;
+	protected final short value;
 
 	/**
 	 * Constructor of an Item
@@ -62,7 +62,7 @@ public class Item extends Entity {
 	 * @param value The value of the item
 	 */
 	public Item(Vector2f pos, float rot, EntitySprite spr,
-				int id, String name, String description, Rarity rarity, int maxStack, int value) {
+				short id, String name, String description, Rarity rarity, short maxStack, short value) {
 		super(pos, rot, spr);
 		this.id = id;
 		this.name = name;
@@ -84,7 +84,7 @@ public class Item extends Entity {
 	 * @param value The value of the item
 	 */
 	public Item(EntitySprite spr, Collider col,
-				int id, String name, String description, Rarity rarity, int maxStack, int value) {
+			short id, String name, String description, Rarity rarity, short maxStack, short value) {
 		super(spr, col);
 		this.id = id;
 		this.name = name;
@@ -105,7 +105,7 @@ public class Item extends Entity {
 	 * @param value The value of the item
 	 */
 	public Item(EntitySprite spr,
-				int id, String name, String description, Rarity rarity, int maxStack, int value) {
+			short id, String name, String description, Rarity rarity, short maxStack, short value) {
 		super(spr);
 		this.id = id;
 		this.name = name;
@@ -141,13 +141,13 @@ public class Item extends Entity {
 	 * Add a number of stack to the current stack of the item
 	 * @param stackToAdd The number of stack to add
 	 */
-	public void changeStack(int stackToAdd) {this.stack += stackToAdd;}	
+	public void changeStack(short stackToAdd) {this.stack += stackToAdd;}	
 
 	/**
 	 * Return the id of the item
 	 * @return the id of the item
 	 */
-	public int getId() {return id;}
+	public short getId() {return id;}
 	
 	/**
 	 * Return the name of the item
@@ -171,19 +171,19 @@ public class Item extends Entity {
 	 * Return the maximum stack of the item
 	 * @return the maximum stack of the item
 	 */
-	public int getMAX_STACK() {return MAX_STACK;}
+	public short getMAX_STACK() {return MAX_STACK;}
 	
 	/**
 	 * Return the current stack of the item
 	 * @return the current stack of the item
 	 */
-	public int getStack() {return stack;}
+	public short getStack() {return stack;}
 	
 	/**
 	 * Return the value of the item
 	 * @return the value of the item
 	 */
-	public int getValue() {return value;}
+	public short getValue() {return value;}
 
 	/* (non-Javadoc)
 	 * @see fr.iutvalence.info.dut.m2107.entities.Entity#equals(java.lang.Object)

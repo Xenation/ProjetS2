@@ -3,8 +3,11 @@ package fr.iutvalence.info.dut.m2107.inventory;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
+import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
+import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 /**
  * A bullet ammunition
@@ -30,8 +33,8 @@ public class Bullet extends Ammunition {
 	 * @param speed The speed of the ammo
 	 */
 	public Bullet(Vector2f pos, float rot, EntitySprite spr,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int knockback, Vector2f velocity, int speed) {
+			short id, String name, String description, Rarity rarity, short maxStack, short value,
+			short damage, short knockback, Vector2f velocity, short speed) {
 		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, knockback, velocity, speed);
 	}
 	
@@ -50,8 +53,8 @@ public class Bullet extends Ammunition {
 	 * @param speed The speed of the ammo
 	 */
 	public Bullet(EntitySprite spr, Collider col,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int knockback, int speed) {
+			short id, String name, String description, Rarity rarity, short maxStack, short value,
+			short damage, short knockback, short speed) {
 		super(spr, col, id, name, description, rarity, maxStack, value, damage, knockback, speed);
 	}
 
@@ -68,6 +71,20 @@ public class Bullet extends Ammunition {
 	 */
 	@Override
 	public void update(Layer layer) {
+		if(piercingEntity == null && piercingTile == null) {
+			this.col.updateColPos();
+			this.col.checkContinuousCollision();
+			
+			if(piercingEntity != null || piercingTile != null) {
+				if(piercingEntity != null) {
+					if(piercingEntity instanceof LivingEntity)
+						((LivingEntity)piercingEntity).doDamage(this.damage, this.rot < 90 && this.rot > -90 ? this.knockback : -this.knockback);
+	
+				}
+				GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
+			}
+		}
+		
 		super.update(layer);
 	}
 }

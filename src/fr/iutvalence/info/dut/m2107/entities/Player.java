@@ -10,10 +10,12 @@ import fr.iutvalence.info.dut.m2107.gui.GUIElement;
 import fr.iutvalence.info.dut.m2107.gui.GUIMovable;
 import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.inventory.Bow;
+import fr.iutvalence.info.dut.m2107.inventory.Gun;
 import fr.iutvalence.info.dut.m2107.inventory.Inventory;
 import fr.iutvalence.info.dut.m2107.inventory.InventorySlot;
 import fr.iutvalence.info.dut.m2107.inventory.Item;
 import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
+import fr.iutvalence.info.dut.m2107.inventory.Staff;
 import fr.iutvalence.info.dut.m2107.inventory.Sword;
 import fr.iutvalence.info.dut.m2107.inventory.Weapon;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
@@ -38,7 +40,7 @@ public class Player extends Character{
 	private float width = 0.1f;
 	private float height = 0.1f;
 	private float posY = -.85f;
-	private int selectSlot = 0;
+	private short selectSlot = 0;
 	private GUIElement selectQuickBar;
 	
 	
@@ -118,10 +120,11 @@ public class Player extends Character{
 	 */
 	public void initInventory() {
 		// TODO Take the item saved from a file save
-		addItem(ItemDatabase.get(0), 10);
-		addItem(ItemDatabase.get(1), 5);
-		addItem(ItemDatabase.get(4), 5);
-		addItem(ItemDatabase.get(5), 5);
+		addItem(ItemDatabase.get(0), (short)10);
+		addItem(ItemDatabase.get(1), (short)5);
+		addItem(ItemDatabase.get(4), (short)5);
+		addItem(ItemDatabase.get(5), (short)5);
+		addItem(ItemDatabase.get(7), (short)500);
 	}
 	
 	/**
@@ -133,8 +136,10 @@ public class Player extends Character{
 		
 		this.quickBar[0].setItem(ItemDatabase.get(2));
 		this.quickBar[1].setItem(ItemDatabase.get(3));
+		this.quickBar[2].setItem(ItemDatabase.get(6));
+		this.quickBar[3].setItem(ItemDatabase.get(8));
 		
-		for (int slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++) {
+		for (byte slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++) {
 			if(this.quickBar[slotNumber].getItem() != null) {
 
 				this.quickBar[slotNumber].setItemSprite(new GUIMovable(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(-width*this.quickBar.length/2 + width*(slotNumber+.5f), 0), width, height));
@@ -142,10 +147,7 @@ public class Player extends Character{
 				
 				this.quickBar[slotNumber].getItemSprite().setRotation(-45);
 				float scaleMult = this.quickBar[slotNumber].getItemSprite().getSprite().getSize().x*this.quickBar[slotNumber].getItemSprite().getSprite().getSize().y;
-				if(scaleMult == 1)
-					this.quickBar[slotNumber].getItemSprite().setScale(this.quickBar[slotNumber].getItemSprite().getScale().x / 1.25f, this.quickBar[slotNumber].getItemSprite().getScale().y / 1.25f);
-				else
-					this.quickBar[slotNumber].getItemSprite().setScale(this.quickBar[slotNumber].getItemSprite().getScale().x / scaleMult, this.quickBar[slotNumber].getItemSprite().getScale().y / scaleMult);
+				this.quickBar[slotNumber].getItemSprite().setScale((Vector2f)this.quickBar[slotNumber].getItemSprite().getScale().scale(1/ (scaleMult != 1 ? scaleMult : 1.5f)));
 				
 				this.quickBar[slotNumber].prepareDisplay();
 				
@@ -180,12 +182,16 @@ public class Player extends Character{
 	 * Update the usage of the player's hand item
 	 */
 	private void useItem() {
-		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.getTarget() == this && !Input.isOverGUI && !Input.isDragingGUI) {
+		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.getTarget() == this && !Input.isDragingGUI) {
 			if(this.itemOnHand instanceof Bow)
 				((Bow) this.itemOnHand).use(this);
-			if(this.itemOnHand instanceof Sword)
+			else if(this.itemOnHand instanceof Sword)
 				((Sword) this.itemOnHand).use(this);
-		}			
+			else if(this.itemOnHand instanceof Gun)
+				((Gun) this.itemOnHand).use(this);
+			else if(this.itemOnHand instanceof Staff)
+				((Staff) this.itemOnHand).use(this);
+		}
 	}
 	
 	/**
@@ -324,13 +330,13 @@ public class Player extends Character{
 	private void updateQuickBar() {
 		
 		if (Input.isKey1())	this.selectSlot = 0;
-		if (Input.isKey2())	this.selectSlot = 1;
-		if (Input.isKey3()) this.selectSlot = 2;
-		if (Input.isKey4()) this.selectSlot = 3;
-		if (Input.isKey5())	this.selectSlot = 4;
-		if (Input.isKey6())	this.selectSlot = 5;
-		if (Input.isKey7())	this.selectSlot = 6;
-		if (Input.isKey8())	this.selectSlot = 7;
+		else if (Input.isKey2())	this.selectSlot = 1;
+		else if (Input.isKey3()) this.selectSlot = 2;
+		else if (Input.isKey4()) this.selectSlot = 3;
+		else if (Input.isKey5())	this.selectSlot = 4;
+		else if (Input.isKey6())	this.selectSlot = 5;
+		else if (Input.isKey7())	this.selectSlot = 6;
+		else if (Input.isKey8())	this.selectSlot = 7;
 		
 		selectSlot -= Input.WheelScrolling();
 		if(selectSlot > 7) selectSlot -= 8;
@@ -348,7 +354,9 @@ public class Player extends Character{
 				} else {
 					this.itemOnHand = this.quickBar[selectSlot].getItem();
 					if(this.itemOnHand instanceof Bow)	this.itemOnHand.setPosition(new Vector2f(-.3f, 0));
-					if(this.itemOnHand instanceof Sword)this.itemOnHand.setPosition(new Vector2f(.7f, -0.02f));
+					else if(this.itemOnHand instanceof Sword)this.itemOnHand.setPosition(new Vector2f(.7f, -0.02f));
+					else if(this.itemOnHand instanceof Gun)this.itemOnHand.setPosition(new Vector2f(.35f, 0.1f));
+					else if(this.itemOnHand instanceof Staff)this.itemOnHand.setPosition(new Vector2f(.25f, 0));
 					this.itemOnHand.setParent(this.pivot);
 				}
 			} else {
@@ -370,10 +378,6 @@ public class Player extends Character{
 		
 		if (GameWorld.camera.isFocusing()) {
 			if (Input.isJumping() && this.isGrounded) this.vel.y = this.jumpHeight;
-			
-			if (Input.isMoveUp()) {
-				this.vel.y += this.spd;
-			}
 			
 			if (Input.isMoveRight()) {
 				if(!rightWallJump || !leftWallJump) this.vel.x += this.spd/6;
@@ -401,7 +405,7 @@ public class Player extends Character{
 	 * @param stack The amount of item to add
 	 * @return True if added
 	 */
-	public boolean addItem(Item item, int stack) {
+	public boolean addItem(Item item, short stack) {
 		byte addState = addQuickBarItem(item, stack);
 		if(addState == 1) return true;
 		else if(addState == -1) return false;
@@ -423,7 +427,7 @@ public class Player extends Character{
 	 * @param stack The amount of item to add
 	 * @return 1 if added, 0 if not found , -1 if found but no more room
 	 */
-	public byte addQuickBarItem(Item item, int stack) {
+	public byte addQuickBarItem(Item item, short stack) {
 		if(stack <= item.getMAX_STACK()) {
 			for (InventorySlot slot : quickBar) {
 				if(slot.getItem() != null) {
@@ -443,7 +447,7 @@ public class Player extends Character{
 	 * @param index The index of the quick bar
 	 * @param stack The number of item to remove
 	 */
-	public void removeQuickBarItem(int index, int stack) {
+	public void removeQuickBarItem(int index, short stack) {
 		if((this.quickBar[index].getItem().getStack() - stack) <= 0) {
 			this.quickBar[index].setItem(null);
 			this.quickBar[index].getItemSprite().remove();
@@ -470,7 +474,7 @@ public class Player extends Character{
 	 * Return the length of the quick bar
 	 * @return the length of the quick bar
 	 */
-	public int getQuickBarLength() {return this.quickBar.length;}
+	public short getQuickBarLength() {return (short) this.quickBar.length;}
 	
 	/**
 	 * Return the angle of shot
@@ -483,4 +487,6 @@ public class Player extends Character{
 	 * @return the vector of shot
 	 */
 	public Vector2f getShoot() {return shoot;}
+	
+	public boolean getWallSlide() {return wallSlide;}
 }

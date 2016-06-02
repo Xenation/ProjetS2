@@ -16,7 +16,7 @@ public class Entity {
 	
 	private static final Vector2f DEF_POS = new Vector2f(0, 0);
 	private static final float DEF_ROT = 0;
-	private static final AbstractSprite DEF_SPR = new EntitySprite("item/default", new Vector2f(1, 1));
+	private static final AbstractSprite DEF_SPR = new EntitySprite("item/arrow", new Vector2f(1, 1));
 	private static final Vector2f DEF_SCALE = new Vector2f(1, 1);
 	
 	/**

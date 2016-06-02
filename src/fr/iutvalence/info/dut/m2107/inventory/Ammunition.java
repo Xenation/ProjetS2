@@ -4,10 +4,12 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Character;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
+import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 /**
  * An ammunition item
@@ -21,7 +23,7 @@ public abstract class Ammunition extends Item {
 	/**
 	 * Time before destruction
 	 */
-	protected final int DESTROY_TIME = 60;
+	protected final short DESTROY_TIME = 60;
 	
 	/**
 	 * Time remaining before destruction
@@ -31,12 +33,12 @@ public abstract class Ammunition extends Item {
 	/**
 	 * The damage of the ammo
 	 */
-	protected int damage;
+	protected short damage;
 	
 	/**
 	 * The knockback of the ammo
 	 */
-	protected int knockback;
+	protected short knockback;
 	
 	/**
 	 * The velocity of the ammo
@@ -46,12 +48,11 @@ public abstract class Ammunition extends Item {
 	/**
 	 * The speed of the ammo
 	 */
-	protected int speed;
+	protected short speed;
 	
-	/**
-	 * The ammunition is or not stick into an object
-	 */
-	protected boolean isPierce = false;
+	protected Entity piercingEntity = null;
+	
+	protected Tile piercingTile = null;
 	
 	/**
 	 * Constructor of an ammunition
@@ -70,8 +71,8 @@ public abstract class Ammunition extends Item {
 	 * @param speed The speed of the ammo
 	 */
 	public Ammunition(Vector2f pos, float rot, EntitySprite spr,
-					int id, String name, String description, Rarity rarity, int maxStack, int value,
-					int damage, int knockback, Vector2f velocity, int speed) {
+				short id, String name, String description, Rarity rarity, short maxStack, short value,
+				short damage, short knockback, Vector2f velocity, short speed) {
 		super(pos, rot, spr, id, name, description, rarity, maxStack, value);
 		this.damage = damage;
 		this.knockback = knockback;
@@ -94,8 +95,8 @@ public abstract class Ammunition extends Item {
 	 * @param speed The speed of the ammo
 	 */
 	public Ammunition(EntitySprite spr, Collider col,
-					int id, String name, String description, Rarity rarity, int maxStack, int value,
-					int damage, int knockback, int speed) {
+				short id, String name, String description, Rarity rarity, short maxStack, short value,
+				short damage, short knockback, short speed) {
 		super(spr, col, id, name, description, rarity, maxStack, value);
 		this.damage = damage;
 		this.knockback = knockback;
@@ -119,6 +120,7 @@ public abstract class Ammunition extends Item {
 	 */
 	@Override
 	public void update(Layer layer) {
+		if(this.id == 9) this.rot += 2;
 		this.pos.x += this.vel.x * DisplayManager.deltaTime();
 		this.pos.y += this.vel.y * DisplayManager.deltaTime();
 		this.remainingTime += DisplayManager.deltaTime();
@@ -136,8 +138,10 @@ public abstract class Ammunition extends Item {
 		this.rot = GameWorld.player.getDegreeShoot();
 		this.vel = new Vector2f(GameWorld.player.getShoot().x, GameWorld.player.getShoot().y);
 		this.vel.scale(this.speed);
-		this.vel.x += GameWorld.player.getVelocity().x/2;
-		this.vel.y += GameWorld.player.getVelocity().y/2;
+		if(this instanceof Arrow) {
+			this.vel.x += GameWorld.player.getVelocity().x/2;
+			this.vel.y += GameWorld.player.getVelocity().y/2;
+		}
 	}
 	
 	/**
@@ -153,13 +157,13 @@ public abstract class Ammunition extends Item {
 	 * Return the damage of the ammo
 	 * @return the damage of the ammo
 	 */
-	public int getDamage() {return damage;}
+	public short getDamage() {return damage;}
 	
 	/**
 	 * Return the knockback of the ammo
 	 * @return the knockback of the ammo
 	 */
-	public int getKnockback() {return knockback;}
+	public short getKnockback() {return knockback;}
 	
 	/**
 	 * Return the velocity of the ammo
@@ -177,6 +181,13 @@ public abstract class Ammunition extends Item {
 	 * Return the speed of the ammo
 	 * @return the speed of the ammo
 	 */
-	public int getSpeed() {return speed;}
+	public short getSpeed() {return speed;}
 
+
+	public Tile getPiercingTile() {return piercingTile;}
+	public void setPiercingTile(Tile piercingTile) {this.piercingTile = piercingTile;}
+	
+	public Entity getPiercingEntity() {return piercingEntity;}
+	public void setPiercingEntity(Entity piercingEntity) {this.piercingEntity = piercingEntity;}
+	
 }
