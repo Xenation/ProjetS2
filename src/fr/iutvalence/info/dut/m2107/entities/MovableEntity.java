@@ -13,8 +13,8 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
  */
 public class MovableEntity extends Entity {
 	
-	private static final Vector2f DEF_VEL = new Vector2f(0, 0);
-	private static final float DEF_SPD = 4;
+	public static final Vector2f DEF_VEL = new Vector2f(0, 0);
+	public static final float DEF_SPD = 4;
 	
 	/**
 	 * The velocity of the entity

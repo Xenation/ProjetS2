@@ -335,7 +335,6 @@ public class Collider {
 							modVel.y = 0;
 							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 							((TerrestrialCreature)ent).isGrounded = true;
-							((Character)ent).hasStepUp = true;
 						} else {
 							if(!((TerrestrialCreature)this.ent).prevGrounded && ((TerrestrialCreature)this.ent).vel.y < 0) {
 								((TerrestrialCreature)this.ent).vel.y = Maths.lerp(((TerrestrialCreature)this.ent).vel.y, -5, 0.05f);

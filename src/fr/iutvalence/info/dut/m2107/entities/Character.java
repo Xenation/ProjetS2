@@ -25,25 +25,6 @@ public class Character extends TerrestrialCreature{
 	 * The pivot of the character's weapon
 	 */
 	protected Entity pivot = new Entity(new Vector2f(.725f, -.3f), SpriteDatabase.getEmptySpr(), null);
-	
-	/**
-	 * Constructor of a character
-	 * @param pos The position of the character
-	 * @param spr The sprite of the character
-	 */
-	public Character(Vector2f pos, EntitySprite spr) {
-		super(pos, spr);
-	}
-	
-	/**
-	 * Constructor of a character
-	 * @param pos The position of the character
-	 * @param spr The sprite of the character
-	 * @param col The collider of the character
-	 */
-	public Character(Vector2f pos, EntitySprite spr, Collider col) {
-		super(pos, spr, col);
-	}
 
 	/**
 	 * Constructor of a character
@@ -57,9 +38,8 @@ public class Character extends TerrestrialCreature{
 	 * @param armor The armor of the character
 	 * @param jumpHeight The jump height of the character
 	 */
-	public Character(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd, int health, int armor,
-			int jumpHeight) {
-		super(pos, rot, spr, col, vel, spd, health, armor, jumpHeight);
+	public Character(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd, int health, int jumpHeight) {
+		super(pos, rot, spr, col, vel, spd, health, jumpHeight);
 	}
 	
 	/* (non-Javadoc)

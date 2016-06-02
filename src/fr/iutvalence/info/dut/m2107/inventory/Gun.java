@@ -25,7 +25,6 @@ public class Gun extends Weapon {
 
 	public Gun(Weapon weapon) {
 		super(weapon);
-		handRotation = 0;
 	}
 
 	@Override
