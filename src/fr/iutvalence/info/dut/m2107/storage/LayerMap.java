@@ -23,8 +23,8 @@ public class LayerMap {
 	 * Updates all the entities of each layer
 	 */
 	public void update() {
-		for (Layer layer : layerMap) {
-			layer.update();
+		for (int i = 0; i < layerMap.size(); i++) {
+			layerMap.get(i).update();
 		}
 	}
 	

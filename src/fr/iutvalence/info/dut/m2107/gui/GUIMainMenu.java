@@ -84,7 +84,7 @@ public class GUIMainMenu implements Listener {
 	 * Unloads all the elements from the GUI layer map.
 	 */
 	public void unloadGUIElement() {
-		GUIMaster.removeFromLayer(text_title);
+		GUIMaster.removeText(text_title);
 		GameWorld.guiLayerMap.getLayer(2).remove(text_title);
 		GameWorld.guiLayerMap.getLayer(2).remove(btn_play);
 		GameWorld.guiLayerMap.getLayer(2).remove(btn_credits);

@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Set;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.events.EventManager;
+import fr.iutvalence.info.dut.m2107.events.GUIMouseLeavedEvent;
+import fr.iutvalence.info.dut.m2107.events.Listener;
+import fr.iutvalence.info.dut.m2107.gui.GUIElement;
 import fr.iutvalence.info.dut.m2107.models.Atlas;
 
 /**
@@ -14,7 +18,7 @@ import fr.iutvalence.info.dut.m2107.models.Atlas;
  * @author Xenation
  *
  */
-public class GUILayer extends Layer {
+public class GUILayer extends Layer implements Listener {
 	
 	/**
 	 * The layer map. Groups a list of entities under a same atlas
@@ -44,6 +48,13 @@ public class GUILayer extends Layer {
 		List<Entity> rList = layer.get(ent.getSprite().getAtlas());
 		if (rList != null) {
 			rList.remove(ent);
+			if (ent instanceof GUIElement) {
+				GUIElement elem = (GUIElement) ent;
+				if (elem.isMouseHover()) {
+					elem.setMouseHover(false);
+					EventManager.sendEvent(new GUIMouseLeavedEvent(elem));
+				}
+			}
 			if (rList.size() == 0) {
 				layer.remove(ent.getSprite().getAtlas());
 			}

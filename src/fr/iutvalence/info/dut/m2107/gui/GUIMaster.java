@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import fr.iutvalence.info.dut.m2107.events.EventManager;
+import fr.iutvalence.info.dut.m2107.events.GUIMouseLeavedEvent;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.FontType;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.TextMeshData;
@@ -112,12 +114,12 @@ public class GUIMaster {
 	 * Removes a text by unloading it and removing it from its layer
 	 * @param text the text to remove
 	 */
-	public static void removeText(GUIText text) {
+	public static void deleteText(GUIText text) {
 		textLoader.unloadVAO(text.getMesh());
 		textLinks.get(text).remove(text);
 	}
 	
-	public static void removeFromLayer(GUIText text) {
+	public static void removeText(GUIText text) {
 		textLinks.get(text).remove(text);
 	}
 	
@@ -125,9 +127,16 @@ public class GUIMaster {
 	 * Removes an element by unloading it and removing it from its layer
 	 * @param elem the element to remove
 	 */
-	public static void removeElement(GUIElement elem) {
+	public static void deleteElement(GUIElement elem) {
 		guiLoader.unloadVAO(elem.getSprite().getVaoID());
 		elementLinks.get(elem).remove(elem);
+	}
+	
+	public static void removeElement(GUIElement elem) {
+		elementLinks.get(elem).remove(elem);
+		if (elem.isMouseHover()) {
+			EventManager.sendEvent(new GUIMouseLeavedEvent(elem));
+		}
 	}
 	
 }

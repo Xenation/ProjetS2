@@ -13,6 +13,7 @@ import fr.iutvalence.info.dut.m2107.render.Renderer;
 import fr.iutvalence.info.dut.m2107.saving.WorldLoader;
 import fr.iutvalence.info.dut.m2107.saving.WorldSaver;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 import fr.iutvalence.info.dut.m2107.toolbox.TrackingPrintStream;
@@ -23,6 +24,8 @@ import fr.iutvalence.info.dut.m2107.toolbox.TrackingPrintStream;
  *
  */
 public class GUI implements Listener {
+	
+	private GUITileSelect tileSelect;
 	
 	/**
 	 * The chunks stats label
@@ -75,6 +78,7 @@ public class GUI implements Listener {
 	 * Whether the debug texts are displayed
 	 */
 	private boolean debugOn;
+	private boolean tileSelectOn;
 	/**
 	 * Whether the in-game GUI elements are loaded.
 	 */
@@ -108,6 +112,8 @@ public class GUI implements Listener {
 		
 		debugConsole = new GUIText("", .5f, .5f, 1, .5f, false, true);
 		debugConsole.setLineHeight(0.024);
+		
+		this.tileSelect = new GUITileSelect();
 		
 	}
 	
@@ -174,6 +180,28 @@ public class GUI implements Listener {
 			cameraStats.updateText(updateStr);
 			debugConsole.updateText(((TrackingPrintStream)System.out).getLastWrittenLines(60));
 		}
+		if (Input.isKeyU()) {
+			if (!tileSelectOn) {
+				tileSelectOn = true;
+				tileSelect.loadGUIElements();
+			} else {
+				tileSelectOn = false;
+				tileSelect.unloadGUIElements();
+			}
+		}
+		if (Input.isEscape() && tileSelectOn) {
+			tileSelectOn = false;
+			tileSelect.unloadGUIElements();
+		}
+	}
+	
+	public void hideTileSelect() {
+		tileSelectOn = false;
+		tileSelect.unloadGUIElements();
+	}
+	
+	public boolean isTileSelectOn() {
+		return tileSelectOn;
 	}
 	
 	/**
@@ -181,12 +209,12 @@ public class GUI implements Listener {
 	 */
 	public void hideDebugTexts() {
 		debugOn = false;
-		GUIMaster.removeFromLayer(chunkStatsLabel);
-		GUIMaster.removeFromLayer(chunkStats);
-		GUIMaster.removeFromLayer(loaderStatsLabel);
-		GUIMaster.removeFromLayer(loaderStats);
-		GUIMaster.removeFromLayer(cameraStats);
-		GUIMaster.removeFromLayer(debugConsole);
+		GUIMaster.removeText(chunkStatsLabel);
+		GUIMaster.removeText(chunkStats);
+		GUIMaster.removeText(loaderStatsLabel);
+		GUIMaster.removeText(loaderStats);
+		GUIMaster.removeText(cameraStats);
+		GUIMaster.removeText(debugConsole);
 	}
 	
 	/**
@@ -206,6 +234,11 @@ public class GUI implements Listener {
 	 * Loads all the GUIElements to the GUI layer map.
 	 */
 	public void loadGUIElements() {
+//		GUIMaster.addElement(btn_debug, 1);
+//		GUIMaster.addElement(btn_save, 1);
+//		GUIMaster.addElement(btn_load, 1);
+//		GUIMaster.addElement(btn_clear, 1);
+//		GUIMaster.addElement(field_save, 1);
 		GameWorld.guiLayerMap.getLayer(1).add(btn_debug);
 		GameWorld.guiLayerMap.getLayer(1).add(btn_save);
 		GameWorld.guiLayerMap.getLayer(1).add(btn_load);
@@ -218,6 +251,11 @@ public class GUI implements Listener {
 	 * Unloads all the GUIElements from the GUI layer map.
 	 */
 	public void unloadGUIElements() {
+//		GUIMaster.removeElement(btn_debug);
+//		GUIMaster.removeElement(btn_save);
+//		GUIMaster.removeElement(btn_load);
+//		GUIMaster.removeElement(btn_clear);
+//		GUIMaster.removeElement(field_save);
 		GameWorld.guiLayerMap.getLayer(1).remove(btn_debug);
 		GameWorld.guiLayerMap.getLayer(1).remove(btn_save);
 		GameWorld.guiLayerMap.getLayer(1).remove(btn_load);

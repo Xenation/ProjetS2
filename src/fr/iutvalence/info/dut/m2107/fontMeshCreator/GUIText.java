@@ -110,7 +110,7 @@ public class GUIText extends Entity {
 	 * Remove the text from the screen.
 	 */
 	public void remove() {
-		GUIMaster.removeText(this);
+		GUIMaster.deleteText(this);
 	}
 
 	/**
