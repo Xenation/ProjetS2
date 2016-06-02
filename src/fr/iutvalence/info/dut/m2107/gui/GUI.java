@@ -26,6 +26,10 @@ import fr.iutvalence.info.dut.m2107.toolbox.TrackingPrintStream;
 public class GUI implements Listener {
 	
 	private GUITileSelect tileSelect;
+	private boolean tileSelectOn;
+	
+	private GUIPauseMenu pauseMenu;
+	private boolean pauseMenuOn;
 	
 	/**
 	 * The chunks stats label
@@ -78,7 +82,6 @@ public class GUI implements Listener {
 	 * Whether the debug texts are displayed
 	 */
 	private boolean debugOn;
-	private boolean tileSelectOn;
 	/**
 	 * Whether the in-game GUI elements are loaded.
 	 */
@@ -114,7 +117,7 @@ public class GUI implements Listener {
 		debugConsole.setLineHeight(0.024);
 		
 		this.tileSelect = new GUITileSelect();
-		
+		this.pauseMenu = new GUIPauseMenu();
 	}
 	
 	/**
@@ -189,9 +192,17 @@ public class GUI implements Listener {
 				tileSelect.unloadGUIElements();
 			}
 		}
-		if (Input.isEscape() && tileSelectOn) {
-			tileSelectOn = false;
-			tileSelect.unloadGUIElements();
+		if (Input.isEscape()) {
+			if (tileSelectOn) {
+				tileSelectOn = false;
+				tileSelect.unloadGUIElements();
+			} else if (pauseMenuOn) {
+				pauseMenuOn = false;
+				pauseMenu.unloadGUIElements();
+			} else {
+				pauseMenuOn = true;
+				pauseMenu.loadGUIElements();
+			}
 		}
 	}
 	
@@ -200,8 +211,17 @@ public class GUI implements Listener {
 		tileSelect.unloadGUIElements();
 	}
 	
+	public void hidePauseMenu() {
+		pauseMenuOn = false;
+		pauseMenu.unloadGUIElements();
+	}
+	
 	public boolean isTileSelectOn() {
 		return tileSelectOn;
+	}
+	
+	public boolean isPauseMenuOn() {
+		return pauseMenuOn;
 	}
 	
 	/**
@@ -263,6 +283,12 @@ public class GUI implements Listener {
 		GameWorld.guiLayerMap.getLayer(1).remove(field_save);
 		if (debugOn) {
 			hideDebugTexts();
+		}
+		if (tileSelectOn) {
+			hideTileSelect();
+		}
+		if (pauseMenuOn) {
+			hidePauseMenu();
 		}
 		isLoaded = false;
 	}

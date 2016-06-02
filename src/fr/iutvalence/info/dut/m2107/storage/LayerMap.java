@@ -108,4 +108,10 @@ public class LayerMap {
 		return this.layerMap.get(index.ordinal());
 	}
 	
+	public void reset() {
+		int size = layerMap.size();
+		layerMap.clear();
+		addEmpty(size);
+	}
+	
 }
