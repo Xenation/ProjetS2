@@ -14,7 +14,7 @@ public class Armor extends Item {
 	/**
 	 * The defense of the armor
 	 */
-	protected final int defense;
+	protected final short defense;
 	
 	/**
 	 * Constructor of an armor
@@ -29,8 +29,8 @@ public class Armor extends Item {
 	 * @param value The value of the armor
 	 * @param defense The defense of the armor
 	 */
-	public Armor(Vector2f pos, float rot, EntitySprite spr, int id, String name, String description, Rarity rarity,
-			int maxStack, int value, int defense) {
+	public Armor(Vector2f pos, float rot, EntitySprite spr, short id, String name, String description, Rarity rarity,
+			short maxStack, short value, short defense) {
 		super(pos, rot, spr, id, name, description, rarity, maxStack, value);
 		this.defense = defense;
 	}
@@ -39,5 +39,5 @@ public class Armor extends Item {
 	 * Return the defense of the armor
 	 * @return the defense of the armor
 	 */
-	public int getDefense() {return defense;}
+	public short getDefense() {return defense;}
 }

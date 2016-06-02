@@ -17,12 +17,12 @@ public abstract class Weapon extends Item {
 	/**
 	 * The damage of the weapon
 	 */
-	protected final int damage;
+	protected final short damage;
 	
 	/**
 	 * The range of the weapon
 	 */
-	protected final int range;
+	protected final short range;
 	
 	/**
 	 * The delay between two usage
@@ -32,16 +32,16 @@ public abstract class Weapon extends Item {
 	/**
 	 * The knockback of the weapon
 	 */
-	protected final int knockback;
+	protected final short knockback;
 	
 	/**
 	 * The remaining time before the next usage
 	 */
 	protected float remainingTime = 0;
 	
-	public float lockTime;
+	protected float lockTime;
 	
-	public float handRotation;
+	protected short handRotation;
 
 	/**
 	 * Constructor of a weapon
@@ -60,13 +60,14 @@ public abstract class Weapon extends Item {
 	 * @param knockback The knockback of the weapon
 	 */
 	public Weapon(Vector2f pos, float rot, EntitySprite spr,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int range, float useTime, int knockback) {
+				short id, String name, String description, Rarity rarity, short maxStack, short value,
+				short damage, short range, float useTime, short knockback, short handRotation) {
 		super(pos, rot, spr, id, name, description, rarity, maxStack, value);
 		this.damage = damage;
 		this.range = range;
 		this.useTime = useTime;
 		this.knockback = knockback;
+		this.handRotation = handRotation;
 	}
 	
 	/**
@@ -84,13 +85,14 @@ public abstract class Weapon extends Item {
 	 * @param knockback The knockback of the weapon
 	 */
 	public Weapon(EntitySprite spr,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int range, float useTime, int knockback) {
+			short id, String name, String description, Rarity rarity, short maxStack, short value,
+			short damage, short range, float useTime, short knockback, short handRotation) {
 		super(spr, id, name, description, rarity, maxStack, value);
 		this.damage = damage;
 		this.range = range;
 		this.useTime = useTime;
 		this.knockback = knockback;
+		this.handRotation = handRotation;
 	}
 	
 	/**
@@ -103,6 +105,7 @@ public abstract class Weapon extends Item {
 		this.range = weapon.range;
 		this.useTime = weapon.useTime;
 		this.knockback = weapon.knockback;
+		this.handRotation = weapon.handRotation;
 	}
 
 	/**
@@ -126,13 +129,13 @@ public abstract class Weapon extends Item {
 	 * Return the damage of the weapon
 	 * @return the damage of the weapon
 	 */
-	public int getDamage() {return damage;}
+	public short getDamage() {return damage;}
 	
 	/**
 	 * Return the range of the weapon
 	 * @return the range of the weapon
 	 */
-	public int getRange() {return range;}
+	public short getRange() {return range;}
 	
 	/**
 	 * Return the use time of the weapon
@@ -144,11 +147,15 @@ public abstract class Weapon extends Item {
 	 * Return the knockback of the weapon
 	 * @return the knockback of the weapon
 	 */
-	public int getKnockback() {return knockback;}
+	public short getKnockback() {return knockback;}
 	
 	/**
 	 * Return the remaining time of the weapon
 	 * @return the remaining time of the weapon
 	 */
 	public float getRemainingTime() {return remainingTime;}
+
+	public float getLockTime() {return lockTime;}
+	
+	public short getHandRotation() {return handRotation;}
 }

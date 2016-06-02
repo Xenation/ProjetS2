@@ -33,8 +33,8 @@ public class Bullet extends Ammunition {
 	 * @param speed The speed of the ammo
 	 */
 	public Bullet(Vector2f pos, float rot, EntitySprite spr,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int knockback, Vector2f velocity, int speed) {
+			short id, String name, String description, Rarity rarity, short maxStack, short value,
+			short damage, short knockback, Vector2f velocity, short speed) {
 		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, knockback, velocity, speed);
 	}
 	
@@ -53,8 +53,8 @@ public class Bullet extends Ammunition {
 	 * @param speed The speed of the ammo
 	 */
 	public Bullet(EntitySprite spr, Collider col,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int knockback, int speed) {
+			short id, String name, String description, Rarity rarity, short maxStack, short value,
+			short damage, short knockback, short speed) {
 		super(spr, col, id, name, description, rarity, maxStack, value, damage, knockback, speed);
 	}
 

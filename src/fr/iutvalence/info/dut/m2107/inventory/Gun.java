@@ -13,16 +13,14 @@ import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 public class Gun extends Weapon {
 
-	public Gun(Vector2f pos, float rot, EntitySprite spr, int id, String name, String description, Rarity rarity,
-			int maxStack, int value, int damage, int range, float useTime, int knockback) {
-		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback);
-		handRotation = 0;
+	public Gun(Vector2f pos, float rot, EntitySprite spr, short id, String name, String description, Rarity rarity,
+			short maxStack, short value, short damage, short range, float useTime, short knockback, short handRotation) {
+		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback, handRotation);
 	}
 
-	public Gun(EntitySprite spr, int id, String name, String description, Rarity rarity, int maxStack, int value,
-			int damage, int range, float useTime, int knockback) {
-		super(spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback);
-		handRotation = 0;
+	public Gun(EntitySprite spr, short id, String name, String description, Rarity rarity, short maxStack, short value,
+			short damage, short range, float useTime, short knockback, short handRotation) {
+		super(spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback, handRotation);
 	}
 
 	public Gun(Weapon weapon) {
@@ -35,10 +33,10 @@ public class Gun extends Weapon {
 		if(this.remainingTime <= 0) {
 			if(owner instanceof Player) {
 				Bullet bullet = null;
-				for (int i = 0; i < ((Player)owner).getQuickBarLength() ; i++) {
+				for (byte i = 0; i < ((Player)owner).getQuickBarLength() ; i++) {
 					if(((Player)owner).getQuickBarItem(i) instanceof Bullet) {
 						bullet = new Bullet ((Bullet)((Player)owner).getQuickBarItem(i));
-						((Player)owner).removeQuickBarItem(i, 1);
+						((Player)owner).removeQuickBarItem(i, (short)1);
 						this.launch(bullet, owner);
 						break;
 					}
@@ -46,7 +44,7 @@ public class Gun extends Weapon {
 				if(bullet == null) {
 					bullet = GameWorld.player.getInventory().getBullet();
 					if(bullet != null) {
-						GameWorld.player.getInventory().remove(bullet, 1);
+						GameWorld.player.getInventory().remove(bullet, (short)1);
 						this.launch(bullet, owner);
 					} else System.out.println("No more bullet in inventory");
 				}

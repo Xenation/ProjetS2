@@ -35,10 +35,9 @@ public class Bow extends Weapon {
 	 * @param knockback The knockback of the bow
 	 */
 	public Bow(Vector2f pos, float rot, EntitySprite spr,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int range, float useTime, int knockback) {
-		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback);
-		handRotation = 20;
+				short id, String name, String description, Rarity rarity, short maxStack, short value,
+				short damage, short range, float useTime, short knockback, short handRotation) {
+		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback, handRotation);
 	}
 	
 	/**
@@ -56,10 +55,9 @@ public class Bow extends Weapon {
 	 * @param knockback The knockback of the bow
 	 */
 	public Bow(EntitySprite spr,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int range, float useTime, int knockback) {
-		super(spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback);
-		handRotation = 20;
+			short id, String name, String description, Rarity rarity, short maxStack, short value,
+			short damage, short range, float useTime, short knockback, short handRotation) {
+		super(spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback, handRotation);
 	}
 
 	/**
@@ -68,7 +66,6 @@ public class Bow extends Weapon {
 	 */
 	public Bow(Bow bow) {
 		super(bow);
-		handRotation = 20;
 	}
 
 	/* (non-Javadoc)
@@ -79,10 +76,10 @@ public class Bow extends Weapon {
 		if(this.remainingTime <= 0) {
 			if(owner instanceof Player) {
 				Arrow arrow = null;
-				for (int i = 0; i < ((Player)owner).getQuickBarLength() ; i++) {
+				for (byte i = 0; i < ((Player)owner).getQuickBarLength() ; i++) {
 					if(((Player)owner).getQuickBarItem(i) instanceof Arrow) {
 						arrow = new Arrow ((Arrow)((Player)owner).getQuickBarItem(i));
-						((Player)owner).removeQuickBarItem(i, 1);
+						((Player)owner).removeQuickBarItem(i, (short)1);
 						this.launch(arrow, owner);
 						break;
 					}
@@ -90,7 +87,7 @@ public class Bow extends Weapon {
 				if(arrow == null) {
 					arrow = GameWorld.player.getInventory().getArrow();
 					if(arrow != null) {
-						GameWorld.player.getInventory().remove(arrow, 1);
+						GameWorld.player.getInventory().remove(arrow, (short)1);
 						this.launch(arrow, owner);
 					} else System.out.println("No more arrow in inventory");
 				}

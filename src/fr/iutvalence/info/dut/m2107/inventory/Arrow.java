@@ -3,14 +3,12 @@ package fr.iutvalence.info.dut.m2107.inventory;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
-import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
-import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 /**
  * An arrow ammunition
@@ -36,8 +34,8 @@ public class Arrow extends Ammunition {
 	 * @param speed The speed of the ammo
 	 */
 	public Arrow(Vector2f pos, float rot, EntitySprite spr,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int knockback, Vector2f velocity, int speed) {
+				short id, String name, String description, Rarity rarity, short maxStack, short value,
+				short damage, short knockback, Vector2f velocity, short speed) {
 		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, knockback, velocity, speed);
 	}
 	
@@ -56,8 +54,8 @@ public class Arrow extends Ammunition {
 	 * @param speed The speed of the ammo
 	 */
 	public Arrow(EntitySprite spr, Collider col,
-				int id, String name, String description, Rarity rarity, int maxStack, int value,
-				int damage, int knockback, int speed) {
+				short id, String name, String description, Rarity rarity, short maxStack, short value,
+				short damage, short knockback, short speed) {
 		super(spr, col, id, name, description, rarity, maxStack, value, damage, knockback, speed);
 	}
 

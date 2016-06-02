@@ -37,6 +37,12 @@ public class SpriteDatabase {
 	private final static EntitySprite bulletSpr = new EntitySprite("item/bullet", new Vector2f(1, 1));
 	public static EntitySprite getBulletSpr() {return bulletSpr;}
 	
+	private final static EntitySprite staffSpr = new EntitySprite("item/staff", new Vector2f(3, 1.5f));
+	public static EntitySprite getStaffSpr() {return staffSpr;}
+	
+	private final static EntitySprite airOrbSpr = new EntitySprite("item/air_orb", new Vector2f(1.5f, 1.5f));
+	public static EntitySprite getAirOrbSpr() {return airOrbSpr;}
+	
 	private final static EntitySprite lightningArrowSpr = new EntitySprite("item/lightning_arrow", new Vector2f(1, 1));
 	public static EntitySprite getLightningArrowSpr() {return lightningArrowSpr;}
 	

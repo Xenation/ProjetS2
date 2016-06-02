@@ -25,7 +25,7 @@ public class Inventory {
 	/**
 	 * The number of inventory slot by row
 	 */
-	private final int inventoryWidth = 4;
+	private final byte inventoryWidth = 4;
 	
 	public static final float width = 0.075f;
 
@@ -55,7 +55,7 @@ public class Inventory {
 	 * @param stack The amount of items to add to the inventory
 	 * @return true if added otherwise false
 	 */
-	public boolean add(Item item, int stack) {
+	public boolean add(Item item, short stack) {
 		// Stack is over the max stack
 		if(stack > item.MAX_STACK)
 			return false;
@@ -93,7 +93,7 @@ public class Inventory {
 		newSlot.getItemSprite().setRotation(-45);
 		
 		float scaleMult = newSlot.getItemSprite().getSprite().getSize().x*newSlot.getItemSprite().getSprite().getSize().y;
-		newSlot.getItemSprite().setScale((Vector2f)newSlot.getItemSprite().getScale().scale(1/scaleMult));	//scaleMult == 1 ? 1 : scaleMult));
+		newSlot.getItemSprite().setScale((Vector2f)newSlot.getItemSprite().getScale().scale(1/ (scaleMult != 1 ? scaleMult : 1.5f)));
 		inventorySlot.add(newSlot);
 		return true;
 	}
@@ -103,7 +103,7 @@ public class Inventory {
 	 * @param item The item to remove to the inventory
 	 * @param stack The amount of items to remove to the inventory
 	 */
-	public boolean remove(Item item, int stack) {
+	public boolean remove(Item item, short stack) {
 		if(stack > item.MAX_STACK)
 			return false;
 		
@@ -112,7 +112,7 @@ public class Inventory {
 				if(slot.getItem().stack - stack < 0)
 					return false;
 					
-				slot.getItem().changeStack(-stack);
+				slot.getItem().changeStack((short) -stack);
 				slot.getQuantity().updateText(""+slot.getItem().stack);					
 				
 				if(slot.getItem().stack == 0) {
@@ -130,7 +130,7 @@ public class Inventory {
 	 * Re-organize the inventory display 
 	 */
 	private void replace() {
-		int x = 0 ,y = 0;
+		short x = 0 ,y = 0;
 		for (InventorySlot slot : inventorySlot) {
 			slot.getItemSprite().setPosition(-width*inventoryWidth/2 + width*1.3f*x + 0.005f, height*(inventoryWidth+3.25f) - height*y*2*1.135f);
 			x++;
