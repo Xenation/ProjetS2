@@ -18,8 +18,6 @@ import fr.iutvalence.info.dut.m2107.tiles.Tile;
  */
 public abstract class Ammunition extends Item {
 	
-	private static final Vector2f DEF_VEL = new Vector2f(0, 0);
-	
 	/**
 	 * Time before destruction
 	 */
@@ -82,8 +80,6 @@ public abstract class Ammunition extends Item {
 	@Override
 	public void update(Layer layer) {
 		if(this.id == 9) this.rot += 2;
-		this.pos.x += this.vel.x * DisplayManager.deltaTime();
-		this.pos.y += this.vel.y * DisplayManager.deltaTime();
 		this.remainingTime += DisplayManager.deltaTime();
 		if(this.remainingTime >= DESTROY_TIME) layer.remove(this);
 		super.update(layer);
