@@ -65,7 +65,7 @@ public class SpriteDatabase {
 		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
 			e.printStackTrace();
 		}*/
-		int rng = (int) (Math.random()*4);
+		byte rng = (byte) (Math.random()*4);
 		switch (rng) {
 			case 0:
 				return slime0Spr;

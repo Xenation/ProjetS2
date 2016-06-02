@@ -1,7 +1,6 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.Sys;
-import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
@@ -16,14 +15,10 @@ public class Orb extends Ammunition {
 	
 	private static final short lifeTime = 5;
 
-	public Orb(Vector2f pos, float rot, EntitySprite spr, short id, String name, String description, Rarity rarity,
-			short maxStack, short value, short damage, short knockback, Vector2f velocity, short speed) {
-		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, knockback, velocity, speed);
-	}
-
-	public Orb(EntitySprite spr, Collider col, short id, String name, String description, Rarity rarity, short maxStack,
-			short value, short damage, short knockback, short speed) {
-		super(spr, col, id, name, description, rarity, maxStack, value, damage, knockback, speed);
+	public Orb(EntitySprite spr, Collider col, short spd,
+			short id, String name, String description, Rarity rarity, short maxStack,
+			short value, short damage, short knockback) {
+		super(spr, col, spd, id, name, description, rarity, maxStack, value, damage, knockback);
 	}
 
 	public Orb(Ammunition ammo) {

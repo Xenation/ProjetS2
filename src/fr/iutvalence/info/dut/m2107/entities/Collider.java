@@ -7,8 +7,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.inventory.Ammunition;
 import fr.iutvalence.info.dut.m2107.inventory.Arrow;
-import fr.iutvalence.info.dut.m2107.inventory.Bullet;
-import fr.iutvalence.info.dut.m2107.inventory.Orb;
 import fr.iutvalence.info.dut.m2107.models.AbstractSprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
@@ -189,7 +187,7 @@ public class Collider {
 		
 		List<Tile> surroundNonSolidTile = generateSurroundingTiles(nonSolidTiles, encompassCol);
 		for (Tile tile : surroundNonSolidTile) {
-			if(tile.getType().getBehaviors().contains(TileBehavior.DAMAGING)) {
+			if(tile.getType().hasBehavior(TileBehavior.DAMAGING)) {
 				((Player)this.ent).doDamage(((DamagingSupportedTile)tile).getDamage(), tile.x + Tile.TILE_SIZE/2 > this.ent.pos.x + this.getW()/2 ? -((DamagingSupportedTile)tile).getKnockback() : ((DamagingSupportedTile)tile).getKnockback());
 				nonSolidTiles.remove(tile);
 			}
@@ -498,7 +496,7 @@ public class Collider {
 		if(top) {
 			((TerrestrialCreature)this.ent).vel.y = 0;
 			if(((Rat)this.ent).wallWalk) {
-				((Rat)this.ent).setSpeed(-((Rat)this.ent).getSpeed());
+				((Rat)this.ent).setSpeed((short) -((Rat)this.ent).getSpeed());
 			}
 		}
 	}
@@ -534,7 +532,6 @@ public class Collider {
 	 */
 	private void AmmunitionContinuousCollision(Ammunition ammo) {
 		short continuousStep = initStepCollision(ammo.getVelocity());
-		
 		float stepXtoAdd = ammo.getVelocity().x * DisplayManager.deltaTime() / continuousStep;
 		float stepYtoAdd = ammo.getVelocity().y * DisplayManager.deltaTime() / continuousStep;
 		float stepX = ammo.col.minX + this.getW()/2;

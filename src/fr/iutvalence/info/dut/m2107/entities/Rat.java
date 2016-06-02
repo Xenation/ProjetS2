@@ -16,7 +16,7 @@ public class Rat extends TerrestrialCreature {
 	
 	private float atlasCount;
 	
-	public Rat(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd, int health,
+	public Rat(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd, int health,
 			int jumpHeight) {
 		super(pos, rot, spr, col, vel, spd, health, jumpHeight);
 	}

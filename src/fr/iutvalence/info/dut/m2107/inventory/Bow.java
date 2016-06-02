@@ -1,7 +1,6 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.Sys;
-import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Character;
 import fr.iutvalence.info.dut.m2107.entities.Player;
@@ -17,28 +16,6 @@ import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
  *
  */
 public class Bow extends Weapon {
-
-	/**
-	 * Constructor of a bow
-	 * @param pos The position of the bow
-	 * @param rot The rotation of the bow
-	 * @param spr The sprite of the bow
-	 * @param id The id of the bow
-	 * @param name The name of the bow
-	 * @param description The description of the bow
-	 * @param rarity The rarity of the bow
-	 * @param maxStack The max stack of the bow
-	 * @param value The value of the bow
-	 * @param damage The damage of the bow
-	 * @param range The range of the bow
-	 * @param useTime The use time of the bow
-	 * @param knockback The knockback of the bow
-	 */
-	public Bow(Vector2f pos, float rot, EntitySprite spr,
-				short id, String name, String description, Rarity rarity, short maxStack, short value,
-				short damage, short range, float useTime, short knockback, short handRotation) {
-		super(pos, rot, spr, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback, handRotation);
-	}
 	
 	/**
 	 * Constructor of a bow

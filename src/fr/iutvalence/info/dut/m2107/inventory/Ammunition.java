@@ -40,45 +40,9 @@ public abstract class Ammunition extends Item {
 	 */
 	protected short knockback;
 	
-	/**
-	 * The velocity of the ammo
-	 */
-	protected Vector2f vel;
-	
-	/**
-	 * The speed of the ammo
-	 */
-	protected short speed;
-	
 	protected Entity piercingEntity = null;
 	
 	protected Tile piercingTile = null;
-	
-	/**
-	 * Constructor of an ammunition
-	 * @param pos The position of the ammo
-	 * @param rot The rotation of the ammo
-	 * @param spr The sprite of the ammo
-	 * @param id The id of the id
-	 * @param name The name of the ammo
-	 * @param description The description of the ammo
-	 * @param rarity The rarity of the ammo
-	 * @param maxStack The max stack of the ammo
-	 * @param value The value of the ammo
-	 * @param damage The damage of the ammo
-	 * @param knockback The knocback of the ammo
-	 * @param velocity The velocity of the ammo
-	 * @param speed The speed of the ammo
-	 */
-	public Ammunition(Vector2f pos, float rot, EntitySprite spr,
-				short id, String name, String description, Rarity rarity, short maxStack, short value,
-				short damage, short knockback, Vector2f velocity, short speed) {
-		super(pos, rot, spr, id, name, description, rarity, maxStack, value);
-		this.damage = damage;
-		this.knockback = knockback;
-		this.vel = velocity;
-		this.vel.scale(speed);
-	}
 	
 	/**
 	 * Constructor of an ammunition
@@ -94,14 +58,12 @@ public abstract class Ammunition extends Item {
 	 * @param knockback The knocback of the ammo
 	 * @param speed The speed of the ammo
 	 */
-	public Ammunition(EntitySprite spr, Collider col,
+	public Ammunition(EntitySprite spr, Collider col, short spd,
 				short id, String name, String description, Rarity rarity, short maxStack, short value,
-				short damage, short knockback, short speed) {
-		super(spr, col, id, name, description, rarity, maxStack, value);
+				short damage, short knockback) {
+		super(spr, col, spd, id, name, description, rarity, maxStack, value);
 		this.damage = damage;
 		this.knockback = knockback;
-		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
-		this.speed = speed;
 	}
 	
 	/**
@@ -112,7 +74,6 @@ public abstract class Ammunition extends Item {
 		super(ammo);
 		this.damage = ammo.damage;
 		this.knockback = ammo.knockback;
-		this.speed = ammo.speed;
 	}
 
 	/* (non-Javadoc)
@@ -137,7 +98,7 @@ public abstract class Ammunition extends Item {
 		this.pos = new Vector2f(GameWorld.player.getPosition().x + GameWorld.player.getPivot().getPosition().x, GameWorld.player.getPosition().y + GameWorld.player.getPivot().getPosition().y);
 		this.rot = GameWorld.player.getDegreeShoot();
 		this.vel = new Vector2f(GameWorld.player.getShoot().x, GameWorld.player.getShoot().y);
-		this.vel.scale(this.speed);
+		this.vel.scale(this.spd);
 		if(this instanceof Arrow) {
 			this.vel.x += GameWorld.player.getVelocity().x/2;
 			this.vel.y += GameWorld.player.getVelocity().y/2;
@@ -164,24 +125,6 @@ public abstract class Ammunition extends Item {
 	 * @return the knockback of the ammo
 	 */
 	public short getKnockback() {return knockback;}
-	
-	/**
-	 * Return the velocity of the ammo
-	 * @return the velocity of the ammo
-	 */
-	public Vector2f getVelocity() {return vel;}
-	
-	/**
-	 * 
-	 * @param vel
-	 */
-	public void setVelocity(Vector2f vel) {this.vel = vel;}
-	
-	/**
-	 * Return the speed of the ammo
-	 * @return the speed of the ammo
-	 */
-	public short getSpeed() {return speed;}
 
 
 	public Tile getPiercingTile() {return piercingTile;}

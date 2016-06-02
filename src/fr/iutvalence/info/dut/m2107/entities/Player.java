@@ -42,11 +42,7 @@ public class Player extends Character{
 	private float posY = -.85f;
 	private short selectSlot = 0;
 	private GUIElement selectQuickBar;
-	
-	
-	private GUIElement hpGUI;
-	// Temporary
-	
+
 	private GUIElement quickBarGUI;
 	
 	protected float invulnerabilityTime;
@@ -104,8 +100,6 @@ public class Player extends Character{
 	public void init() {
 		this.quickBarGUI = new GUIElement(SpriteDatabase.getQuickBarStr(), new Vector2f(0, posY), width*this.quickBar.length, height);
 		GameWorld.guiLayerMap.getLayer(1).add(this.quickBarGUI);
-		
-		this.hpGUI = new GUIElement(SpriteDatabase.getHeartStr(), new Vector2f(-1 + width, 1 - height), width/2, height/2);
 		
 		this.initLayer();
 		this.layer.add(this.pivot);

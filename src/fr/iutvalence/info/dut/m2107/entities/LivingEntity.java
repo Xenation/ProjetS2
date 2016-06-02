@@ -44,7 +44,7 @@ public class LivingEntity extends MovableEntity {
 	 * @param jumpHeight The jump height of the entity
 	 */
 	public LivingEntity(Vector2f pos, float rot, EntitySprite spr, Collider col,
-						Vector2f vel, float spd,
+						Vector2f vel, short spd,
 						int health, int jumpHeight) {
 		super(pos, rot, spr, col, vel, spd);
 		this.health = health;

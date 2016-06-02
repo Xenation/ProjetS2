@@ -24,22 +24,22 @@ public class ItemDatabase {
 	public static void create() {
 		// AMMUNIITON
 		//					TYPE	SPR							 			COL											ID	NAME				DESC					RARITY				MAX		VAL		DMG		KNO		SPD
-		itemDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			new Collider(-.02f, -.02f, .02f, .02f),		(short)0, 	"Arrow",			"A basic arrow", 		Rarity.POOR,		(short)50,		(short)1,		(short)1,		(short)1,		(short)25));
-		itemDatabase.add(new Arrow	(SpriteDatabase.getLightningArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),		(short)1,	"Lightning Arrow", 	"A lightning arrow",	Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)20,		(short)50));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			new Collider(-.02f, -.02f, .02f, .02f), (short) 15,		(short)0, 	"Arrow",			"A basic arrow", 		Rarity.POOR,		(short)50,		(short)1,		(short)1,		(short)1));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getLightningArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),	(short) 30,	(short)1,	"Lightning Arrow", 	"A lightning arrow",	Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)20));
 		
 		// WEAPON
 		//					TYPE	SPR								ID	NAME		DESC				RARITY			MAX		VAL		DMG 	RNG		USE		KNOC
 		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	(short)2,	"Bow",		"A simple bow",		Rarity.POOR,	(short)1,		(short)3, 		(short)3, 		(short)0, 		.5f,	(short)3, (short)20));
 		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	(short)3,	"Sword",	"A simple Sword",	Rarity.POOR,	(short)1,		(short)3, 		(short)5, 		(short)3, 		.5f,	(short)7, (short)-20));
 		
-		itemDatabase.add(new Arrow	(SpriteDatabase.getFrozenArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),		(short)4,	"Frozen Arrow", 	"A frozen arrow",		Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)3,		(short)38));
-		itemDatabase.add(new Arrow	(SpriteDatabase.getBurningArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),		(short)5,	"Burning Arrow", 	"A burning arrow",		Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)3,		(short)38));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getFrozenArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),	(short)21,	(short)4,	"Frozen Arrow", 	"A frozen arrow",		Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)3));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getBurningArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),	(short)21,	(short)5,	"Burning Arrow", 	"A burning arrow",		Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)3));
 		
 		itemDatabase.add(new Gun(SpriteDatabase.getGunSpr(), (short)6, "Gun", "Basic gun", Rarity.COMMON, (short)1, (short)5, (short)5, (short)0, .25f, (short)5, (short)20));
-		itemDatabase.add(new Bullet(SpriteDatabase.getBulletSpr(), new Collider(-.02f, -.02f, .02f, .02f), (short)7, "A bullet", "A bullet", Rarity.COMMON, (short)500, (short)1, (short)2, (short)5, (short)50));
+		itemDatabase.add(new Bullet(SpriteDatabase.getBulletSpr(), new Collider(-.02f, -.02f, .02f, .02f), (short) 50, (short)7, "A bullet", "A bullet", Rarity.COMMON, (short)500, (short)1, (short)2, (short)5));
 		
 		itemDatabase.add(new Staff(SpriteDatabase.getStaffSpr(), (short)8, "Staff", "A staff", Rarity.RARE, (short)1, (short)50, (short)10, (short)15, 1, (short)1, (short)-80));
-		itemDatabase.add(new Orb(SpriteDatabase.getAirOrbSpr(), new Collider(-0.25f, -0.25f, 0.25f, 0.25f), (short)9, "Air Orb", "An air orb", Rarity.POOR, (short)1, (short)1, (short)5, (short)10, (short)5));
+		itemDatabase.add(new Orb(SpriteDatabase.getAirOrbSpr(), new Collider(-0.25f, -0.25f, 0.25f, 0.25f), (short)2, (short)9, "Air Orb", "An air orb", Rarity.POOR, (short)1, (short)1, (short)5, (short)10));
 	}
 	
 	/**

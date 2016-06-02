@@ -3,7 +3,7 @@ package fr.iutvalence.info.dut.m2107.inventory;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
-import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.entities.MovableEntity;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 
@@ -12,7 +12,7 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
  * @author Voxelse
  *
  */
-public class Item extends Entity {
+public class Item extends MovableEntity {
 
 	/**
 	 * The id of the item
@@ -61,9 +61,10 @@ public class Item extends Entity {
 	 * @param maxStack The maximum stack of the item
 	 * @param value The value of the item
 	 */
-	public Item(Vector2f pos, float rot, EntitySprite spr,
+	public Item(Vector2f pos, float rot, EntitySprite spr, Collider col,
+				Vector2f vel, short spd,
 				short id, String name, String description, Rarity rarity, short maxStack, short value) {
-		super(pos, rot, spr);
+		super(pos, rot, spr, col, vel, spd);
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -83,6 +84,17 @@ public class Item extends Entity {
 	 * @param maxStack The maximum stack of the item
 	 * @param value The value of the item
 	 */
+	public Item(EntitySprite spr,
+			short id, String name, String description, Rarity rarity, short maxStack, short value) {
+		super(spr);
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.rarity = rarity;
+		this.MAX_STACK = maxStack;
+		this.value = value;
+	}
+	
 	public Item(EntitySprite spr, Collider col,
 			short id, String name, String description, Rarity rarity, short maxStack, short value) {
 		super(spr, col);
@@ -94,19 +106,9 @@ public class Item extends Entity {
 		this.value = value;
 	}
 	
-	/**
-	 * Constructor of an Item
-	 * @param spr The sprite of the item
-	 * @param id The id of the item
-	 * @param name The name of the item
-	 * @param description The description of the item
-	 * @param rarity The rarity of the item
-	 * @param maxStack The maximum stack of the item
-	 * @param value The value of the item
-	 */
-	public Item(EntitySprite spr,
+	public Item(EntitySprite spr, Collider col, short spd,
 			short id, String name, String description, Rarity rarity, short maxStack, short value) {
-		super(spr);
+		super(spr, col, spd);
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -120,7 +122,7 @@ public class Item extends Entity {
 	 * @param item The item to copy
 	 */
 	public Item(Item item) {
-		super(item.spr, item.col);
+		super(item.pos, item.rot, item.spr, item.col, item.vel, item.spd);
 		this.id = item.id;
 		this.name = item.name;
 		this.description = item.description;
@@ -134,6 +136,7 @@ public class Item extends Entity {
 	 */
 	@Override
 	public void update(Layer layer) {
+		
 		super.update(layer);
 	}
 

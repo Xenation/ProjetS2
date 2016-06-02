@@ -10,7 +10,7 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Zombie extends Character {
 
-	public Zombie(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd, int health,
+	public Zombie(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd, int health,
 			int jumpHeight) {
 		super(pos, rot, spr, col, vel, spd, health, jumpHeight);
 	}

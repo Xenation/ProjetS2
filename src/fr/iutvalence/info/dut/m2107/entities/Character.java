@@ -38,7 +38,7 @@ public class Character extends TerrestrialCreature{
 	 * @param armor The armor of the character
 	 * @param jumpHeight The jump height of the character
 	 */
-	public Character(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, float spd, int health, int jumpHeight) {
+	public Character(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd, int health, int jumpHeight) {
 		super(pos, rot, spr, col, vel, spd, health, jumpHeight);
 	}
 	
