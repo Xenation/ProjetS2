@@ -16,7 +16,7 @@ import fr.iutvalence.info.dut.m2107.tiles.Tile;
  * @author Voxelse
  *
  */
-public abstract class Ammunition extends Item {
+public class Ammunition extends Item {
 	
 	/**
 	 * Time before destruction
@@ -41,6 +41,28 @@ public abstract class Ammunition extends Item {
 	protected Entity piercingEntity = null;
 	
 	protected Tile piercingTile = null;
+
+	/**
+	 * Constructor of an ammunition
+	 * @param spr The sprite of the ammo
+	 * @param col The collider of the ammo
+	 * @param id The id of the id
+	 * @param name The name of the ammo
+	 * @param description The description of the ammo
+	 * @param rarity The rarity of the ammo
+	 * @param maxStack The max stack of the ammo
+	 * @param value The value of the ammo
+	 * @param damage The damage of the ammo
+	 * @param knockback The knocback of the ammo
+	 * @param speed The speed of the ammo
+	 */
+	public Ammunition(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd,
+				short id, String name, String description, Rarity rarity, short maxStack, short value,
+				short damage, short knockback) {
+		super(pos, rot, spr, col, vel, spd, id, name, description, rarity, maxStack, value);
+		this.damage = damage;
+		this.knockback = knockback;
+	}
 	
 	/**
 	 * Constructor of an ammunition
@@ -62,16 +84,6 @@ public abstract class Ammunition extends Item {
 		super(spr, col, spd, id, name, description, rarity, maxStack, value);
 		this.damage = damage;
 		this.knockback = knockback;
-	}
-	
-	/**
-	 * Constructor of an ammunition
-	 * @param ammo The ammo to copy
-	 */
-	public Ammunition(Ammunition ammo) {
-		super(ammo);
-		this.damage = ammo.damage;
-		this.knockback = ammo.knockback;
 	}
 
 	/* (non-Javadoc)
@@ -128,5 +140,24 @@ public abstract class Ammunition extends Item {
 	
 	public Entity getPiercingEntity() {return piercingEntity;}
 	public void setPiercingEntity(Entity piercingEntity) {this.piercingEntity = piercingEntity;}
+	
+	public Ammunition copy() {
+		Item item = super.copy();
+		Ammunition newAmmo = new Ammunition(item.getPosition(),
+											item.getRotation(),
+											(EntitySprite)item.getSprite(),
+											item.getCollider(),
+											item.getVelocity(),
+											item.getSpeed(),
+											item.getId(),
+											item.name,
+											item.description,
+											item.rarity,
+											item.MAX_STACK,
+											item.value,
+											this.damage,
+											this.knockback);
+		return newAmmo;
+	}
 	
 }

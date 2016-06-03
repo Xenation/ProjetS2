@@ -573,9 +573,16 @@ public class Collider {
 		}
 	}
 	
-	private Collider encompassCollider(Collider entCollider, Vector2f nextPos, float extendValue) {
+	public Collider encompassCollider(Collider entCollider, Vector2f nextPos, float extendValue) {
 		Collider encompassCol = encompassTrajectory(new Vector2f(entCollider.minX + entCollider.getW()/2, entCollider.minY + entCollider.getH()/2), nextPos);
 		encompassCol.extendAll(entCollider.getW()*extendValue, entCollider.getH()*extendValue);
+		return encompassCol;
+	}
+	
+	public static Collider encompassCollider(Collider entCollider, Vector2f vel) {
+		Collider encompassCol = encompassTrajectory(new Vector2f(entCollider.minX + entCollider.getW()/2, entCollider.minY + entCollider.getH()/2),
+				new Vector2f(entCollider.minX + entCollider.getW()/2 + vel.x * DisplayManager.deltaTime(), entCollider.minY + entCollider.getH()/2 + vel.y * DisplayManager.deltaTime()));
+		encompassCol.extendAll(entCollider.getW()/2, entCollider.getH()/2);
 		return encompassCol;
 	}
 
@@ -585,7 +592,7 @@ public class Collider {
 	 * @param nextPos The next position
 	 * @return The new collider which encompass the both position
 	 */
-	public Collider encompassTrajectory(Vector2f actualPos, Vector2f nextPos) {
+	public static Collider encompassTrajectory(Vector2f actualPos, Vector2f nextPos) {
 		Collider encompassCol;
 		if(actualPos.getX() <= nextPos.getX()) {
 			if(actualPos.getY() <= nextPos.getY())
@@ -634,6 +641,12 @@ public class Collider {
 					return ent;
 		}
 		return null;
+	}
+	
+	public boolean isCollidingWithPlayer() {			
+		if(isColliding(this, GameWorld.player.getCollider()))
+			return true;
+		return false;
 	}
 	
 	public boolean checkTilePosition(List<Tile> globalTiles, int x, int y) {

@@ -291,11 +291,9 @@ public class Entity {
 	 */
 	public void setAlpha(float alpha) {this.alpha = alpha;}
 	
-	/**
-	 * 
-	 * @return
-	 */
 	public Collider getCollider() {return col;}
+	
+	public void setCollider(Collider col) {this.col = col;}
 	
 	/**
 	 * Returns the group layer

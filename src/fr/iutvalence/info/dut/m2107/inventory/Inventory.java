@@ -215,8 +215,9 @@ public class Inventory {
 	 */
 	public Arrow getArrow() {
 		for (InventorySlot slot : inventorySlot)
-			if(slot.getItem() instanceof Arrow)
-				return new Arrow((Arrow)slot.getItem());
+			if(slot.getItem() instanceof Arrow) {
+				return (Arrow)slot.getItem().copy();
+			}
 		return null;
 	}
 	
@@ -227,7 +228,7 @@ public class Inventory {
 	public Bullet getBullet() {
 		for (InventorySlot slot : inventorySlot)
 			if(slot.getItem() instanceof Bullet)
-				return new Bullet((Bullet)slot.getItem());
+				return (Bullet)slot.getItem().copy();
 		return null;
 	}
 

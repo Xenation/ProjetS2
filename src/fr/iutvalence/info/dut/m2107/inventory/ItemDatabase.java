@@ -23,9 +23,9 @@ public class ItemDatabase {
 	 */
 	public static void create() {
 		// AMMUNIITON
-		//					TYPE	SPR							 			COL											ID	NAME				DESC					RARITY				MAX		VAL		DMG		KNO		SPD
+		//					TYPE	SPR							 			COL															ID		NAME				DESC					RARITY					MAX				VAL				DMG				KNO
 		itemDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			new Collider(-.02f, -.02f, .02f, .02f), (short) 25,		(short)0, 	"Arrow",			"A basic arrow", 		Rarity.POOR,		(short)50,		(short)1,		(short)1,		(short)1));
-		itemDatabase.add(new Arrow	(SpriteDatabase.getLightningArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),	(short) 50,	(short)1,	"Lightning Arrow", 	"A lightning arrow",	Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)20));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getLightningArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),	(short) 50,		(short)1,	"Lightning Arrow", 	"A lightning arrow",	Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)20));
 		
 		// WEAPON
 		//					TYPE	SPR								ID	NAME		DESC				RARITY			MAX		VAL		DMG 	RNG		USE		KNOC
@@ -136,22 +136,10 @@ public class ItemDatabase {
 	 * @return A new instance of the item desired
 	 */
 	public static Item get(int index) {
-		Item item = itemDatabase.get(index);
-		if(item instanceof Arrow)
-			return new Arrow((Arrow)item);
-		if(item instanceof Bullet)
-			return new Bullet((Bullet)item);
-		if(item instanceof Orb)
-			return new Orb((Orb)item);
-		
-		if(item instanceof Bow)
-			return new Bow((Bow)item);
-		if(item instanceof Sword)
-			return new Sword((Sword)item);
-		if(item instanceof Gun)
-			return new Gun((Gun)item);
-		if(item instanceof Staff)
-			return new Staff((Staff)item);
-		return null;
+		return itemDatabase.get(index).getClass().cast(itemDatabase.get(index)).copy();
+	}
+
+	public static Item getItem(int index) {
+		return itemDatabase.get(index).copy();
 	}
 }
