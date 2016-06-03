@@ -5,12 +5,7 @@ import java.io.PrintStream;
 import org.lwjgl.opengl.Display;
 
 import fr.iutvalence.info.dut.m2107.core.GameManager;
-import fr.iutvalence.info.dut.m2107.inventory.Item;
-import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.render.*;
-import fr.iutvalence.info.dut.m2107.storage.GameWorld;
-import fr.iutvalence.info.dut.m2107.storage.Input;
-import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 import fr.iutvalence.info.dut.m2107.toolbox.TrackingPrintStream;
 
 public class MainGameTester {

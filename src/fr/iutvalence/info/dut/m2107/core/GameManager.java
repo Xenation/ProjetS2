@@ -17,6 +17,7 @@ import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
 import fr.iutvalence.info.dut.m2107.gui.GUISlot;
 import fr.iutvalence.info.dut.m2107.inventory.Item;
 import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
+import fr.iutvalence.info.dut.m2107.junit.InventoryTest;
 import fr.iutvalence.info.dut.m2107.listeners.GUIListener;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Loader;
@@ -299,7 +300,7 @@ public class GameManager {
 		//Entity chest = new Entity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider);
 		//GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(chest);
 		
-		Item item = Item.copyDropableItem(ItemDatabase.get(2), 105.5f, 25f);
+		Item item = Item.copyDropableItem(ItemDatabase.get(2), 106f, 25f);
 		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
 		
 		item = Item.copyDropableItem(ItemDatabase.get(10), 0, 10);
@@ -308,6 +309,9 @@ public class GameManager {
 		
 		item = Item.copyDropableItem(ItemDatabase.get(6), 0, 10);
 		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
+		
+
+		org.junit.runner.JUnitCore.runClasses(InventoryTest.class);
 		
 //		Light sun = new Light(new Vector2f(0, 50), new Vector3f(1, 1, 1), 1, 200);
 //		sun.setParent(GameWorld.player);
