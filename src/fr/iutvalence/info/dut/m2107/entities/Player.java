@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector2f;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
 import fr.iutvalence.info.dut.m2107.gui.GUIMovable;
+import fr.iutvalence.info.dut.m2107.gui.GUISlot;
 import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.inventory.Bow;
 import fr.iutvalence.info.dut.m2107.inventory.Gun;
@@ -137,8 +138,10 @@ public class Player extends Character{
 		
 		for (byte slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++) {
 			if(this.quickBar[slotNumber].getItem() != null) {
-
-				this.quickBar[slotNumber].setItemSprite(new GUIMovable(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(-width*this.quickBar.length/2 + width*(slotNumber+.5f), 0), width, height));
+				
+				GUISlot s = new GUISlot(new Vector2f(-width*this.quickBar.length/2 + width*(slotNumber+.5f), 0), width, height, quickBar[slotNumber]);
+				s.setItem(new GUIMovable(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(0, 0), width, height));
+				this.quickBar[slotNumber].setItemSprite(s);
 				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
 				
 				this.quickBar[slotNumber].getItemSprite().setRotation(-45);

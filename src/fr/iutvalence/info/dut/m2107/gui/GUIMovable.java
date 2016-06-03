@@ -2,6 +2,7 @@ package fr.iutvalence.info.dut.m2107.gui;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.events.GUIDragDroppedEvent;
 import fr.iutvalence.info.dut.m2107.models.AbstractSprite;
 import fr.iutvalence.info.dut.m2107.storage.Input;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
@@ -20,6 +21,7 @@ public class GUIMovable extends GUIElement {
 		if (bound && Input.isMouseLeftUp()) {
 			bound = false;
 			Input.isDragingGUI = false;
+			sendPreciseEvent(new GUIDragDroppedEvent(this));
 		}
 		if ((leftClicked && !Input.isDragingGUI) || bound) {
 			if (!bound) {
@@ -34,6 +36,10 @@ public class GUIMovable extends GUIElement {
 		} else if (offset != null) {
 			offset = null;
 		}
+	}
+	
+	public boolean isBound() {
+		return bound;
 	}
 	
 }

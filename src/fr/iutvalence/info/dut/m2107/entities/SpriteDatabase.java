@@ -55,27 +55,20 @@ public class SpriteDatabase {
 	private final static EntitySprite chestSpr = new EntitySprite("entities/chest", new Vector2f(2, 2));
 	public static EntitySprite getChestSpr() {return chestSpr;}
 	
+	@SuppressWarnings("unused")
 	private final static EntitySprite slime0Spr = new EntitySprite("entities/slime_0", new Vector2f(1.75f, 1.75f));
+	@SuppressWarnings("unused")
 	private final static EntitySprite slime1Spr = new EntitySprite("entities/slime_1", new Vector2f(1.75f, 1.75f));
+	@SuppressWarnings("unused")
 	private final static EntitySprite slime2Spr = new EntitySprite("entities/slime_2", new Vector2f(1.75f, 1.75f));
+	@SuppressWarnings("unused")
 	private final static EntitySprite slime3Spr = new EntitySprite("entities/slime_3", new Vector2f(1.75f, 1.75f));
 	public static EntitySprite getSlimeSpr() {
-		/*try {
-			return (EntitySprite) SpriteDatabase.class.getField("slime" + (int)(Math.random()*4) + "Spr").get(null);
+		try {
+			return (EntitySprite) SpriteDatabase.class.getDeclaredField("slime" + (int)(Math.random()*4) + "Spr").get(null);
 		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
 			e.printStackTrace();
-		}*/
-		byte rng = (byte) (Math.random()*4);
-		switch (rng) {
-			case 0:
-				return slime0Spr;
-			case 1:
-				return slime1Spr;
-			case 2:
-				return slime2Spr;
-			case 3:
-				return slime3Spr;
-		};
+		}
 		return null;
 	}
 	

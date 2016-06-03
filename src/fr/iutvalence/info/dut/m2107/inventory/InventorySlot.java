@@ -4,13 +4,14 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIMovable;
+import fr.iutvalence.info.dut.m2107.gui.GUISlot;
 import fr.iutvalence.info.dut.m2107.gui.GUISprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 
 public class InventorySlot {
 
 	private Item item;
-	private GUIMovable itemSprite;
+	private GUISlot itemSprite;
 	private GUIText quantity;
 	
 	public InventorySlot() {
@@ -21,7 +22,8 @@ public class InventorySlot {
 	
 	public InventorySlot(Item item, Vector2f pos) {
 		this.item = item;
-		this.itemSprite = new GUIMovable(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), pos, Inventory.width, Inventory.height);
+		this.itemSprite = new GUISlot(pos, Inventory.width, Inventory.height, this);
+		this.itemSprite.setItem(new GUIMovable(new GUISprite(item.getSprite().getAtlas(), item.getSprite().getSize()), new Vector2f(0, 0), Inventory.width, Inventory.height));
 		this.quantity = new GUIText(""+item.stack, .5f, -Inventory.width, -Inventory.width/3, Inventory.width, true);
 		quantity.setParent(itemSprite);
 		itemSprite.setParent(GameWorld.player.getInventory().getInventoryGUI());
@@ -45,6 +47,6 @@ public class InventorySlot {
 	public Item getItem() {return item;}
 	public void setItem(Item item) {this.item = item;}
 
-	public GUIMovable getItemSprite() {return itemSprite;}
-	public void setItemSprite(GUIMovable itemSprite) {this.itemSprite = itemSprite;}
+	public GUISlot getItemSprite() {return itemSprite;}
+	public void setItemSprite(GUISlot itemSprite) {this.itemSprite = itemSprite;}
 }

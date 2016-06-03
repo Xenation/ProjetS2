@@ -65,4 +65,8 @@ public class GUIListener implements Listener {
 		guiSubLayersCounter = 0;
 	}
 	
+	public List<GUIElement> hoveredElements() {
+		return elements;
+	}
+	
 }

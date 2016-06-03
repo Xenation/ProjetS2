@@ -8,9 +8,13 @@ import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.Player;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
+import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUI;
 import fr.iutvalence.info.dut.m2107.gui.GUIMainMenu;
 import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
+import fr.iutvalence.info.dut.m2107.gui.GUIMovable;
+import fr.iutvalence.info.dut.m2107.gui.GUISlot;
+import fr.iutvalence.info.dut.m2107.inventory.Item;
 import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.listeners.GUIListener;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
@@ -62,6 +66,9 @@ public class GameManager {
 	private static boolean gui_pause_toUnload;
 	private static boolean gui_player_toUnload;
 	
+	private static GUISlot s1 = null;
+	private static GUISlot s2 = null;
+	
 	/**
 	 * The listener for GUI broadcast events
 	 */
@@ -104,6 +111,10 @@ public class GameManager {
 		
 		mainMenu = new GUIMainMenu();
 		gui = new GUI();
+	}
+	
+	public static GUIListener getGUIListener() {
+		return guiListener;
 	}
 	
 	/**
@@ -171,6 +182,12 @@ public class GameManager {
 			unloadEntityLayers();
 			GameWorld.player = new Player();
 			ent_default_toUnload = false;
+		}
+		// Slot Switch
+		if (s1 != null && s2 != null) {
+			switchSlots();
+			s1 = null;
+			s2 = null;
 		}
 	}
 	
@@ -277,10 +294,10 @@ public class GameManager {
 		Entity chest = new Entity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider);
 		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(chest);
 		
-		/*for (byte i = 0; i < 100; i++) {
-			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Slime(new Vector2f(2+(float)Math.random()*i*2, 2+(float)Math.random()*i*2), 0, SpriteDatabase.getSlimeSpr() , new Collider(-.5f, -.625f, .5f, .625f), new Vector2f(), 3, 10, 15));
-			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Rat(new Vector2f(2+(float)Math.random()*i*2, 2+(float)Math.random()*i*2), 0, SpriteDatabase.getRatSpr() , new Collider(-.25f, -.25f, .25f, .25f), new Vector2f(), 6, 1, 0));
-		}*/
+//		for (byte i = 0; i < 100; i++) {
+//			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Slime(new Vector2f(2+(float)Math.random()*i*2, 2+(float)Math.random()*i*2), 0, SpriteDatabase.getSlimeSpr() , new Collider(-.5f, -.625f, .5f, .625f), new Vector2f(), (short) 3, 10, 15));
+////			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Rat(new Vector2f(2+(float)Math.random()*i*2, 2+(float)Math.random()*i*2), 0, SpriteDatabase.getRatSpr() , new Collider(-.25f, -.25f, .25f, .25f), new Vector2f(), 6, 1, 0));
+//		}
 	}
 	
 	public static void unloadDefaultEntities() {
@@ -291,4 +308,20 @@ public class GameManager {
 		GameWorld.layerMap.reset();
 	}
 	
+	public static void setSlotsToSwitch(GUISlot slot1, GUISlot slot2) {
+		s1 = slot1;
+		s2 = slot2;
+	}
+	
+	private static void switchSlots() {
+		Item item1 = s1.getSlot().getItem();
+		GUIText txt1 = s1.getSlot().getQuantity();
+		GUIMovable i = s1.getItem();
+		s1.setItem(s2.getItem());
+		s1.getSlot().setItem(s2.getSlot().getItem());
+		s1.getSlot().setQuantity(s2.getSlot().getQuantity());
+		s2.setItem(i);
+		s2.getSlot().setItem(item1);
+		s2.getSlot().setQuantity(txt1);
+	}
 }
