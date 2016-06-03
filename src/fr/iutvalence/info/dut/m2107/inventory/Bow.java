@@ -89,13 +89,8 @@ public class Bow extends Weapon {
 			owner.getPivot().getPosition().x = -owner.getPivot().getPosition().x; 
 			owner.getPivot().getScale().x = owner.getScale().x;
 		}
-		arrow.addWeaponStats(this);
-		arrow.initLaunch(owner);
+		arrow.initLaunch(owner, this, 1, 3);
 		GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).add(arrow);
-		if (arrow.color != null) {
-			Light light = new Light(new Vector2f(0, .01f), arrow.color, 1, 5);
-			light.setParent(arrow);
-		}
 		OpenAL.source.play(AudioDataBase.arrow());
 	}
 	

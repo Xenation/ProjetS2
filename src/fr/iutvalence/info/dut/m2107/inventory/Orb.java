@@ -2,6 +2,7 @@ package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
@@ -18,14 +19,14 @@ public class Orb extends Ammunition {
 
 	public Orb(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd,
 			short id, String name, String description, Rarity rarity, short maxStack,
-			short value, short damage, short knockback) {
-		super(pos, rot, spr, col, vel, spd, id, name, description, rarity, maxStack, value, damage, knockback);
+			short value, short damage, short knockback, Vector3f color) {
+		super(pos, rot, spr, col, vel, spd, id, name, description, rarity, maxStack, value, damage, knockback, color);
 	}
 	
 	public Orb(EntitySprite spr, Collider col, short spd,
 			short id, String name, String description, Rarity rarity, short maxStack,
-			short value, short damage, short knockback) {
-		super(spr, col, spd, id, name, description, rarity, maxStack, value, damage, knockback);
+			short value, short damage, short knockback, Vector3f color) {
+		super(spr, col, spd, id, name, description, rarity, maxStack, value, damage, knockback, color);
 	}
 
 	@Override
@@ -60,7 +61,8 @@ public class Orb extends Ammunition {
 									ammo.MAX_STACK,
 									ammo.value,
 									ammo.damage,
-									ammo.knockback);
+									ammo.knockback,
+									ammo.color);
 		return newOrb;
 	}
 }

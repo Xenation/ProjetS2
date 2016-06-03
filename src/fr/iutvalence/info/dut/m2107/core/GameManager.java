@@ -2,13 +2,9 @@ package fr.iutvalence.info.dut.m2107.core;
 
 import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
-import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
-import fr.iutvalence.info.dut.m2107.entities.Light;
 import fr.iutvalence.info.dut.m2107.entities.Player;
-import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUI;
@@ -17,7 +13,6 @@ import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
 import fr.iutvalence.info.dut.m2107.gui.GUISlot;
 import fr.iutvalence.info.dut.m2107.inventory.Item;
 import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
-import fr.iutvalence.info.dut.m2107.junit.InventoryTest;
 import fr.iutvalence.info.dut.m2107.listeners.GUIListener;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Loader;
@@ -311,7 +306,7 @@ public class GameManager {
 		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
 		
 
-		org.junit.runner.JUnitCore.runClasses(InventoryTest.class);
+		//org.junit.runner.JUnitCore.runClasses(InventoryTest.class);
 		
 //		Light sun = new Light(new Vector2f(0, 50), new Vector3f(1, 1, 1), 1, 200);
 //		sun.setParent(GameWorld.player);

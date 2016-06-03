@@ -1,6 +1,7 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
@@ -34,8 +35,8 @@ public class Bullet extends Ammunition {
 	 */
 	public Bullet(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd,
 			short id, String name, String description, Rarity rarity, short maxStack, short value,
-			short damage, short knockback, byte reboundCount) {
-		super(pos, rot, spr, col, vel, spd, id, name, description, rarity, maxStack, value, damage, knockback);
+			short damage, short knockback, Vector3f color, byte reboundCount) {
+		super(pos, rot, spr, col, vel, spd, id, name, description, rarity, maxStack, value, damage, knockback, color);
 		this.reboundCount = reboundCount;
 	}
 	
@@ -55,8 +56,8 @@ public class Bullet extends Ammunition {
 	 */
 	public Bullet(EntitySprite spr, Collider col, short spd,
 			short id, String name, String description, Rarity rarity, short maxStack, short value,
-			short damage, short knockback, byte reboundCount) {
-		super(spr, col, spd, id, name, description, rarity, maxStack, value, damage, knockback);
+			short damage, short knockback, Vector3f color, byte reboundCount) {
+		super(spr, col, spd, id, name, description, rarity, maxStack, value, damage, knockback, color);
 		this.reboundCount = reboundCount;
 	}
 
@@ -75,11 +76,22 @@ public class Bullet extends Ammunition {
 						((LivingEntity)piercingEntity).doDamage(this.damage, this.rot < 90 && this.rot > -90 ? this.knockback : -this.knockback);	
 					GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
 				} else {
-					if (reboundCount > 0) {
-						if(this.col.isOnDown(this.col, piercingTile) || this.col.isOnUp(this.col, piercingTile)) this.vel.y = -this.vel.y;
-						if(this.col.isOnLeft(this.col, piercingTile) || this.col.isOnRight(this.col, piercingTile)) this.vel.x = -this.vel.x;
-						this.piercingTile = null;
-						reboundCount--;
+					if (reboundCount > 0 || reboundCount == -1) {
+						if(this.col.isOnDown(this.col, piercingTile) || this.col.isOnUp(this.col, piercingTile)) {
+							this.vel.y = -this.vel.y;
+							this.piercingTile = null;
+							if(reboundCount > 0) reboundCount--;
+							this.update(layer);
+							return;
+						}
+						if(this.col.isOnLeft(this.col, piercingTile) || this.col.isOnRight(this.col, piercingTile)) {
+							this.vel.x = -this.vel.x;
+							this.piercingTile = null;
+							if(reboundCount > 0) reboundCount--;
+							this.update(layer);
+							return;
+						}
+
 					} else GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
 				}
 			}
@@ -104,6 +116,7 @@ public class Bullet extends Ammunition {
 									ammo.value,
 									ammo.damage,
 									ammo.knockback,
+									ammo.color,
 									this.reboundCount);
 		return newBullet;
 	}
