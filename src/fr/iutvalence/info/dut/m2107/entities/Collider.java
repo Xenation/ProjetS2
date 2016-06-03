@@ -539,7 +539,7 @@ public class Collider {
 		
 		Collider globalCollider = encompassCollider(ammo.col, new Vector2f(ammo.col.minX + this.getW()/2 + ammo.getVelocity().x * DisplayManager.deltaTime(), ammo.col.minY + this.getH()/2 + ammo.getVelocity().y * DisplayManager.deltaTime()), 3);
 		
-		List<Tile> globalTiles = generateGlobalSurroundingTiles(globalCollider);
+		List<Tile> globalTiles = generateGlobalSolidSurroundingTiles(globalCollider);
 		
 		for (short step = continuousStep; step > 0; step--) {
 			stepX += stepXtoAdd;
@@ -662,9 +662,19 @@ public class Collider {
 	 */
 	public List<Tile> generateGlobalSurroundingTiles(Collider col) {
 		List<Tile> tiles = new ArrayList<Tile>();
-		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(col.localMinX + col.getW()/2, col.localMinY + col.getH()/2))) { 
+		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(col.localMinX, col.localMinY))) { 
 			for (Tile tile : chunk)
 				if(isColliding(col, tile))
+					tiles.add(tile);
+		}
+		return tiles;
+	}
+	
+	public List<Tile> generateGlobalSolidSurroundingTiles(Collider col) {
+		List<Tile> tiles = new ArrayList<Tile>();
+		for (Chunk chunk : GameWorld.chunkMap.getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, new Vector2f(col.localMinX, col.localMinY))) { 
+			for (Tile tile : chunk)
+				if(isColliding(col, tile) && tile.getType().isSolid())
 					tiles.add(tile);
 		}
 		return tiles;

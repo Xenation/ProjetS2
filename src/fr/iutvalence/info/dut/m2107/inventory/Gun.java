@@ -64,8 +64,7 @@ public class Gun extends Weapon {
 			owner.getPivot().getPosition().x = -owner.getPivot().getPosition().x; 
 			owner.getPivot().getScale().x = owner.getScale().x;
 		}
-		bullet.addWeaponStats(this);
-		bullet.initLaunch(owner);
+		bullet.initLaunch(owner, this, .75f, 1.5f);
 		GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).add(bullet);
 		// Audio to add
 	}

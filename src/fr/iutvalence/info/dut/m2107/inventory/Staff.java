@@ -25,8 +25,7 @@ public class Staff extends Weapon {
 	public void use(Character owner) {
 		if(remainingTime <= 0) {
 			Orb orb = (Orb) ItemDatabase.get(9);
-			orb.addWeaponStats(this);
-			orb.initLaunch(owner);
+			orb.initLaunch(owner, this, .75f, 3f);
 			GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).add(orb);
 			// Add sound
 			this.remainingTime = this.useTime;

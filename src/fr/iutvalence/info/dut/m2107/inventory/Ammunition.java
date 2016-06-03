@@ -1,10 +1,12 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Character;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.entities.Light;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
@@ -41,6 +43,8 @@ public class Ammunition extends Item {
 	protected Entity piercingEntity = null;
 	
 	protected Tile piercingTile = null;
+	
+	public Vector3f color = null;
 
 	/**
 	 * Constructor of an ammunition
@@ -58,10 +62,11 @@ public class Ammunition extends Item {
 	 */
 	public Ammunition(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd,
 				short id, String name, String description, Rarity rarity, short maxStack, short value,
-				short damage, short knockback) {
+				short damage, short knockback, Vector3f color) {
 		super(pos, rot, spr, col, vel, spd, id, name, description, rarity, maxStack, value);
 		this.damage = damage;
 		this.knockback = knockback;
+		this.color = color;
 	}
 	
 	/**
@@ -80,10 +85,11 @@ public class Ammunition extends Item {
 	 */
 	public Ammunition(EntitySprite spr, Collider col, short spd,
 				short id, String name, String description, Rarity rarity, short maxStack, short value,
-				short damage, short knockback) {
+				short damage, short knockback, Vector3f color) {
 		super(spr, col, spd, id, name, description, rarity, maxStack, value);
 		this.damage = damage;
 		this.knockback = knockback;
+		this.color = color;
 	}
 
 	/* (non-Javadoc)
@@ -101,7 +107,7 @@ public class Ammunition extends Item {
 	 * Initialize the collision, the position, rotation and velocity of the ammunition
 	 * @param owner 
 	 */
-	public void initLaunch(Character owner) {
+	public void initLaunch(Character owner, Weapon weapon, float intensity, float range) {
 		this.col = new Collider(this.col);
 		this.pos = new Vector2f(GameWorld.player.getPosition().x + GameWorld.player.getPivot().getPosition().x, GameWorld.player.getPosition().y + GameWorld.player.getPivot().getPosition().y);
 		this.rot = GameWorld.player.getDegreeShoot();
@@ -110,6 +116,15 @@ public class Ammunition extends Item {
 		if(this instanceof Arrow) {
 			this.vel.x += GameWorld.player.getVelocity().x/2;
 			this.vel.y += GameWorld.player.getVelocity().y/2;
+		}
+		this.addWeaponStats(weapon);
+		this.setLight(intensity, range);
+	}
+	
+	public void setLight(float intensity, float range) {
+		if (this.color != null) {
+			Light light = new Light(new Vector2f(), this.color, intensity, range);
+			light.setParent(this);
 		}
 	}
 	
@@ -156,7 +171,8 @@ public class Ammunition extends Item {
 											item.MAX_STACK,
 											item.value,
 											this.damage,
-											this.knockback);
+											this.knockback,
+											this.color);
 		return newAmmo;
 	}
 	
