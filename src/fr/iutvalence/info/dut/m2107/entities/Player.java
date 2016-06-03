@@ -131,30 +131,24 @@ public class Player extends Character{
 		for (int slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++)
 			this.quickBar[slotNumber] = new InventorySlot();
 		
-		this.quickBar[0].setItem(ItemDatabase.get(2));
-		this.quickBar[1].setItem(ItemDatabase.get(3));
-		this.quickBar[2].setItem(ItemDatabase.get(6));
-		this.quickBar[3].setItem(ItemDatabase.get(8));
-		
-		for (byte slotNumber = 0; slotNumber < this.quickBar.length; slotNumber++) {
-			if(this.quickBar[slotNumber].getItem() != null) {
-				
-				GUISlot s = new GUISlot(new Vector2f(-width*this.quickBar.length/2 + width*(slotNumber+.5f), 0), width, height, quickBar[slotNumber]);
-				s.setItem(new GUIMovable(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(0, 0), width, height));
-				this.quickBar[slotNumber].setItemSprite(s);
-				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
-				
-				this.quickBar[slotNumber].getGUISprite().setRotation(-45);
-				float scaleMult = this.quickBar[slotNumber].getGUISprite().getSprite().getSize().x*this.quickBar[slotNumber].getGUISprite().getSprite().getSize().y;
-				this.quickBar[slotNumber].getGUISprite().setScale((Vector2f)this.quickBar[slotNumber].getGUISprite().getScale().scale(1/ (scaleMult != 1 ? scaleMult : 1.5f)));
-				
-				this.quickBar[slotNumber].prepareDisplay();
-				
-				this.quickBar[slotNumber].getItemSprite().setParent(this.quickBarGUI);
-			}
-		}
 		selectQuickBar = new GUIElement(SpriteDatabase.getSelectQuickBarSlotStr(), new Vector2f(-width*this.quickBar.length/2 + width*.5f, 0), width, height);
 		selectQuickBar.setParent(quickBarGUI);
+	}
+	
+	private void initQuickBarSlot(Item item, byte slotNumber) {
+		this.quickBar[slotNumber].setItem(item);
+		GUISlot s = new GUISlot(new Vector2f(-width*this.quickBar.length/2 + width*(slotNumber+.5f), 0), width, height, quickBar[slotNumber]);
+		s.setItem(new GUIMovable(new GUISprite(this.quickBar[slotNumber].getItem().getSprite().getAtlas(), this.quickBar[slotNumber].getItem().getSprite().getSize()), new Vector2f(0, 0), width, height));
+		this.quickBar[slotNumber].setItemSprite(s);
+		this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
+		
+		this.quickBar[slotNumber].getGUISprite().setRotation(-45);
+		float scaleMult = this.quickBar[slotNumber].getGUISprite().getSprite().getSize().x*this.quickBar[slotNumber].getGUISprite().getSprite().getSize().y;
+		this.quickBar[slotNumber].getGUISprite().setScale((Vector2f)this.quickBar[slotNumber].getGUISprite().getScale().scale(1/ (scaleMult != 1 ? scaleMult : 1.5f)));
+		
+		this.quickBar[slotNumber].prepareDisplay();
+		
+		this.quickBar[slotNumber].getItemSprite().setParent(this.quickBarGUI);
 	}
 	
 	public void unloadGUIElements() {
@@ -177,8 +171,6 @@ public class Player extends Character{
 		updateSpriteAnimation();
 		
 		updateShootVal();
-		
-		System.out.println(this.inventory);
 		
 		updateQuickBar();
 		
@@ -430,15 +422,21 @@ public class Player extends Character{
 	 * @param stack The amount of item to add
 	 * @return 1 if added, 0 if not found , -1 if found but no more room
 	 */
-	public byte addQuickBarItem(Item item, short stack) {
+	public byte addQuickBarItem(Item item, short stack) {		
 		if(stack <= item.getMAX_STACK()) {
-			for (InventorySlot slot : quickBar) {
-				if(slot.getItem() != null) {
-					if(slot.getItem().getId() == item.getId()) {
-						if(slot.getItem().getStack() + stack <= slot.getItem().getMAX_STACK()) {
-							slot.getItem().changeStack(stack);
+			for (byte i = 0; i < this.quickBar.length; i++) {
+				if(quickBar[i].getItem() != null) {
+					if(quickBar[i].getItem().getId() == item.getId()) {
+						if(quickBar[i].getItem().getStack() + stack <= quickBar[i].getItem().getMAX_STACK()) {
+							quickBar[i].getItem().changeStack(stack);
 							return 1;
 						} return -1;
+					}
+				} else {
+					Item it;
+					if((it = ItemDatabase.get(item.getId())) instanceof Weapon) {
+						this.initQuickBarSlot(it, i);
+						return 1;
 					}
 				}
 			}

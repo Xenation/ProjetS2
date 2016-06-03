@@ -5,7 +5,6 @@ import java.io.PrintStream;
 import org.lwjgl.opengl.Display;
 
 import fr.iutvalence.info.dut.m2107.core.GameManager;
-import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.inventory.Item;
 import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.render.*;
@@ -44,7 +43,7 @@ public class MainGameTester {
 			GameManager.update();
 			
 			if(Input.isKeyWater() && GameWorld.camera.isFocusing()) {
-				Item item = Item.copyDropableItem(ItemDatabase.getItem(0));
+				Item item = Item.copyDropableItem(ItemDatabase.get(0));
 				GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
 				
 			}
