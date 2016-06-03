@@ -16,6 +16,8 @@ import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
  */
 public class Bullet extends Ammunition {
 	
+	protected byte reboundCount;
+	
 	/**
 	 * A constructor of a bullet
 	 * @param spr The sprite of the ammo
@@ -32,8 +34,9 @@ public class Bullet extends Ammunition {
 	 */
 	public Bullet(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd,
 			short id, String name, String description, Rarity rarity, short maxStack, short value,
-			short damage, short knockback) {
+			short damage, short knockback, byte reboundCount) {
 		super(pos, rot, spr, col, vel, spd, id, name, description, rarity, maxStack, value, damage, knockback);
+		this.reboundCount = reboundCount;
 	}
 	
 	/**
@@ -52,8 +55,9 @@ public class Bullet extends Ammunition {
 	 */
 	public Bullet(EntitySprite spr, Collider col, short spd,
 			short id, String name, String description, Rarity rarity, short maxStack, short value,
-			short damage, short knockback) {
+			short damage, short knockback, byte reboundCount) {
 		super(spr, col, spd, id, name, description, rarity, maxStack, value, damage, knockback);
+		this.reboundCount = reboundCount;
 	}
 
 	/* (non-Javadoc)
@@ -68,10 +72,16 @@ public class Bullet extends Ammunition {
 			if(piercingEntity != null || piercingTile != null) {
 				if(piercingEntity != null) {
 					if(piercingEntity instanceof LivingEntity)
-						((LivingEntity)piercingEntity).doDamage(this.damage, this.rot < 90 && this.rot > -90 ? this.knockback : -this.knockback);
-	
+						((LivingEntity)piercingEntity).doDamage(this.damage, this.rot < 90 && this.rot > -90 ? this.knockback : -this.knockback);	
+					GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
+				} else {
+					if (reboundCount > 0) {
+						if(this.col.isOnDown(this.col, piercingTile) || this.col.isOnUp(this.col, piercingTile)) this.vel.y = -this.vel.y;
+						if(this.col.isOnLeft(this.col, piercingTile) || this.col.isOnRight(this.col, piercingTile)) this.vel.x = -this.vel.x;
+						this.piercingTile = null;
+						reboundCount--;
+					} else GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
 				}
-				GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).remove(this);
 			}
 		}
 		
@@ -93,7 +103,8 @@ public class Bullet extends Ammunition {
 									ammo.MAX_STACK,
 									ammo.value,
 									ammo.damage,
-									ammo.knockback);
+									ammo.knockback,
+									this.reboundCount);
 		return newBullet;
 	}
 	

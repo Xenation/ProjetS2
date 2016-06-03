@@ -76,13 +76,14 @@ public class Inventory {
 		// Not found so item is not in the inventory
 		InventorySlot lastSlot = null;
 		InventorySlot newSlot;
-		item.stack = stack;
+		Item newItem = ItemDatabase.get(item.getId());
+		newItem.stack = stack;
 		
 		if(inventorySlot.isEmpty()) {
-			newSlot = new InventorySlot(item, new Vector2f(-width*inventoryWidth/2+.005f, height*(inventoryWidth+.125f)*DisplayManager.aspectRatio));
+			newSlot = new InventorySlot(newItem, new Vector2f(-width*inventoryWidth/2+.005f, height*(inventoryWidth+.125f)*DisplayManager.aspectRatio));
 		} else {
 			lastSlot = inventorySlot.get(inventorySlot.size()-1);
-			newSlot = new InventorySlot(item, new Vector2f(lastSlot.getItemSprite().getPosition().x + width*1.3f, lastSlot.getItemSprite().getPosition().y));
+			newSlot = new InventorySlot(newItem, new Vector2f(lastSlot.getItemSprite().getPosition().x + width*1.3f, lastSlot.getItemSprite().getPosition().y));
 			
 			if(Maths.round(lastSlot.getItemSprite().getPosition().x + width, 5) >= width*inventoryWidth/2) {
 				newSlot.getItemSprite().setPositionY(newSlot.getItemSprite().getPosition().y - height*2*1.135f);
@@ -226,9 +227,11 @@ public class Inventory {
 	 * @return the first bullet found in the inventory
 	 */
 	public Bullet getBullet() {
-		for (InventorySlot slot : inventorySlot)
-			if(slot.getItem() instanceof Bullet)
+		for (InventorySlot slot : inventorySlot) {
+			if(slot.getItem() instanceof Bullet) {
 				return (Bullet)slot.getItem().copy();
+			}
+		}
 		return null;
 	}
 

@@ -299,9 +299,14 @@ public class GameManager {
 		//Entity chest = new Entity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider);
 		//GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(chest);
 		
-		Item item = Item.copyDropableItem(ItemDatabase.get(2));
-		item.setPosition(new Vector2f(105,25));
-		item.getCollider().updateColPos();
+		Item item = Item.copyDropableItem(ItemDatabase.get(2), 105.5f, 25f);
+		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
+		
+		item = Item.copyDropableItem(ItemDatabase.get(10), 0, 10);
+		item.changeStack((short) 9);
+		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
+		
+		item = Item.copyDropableItem(ItemDatabase.get(6), 0, 10);
 		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
 		
 //		Light sun = new Light(new Vector2f(0, 50), new Vector3f(1, 1, 1), 1, 200);

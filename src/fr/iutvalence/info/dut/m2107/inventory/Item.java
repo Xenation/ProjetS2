@@ -212,7 +212,7 @@ public class Item extends MovableEntity {
 						this.value);
 	}
 	
-	public static Item copyDropableItem(Item item) {
+	public static Item copyDropableItem(Item item, float x, float y) {
 		Item newItem = new Item(new Vector2f(item.pos.x, item.pos.y),
 											item.rot,
 											item.spr,
@@ -227,6 +227,8 @@ public class Item extends MovableEntity {
 											item.value);
 		newItem.setCollider(new Collider(newItem.getSprite()));
 		newItem.getCollider().setEnt(newItem);
+		newItem.setPosition(new Vector2f(x, y));
+		newItem.getCollider().updateColPos();
 		return newItem;
 	}
 	
