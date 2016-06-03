@@ -90,10 +90,10 @@ public class Inventory {
 			}
 		}
 
-		newSlot.getItemSprite().setRotation(-45);
+		newSlot.getGUISprite().setRotation(-45);
 		
-		float scaleMult = newSlot.getItemSprite().getSprite().getSize().x*newSlot.getItemSprite().getSprite().getSize().y;
-		newSlot.getItemSprite().setScale((Vector2f)newSlot.getItemSprite().getScale().scale(1/ (scaleMult != 1 ? scaleMult : 1.5f)));
+		float scaleMult = newSlot.getGUISprite().getSprite().getSize().x*newSlot.getGUISprite().getSprite().getSize().y;
+		newSlot.getGUISprite().setScale((Vector2f)newSlot.getGUISprite().getScale().scale(1/ (scaleMult != 1 ? scaleMult : 1.5f)));
 		inventorySlot.add(newSlot);
 		return true;
 	}
@@ -239,7 +239,7 @@ public class Inventory {
 	public String toString() {
 		String str = "";
 		for (InventorySlot slot : inventorySlot)
-			str += slot.getItem().toString() + "\n";
+			str += slot.getItem().toString() + " , " + slot.getItemSprite().getRotation() + "\n";
 		return "Inventory :\n" + str;
 	}
 

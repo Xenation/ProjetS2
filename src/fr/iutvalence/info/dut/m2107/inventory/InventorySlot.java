@@ -61,6 +61,8 @@ public class InventorySlot {
 
 	public GUISlot getItemSprite() {return itemSprite;}
 	public void setItemSprite(GUISlot itemSprite) {this.itemSprite = itemSprite;}
+	
+	public GUIMovable getGUISprite() {return itemSprite.getItem();}
 
 	@Override
 	public String toString() {

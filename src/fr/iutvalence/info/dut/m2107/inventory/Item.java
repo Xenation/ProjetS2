@@ -212,19 +212,22 @@ public class Item extends MovableEntity {
 						this.value);
 	}
 	
-	public static Item copyItem(Item item) {
-		return new Item(new Vector2f(item.pos.x, item.pos.y),
-						item.rot,
-						item.spr,
-						new Collider(item.col),
-						new Vector2f(item.vel.x, item.vel.y),
-						item.spd,
-						item.id,
-						item.name,
-						item.description,
-						item.rarity,
-						item.MAX_STACK,
-						item.value);
+	public static Item copyDropableItem(Item item) {
+		Item newItem = new Item(new Vector2f(item.pos.x, item.pos.y),
+											item.rot,
+											item.spr,
+											new Collider(item.col),
+											new Vector2f(item.vel.x, item.vel.y),
+											item.spd,
+											item.id,
+											item.name,
+											item.description,
+											item.rarity,
+											item.MAX_STACK,
+											item.value);
+		newItem.setCollider(new Collider(newItem.getSprite()));
+		newItem.getCollider().setEnt(newItem);
+		return newItem;
 	}
 	
 	/* (non-Javadoc)

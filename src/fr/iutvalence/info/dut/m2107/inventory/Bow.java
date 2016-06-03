@@ -64,7 +64,6 @@ public class Bow extends Weapon {
 				if(arrow == null) {
 					arrow = GameWorld.player.getInventory().getArrow();
 					if(arrow != null) {
-						System.out.println(arrow);
 						GameWorld.player.getInventory().remove(arrow, (short)1);
 						this.launch(arrow, owner);
 					} else System.out.println("No more arrow in inventory");

@@ -44,9 +44,7 @@ public class MainGameTester {
 			GameManager.update();
 			
 			if(Input.isKeyWater() && GameWorld.camera.isFocusing()) {
-				Item item = Item.copyItem(ItemDatabase.getItem(0));
-				item.setCollider(new Collider(item.getSprite()));
-				item.getCollider().setEnt(item);
+				Item item = Item.copyDropableItem(ItemDatabase.getItem(0));
 				GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
 				
 			}

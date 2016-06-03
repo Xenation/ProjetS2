@@ -144,9 +144,9 @@ public class Player extends Character{
 				this.quickBar[slotNumber].setItemSprite(s);
 				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
 				
-				this.quickBar[slotNumber].getItemSprite().setRotation(-45);
-				float scaleMult = this.quickBar[slotNumber].getItemSprite().getSprite().getSize().x*this.quickBar[slotNumber].getItemSprite().getSprite().getSize().y;
-				this.quickBar[slotNumber].getItemSprite().setScale((Vector2f)this.quickBar[slotNumber].getItemSprite().getScale().scale(1/ (scaleMult != 1 ? scaleMult : 1.5f)));
+				this.quickBar[slotNumber].getGUISprite().setRotation(-45);
+				float scaleMult = this.quickBar[slotNumber].getGUISprite().getSprite().getSize().x*this.quickBar[slotNumber].getGUISprite().getSprite().getSize().y;
+				this.quickBar[slotNumber].getGUISprite().setScale((Vector2f)this.quickBar[slotNumber].getGUISprite().getScale().scale(1/ (scaleMult != 1 ? scaleMult : 1.5f)));
 				
 				this.quickBar[slotNumber].prepareDisplay();
 				
@@ -177,6 +177,8 @@ public class Player extends Character{
 		updateSpriteAnimation();
 		
 		updateShootVal();
+		
+		System.out.println(this.inventory);
 		
 		updateQuickBar();
 		
