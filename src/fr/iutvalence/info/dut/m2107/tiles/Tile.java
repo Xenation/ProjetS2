@@ -188,20 +188,6 @@ public class Tile {
 					}
 				}
 			}
-			for (Layer lay : GameWorld.layerMap.getLayers()) {
-				for (Entity entity : lay) {
-					float flat = 0.25f*LIGHT_RANGE;
-					float distance = Maths.distance(x, y, entity.getAbsolutePosition());
-					float distanceFade = 1;
-					if (distance > flat)
-						distanceFade = ((LIGHT_RANGE-distance)/(LIGHT_RANGE-flat));
-					if (distanceFade < .1f) continue;
-					if (distanceFade < 0) distanceFade = 0;
-					entity.getLight().x += LIGHT_COLOR.x * LIGHT_INT * distanceFade;
-					entity.getLight().y += LIGHT_COLOR.y * LIGHT_INT * distanceFade;
-					entity.getLight().z += LIGHT_COLOR.z * LIGHT_INT * distanceFade;
-				}
-			}
 		}
 		return;
 	}
