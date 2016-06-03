@@ -4,8 +4,12 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.MovableEntity;
+import fr.iutvalence.info.dut.m2107.models.AbstractSprite;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
+import fr.iutvalence.info.dut.m2107.render.DisplayManager;
+import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 /**
  * Class which represent an item
@@ -48,6 +52,8 @@ public class Item extends MovableEntity {
 	 * The value of the item
 	 */
 	protected final short value;
+	
+	private Tile collidingTile;
 
 	/**
 	 * Constructor of an Item
@@ -61,7 +67,7 @@ public class Item extends MovableEntity {
 	 * @param maxStack The maximum stack of the item
 	 * @param value The value of the item
 	 */
-	public Item(Vector2f pos, float rot, EntitySprite spr, Collider col,
+	public Item(Vector2f pos, float rot, AbstractSprite spr, Collider col,
 				Vector2f vel, short spd,
 				short id, String name, String description, Rarity rarity, short maxStack, short value) {
 		super(pos, rot, spr, col, vel, spd);
@@ -116,27 +122,30 @@ public class Item extends MovableEntity {
 		this.MAX_STACK = maxStack;
 		this.value = value;
 	}
-	
-	/**
-	 * Constructor of an Item
-	 * @param item The item to copy
-	 */
-	public Item(Item item) {
-		super(item.pos, item.rot, item.spr, item.col, item.vel, item.spd);
-		this.id = item.id;
-		this.name = item.name;
-		this.description = item.description;
-		this.rarity = item.rarity;
-		this.MAX_STACK = item.MAX_STACK;
-		this.value = item.value;
-	}
 
 	/* (non-Javadoc)
 	 * @see fr.iutvalence.info.dut.m2107.entities.Entity#update(fr.iutvalence.info.dut.m2107.storage.Layer)
 	 */
 	@Override
 	public void update(Layer layer) {
-		
+		if(this.getClass().getSimpleName().equals("Item")) {
+			if(this.col.isCollidingWithPlayer()) {
+				if(GameWorld.player.addItem(this))
+					layer.remove(this);
+			}
+			if(collidingTile == null) {
+				this.vel.y -= GameWorld.gravity * DisplayManager.deltaTime();
+				
+				if(this.vel.y < -25) this.vel.y = -25;
+				
+				Collider encompass = Collider.encompassCollider(this.col, this.vel);
+				collidingTile = this.col.isCollidingWithMap(encompass);
+				if(collidingTile != null) {
+					this.pos.y = collidingTile.y + Tile.TILE_SIZE + this.col.getH()/3;
+					this.vel.y = 0;
+				}
+			}
+		}
 		super.update(layer);
 	}
 
@@ -188,6 +197,39 @@ public class Item extends MovableEntity {
 	 */
 	public short getValue() {return value;}
 
+	public Item copy() {
+		return new Item(new Vector2f(this.pos.x, this.pos.y),
+						this.rot,
+						this.spr,
+						new Collider(this.col),
+						new Vector2f(this.vel.x, this.vel.y),
+						this.spd,
+						this.id,
+						this.name,
+						this.description,
+						this.rarity,
+						this.MAX_STACK,
+						this.value);
+	}
+	
+	public static Item copyDropableItem(Item item) {
+		Item newItem = new Item(new Vector2f(item.pos.x, item.pos.y),
+											item.rot,
+											item.spr,
+											new Collider(item.col),
+											new Vector2f(item.vel.x, item.vel.y),
+											item.spd,
+											item.id,
+											item.name,
+											item.description,
+											item.rarity,
+											item.MAX_STACK,
+											item.value);
+		newItem.setCollider(new Collider(newItem.getSprite()));
+		newItem.getCollider().setEnt(newItem);
+		return newItem;
+	}
+	
 	/* (non-Javadoc)
 	 * @see fr.iutvalence.info.dut.m2107.entities.Entity#equals(java.lang.Object)
 	 */

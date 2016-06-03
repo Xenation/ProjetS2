@@ -100,6 +100,7 @@ public class MovableEntity extends Entity {
 	
 	public MovableEntity(AbstractSprite spr, Collider col, short spd) {
 		super(spr, col);
+		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
 		this.spd = spd;
 	}
 

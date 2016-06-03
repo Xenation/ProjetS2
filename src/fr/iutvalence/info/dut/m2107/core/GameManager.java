@@ -14,7 +14,6 @@ import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUI;
 import fr.iutvalence.info.dut.m2107.gui.GUIMainMenu;
 import fr.iutvalence.info.dut.m2107.gui.GUIMaster;
-import fr.iutvalence.info.dut.m2107.gui.GUIMovable;
 import fr.iutvalence.info.dut.m2107.gui.GUISlot;
 import fr.iutvalence.info.dut.m2107.inventory.Item;
 import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
@@ -323,14 +322,18 @@ public class GameManager {
 	}
 	
 	private static void switchSlots() {
-		Item item1 = s1.getSlot().getItem();
-		GUIText txt1 = s1.getSlot().getQuantity();
-		GUIMovable i = s1.getItem();
-		s1.setItem(s2.getItem());
-		s1.getSlot().setItem(s2.getSlot().getItem());
-		s1.getSlot().setQuantity(s2.getSlot().getQuantity());
-		s2.setItem(i);
-		s2.getSlot().setItem(item1);
-		s2.getSlot().setQuantity(txt1);
+		Vector2f pos1 = new Vector2f (s1.getSlot().getItemSprite().getPosition().x,s1.getSlot().getItemSprite().getPosition().y);
+		Vector2f pos2 = new Vector2f (s2.getSlot().getItemSprite().getPosition().x,s2.getSlot().getItemSprite().getPosition().y);
+		
+		Item item = s1.getSlot().getItem();
+		GUISlot sprite = s1.getSlot().getItemSprite();
+		GUIText text = s1.getSlot().getQuantity();
+		
+		s1.getSlot().setSlot(s2.getSlot());
+		
+		s2.getSlot().setSlot(item, sprite, text);
+		
+		s1.getSlot().getItemSprite().setPosition(pos1);
+		s2.getSlot().getItemSprite().setPosition(pos2);
 	}
 }

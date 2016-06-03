@@ -3,12 +3,11 @@ package fr.iutvalence.info.dut.m2107.enginetest;
 import java.io.PrintStream;
 
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.core.GameManager;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
-import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
-import fr.iutvalence.info.dut.m2107.entities.Zombie;
+import fr.iutvalence.info.dut.m2107.inventory.Item;
+import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.render.*;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Input;
@@ -44,8 +43,12 @@ public class MainGameTester {
 		while (!Display.isCloseRequested() && !GameManager.isQuitting) {
 			GameManager.update();
 			
-			if(Input.isKeyWater() && GameWorld.camera.isFocusing())
-				GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f(0, 0), 0, SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f), new Vector2f(), (short) 2, 10, 0));
+			if(Input.isKeyWater() && GameWorld.camera.isFocusing()) {
+				Item item = Item.copyDropableItem(ItemDatabase.getItem(0));
+				GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
+				
+			}
+			//GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f(0, 0), 0, SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f), new Vector2f(), (short) 2, 10, 0));
 			
 			GameManager.render();
 			

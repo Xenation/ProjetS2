@@ -138,22 +138,10 @@ public class ItemDatabase {
 	 * @return A new instance of the item desired
 	 */
 	public static Item get(int index) {
-		Item item = itemDatabase.get(index);
-		if(item instanceof Arrow)
-			return new Arrow((Arrow)item);
-		if(item instanceof Bullet)
-			return new Bullet((Bullet)item);
-		if(item instanceof Orb)
-			return new Orb((Orb)item);
-		
-		if(item instanceof Bow)
-			return new Bow((Bow)item);
-		if(item instanceof Sword)
-			return new Sword((Sword)item);
-		if(item instanceof Gun)
-			return new Gun((Gun)item);
-		if(item instanceof Staff)
-			return new Staff((Staff)item);
-		return null;
+		return itemDatabase.get(index).getClass().cast(itemDatabase.get(index)).copy();
+	}
+
+	public static Item getItem(int index) {
+		return itemDatabase.get(index).copy();
 	}
 }

@@ -144,9 +144,9 @@ public class Player extends Character{
 				this.quickBar[slotNumber].setItemSprite(s);
 				this.quickBar[slotNumber].setQuantity(new GUIText("" + this.quickBar[slotNumber].getItem().getStack() , .8f, -width, -width/4, width, true));
 				
-				this.quickBar[slotNumber].getItemSprite().setRotation(-45);
-				float scaleMult = this.quickBar[slotNumber].getItemSprite().getSprite().getSize().x*this.quickBar[slotNumber].getItemSprite().getSprite().getSize().y;
-				this.quickBar[slotNumber].getItemSprite().setScale((Vector2f)this.quickBar[slotNumber].getItemSprite().getScale().scale(1/ (scaleMult != 1 ? scaleMult : 1.5f)));
+				this.quickBar[slotNumber].getGUISprite().setRotation(-45);
+				float scaleMult = this.quickBar[slotNumber].getGUISprite().getSprite().getSize().x*this.quickBar[slotNumber].getGUISprite().getSprite().getSize().y;
+				this.quickBar[slotNumber].getGUISprite().setScale((Vector2f)this.quickBar[slotNumber].getGUISprite().getScale().scale(1/ (scaleMult != 1 ? scaleMult : 1.5f)));
 				
 				this.quickBar[slotNumber].prepareDisplay();
 				
@@ -178,6 +178,8 @@ public class Player extends Character{
 		
 		updateShootVal();
 		
+		System.out.println(this.inventory);
+		
 		updateQuickBar();
 		
 		updateInvulnerability();
@@ -191,16 +193,8 @@ public class Player extends Character{
 	 * Update the usage of the player's hand item
 	 */
 	private void useItem() {
-		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.getTarget() == this && !Input.isDragingGUI && !Input.isOverGUI) {
-			if(this.itemOnHand instanceof Bow)
-				((Bow) this.itemOnHand).use(this);
-			else if(this.itemOnHand instanceof Sword)
-				((Sword) this.itemOnHand).use(this);
-			else if(this.itemOnHand instanceof Gun)
-				((Gun) this.itemOnHand).use(this);
-			else if(this.itemOnHand instanceof Staff)
-				((Staff) this.itemOnHand).use(this);
-		}
+		if(Input.isMouseLeftDown() && this.itemOnHand != null && GameWorld.camera.getTarget() == this && !Input.isDragingGUI && !Input.isOverGUI)
+			((Weapon)this.itemOnHand.getClass().cast(this.itemOnHand)).use(this);
 	}
 	
 	/**
@@ -358,7 +352,7 @@ public class Player extends Character{
 					this.itemOnHand.setParent(null);
 				
 				if(!(this.quickBar[selectSlot].getItem() instanceof Weapon)) {
-					this.itemOnHand = new Item(this.quickBar[selectSlot].getItem());
+					this.itemOnHand = this.quickBar[selectSlot].getItem().copy();
 					this.itemOnHand.setParent(this.pivot);
 				} else {
 					this.itemOnHand = this.quickBar[selectSlot].getItem();

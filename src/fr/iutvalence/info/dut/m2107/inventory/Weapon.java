@@ -1,6 +1,9 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import fr.iutvalence.info.dut.m2107.entities.Character;
+import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
@@ -10,7 +13,7 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
  * @author Voxelse
  *
  */
-public abstract class Weapon extends Item {
+public class Weapon extends Item {
 	
 	/**
 	 * The damage of the weapon
@@ -40,6 +43,31 @@ public abstract class Weapon extends Item {
 	protected float lockTime;
 	
 	protected short handRotation;
+
+	/**
+	 * Constructor of a weapon
+	 * @param spr The sprite of the weapon
+	 * @param id The id of the weapon
+	 * @param name The name of the weapon
+	 * @param description The description of the weapon
+	 * @param rarity The rarity of the weapon
+	 * @param maxStack The maximum stack of the weapon
+	 * @param value The value of the weapon
+	 * @param damage The damage of the weapon
+	 * @param range The range of the weapon
+	 * @param useTime The use time of the weapon
+	 * @param knockback The knockback of the weapon
+	 */
+	public Weapon(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd,
+			short id, String name, String description, Rarity rarity, short maxStack, short value,
+			short damage, short range, float useTime, short knockback, short handRotation) {
+		super(pos, rot, spr, col, vel, spd, id, name, description, rarity, maxStack, value);
+		this.damage = damage;
+		this.range = range;
+		this.useTime = useTime;
+		this.knockback = knockback;
+		this.handRotation = handRotation;
+	}
 	
 	/**
 	 * Constructor of a weapon
@@ -65,19 +93,6 @@ public abstract class Weapon extends Item {
 		this.knockback = knockback;
 		this.handRotation = handRotation;
 	}
-	
-	/**
-	 * Constructor of a weapon
-	 * @param weapon Weapon to copy
-	 */
-	public Weapon(Weapon weapon) {
-		super(weapon);
-		this.damage = weapon.damage;
-		this.range = weapon.range;
-		this.useTime = weapon.useTime;
-		this.knockback = weapon.knockback;
-		this.handRotation = weapon.handRotation;
-	}
 
 	/**
 	 * Use the weapon
@@ -93,7 +108,6 @@ public abstract class Weapon extends Item {
 	@Override
 	public void update(Layer layer) {
 		this.remainingTime -= DisplayManager.deltaTime();
-		super.update(layer);
 	}
 
 	/**
@@ -129,4 +143,26 @@ public abstract class Weapon extends Item {
 	public float getLockTime() {return lockTime;}
 	
 	public short getHandRotation() {return handRotation;}
+	
+	public Weapon copy() {
+		Item item = super.copy();
+		Weapon newWeapon = new Weapon(item.getPosition(),
+											item.getRotation(),
+											(EntitySprite)item.getSprite(),
+											item.getCollider(),
+											item.getVelocity(),
+											item.getSpeed(),
+											item.getId(),
+											item.name,
+											item.description,
+											item.rarity,
+											item.MAX_STACK,
+											item.value,
+											this.damage,
+											this.range,
+											this.useTime,
+											this.knockback,
+											this.handRotation);
+		return newWeapon;
+	}
 }

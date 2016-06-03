@@ -49,9 +49,8 @@ public class Rat extends TerrestrialCreature {
 		
 		if(this.scale.x > 0) tmpCol.extendRight(this.col.getW());
 		else tmpCol.extendLeft(this.col.getW());
-		Entity ent = tmpCol.isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER)});
-		if(ent == GameWorld.player) {
-			((LivingEntity) ent).doDamage(0, 10 * (int)(this.scale.x/Maths.fastAbs(this.scale.x)));
+		if(tmpCol.isCollidingWithPlayer()) {
+			GameWorld.player.doDamage(0, 10 * (int)(this.scale.x/Maths.fastAbs(this.scale.x)));
 		}
 		
 		super.update(layer);

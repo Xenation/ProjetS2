@@ -35,9 +35,8 @@ public class Slime extends TerrestrialCreature {
 				this.vel.y = this.jumpHeight;
 			}
 			
-			Entity ent = this.col.isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER)});
-			if(ent == GameWorld.player)
-				((LivingEntity) ent).doDamage(1, 10 * (int)(this.scale.x/Maths.fastAbs(this.scale.x)));
+			if(this.col.isCollidingWithPlayer())
+				GameWorld.player.doDamage(1, 10 * (int)(this.scale.x/Maths.fastAbs(this.scale.x)));
 		}
 		super.update(layer);
 	}
