@@ -22,6 +22,7 @@ public class TileBuilder {
 	 * @return the instantiated tile
 	 */
 	public static Tile buildTile(TileType type, int x, int y) {
+		Tile t = null;
 		switch (type) {
 		case Dirt:
 		case Stone:
@@ -30,23 +31,31 @@ public class TileBuilder {
 		case Leaves:
 		case Sand:
 		case Water:
-			return new Tile(type, x, y);
+			t = new Tile(type, x, y);
+			break;
 		case Fader:
-			return new FadingTile(type, x, y);
+			t = new FadingTile(type, x, y);
+			break;
 		case Spikes:
 			DamagingSupportedTile spike = new DamagingSupportedTile(type, x, y, 1, 10);
 			spike.setDepending(GameWorld.chunkMap.getBottomTile(spike));
-			return spike;
+			t = spike;
+			break;
 		case Creator:
-			return new CreatingTile(type, x, y, TileType.Sand);
+			t = new CreatingTile(type, x, y, TileType.Sand);
+			break;
 		case Piston:
-			PushingTile t = new PushingTile(type, x, y);
-			return t;
+			t = new PushingTile(type, x, y);
+			break;
 		case PistonArm:
-			return new DependantFixedTile(type, x, y);
+			t = new DependantFixedTile(type, x, y);
+			break;
 		default:
-			return new Tile(type, x, y);
+			t = new Tile(type, x, y);
+			break;
 		}
+		t.updateAdjacents = true;
+		return t;
 	}
 	
 	/**
@@ -114,10 +123,11 @@ public class TileBuilder {
 		stats.add("right = "+tile.getRight());
 		stats.add("bottom = "+tile.getBottom());
 		stats.add("left = "+tile.getLeft());
-		stats.add("sides[0] = "+tile.getSides()[0]);
-		stats.add("sides[1] = "+tile.getSides()[1]);
-		stats.add("sides[2] = "+tile.getSides()[2]);
-		stats.add("sides[3] = "+tile.getSides()[3]);
+		stats.add("bbotleft = "+tile.getbBotLeft());
+		stats.add("btopleft = "+tile.getbTopLeft());
+		stats.add("bbotright = "+tile.getbBotRight());
+		stats.add("btopright = "+tile.getbTopRight());
+		stats.add("light = "+tile.light.x+", "+tile.light.y+", "+tile.light.z);
 		switch (tile.type) {
 		case Dirt:
 		case Stone:

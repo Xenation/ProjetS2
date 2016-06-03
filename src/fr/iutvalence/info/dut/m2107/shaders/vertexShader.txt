@@ -5,40 +5,34 @@ in vec2 textureUVs;
 
 out vec2 textureCoords;
 out float alphaPass;
-out vec4 colorInt;
-out vec2 fragPos;
+out vec3 lightPass;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform float alpha;
 uniform float depth;
-uniform float intensityMultiplier;
-
-uniform int sides;
+uniform vec3 light;
+//uniform vec3 naturalLight;
 
 void main(void) {
-	
-	fragPos = position;
-	
-	bvec4 bsides;
-	for (int i = 0; i < 4; i++) {
-		if (((sides >> i) & 1) == 1) {
-			bsides[i] = true;
-		} else {
-			bsides[i] = false;
-		}
-	}
-	
-	for (int i = 0; i < 4; i++) {
-		if (bsides[i] == true) {
-			colorInt[i] = 0.0;
-		} else {
-			colorInt[i] = intensityMultiplier;
-		}
-	}
-	
 	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, depth, 1.0);
 	textureCoords = textureUVs;
 	alphaPass = alpha;
+	/*if (naturalLight.r == -1) {
+		lightPass = light;
+	} else {
+		lightPass = naturalLight + light;
+	}*/
+	lightPass = light;
+	if (lightPass.r > 1) {
+		lightPass.r = 1;
+	}
+	if (lightPass.g > 1) {
+		lightPass.g = 1;
+	}
+	if (lightPass.b > 1) {
+		lightPass.b = 1;
+	}
+	
 }

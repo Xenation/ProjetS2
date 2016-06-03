@@ -1,11 +1,15 @@
 package fr.iutvalence.info.dut.m2107.tiles;
 
-import java.util.Arrays;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
+import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.TileVariantChangedEvent;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 /**
  * Defines a Tile
@@ -18,6 +22,10 @@ public class Tile {
 	 * The SIZE of a tile
 	 */
 	public static final float TILE_SIZE = 1;
+	
+	public static final Vector3f LIGHT_COLOR = new Vector3f(1, 1, 1);
+	public static final float LIGHT_INT = .25f;
+	public static final float LIGHT_RANGE = 3;
 	
 	/**
 	 * the x and y coordinates of the tile
@@ -47,16 +55,14 @@ public class Tile {
 	 */
 	public boolean updateLight;
 	
-	/**
-	 * The array indicating which corner is to be lit.<br>
-	 * <tt>true</tt>: not lit<br>
-	 * <tt>false</tt>: lit<br>
-	 * - 0: top-left<br>
-	 * - 1: top-right<br>
-	 * - 2: bottom-right<br>
-	 * - 3: bottom-left<br>
-	 */
-	private boolean[] sides = new boolean[4];
+	public boolean updateAdjacents;
+	
+	public Vector3f light = new Vector3f(0, 0, 0);
+	public Vector3f prevLight = new Vector3f(0, 0, 0);
+	
+	public boolean isNaturalLight;
+	
+	private int freeNb = 0;
 	
 	/**
 	 * The top tile
@@ -74,6 +80,11 @@ public class Tile {
 	 * The left tile
 	 */
 	private Tile left;
+	
+	private Tile bBotLeft;
+	private Tile bTopLeft;
+	private Tile bBotRight;
+	private Tile bTopRight;
 	
 	/**
 	 * The Chunk that contains this tile
@@ -148,6 +159,45 @@ public class Tile {
 	 * Updates the attributes of this tile that change every frame.
 	 */
 	public void softUpdate() {
+		if (isNaturalLight) {
+			for (Chunk chk : GameWorld.chunkMap.getSurroundingChunks(-LIGHT_RANGE, LIGHT_RANGE, LIGHT_RANGE, -LIGHT_RANGE, new Vector2f(x, y))) {
+				for (Tile tile : chk) {
+					float flat = 0.25f*LIGHT_RANGE;
+					float distance = Maths.distance(tile.x, tile.y, x, y);
+					float distanceFade = 1;
+					if (distance > flat)
+						distanceFade = ((LIGHT_RANGE-distance)/(LIGHT_RANGE-flat));
+					if (distanceFade < 0) distanceFade = 0;
+					tile.light.x += LIGHT_COLOR.x * LIGHT_INT*freeNb * distanceFade;
+					tile.light.y += LIGHT_COLOR.y * LIGHT_INT*freeNb * distanceFade;
+					tile.light.z += LIGHT_COLOR.z * LIGHT_INT*freeNb * distanceFade;
+				}
+			}
+			for (Chunk chk : GameWorld.backChunkMap.getSurroundingChunks(-LIGHT_RANGE, LIGHT_RANGE, LIGHT_RANGE, -LIGHT_RANGE, new Vector2f(x, y))) {
+				for (Tile tile : chk) {
+					float distance = Maths.distance(tile.x, tile.y, x, y);
+					float distanceFade = ((LIGHT_RANGE-distance)/LIGHT_RANGE);
+					if (distanceFade < 0) distanceFade = 0;
+					tile.light.x += LIGHT_COLOR.x * LIGHT_INT * distanceFade * .75f;
+					tile.light.y += LIGHT_COLOR.y * LIGHT_INT * distanceFade * .75f;
+					tile.light.z += LIGHT_COLOR.z * LIGHT_INT * distanceFade * .75f;
+				}
+			}
+			for (Layer lay : GameWorld.layerMap.getLayers()) {
+				for (Entity entity : lay) {
+					float flat = 0.25f*LIGHT_RANGE;
+					float distance = Maths.distance(x, y, entity.getAbsolutePosition());
+					float distanceFade = 1;
+					if (distance > flat)
+						distanceFade = ((LIGHT_RANGE-distance)/(LIGHT_RANGE-flat));
+					if (distanceFade < .1f) continue;
+					if (distanceFade < 0) distanceFade = 0;
+					entity.getLight().x += LIGHT_COLOR.x * LIGHT_INT * distanceFade;
+					entity.getLight().y += LIGHT_COLOR.y * LIGHT_INT * distanceFade;
+					entity.getLight().z += LIGHT_COLOR.z * LIGHT_INT * distanceFade;
+				}
+			}
+		}
 		return;
 	}
 	
@@ -161,7 +211,67 @@ public class Tile {
 	public boolean heavyUpdate() {
 		this.toUpdate = false;
 		resetAdjacentLinks();
+		if (updateAdjacents) {
+			adjacentsToUpdate();
+			updateAdjacents = false;
+		}
 		return this.type.updateBehaviors(this);
+	}
+	
+	public void updateNaturalLight() {
+		freeNb = 4;
+		
+		if (top != null) freeNb--;
+		if (left != null) freeNb--;
+		if (right != null) freeNb--;
+		if (bottom != null) freeNb--;
+		
+		if (freeNb != 0
+				&& (bBotLeft == null
+				|| bBotRight == null
+				|| bTopLeft == null
+				|| bTopRight == null)) {
+			isNaturalLight = true;
+		} else if (isNaturalLight) {
+			isNaturalLight = false;
+		}
+		
+//		if (top == null && (bTopLeft == null || (bTopLeft != null && bTopLeft.top == null) || bTopRight == null || (bTopRight != null && bTopRight.top == null))
+//				|| bottom == null && (bBotLeft == null || (bBotLeft != null && bBotLeft.bottom == null) || bBotRight == null || (bBotRight != null && bBotRight.bottom == null))
+//				|| left == null && (bBotLeft == null || (bBotLeft != null && bBotLeft.left == null) || bTopLeft == null || (bTopLeft != null && bTopLeft.left == null))
+//				|| right == null && (bBotRight == null || (bBotRight != null && bBotRight.right == null) || bTopRight == null || (bTopRight != null && bTopRight.right == null))) {
+//			if (chunk.isBackground) {
+//				naturalLight.x = .75f;
+//				naturalLight.y = .75f;
+//				naturalLight.z = .75f;
+//			} else {
+//				naturalLight.x = 1;
+//				naturalLight.y = 1;
+//				naturalLight.z = 1;
+//			}
+//		} else if ((top != null && (top.top == null || top.left == null || top.right == null)
+//				|| bottom != null && (bottom.bottom == null || bottom.left == null || bottom.right == null)
+//				|| left != null && (left.left == null || left.top == null || left.bottom == null)
+//				|| right != null && (right.right == null || right.top == null || right.bottom == null))
+//				&& ((bTopLeft == null || bTopLeft != null && (bTopLeft.top == null || bTopLeft.left == null))
+//				|| (bTopRight == null || bTopRight != null && (bTopRight.top == null || bTopRight.right == null))
+//				|| (bBotLeft == null || bBotLeft != null && (bBotLeft.bottom == null || bBotLeft.left == null))
+//				|| (bBotRight == null || bBotRight != null && (bBotRight.bottom == null || bBotRight.right == null)))) {
+//			if (chunk.isBackground) {
+//				naturalLight.x = .375f;
+//				naturalLight.y = .375f;
+//				naturalLight.z = .375f;
+//			} else {
+//				naturalLight.x = .5f;
+//				naturalLight.y = .5f;
+//				naturalLight.z = .5f;
+//			}
+//		} else {
+//			naturalLight.x = 0;
+//			naturalLight.y = 0;
+//			naturalLight.z = 0;
+//		}
+		updateLight = false;
 	}
 	
 	/**
@@ -181,100 +291,52 @@ public class Tile {
 	}
 	
 	/**
-	 * Updates the array that indicates which corner is lit.
-	 */
-	public void updateSides() {
-		if (this.variant.isTransparent) return;
-		for (int i = 0; i < sides.length; i++) {
-			sides[i] = false;
-		}
-		if (top != null && left != null && top.left != null && top.top != null && left.left != null
-				&& right != null && bottom != null
-				&& top.right != null && left.bottom != null
-				&& top.top.left != null && left.left.top != null) {
-			sides[0] = true;
-		}
-		if (top != null && right != null && top.right != null && top.top != null && right.right != null
-				&& bottom != null && left != null
-				&& top.left != null && right.bottom != null
-				&& top.top.right != null && right.right.top != null) {
-			sides[1] = true;
-		}
-		if (bottom != null && right != null && bottom.right != null && bottom.bottom != null && right.right != null
-				&& left != null && top != null
-				&& bottom.left != null && right.top != null
-				&& bottom.bottom.right != null && right.right.bottom != null) {
-			sides[2] = true;
-		}
-		if (bottom != null && left != null && bottom.left != null && bottom.bottom != null && left.left != null
-				&& top != null && right != null
-				&& bottom.right != null && left.top != null
-				&& bottom.bottom.left != null && left.left.bottom != null) {
-			sides[3] = true;
-		}
-		boolean[] sidesCp = Arrays.copyOf(sides, 4);
-		switch (orientation) {
-		case DOWN:
-			sides[0] = sidesCp[1];
-			sides[1] = sidesCp[2];
-			sides[2] = sidesCp[3];
-			sides[3] = sidesCp[0];
-			break;
-		case LEFT:
-			break;
-		case RIGHT:
-			break;
-		case UP:
-			sides[0] = sidesCp[3];
-			sides[1] = sidesCp[0];
-			sides[2] = sidesCp[1];
-			sides[3] = sidesCp[2];
-			break;
-		default:
-			break;
-		}
-		updateLight = false;
-	}
-	
-	/**
 	 * Request update of adjacent tiles.
 	 */
 	public void adjacentsToUpdate() {
 		if (top != null) {
 			top.toUpdate = true;
-//			if (top.right != null) top.right.toUpdate = true;
-//			if (top.left != null) top.left.toUpdate = true;
-//			if (top.top != null) {
-//				top.top.toUpdate = true;
-//				if (top.top.left != null) top.top.left.toUpdate = true;
-//				if (top.top.right != null) top.top.right.toUpdate = true;
-//			}
+			if (top.top != null) top.top.toUpdate = true;
+			if (top.left != null) top.left.toUpdate = true;
+			if (top.right != null) top.right.toUpdate = true;
 		}
 		if (bottom != null) {
 			bottom.toUpdate = true;
-//			if (bottom.right != null) bottom.right.toUpdate = true;
-//			if (bottom.left != null) bottom.left.toUpdate = true;
-//			if (bottom.bottom != null) {
-//				bottom.bottom.toUpdate = true;
-//				if (bottom.bottom.left != null) bottom.bottom.left.toUpdate = true;
-//				if (bottom.bottom.right != null) bottom.bottom.right.toUpdate = true;
-//			}
+			if (bottom.bottom != null) bottom.bottom.toUpdate = true;
+			if (bottom.left != null) bottom.left.toUpdate = true;
+			if (bottom.right != null) bottom.right.toUpdate = true;
 		}
 		if (right != null) {
 			right.toUpdate = true;
-//			if (right.right != null) {
-//				right.right.toUpdate = true;
-//				if (right.right.top != null) right.right.top.toUpdate = true;
-//				if (right.right.bottom != null) right.right.bottom.toUpdate = true;
-//			}
+			if (right.right != null) right.right.toUpdate = true;
+			if (right.top != null) right.top.toUpdate = true;
+			if (right.bottom != null) right.bottom.toUpdate = true;
 		}
 		if (left != null) {
 			left.toUpdate = true;
-//			if (left.left != null) {
-//				left.left.toUpdate = true;
-//				if (left.left.top != null) left.left.top.toUpdate = true;
-//				if (left.left.bottom != null) left.left.bottom.toUpdate = true;
-//			}
+			if (left.left != null) left.left.toUpdate = true;
+			if (left.top != null) left.top.toUpdate = true;
+			if (left.bottom != null) left.bottom.toUpdate = true;
+		}
+		if (bBotLeft != null) {
+			bBotLeft.toUpdate = true;
+			if (bBotLeft.left != null) bBotLeft.left.toUpdate = true;
+			if (bBotLeft.bottom != null) bBotLeft.bottom.toUpdate = true;
+		}
+		if (bBotRight != null) {
+			bBotRight.toUpdate = true;
+			if (bBotRight.right != null) bBotRight.right.toUpdate = true;
+			if (bBotRight.bottom != null) bBotRight.bottom.toUpdate = true;
+		}
+		if (bTopLeft != null) {
+			bTopLeft.toUpdate = true;
+			if (bTopLeft.left != null) bTopLeft.left.toUpdate = true;
+			if (bTopLeft.top != null) bTopLeft.top.toUpdate = true;
+		}
+		if (bTopRight != null) {
+			bTopRight.toUpdate = true;
+			if (bTopRight.right != null) bTopRight.right.toUpdate = true;
+			if (bTopRight.top != null) bTopRight.top.toUpdate = true;
 		}
 	}
 
@@ -357,6 +419,14 @@ public class Tile {
 	public Tile getLeft() {return left;}
 	protected void setLeft(Tile left) {this.left = left;}
 	
+	public Tile getbBotLeft() {return bBotLeft;}
+
+	public Tile getbTopLeft() {return bTopLeft;}
+
+	public Tile getbBotRight() {return bBotRight;}
+
+	public Tile getbTopRight() {return bTopRight;}
+
 	public Chunk getChunk() {return chunk;}
 	public void setChunk(Chunk chunk) {this.chunk = chunk;}
 	
@@ -364,10 +434,25 @@ public class Tile {
 	 * Reset the adjacent tiles links.
 	 */
 	public void resetAdjacentLinks() {
-		this.top = GameWorld.chunkMap.getTopTile(this);
-		this.right = GameWorld.chunkMap.getRightTile(this);
-		this.bottom = GameWorld.chunkMap.getBottomTile(this);
-		this.left = GameWorld.chunkMap.getLeftTile(this);
+		if (!chunk.isBackground) {
+			this.top = GameWorld.chunkMap.getTopTile(this);
+			this.right = GameWorld.chunkMap.getRightTile(this);
+			this.bottom = GameWorld.chunkMap.getBottomTile(this);
+			this.left = GameWorld.chunkMap.getLeftTile(this);
+			this.bBotLeft = GameWorld.backChunkMap.getTileAt(x, y);
+			this.bBotRight = GameWorld.backChunkMap.getTileAt(x+1, y);
+			this.bTopLeft = GameWorld.backChunkMap.getTileAt(x, y+1);
+			this.bTopRight = GameWorld.backChunkMap.getTileAt(x+1, y+1);
+		} else {
+			this.top = GameWorld.backChunkMap.getTopTile(this);
+			this.right = GameWorld.backChunkMap.getRightTile(this);
+			this.bottom = GameWorld.backChunkMap.getBottomTile(this);
+			this.left = GameWorld.backChunkMap.getLeftTile(this);
+			this.bBotLeft = GameWorld.chunkMap.getTileAt(x-1, y-1);
+			this.bBotRight = GameWorld.chunkMap.getTileAt(x, y-1);
+			this.bTopLeft = GameWorld.chunkMap.getTileAt(x-1, y);
+			this.bTopRight = GameWorld.chunkMap.getTileAt(x, y);
+		}
 		updateLight = true;
 	}
 
@@ -388,12 +473,6 @@ public class Tile {
 	public int getRelY(Chunk chk) {
 		return y-chk.getY()*Chunk.CHUNK_SIZE;
 	}
-	
-	/**
-	 * Returns the array indicating which corner of the tile is lit.
-	 * @return the array indicating which corner of the tile is lit.
-	 */
-	public boolean[] getSides() {return sides;}
 	
 	/**
 	 * Returns the x coordinate of the tile in front

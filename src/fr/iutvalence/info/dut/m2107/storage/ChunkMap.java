@@ -33,6 +33,8 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	 */
 	private float tilesPositionOffset;
 	
+	private boolean isBackground;
+	
 	/**
 	 * Creates an empty ChunkMap
 	 */
@@ -44,8 +46,9 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	 * Creates a ChunkMap that has the specified tiles position offset
 	 * @param tilesPositionOffset the tiles position offset
 	 */
-	public ChunkMap(float tilesPositionOffset) {
+	public ChunkMap(float tilesPositionOffset, boolean isBackground) {
 		this.tilesPositionOffset = tilesPositionOffset;
+		this.isBackground = isBackground;
 	}
 	
 	//// CHUNKMAP \\\\
@@ -64,6 +67,19 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	public void updateWhole() {
 		for (Chunk chk : this) {
 			chk.update();
+		}
+	}
+	
+	public void resetLights() {
+		for (Chunk chk : getScreenChunks()) {
+			for (Tile tile : chk) {
+				tile.prevLight.x = tile.light.x;
+				tile.prevLight.y = tile.light.y;
+				tile.prevLight.z = tile.light.z;
+				tile.light.x = 0;
+				tile.light.y = 0;
+				tile.light.z = 0;
+			}
 		}
 	}
 	
@@ -87,7 +103,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 			chk.add(til);
 		} else {
 			Vector2i pos = Chunk.toChunkPosition(til.x, til.y);
-			chk = new Chunk(pos);
+			chk = new Chunk(pos, isBackground);
 			put(pos, chk);
 			chk.add(til);
 		}
@@ -112,7 +128,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 			chk.set(til);
 		} else {
 			Vector2i pos = Chunk.toChunkPosition(til.x, til.y);
-			chk = new Chunk(pos);
+			chk = new Chunk(pos, isBackground);
 			put(pos, chk);
 			chk.add(til);
 		}
@@ -445,7 +461,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 			for (int x = Chunk.toChunkPosition(Maths.fastFloor(left + center.x)); x <= Chunk.toChunkPosition(Maths.fastFloor(right + center.x)); x++) {
 				Vector2i pos = new Vector2i(x, y);
 				if (!this.containsKey(pos)) {
-					this.put(pos, new Chunk(pos));
+					this.put(pos, new Chunk(pos, isBackground));
 				}
 			}
 		}

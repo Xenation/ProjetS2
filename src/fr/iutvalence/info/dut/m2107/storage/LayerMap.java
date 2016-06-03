@@ -3,6 +3,7 @@ package fr.iutvalence.info.dut.m2107.storage;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 /**
@@ -25,6 +26,14 @@ public class LayerMap {
 	public void update() {
 		for (int i = 0; i < layerMap.size(); i++) {
 			layerMap.get(i).update();
+		}
+	}
+	
+	public void resetLights() {
+		for (Layer layer : layerMap) {
+			for (Entity entity : layer) {
+				entity.resetLight();
+			}
 		}
 	}
 	

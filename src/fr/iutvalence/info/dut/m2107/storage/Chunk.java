@@ -37,6 +37,8 @@ public class Chunk implements Iterable<Tile> {
 	 */
 	private int tilesCount = 0;
 	
+	public boolean isBackground;
+	
 //	private final int vaoID;
 //	private final int textureID;
 	
@@ -46,6 +48,11 @@ public class Chunk implements Iterable<Tile> {
 	 */
 	public Chunk(Vector2i pos) {
 		this.position = pos;
+	}
+	
+	public Chunk(Vector2i pos, boolean isBackground) {
+		this(pos);
+		this.isBackground = isBackground;
 	}
 	
 	/**
@@ -60,7 +67,7 @@ public class Chunk implements Iterable<Tile> {
 		List<Tile> toRemove = new ArrayList<Tile>();
 		for (Tile tile : this) {
 			if (tile.updateLight) {
-				tile.updateSides();
+				tile.updateNaturalLight();
 			}
 			if (tile.toUpdate() && !tile.heavyUpdate()) {
 				toRemove.add(tile);

@@ -2,6 +2,8 @@ package fr.iutvalence.info.dut.m2107.inventory;
 
 import java.util.*;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 
@@ -24,16 +26,16 @@ public class ItemDatabase {
 	public static void create() {
 		// AMMUNIITON
 		//					TYPE	SPR							 			COL											ID	NAME				DESC					RARITY				MAX		VAL		DMG		KNO		SPD
-		itemDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			new Collider(-.02f, -.02f, .02f, .02f), (short) 25,		(short)0, 	"Arrow",			"A basic arrow", 		Rarity.POOR,		(short)50,		(short)1,		(short)1,		(short)1));
-		itemDatabase.add(new Arrow	(SpriteDatabase.getLightningArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),	(short) 50,	(short)1,	"Lightning Arrow", 	"A lightning arrow",	Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)20));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getArrowSpr(),			new Collider(-.02f, -.02f, .02f, .02f), (short) 25,		(short)0, 	"Arrow",			"A basic arrow", 		Rarity.POOR,		(short)50,		(short)1,		(short)1,		(short)1, null));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getLightningArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),	(short) 50,	(short)1,	"Lightning Arrow", 	"A lightning arrow",	Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)20, new Vector3f(1, 1, 1)));
 		
 		// WEAPON
 		//					TYPE	SPR								ID	NAME		DESC				RARITY			MAX		VAL		DMG 	RNG		USE		KNOC
 		itemDatabase.add(new Bow	(SpriteDatabase.getBowSpr(),	(short)2,	"Bow",		"A simple bow",		Rarity.POOR,	(short)1,		(short)3, 		(short)3, 		(short)0, 		.5f,	(short)3, (short)20));
 		itemDatabase.add(new Sword	(SpriteDatabase.getSwordSpr(),	(short)3,	"Sword",	"A simple Sword",	Rarity.POOR,	(short)1,		(short)3, 		(short)5, 		(short)3, 		.5f,	(short)7, (short)-20));
 		
-		itemDatabase.add(new Arrow	(SpriteDatabase.getFrozenArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),	(short)38,	(short)4,	"Frozen Arrow", 	"A frozen arrow",		Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)3));
-		itemDatabase.add(new Arrow	(SpriteDatabase.getBurningArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),	(short)38,	(short)5,	"Burning Arrow", 	"A burning arrow",		Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)3));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getFrozenArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),	(short)38,	(short)4,	"Frozen Arrow", 	"A frozen arrow",		Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)3, new Vector3f(.68f, .84f, .90f)));
+		itemDatabase.add(new Arrow	(SpriteDatabase.getBurningArrowSpr(),	new Collider(-.02f, -.02f, .02f, .02f),	(short)38,	(short)5,	"Burning Arrow", 	"A burning arrow",		Rarity.UNCOMMON,	(short)25,		(short)5,		(short)2,		(short)3, new Vector3f(.91f, .58f, .48f)));
 		
 		itemDatabase.add(new Gun(SpriteDatabase.getGunSpr(), (short)6, "Gun", "Basic gun", Rarity.COMMON, (short)1, (short)5, (short)5, (short)0, .25f, (short)5, (short)20));
 		itemDatabase.add(new Bullet(SpriteDatabase.getBulletSpr(), new Collider(-.02f, -.02f, .02f, .02f), (short) 75, (short)7, "A bullet", "A bullet", Rarity.COMMON, (short)500, (short)1, (short)2, (short)5));

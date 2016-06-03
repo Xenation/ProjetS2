@@ -246,4 +246,16 @@ public class Maths {
 	    else return (float) (int) ((tmp - (int) tmp) <= -0.5f ? tmp - 1 : tmp) / pow;
 	}
 	
+	public static float distance(Vector2f pos1, Vector2f pos2) {
+		return (float) Math.sqrt(pow(pos2.x-pos1.x, 2) + pow(pos2.y-pos1.y, 2));
+	}
+	
+	public static float distance(float x1, float y1, Vector2f pos2) {
+		return (float) Math.sqrt(pow(pos2.x-x1, 2) + pow(pos2.y-y1, 2));
+	}
+	
+	public static float distance(int x1, int y1, int x2, int y2) {
+		return (float) Math.sqrt(pow(x2-x1, 2) + pow(y2-y1, 2));
+	}
+	
 }

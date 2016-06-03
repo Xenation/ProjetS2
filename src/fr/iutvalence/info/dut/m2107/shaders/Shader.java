@@ -1,6 +1,7 @@
 package fr.iutvalence.info.dut.m2107.shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Camera;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
@@ -42,9 +43,9 @@ public class Shader extends ShaderProgram {
 	 */
 	private int location_depth;
 	
-	private int location_sides;
+	private int location_light;
 	
-	private int location_intensityMultiplier;
+	private int location_naturalLight;
 	
 	/**
 	 * Creates a new ShaderProgram using the vertex and fragment files
@@ -91,25 +92,12 @@ public class Shader extends ShaderProgram {
 		super.loadFloat(location_depth, depth);
 	}
 	
-	public void loadSides(boolean[] sides) {
-		if (sides != null && sides.length != 4) throw new IllegalArgumentException();
-		int fillIndex = 4;
-		boolean[] toLoad = new boolean[16];
-		if (sides != null) {
-			for (int i = 0; i < sides.length; i++) {
-				toLoad[i] = sides[i];
-			}
-		} else {
-			fillIndex = 0;
-		}
-		for (int i = fillIndex; i < toLoad.length; i++) {
-			toLoad[i] = false;
-		}
-		super.load16Booleans(location_sides, toLoad);
+	public void loadLight(Vector3f light) {
+		super.loadVector(location_light, light);
 	}
 	
-	public void loadIntensityMultiplier(float intensity) {
-		super.loadFloat(location_intensityMultiplier, intensity);
+	public void loadNaturalLight(Vector3f naturalLight) {
+		super.loadVector(location_naturalLight, naturalLight);
 	}
 	
 	/**
@@ -122,8 +110,8 @@ public class Shader extends ShaderProgram {
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_alpha = super.getUniformLocation("alpha");
 		location_depth = super.getUniformLocation("depth");
-		location_sides = super.getUniformLocation("sides");
-		location_intensityMultiplier = super.getUniformLocation("intensityMultiplier");
+		location_light = super.getUniformLocation("light");
+		location_naturalLight = super.getUniformLocation("naturalLight");
 	}
 	
 	/**

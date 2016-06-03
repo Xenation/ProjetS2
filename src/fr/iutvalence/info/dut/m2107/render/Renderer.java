@@ -110,7 +110,6 @@ public class Renderer {
 		shader.loadViewMatrix(GameWorld.camera);
 		shader.loadDepth(0);
 		shader.loadAlpha(1);
-		shader.loadIntensityMultiplier(0.7f);
 		
 		// Background Chunks Rendering
 		prepareAtlas(Atlas.TILE_ATLAS);
@@ -122,7 +121,7 @@ public class Renderer {
 					
 					Matrix4f matrix = Maths.createTransformationMatrix(tile.x+GameWorld.backChunkMap.getTilesPositionOffset(), tile.y+GameWorld.backChunkMap.getTilesPositionOffset(), tile.getOrientation());
 					shader.loadTransformation(matrix);
-					shader.loadSides(tile.getSides());
+					shader.loadLight(tile.light);
 					
 					// Draws the sprite
 					glDrawArrays(GL_QUADS, 0, 4);
@@ -133,7 +132,6 @@ public class Renderer {
 		}
 		
 		// Chunks Rendering
-		shader.loadIntensityMultiplier(1);
 		prepareAtlas(Atlas.TILE_ATLAS);
 		for (Chunk chk : GameWorld.chunkMap.getSurroundingChunks(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_TOP, BOUNDARY_BOTTOM, GameWorld.camera.getPosition())) {
 			for (TileVariant var : chk.variants()) {
@@ -143,7 +141,7 @@ public class Renderer {
 					
 					Matrix4f matrix = Maths.createTransformationMatrix(tile.x, tile.y, tile.getOrientation());
 					shader.loadTransformation(matrix);
-					shader.loadSides(tile.getSides());
+					shader.loadLight(tile.light);
 					
 					// Draws the sprite
 					glDrawArrays(GL_QUADS, 0, 4);
@@ -153,8 +151,8 @@ public class Renderer {
 			}
 		}
 		
-		shader.loadSides(null);
 		// Layers rendering
+		shader.loadNaturalLight(new Vector3f(-1, -1, -1));
 		for (int i = GameWorld.layerMap.getLayersCount()-1; i >= 0; i--) {
 			Layer layer = GameWorld.layerMap.getLayer(i);
 			shader.loadDepth(layer.getDepth());
@@ -168,6 +166,7 @@ public class Renderer {
 							Matrix4f matrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getScale(), ent.getRotation());
 							shader.loadTransformation(matrix);
 							shader.loadAlpha(ent.getAlpha());
+							shader.loadLight(ent.getLight());
 							
 							glDrawArrays(GL_QUADS, 0, 4);
 							

@@ -1,5 +1,7 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
@@ -14,6 +16,8 @@ import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
  *
  */
 public class Arrow extends Ammunition {
+	
+	public Vector3f color = null;
 	
 	/**
 	 * Constructor of an arrow
@@ -31,8 +35,9 @@ public class Arrow extends Ammunition {
 	 */
 	public Arrow(EntitySprite spr, Collider col, short spd,
 				short id, String name, String description, Rarity rarity, short maxStack, short value,
-				short damage, short knockback) {
+				short damage, short knockback, Vector3f color) {
 		super(spr, col, spd, id, name, description, rarity, maxStack, value, damage, knockback);
+		this.color = color;
 	}
 
 	/**
@@ -41,6 +46,7 @@ public class Arrow extends Ammunition {
 	 */
 	public Arrow(Arrow arrow) {
 		super(arrow);
+		this.color = arrow.color;
 	}
 
 	/* (non-Javadoc)

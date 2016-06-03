@@ -57,7 +57,7 @@ public class GameWorld {
 	public static void init() {
 		chunkMap = new ChunkMap();
 		
-		backChunkMap = new ChunkMap(-.5f);
+		backChunkMap = new ChunkMap(-.5f, true);
 		
 		layerMap = new LayerMap();
 		layerMap.addEmpty(4);
@@ -78,8 +78,12 @@ public class GameWorld {
 	 */
 	public static void update() {
 		camera.update();
+		layerMap.resetLights();
+		chunkMap.resetLights();
+		backChunkMap.resetLights();
 		layerMap.update();
 		guiLayerMap.update();
+		backChunkMap.update();
 		chunkMap.update();
 	}
 }

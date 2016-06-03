@@ -114,6 +114,7 @@ public class MovableEntity extends Entity {
 			this.pos.x += this.vel.x * DisplayManager.deltaTime();
 			this.pos.y += this.vel.y * DisplayManager.deltaTime();
 		}
+		super.update(layer);
 	}
 
 	/**

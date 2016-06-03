@@ -2,9 +2,11 @@ package fr.iutvalence.info.dut.m2107.core;
 
 import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.entities.Light;
 import fr.iutvalence.info.dut.m2107.entities.Player;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
@@ -134,6 +136,10 @@ public class GameManager {
 		GameWorld.update();
 		if (gui.isLoaded()) {
 			gui.update();
+		}
+		if (Input.isKeyC()) {
+			Light l = new Light(new Vector2f(GameWorld.camera.getMouseWorldX(), GameWorld.camera.getMouseWorldY()), new Vector3f(1, 1, 1), 1, 15);
+			GameWorld.layerMap.getLayer(2).add(l);
 		}
 		applyChanges();
 	}
@@ -294,9 +300,12 @@ public class GameManager {
 		Entity chest = new Entity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider);
 		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(chest);
 		
+//		Light sun = new Light(new Vector2f(0, 50), new Vector3f(1, 1, 1), 1, 200);
+//		sun.setParent(GameWorld.player);
+		
 //		for (byte i = 0; i < 100; i++) {
 //			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Slime(new Vector2f(2+(float)Math.random()*i*2, 2+(float)Math.random()*i*2), 0, SpriteDatabase.getSlimeSpr() , new Collider(-.5f, -.625f, .5f, .625f), new Vector2f(), (short) 3, 10, 15));
-////			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Rat(new Vector2f(2+(float)Math.random()*i*2, 2+(float)Math.random()*i*2), 0, SpriteDatabase.getRatSpr() , new Collider(-.25f, -.25f, .25f, .25f), new Vector2f(), 6, 1, 0));
+//			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Rat(new Vector2f(2+(float)Math.random()*i*2, 2+(float)Math.random()*i*2), 0, SpriteDatabase.getRatSpr() , new Collider(-.25f, -.25f, .25f, .25f), new Vector2f(), 6, 1, 0));
 //		}
 	}
 	

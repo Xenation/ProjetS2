@@ -1,8 +1,10 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.Sys;
+import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Character;
+import fr.iutvalence.info.dut.m2107.entities.Light;
 import fr.iutvalence.info.dut.m2107.entities.Player;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.sound.AudioDataBase;
@@ -91,6 +93,10 @@ public class Bow extends Weapon {
 		arrow.addWeaponStats(this);
 		arrow.initLaunch(owner);
 		GameWorld.layerMap.getStoredLayer(LayerStore.AMMUNITION).add(arrow);
+		if (arrow.color != null) {
+			Light light = new Light(new Vector2f(0, .01f), arrow.color, 1, 5);
+			light.setParent(arrow);
+		}
 		OpenAL.source.play(AudioDataBase.arrow());
 	}
 }

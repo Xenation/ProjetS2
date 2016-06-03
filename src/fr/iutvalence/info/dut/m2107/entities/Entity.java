@@ -1,10 +1,13 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.models.AbstractSprite;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
+import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
+import fr.iutvalence.info.dut.m2107.tiles.Tile;
 
 /**
  * A basic Entity
@@ -42,6 +45,8 @@ public class Entity {
 	 * The alpha filter to apply to this entity's sprite
 	 */
 	protected float alpha;
+	
+	protected Vector3f light;
 
 	/**
 	 * The collider of the entity
@@ -74,6 +79,7 @@ public class Entity {
 		col.setEnt(this);
 		col.updateColPos();
 		this.parent = null;
+		this.light = new Vector3f(0, 0, 0);
 	}
 
 	/**
@@ -95,6 +101,7 @@ public class Entity {
 			col.updateColPos();
 		}
 		this.parent = null;
+		this.light = new Vector3f(0, 0, 0);
 	}
 	
 	/**
@@ -112,6 +119,7 @@ public class Entity {
 		col.setEnt(this);
 		col.updateColPos();
 		this.parent = null;
+		this.light = new Vector3f(0, 0, 0);
 	}
 	
 	/**
@@ -132,6 +140,7 @@ public class Entity {
 			col.updateColPos();
 		}
 		this.parent = null;
+		this.light = new Vector3f(0, 0, 0);
 	}
 	
 	/**
@@ -148,6 +157,7 @@ public class Entity {
 		col.setEnt(this);
 		col.updateColPos();
 		this.parent = null;
+		this.light = new Vector3f(0, 0, 0);
 	}
 	
 	/**
@@ -165,6 +175,7 @@ public class Entity {
 		col.setEnt(this);
 		col.updateColPos();
 		this.parent = null;
+		this.light = new Vector3f(0, 0, 0);
 	}
 	
 	/**
@@ -180,6 +191,7 @@ public class Entity {
 		col.setEnt(this);
 		col.updateColPos();
 		this.parent = null;
+		this.light = new Vector3f(0, 0, 0);
 	}
 	
 	/**
@@ -187,7 +199,27 @@ public class Entity {
 	 * @param layer The layer in which the entity is
 	 */
 	public void update(Layer layer) {
+		if (this.layer != null) {
+			this.layer.update();
+		}
 		return;
+	}
+	
+	public Vector3f getLight() {
+		return light;
+	}
+	
+	public void resetLight() {
+		Tile back = GameWorld.backChunkMap.getTileAt(pos.x, pos.y);
+		if (back != null) {
+			light.x = back.prevLight.x;
+			light.y = back.prevLight.y;
+			light.z = back.prevLight.z;
+		} else {
+			light.x = 1;
+			light.y = 1;
+			light.z = 1;
+		}
 	}
 
 	/**
@@ -228,6 +260,17 @@ public class Entity {
 	 * @return the position of the entity
 	 */
 	public Vector2f getPosition() {return pos;}
+	
+	public Vector2f getAbsolutePosition() {
+		Entity curPar = this.getParent();
+		Vector2f absPos = new Vector2f(this.pos.x, this.pos.y);
+		while (curPar != null) {
+			absPos.x += curPar.pos.x;
+			absPos.y += curPar.pos.y;
+			curPar = curPar.getParent();
+		}
+		return absPos;
+	}
 	
 	/**
 	 * Set the entity position
