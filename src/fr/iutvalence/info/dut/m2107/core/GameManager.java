@@ -136,10 +136,10 @@ public class GameManager {
 		if (gui.isLoaded()) {
 			gui.update();
 		}
-		if (Input.isKeyC()) {
+		/*if (Input.isKeyC()) {
 			Light l = new Light(new Vector2f(GameWorld.camera.getMouseWorldX(), GameWorld.camera.getMouseWorldY()), new Vector3f(1, 1, 1), 1, 15);
 			GameWorld.layerMap.getLayer(2).add(l);
-		}
+		}*/
 		applyChanges();
 	}
 	
@@ -269,7 +269,7 @@ public class GameManager {
 	public static void loadDefaultChunkMap() {
 		GameWorld.chunkMap.clear();
 		GameWorld.backChunkMap.clear();
-		WorldLoader.setFilePath("saves/default/test.eagl");
+		WorldLoader.setFilePath("saves/Final.eagl");
 		WorldLoader.loadWorld();
 		GameWorld.chunkMap.updateWhole();
 	}
@@ -295,9 +295,14 @@ public class GameManager {
 		GameWorld.camera.setTarget(GameWorld.player);
 		GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER).add(GameWorld.player);
 		
-		Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
-		Entity chest = new Entity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider);
-		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(chest);
+		//Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
+		//Entity chest = new Entity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider);
+		//GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(chest);
+		
+		Item item = Item.copyDropableItem(ItemDatabase.get(2));
+		item.setPosition(new Vector2f(105,25));
+		item.getCollider().updateColPos();
+		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
 		
 //		Light sun = new Light(new Vector2f(0, 50), new Vector3f(1, 1, 1), 1, 200);
 //		sun.setParent(GameWorld.player);
