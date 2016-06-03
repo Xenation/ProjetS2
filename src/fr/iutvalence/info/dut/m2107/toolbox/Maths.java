@@ -1,10 +1,16 @@
 package fr.iutvalence.info.dut.m2107.toolbox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Camera;
+import fr.iutvalence.info.dut.m2107.storage.GameWorld;
+import fr.iutvalence.info.dut.m2107.storage.Vector2i;
+import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileOrientation;
 
 /**
@@ -257,6 +263,92 @@ public class Maths {
 	
 	public static float distance(int x1, int y1, int x2, int y2) {
 		return (float) Math.sqrt(pow(x2-x1, 2) + pow(y2-y1, 2));
+	}
+	
+	public static List<Vector2i> bresenham(int x0, int y0, int x1, int y1) {
+		List<Vector2i> line = new ArrayList<Vector2i>();
+		
+		int dx = Math.abs(x1 - x0);
+		int dy = Math.abs(y1 - y0);
+		
+		int sx = x0 < x1 ? 1 : -1;
+		int sy = y0 < y1 ? 1 : -1;
+		
+		int err = dx - dy;
+		int e2;
+		
+		while (true) {
+			line.add(new Vector2i(x0, y0));
+			
+			if (x0 == x1 && y0 == y1)
+				break;
+				
+			e2 = 2 * err;
+			if (e2 > -dy) {
+				err = err - dy;
+				x0 = x0 + sx;
+			}
+			
+			if (e2 < dx) {
+				err = err + dx;
+				y0 = y0 + sy;
+			}
+		}
+		return line;
+	}
+	
+	public static List<Tile> tileBresenham(Tile tile1, Tile tile2) {
+		List<Tile> tiles = new ArrayList<Tile>();
+		
+		int x0 = tile1.x;
+		int y0 = tile1.y;
+		
+		int x1 = tile2.x;
+		int y1 = tile2.y;
+		
+		int dx = Math.abs(tile2.x - tile1.x);
+		int dy = Math.abs(tile2.y - tile1.y);
+		
+		int sx = tile1.x < tile2.x ? 1 : -1;
+		int sy = tile1.y < tile2.y ? 1 : -1;
+		
+		int err = dx - dy;
+		int e2;
+		
+		Tile t = tile1;
+		
+		while (true) {
+			if (t != null)
+				tiles.add(t);
+			
+			if (x0 == x1 && y0 == y1)
+				break;
+			
+			e2 = 2 * err;
+			if (e2 > -dy) {
+				err = err - dy;
+				x0 = x0 + sx;
+				if (t != null) {
+					if (sx == -1) t = t.getLeft();
+					else if (sx == 1) t = t.getRight();
+				}
+			}
+			
+			if (e2 < dx) {
+				err = err + dx;
+				y0 = y0 + sy;
+				if (t != null) {
+					if (sy == -1) t = t.getBottom();
+					else if (sy == 1) t = t.getTop();
+				}
+			}
+			
+			if (t == null) {
+				t = GameWorld.chunkMap.getTileAt(x0, y0);
+			}
+		}
+		
+		return tiles;
 	}
 	
 }

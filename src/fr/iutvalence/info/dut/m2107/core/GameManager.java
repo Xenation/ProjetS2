@@ -311,7 +311,7 @@ public class GameManager {
 		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
 		
 
-		org.junit.runner.JUnitCore.runClasses(InventoryTest.class);
+//		org.junit.runner.JUnitCore.runClasses(InventoryTest.class);
 		
 //		Light sun = new Light(new Vector2f(0, 50), new Vector3f(1, 1, 1), 1, 200);
 //		sun.setParent(GameWorld.player);

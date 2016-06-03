@@ -36,6 +36,8 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	
 	private boolean isBackground;
 	
+	public int searchNb = 0;
+	
 	/**
 	 * Creates an empty ChunkMap
 	 */
@@ -57,9 +59,15 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	 * Updates the chunks on screen
 	 */
 	public void update() {
+		searchNb = 0;
 		for (Chunk chk : getScreenChunks()) {
 			chk.update();
 		}
+		searchNb++;
+		if (isBackground)
+			System.out.println("Beckground search: "+searchNb);
+		else
+			System.out.println("Foreground search: "+searchNb);
 	}
 	
 	/**
@@ -69,6 +77,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		for (Chunk chk : this) {
 			chk.update();
 		}
+		searchNb++;
 	}
 	
 	public void resetLights() {
@@ -82,6 +91,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 				tile.light.z = 0;
 			}
 		}
+		searchNb++;
 	}
 	
 	/**
@@ -449,6 +459,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 				return chk;
 			}
 		}
+		searchNb++;
 		return null;
 	}
 	
@@ -469,6 +480,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 				}
 			}
 		}
+		searchNb++;
 	}
 	
 	/**
@@ -490,6 +502,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 				}
 			}
 		}
+		searchNb++;
 		return chks;
 	}
 	
@@ -520,6 +533,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 				}
 			}
 		}
+		searchNb++;
 		return count;
 	}
 	
@@ -532,6 +546,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		for (Chunk chk : this) {
 			count += chk.getTilesCount();
 		}
+		searchNb++;
 		return count;
 	}
 	
@@ -552,6 +567,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		for (Link lnk : map) {
 			chks.add(lnk.getValue());
 		}
+		searchNb++;
 		return chks;
 	}
 	
@@ -574,6 +590,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 				return true;
 			}
 		}
+		searchNb++;
 		return false;
 	}
 
@@ -584,6 +601,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 				return true;
 			}
 		}
+		searchNb++;
 		return false;
 	}
 
@@ -593,6 +611,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		for (Entry<Vector2i, Chunk> entry : map) {
 			set.add(entry);
 		}
+		searchNb++;
 		return set;
 	}
 
@@ -603,6 +622,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 				return lnk.getValue();
 			}
 		}
+		searchNb++;
 		return null;
 	}
 
@@ -619,6 +639,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		for (Link lnk : map) {
 			set.add(lnk.position);
 		}
+		searchNb++;
 		return set;
 	}
 
@@ -648,6 +669,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 			if (lnk.position.equals((Vector2i) arg0))
 					toRem.add(lnk);
 		}
+		searchNb++;
 		for (Link entry : toRem) {
 			map.remove(entry);
 		}
