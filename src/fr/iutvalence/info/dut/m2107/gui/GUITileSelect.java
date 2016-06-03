@@ -81,6 +81,7 @@ public class GUITileSelect implements Listener {
 			GameWorld.camera.setVariant(TileType.values()[rightClickedTypeIndex].getVariants().get(index));
 			GameManager.unloadGUITileSelect();
 		}
+		GameWorld.camera.setTimeBeforeDraw(.5f);
 	}
 	
 	public void onGUIMouseRightDown(GUIMouseRightDownEvent event) {

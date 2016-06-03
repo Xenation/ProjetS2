@@ -87,6 +87,9 @@ public class Camera {
 	 */
 	private boolean isFocusing = true;
 	
+	private float timeBeforeDraw;
+	private boolean canDraw = true;
+	
 	/**
 	 * A new Camera at 0,0 and with a rotation of 0
 	 */
@@ -201,37 +204,39 @@ public class Camera {
 				this.preview.pos.y = targetChunkMap.toTileCenterVisualPosition(mWorldY) + Tile.TILE_SIZE/2;
 				
 				//// Drawing
-				if (Input.isLShift() && (Input.isMouseLeftDown() || Input.isMouseRightDown())) {
-					if (drawStart == null) {
-						if (Input.isMouseLeftDown()) isRemoving = false;
-						else if (Input.isMouseRightDown()) isRemoving = true;
-						
-						drawStart = new Vector2i(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
-						isSelecting = true;
-					} else {
-						drawEnd = new Vector2i(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
-						calculateSelectionCenter();
+				if (canDraw) {
+					if (Input.isLShift() && (Input.isMouseLeftDown() || Input.isMouseRightDown())) {
+						if (drawStart == null) {
+							if (Input.isMouseLeftDown()) isRemoving = false;
+							else if (Input.isMouseRightDown()) isRemoving = true;
+							
+							drawStart = new Vector2i(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
+							isSelecting = true;
+						} else {
+							drawEnd = new Vector2i(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
+							calculateSelectionCenter();
+						}
+					} else if (isSelecting) {
+						isSelecting = false;
+						if (!isRemoving) {
+							targetChunkMap.fillZone(type, variant, drawStart, drawEnd);
+						} else {
+							targetChunkMap.emptyZone(drawStart, drawEnd);
+						}
+						preview.setScale(1, 1);
+						isRemoving = false;
+						drawStart = null;
 					}
-				} else if (isSelecting) {
-					isSelecting = false;
-					if (!isRemoving) {
-						targetChunkMap.fillZone(type, variant, drawStart, drawEnd);
-					} else {
-						targetChunkMap.emptyZone(drawStart, drawEnd);
-					}
-					preview.setScale(1, 1);
-					isRemoving = false;
-					drawStart = null;
-				}
-				if (!isSelecting) {
-					if (Input.isMouseLeftDown()) {
-						Tile t = TileBuilder.buildTile(type, targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
-						targetChunkMap.setTile(t);
-						if (variant != null)
-							t.setVariant(variant);
-					}
-					if (Input.isMouseRightDown()) {
-						targetChunkMap.removeTileAt(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
+					if (!isSelecting) {
+						if (Input.isMouseLeftDown()) {
+							Tile t = TileBuilder.buildTile(type, targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
+							targetChunkMap.setTile(t);
+							if (variant != null)
+								t.setVariant(variant);
+						}
+						if (Input.isMouseRightDown()) {
+							targetChunkMap.removeTileAt(targetChunkMap.toTilePosition(mWorldX), targetChunkMap.toTilePosition(mWorldY));
+						}
 					}
 				}
 			}
@@ -243,6 +248,13 @@ public class Camera {
 			else DisplayManager.vSyncTracker = true;
 			
 			Display.setVSyncEnabled(DisplayManager.vSyncTracker);
+		}
+		
+		if (timeBeforeDraw < 0) {
+			canDraw = true;
+		} else {
+			timeBeforeDraw -= DisplayManager.deltaTime();
+			canDraw = false;
 		}
 		
 	}
@@ -347,6 +359,11 @@ public class Camera {
 	
 	public void setVariant(TileVariant variant) {
 		this.variant = variant;
+	}
+	
+	public void setTimeBeforeDraw(float time) {
+		this.timeBeforeDraw = time;
+		this.canDraw = false;
 	}
 	
 	/**
