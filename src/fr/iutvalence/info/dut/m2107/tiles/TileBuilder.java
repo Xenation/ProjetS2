@@ -50,6 +50,9 @@ public class TileBuilder {
 		case PistonArm:
 			t = new DependantFixedTile(type, x, y);
 			break;
+		case Torch:
+			t = new LightingTile(type, x, y);
+			break;
 		default:
 			t = new Tile(type, x, y);
 			break;
@@ -71,6 +74,7 @@ public class TileBuilder {
 		case Leaves:
 		case Sand:
 		case Water:
+		case Planks:
 			EventManager.sendEvent(new TileDestroyedEvent(tile));
 //			EventManager.unregister(tile);
 			break;
@@ -98,6 +102,10 @@ public class TileBuilder {
 			DependantFixedTile dependant = (DependantFixedTile) tile;
 			EventManager.sendEvent(new TileDestroyedEvent(dependant));
 //			EventManager.unregister(dependant);
+			break;
+		case Torch:
+			LightingTile torch = (LightingTile) tile;
+			EventManager.sendEvent(new TileDestroyedEvent(torch));
 			break;
 		default:
 //			EventManager.unregister(tile);
@@ -135,6 +143,8 @@ public class TileBuilder {
 		case Log:
 		case Leaves:
 		case Sand:
+		case Water:
+		case Planks:
 			break;
 		case Fader:
 			stats.add("time = "+((TimedTile)tile).time);
@@ -151,6 +161,12 @@ public class TileBuilder {
 			stats.add("time = "+((PushingTile)tile).time);
 			break;
 		case PistonArm:
+			break;
+		case Torch:
+			LightingTile l = (LightingTile) tile;
+			stats.add("color = "+l.getColor().x+", "+l.getColor().y+", "+l.getColor().z);
+			stats.add("intensity = "+l.getIntensity());
+			stats.add("range = "+l.getRange());
 			break;
 		default:
 			break;

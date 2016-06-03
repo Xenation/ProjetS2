@@ -19,20 +19,15 @@ void main(void) {
 	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, depth, 1.0);
 	textureCoords = textureUVs;
 	alphaPass = alpha;
-	/*if (naturalLight.r == -1) {
-		lightPass = light;
-	} else {
-		lightPass = naturalLight + light;
-	}*/
 	lightPass = light;
 	if (lightPass.r > 1) {
-		lightPass.r = 1;
+		lightPass.rgb /= lightPass.r;
 	}
 	if (lightPass.g > 1) {
-		lightPass.g = 1;
+		lightPass.rgb /= lightPass.g;
 	}
 	if (lightPass.b > 1) {
-		lightPass.b = 1;
+		lightPass.rgb /= lightPass.b;
 	}
 	
 }

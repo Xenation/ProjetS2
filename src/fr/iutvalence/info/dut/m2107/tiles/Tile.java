@@ -173,14 +173,19 @@ public class Tile {
 					tile.light.z += LIGHT_COLOR.z * LIGHT_INT*freeNb * distanceFade;
 				}
 			}
-			for (Chunk chk : GameWorld.backChunkMap.getSurroundingChunks(-LIGHT_RANGE, LIGHT_RANGE, LIGHT_RANGE, -LIGHT_RANGE, new Vector2f(x, y))) {
-				for (Tile tile : chk) {
-					float distance = Maths.distance(tile.x, tile.y, x, y);
-					float distanceFade = ((LIGHT_RANGE-distance)/LIGHT_RANGE);
-					if (distanceFade < 0) distanceFade = 0;
-					tile.light.x += LIGHT_COLOR.x * LIGHT_INT * distanceFade * .75f;
-					tile.light.y += LIGHT_COLOR.y * LIGHT_INT * distanceFade * .75f;
-					tile.light.z += LIGHT_COLOR.z * LIGHT_INT * distanceFade * .75f;
+			if (chunk.isBackground) {
+				for (Chunk chk : GameWorld.backChunkMap.getSurroundingChunks(-LIGHT_RANGE, LIGHT_RANGE, LIGHT_RANGE, -LIGHT_RANGE, new Vector2f(x, y))) {
+					for (Tile tile : chk) {
+						float flat = 0.25f*LIGHT_RANGE;
+						float distance = Maths.distance(tile.x, tile.y, x, y);
+						float distanceFade = 1;
+						if (distance > flat)
+							distanceFade = ((LIGHT_RANGE-distance)/(LIGHT_RANGE-flat));
+						if (distanceFade < 0) distanceFade = 0;
+						tile.light.x += LIGHT_COLOR.x * LIGHT_INT*freeNb * distanceFade * .75f;
+						tile.light.y += LIGHT_COLOR.y * LIGHT_INT*freeNb * distanceFade * .75f;
+						tile.light.z += LIGHT_COLOR.z * LIGHT_INT*freeNb * distanceFade * .75f;
+					}
 				}
 			}
 			for (Layer lay : GameWorld.layerMap.getLayers()) {
@@ -221,19 +226,36 @@ public class Tile {
 	public void updateNaturalLight() {
 		freeNb = 4;
 		
-		if (top != null) freeNb--;
-		if (left != null) freeNb--;
-		if (right != null) freeNb--;
-		if (bottom != null) freeNb--;
-		
-		if (freeNb != 0
-				&& (bBotLeft == null
-				|| bBotRight == null
-				|| bTopLeft == null
-				|| bTopRight == null)) {
-			isNaturalLight = true;
-		} else if (isNaturalLight) {
-			isNaturalLight = false;
+		if (!chunk.isBackground) {
+			if (top != null) freeNb--;
+			if (left != null) freeNb--;
+			if (right != null) freeNb--;
+			if (bottom != null) freeNb--;
+			
+			if (freeNb != 0
+					&& (bBotLeft == null
+					|| bBotRight == null
+					|| bTopLeft == null
+					|| bTopRight == null)) {
+				isNaturalLight = true;
+			} else if (isNaturalLight) {
+				isNaturalLight = false;
+			}
+		} else {
+			if (top != null) freeNb--;
+			if (left != null) freeNb--;
+			if (right != null) freeNb--;
+			if (bottom != null) freeNb--;
+			
+			if (freeNb != 0
+					&& (bBotLeft == null
+					&& bBotRight == null
+					&& bTopLeft == null
+					&& bTopRight == null)) {
+				isNaturalLight = true;
+			} else if (isNaturalLight) {
+				isNaturalLight = false;
+			}
 		}
 		
 //		if (top == null && (bTopLeft == null || (bTopLeft != null && bTopLeft.top == null) || bTopRight == null || (bTopRight != null && bTopRight.top == null))

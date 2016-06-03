@@ -24,7 +24,8 @@ public enum TileType {
 	Piston(10, TileVariant.Piston_retracted, true, TileBehavior.PISTON),
 	PistonArm(11, TileVariant.Piston_arm, true, TileBehavior.FIXEDDEPENDANT),
 	Water(12, TileVariant.Water, false, TileBehavior.LIQUID),
-	Planks(13, TileVariant.Planks);
+	Planks(13, TileVariant.Planks),
+	Torch(14, TileVariant.Torch, false);
 	
 	static {
 		//// Add variants here
