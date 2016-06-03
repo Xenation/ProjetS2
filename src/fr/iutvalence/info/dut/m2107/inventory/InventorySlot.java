@@ -40,6 +40,18 @@ public class InventorySlot {
 		this.quantity = null;
 		this.item = null;
 	}
+	
+	public void setSlot(InventorySlot slot) {
+		this.item = slot.item;
+		this.itemSprite = slot.itemSprite;
+		this.quantity = slot.quantity;
+	}
+	
+	public void setSlot(Item item, GUISlot sprite, GUIText text) {
+		this.item = item;
+		this.itemSprite = sprite;
+		this.quantity = text;
+	}
 
 	public GUIText getQuantity() {return quantity;}
 	public void setQuantity(GUIText quantity) {this.quantity = quantity;}
@@ -49,4 +61,11 @@ public class InventorySlot {
 
 	public GUISlot getItemSprite() {return itemSprite;}
 	public void setItemSprite(GUISlot itemSprite) {this.itemSprite = itemSprite;}
+
+	@Override
+	public String toString() {
+		return "InventorySlot [item=" + item + ", itemSprite=" + itemSprite.getPosition() + ", quantity=" + quantity.getPosition() + "]";
+	}
+	
+	
 }
