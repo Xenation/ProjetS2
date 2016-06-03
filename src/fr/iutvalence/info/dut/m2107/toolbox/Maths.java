@@ -217,16 +217,17 @@ public class Maths {
 	 * Returns a power b
 	 * This method is faster than Math.pow() because it doesn't handle double as power
 	 * @param a a float
-	 * @param b the power (integer)
+	 * @param b the power (positive integer)
 	 * @return a power b
 	 */
 	public static float pow(float a, int b) {
 		float result = 1;
+		if (b < 0) throw new IllegalArgumentException("Power b must be a positive integer");
 		while(b > 0) {
 			if (b % 2 != 0) {
 				result *= a;
 				b--;
-			} 
+			}
 			a *= a;
 			b /= 2;
 		}

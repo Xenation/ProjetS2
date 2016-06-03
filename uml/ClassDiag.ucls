@@ -677,6 +677,8 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="82">    
+    <bendpoint x="-414" y="108"/>    
+    <bendpoint x="-233" y="108"/>    
     <end type="SOURCE" refId="63" navigable="false">      
       <attribute id="83" name="pivot"/>      
       <multiplicity id="84" minimum="0" maximum="1"/>    
@@ -1371,7 +1373,7 @@
     <end type="TARGET" refId="12"/>  
   </generalization>  
   <association id="303">    
-    <bendpoint x="200" y="-165"/>    
+    <bendpoint x="203" y="-159"/>    
     <bendpoint x="308" y="-392"/>    
     <bendpoint x="376" y="-1193"/>    
     <bendpoint x="530" y="-1224"/>    
