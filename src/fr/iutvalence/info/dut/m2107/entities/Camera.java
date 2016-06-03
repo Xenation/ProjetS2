@@ -215,7 +215,7 @@ public class Camera {
 				} else if (isSelecting) {
 					isSelecting = false;
 					if (!isRemoving) {
-						targetChunkMap.fillZone(type, drawStart, drawEnd);
+						targetChunkMap.fillZone(type, variant, drawStart, drawEnd);
 					} else {
 						targetChunkMap.emptyZone(drawStart, drawEnd);
 					}
@@ -235,15 +235,6 @@ public class Camera {
 					}
 				}
 			}
-		} else {
-//			if (Input.isNumPad0()) {
-//				float pow = Maths.pow(2, 23);
-//				this.target.pos = new Vector2f(pow, 0);
-//				setPosition(pow, 0);
-//				for (int i = -10; i <= 10; i++) {
-//					GameWorld.chunkMap.setTilenChunk(TileBuilder.buildTile(type, Maths.fastFloor(pow+i), -20));
-//				}
-//			}
 		}
 		
 		//// VSync

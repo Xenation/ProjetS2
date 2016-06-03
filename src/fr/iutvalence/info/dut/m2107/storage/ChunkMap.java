@@ -16,6 +16,7 @@ import fr.iutvalence.info.dut.m2107.tiles.Tile;
 import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.tiles.TileOrientation;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
+import fr.iutvalence.info.dut.m2107.tiles.TileVariant;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 /**
@@ -275,7 +276,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	 * @param start the starting position of the zone
 	 * @param end the ending position of the zone
 	 */
-	public void fillZone(TileType type, Vector2i start, Vector2i end) {
+	public void fillZone(TileType type, TileVariant variant, Vector2i start, Vector2i end) {
 		if (start.x > end.x) {
 			int tmp = start.x;
 			start.x = end.x;
@@ -288,7 +289,10 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 		}
 		for (int y = start.y; y <= end.y; y++) {
 			for (int x = start.x; x <= end.x; x++) {
-				setTilenChunk(TileBuilder.buildTile(type, x, y));
+				Tile t = TileBuilder.buildTile(type, x, y);
+				setTilenChunk(t);
+				if (variant != null)
+					t.setVariant(variant);
 			}
 		}
 	}
