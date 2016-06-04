@@ -1,7 +1,6 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.Sys;
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
@@ -16,12 +15,6 @@ public class Orb extends Ammunition {
 	private float launchTime = Sys.getTime();
 	
 	private static final short lifeTime = 5;
-
-	public Orb(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd,
-			short id, String name, String description, Rarity rarity, short maxStack,
-			short value, short damage, short knockback, Vector3f color) {
-		super(pos, rot, spr, col, vel, spd, id, name, description, rarity, maxStack, value, damage, knockback, color);
-	}
 	
 	public Orb(EntitySprite spr, Collider col, short spd,
 			short id, String name, String description, Rarity rarity, short maxStack,
@@ -48,11 +41,8 @@ public class Orb extends Ammunition {
 	
 	public Orb copy() {
 		Ammunition ammo = super.copy();
-		Orb newOrb = new Orb(ammo.getPosition(),
-									ammo.getRotation(),
-									(EntitySprite)ammo.getSprite(),
+		Orb newOrb = new Orb((EntitySprite)ammo.getSprite(),
 									ammo.getCollider(),
-									ammo.getVelocity(),
 									ammo.getSpeed(),
 									ammo.getId(),
 									ammo.name,

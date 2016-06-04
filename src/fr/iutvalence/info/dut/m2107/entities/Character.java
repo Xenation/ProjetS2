@@ -42,6 +42,10 @@ public class Character extends TerrestrialCreature{
 		super(pos, rot, spr, col, vel, spd, health, jumpHeight);
 	}
 	
+	public Character(Vector2f pos, EntitySprite spr, Collider col, short spd, int health, int jumpHeight) {
+		this(pos, 0, spr, col, new Vector2f(), spd, health, jumpHeight);
+	}
+	
 	/* (non-Javadoc)
 	 * @see fr.iutvalence.info.dut.m2107.entities.LivingEntity#update(fr.iutvalence.info.dut.m2107.storage.Layer)
 	 */

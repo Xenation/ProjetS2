@@ -5,14 +5,12 @@ import org.lwjgl.util.vector.Vector2f;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
-import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Zombie extends Character {
 
-	public Zombie(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd, int health,
-			int jumpHeight) {
-		super(pos, rot, spr, col, vel, spd, health, jumpHeight);
+	public Zombie(Vector2f pos, EntitySprite spr, Collider col, short spd, int health, int jumpHeight) {
+		super(pos, spr, col, spd, health, jumpHeight);
 	}
 
 	@Override

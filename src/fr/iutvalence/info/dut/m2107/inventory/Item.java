@@ -4,7 +4,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.MovableEntity;
-import fr.iutvalence.info.dut.m2107.models.AbstractSprite;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
@@ -54,30 +53,6 @@ public class Item extends MovableEntity {
 	protected final short value;
 	
 	private Tile collidingTile;
-
-	/**
-	 * Constructor of an Item
-	 * @param pos The position of the item
-	 * @param rot The rotation of the item
-	 * @param spr The sprite of the item
-	 * @param id The id of the item
-	 * @param name The name of the item
-	 * @param description The description of the item
-	 * @param rarity The rarity of the item
-	 * @param maxStack The maximum stack of the item
-	 * @param value The value of the item
-	 */
-	public Item(Vector2f pos, float rot, AbstractSprite spr, Collider col,
-				Vector2f vel, short spd,
-				short id, String name, String description, Rarity rarity, short maxStack, short value) {
-		super(pos, rot, spr, col, vel, spd);
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.rarity = rarity;
-		this.MAX_STACK = maxStack;
-		this.value = value;
-	}
 	
 	/**
 	 * Constructor of an Item
@@ -90,20 +65,8 @@ public class Item extends MovableEntity {
 	 * @param maxStack The maximum stack of the item
 	 * @param value The value of the item
 	 */
-	public Item(EntitySprite spr,
-			short id, String name, String description, Rarity rarity, short maxStack, short value) {
+	public Item(EntitySprite spr, short id, String name, String description, Rarity rarity, short maxStack, short value) {
 		super(spr);
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.rarity = rarity;
-		this.MAX_STACK = maxStack;
-		this.value = value;
-	}
-	
-	public Item(EntitySprite spr, Collider col,
-			short id, String name, String description, Rarity rarity, short maxStack, short value) {
-		super(spr, col);
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -198,11 +161,8 @@ public class Item extends MovableEntity {
 	public short getValue() {return value;}
 
 	public Item copy() {
-		return new Item(new Vector2f(this.pos.x, this.pos.y),
-						this.rot,
-						this.spr,
-						new Collider(this.col),
-						new Vector2f(this.vel.x, this.vel.y),
+		return new Item((EntitySprite) this.spr,
+						this.col == null ? null : new Collider(this.col),
 						this.spd,
 						this.id,
 						this.name,
@@ -213,18 +173,15 @@ public class Item extends MovableEntity {
 	}
 	
 	public static Item copyDropableItem(Item item, float x, float y) {
-		Item newItem = new Item(new Vector2f(item.pos.x, item.pos.y),
-											item.rot,
-											item.spr,
-											new Collider(item.col),
-											new Vector2f(item.vel.x, item.vel.y),
-											item.spd,
-											item.id,
-											item.name,
-											item.description,
-											item.rarity,
-											item.MAX_STACK,
-											item.value);
+		Item newItem = new Item((EntitySprite) item.spr,
+								new Collider(item.spr),
+								item.spd,
+								item.id,
+								item.name,
+								item.description,
+								item.rarity,
+								item.MAX_STACK,
+								item.value);
 		newItem.setCollider(new Collider(newItem.getSprite()));
 		newItem.getCollider().setEnt(newItem);
 		newItem.setPosition(new Vector2f(x, y));

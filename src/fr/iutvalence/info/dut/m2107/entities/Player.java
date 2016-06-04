@@ -96,7 +96,7 @@ public class Player extends Character{
 	 * Constructor of a player
 	 */
 	public Player() {
-		super(new Vector2f(), Entity.DEF_ROT, SpriteDatabase.getPlayerSpr() ,new Collider(-.75f, -1.75f, .75f, 1.75f), new Vector2f(), MovableEntity.DEF_SPD, LivingEntity.DEF_HEALTH, LivingEntity.DEF_JUMP_HEIGHT);
+		super(new Vector2f(), SpriteDatabase.getPlayerSpr() ,new Collider(-.75f, -1.75f, .75f, 1.75f), MovableEntity.DEF_SPD, LivingEntity.DEF_HEALTH, LivingEntity.DEF_JUMP_HEIGHT);
 	}
 	
 	public void init() {

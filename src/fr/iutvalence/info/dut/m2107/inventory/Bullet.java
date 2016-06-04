@@ -1,6 +1,5 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Collider;
@@ -18,27 +17,6 @@ import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 public class Bullet extends Ammunition {
 	
 	protected byte reboundCount;
-	
-	/**
-	 * A constructor of a bullet
-	 * @param spr The sprite of the ammo
-	 * @param col The collider of the ammo
-	 * @param id The id of the id
-	 * @param name The name of the ammo
-	 * @param description The description of the ammo
-	 * @param rarity The rarity of the ammo
-	 * @param maxStack The max stack of the ammo
-	 * @param value The value of the ammo
-	 * @param damage The damage of the ammo
-	 * @param knockback The knocback of the ammo
-	 * @param speed The speed of the ammo
-	 */
-	public Bullet(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd,
-			short id, String name, String description, Rarity rarity, short maxStack, short value,
-			short damage, short knockback, Vector3f color, byte reboundCount) {
-		super(pos, rot, spr, col, vel, spd, id, name, description, rarity, maxStack, value, damage, knockback, color);
-		this.reboundCount = reboundCount;
-	}
 	
 	/**
 	 * A constructor of a bullet
@@ -102,11 +80,8 @@ public class Bullet extends Ammunition {
 	
 	public Bullet copy() {
 		Ammunition ammo = super.copy();
-		Bullet newBullet = new Bullet(ammo.getPosition(),
-									ammo.getRotation(),
-									(EntitySprite)ammo.getSprite(),
+		Bullet newBullet = new Bullet((EntitySprite)ammo.getSprite(),
 									ammo.getCollider(),
-									ammo.getVelocity(),
 									ammo.getSpeed(),
 									ammo.getId(),
 									ammo.name,

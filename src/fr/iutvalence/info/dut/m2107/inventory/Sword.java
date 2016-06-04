@@ -1,7 +1,6 @@
 package fr.iutvalence.info.dut.m2107.inventory;
 
 import org.lwjgl.Sys;
-import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Character;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
@@ -15,12 +14,6 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 public class Sword extends Weapon {
-	
-	public Sword(Vector2f pos, float rot, EntitySprite spr, Collider col, Vector2f vel, short spd,
-			short id, String name, String description, Rarity rarity, short maxStack, short value,
-			short damage, short range, float useTime, short knockback, short handRotation) {
-		super(pos, rot, spr, col, vel, spd, id, name, description, rarity, maxStack, value, damage, range, useTime, knockback, handRotation);
-	}
 	
 	/**
 	 * Constructor of a sword
@@ -78,12 +71,7 @@ public class Sword extends Weapon {
 	
 	public Sword copy() {
 		Weapon weapon = super.copy();
-		Sword newSword = new Sword(weapon.getPosition(),
-								weapon.getRotation(),
-								(EntitySprite)weapon.getSprite(),
-								weapon.getCollider(),
-								weapon.getVelocity(),
-								weapon.getSpeed(),
+		Sword newSword = new Sword((EntitySprite)weapon.getSprite(),
 								weapon.getId(),
 								weapon.name,
 								weapon.description,

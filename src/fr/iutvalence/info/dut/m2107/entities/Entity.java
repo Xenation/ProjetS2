@@ -16,10 +16,7 @@ import fr.iutvalence.info.dut.m2107.tiles.Tile;
  */
 public class Entity {
 	
-	public static final Vector2f DEF_POS = new Vector2f(0, 0);
-	public static final float DEF_ROT = 0;
 	public static final AbstractSprite DEF_SPR = new EntitySprite("item/arrow", new Vector2f(1, 1));
-	public static final Vector2f DEF_SCALE = new Vector2f(1, 1);
 	
 	/**
 	 * The position of the entity
@@ -62,25 +59,6 @@ public class Entity {
 	 * The parent entity
 	 */
 	private Entity parent;
-	
-	/**
-	 * Constructor of an Entity
-	 * @param pos The position of the entity
-	 * @param rot The rotation of the entity
-	 * @param spr The sprite of the entity
-	 */
-	public Entity(Vector2f pos, float rot, AbstractSprite spr) {
-		this.pos = pos;
-		this.rot = rot;
-		this.spr = spr;
-		this.alpha = 1;
-		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
-		this.col = new Collider(spr);
-		col.setEnt(this);
-		col.updateColPos();
-		this.parent = null;
-		this.light = new Vector3f(0, 0, 0);
-	}
 
 	/**
 	 * Constructor of an Entity
@@ -94,7 +72,7 @@ public class Entity {
 		this.rot = rot;
 		this.spr = spr;
 		this.alpha = 1;
-		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
+		this.scale = new Vector2f(1, 1);
 		this.col = col;
 		if(col != null) {
 			col.setEnt(this);
@@ -110,16 +88,7 @@ public class Entity {
 	 * @param spr The sprite of the entity
 	 */
 	public Entity(Vector2f pos, AbstractSprite spr) {
-		this.pos = pos;
-		this.rot = DEF_ROT;
-		this.spr = spr;
-		this.alpha = 1;
-		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
-		this.col = new Collider(spr);
-		col.setEnt(this);
-		col.updateColPos();
-		this.parent = null;
-		this.light = new Vector3f(0, 0, 0);
+		this(pos, 0, spr, null);
 	}
 	
 	/**
@@ -129,18 +98,7 @@ public class Entity {
 	 * @param col The collider of the entity
 	 */
 	public Entity(Vector2f pos, AbstractSprite spr, Collider col) {
-		this.pos = pos;
-		this.rot = DEF_ROT;
-		this.spr = spr;
-		this.alpha = 1;
-		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
-		this.col = col;
-		if (col != null) {
-			col.setEnt(this);
-			col.updateColPos();
-		}
-		this.parent = null;
-		this.light = new Vector3f(0, 0, 0);
+		this(pos, 0, spr, col);
 	}
 	
 	/**
@@ -148,16 +106,7 @@ public class Entity {
 	 * @param spr The sprite of the entity
 	 */
 	public Entity(AbstractSprite spr) {
-		this.pos = new Vector2f(DEF_POS.x, DEF_POS.y);
-		this.rot = DEF_ROT;
-		this.spr = spr;
-		this.alpha = 1;
-		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
-		this.col = new Collider(spr);
-		col.setEnt(this);
-		col.updateColPos();
-		this.parent = null;
-		this.light = new Vector3f(0, 0, 0);
+		this(new Vector2f(), 0, spr, null);
 	}
 	
 	/**
@@ -166,32 +115,14 @@ public class Entity {
 	 * @param col The collider of the entity
 	 */
 	public Entity(AbstractSprite spr, Collider col) {
-		this.pos = new Vector2f(DEF_POS.x, DEF_POS.y);
-		this.rot = DEF_ROT;
-		this.spr = spr;
-		this.alpha = 1;
-		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
-		this.col = col;
-		col.setEnt(this);
-		col.updateColPos();
-		this.parent = null;
-		this.light = new Vector3f(0, 0, 0);
+		this(new Vector2f(), 0, spr, col);
 	}
 	
 	/**
 	 * Constructor of an Entity
 	 */
 	public Entity() {
-		this.pos = new Vector2f(DEF_POS.x, DEF_POS.y);
-		this.rot = DEF_ROT;
-		this.spr = DEF_SPR;
-		this.alpha = 1;
-		this.scale = new Vector2f(DEF_SCALE.x, DEF_SCALE.y);
-		this.col = new Collider(spr);
-		col.setEnt(this);
-		col.updateColPos();
-		this.parent = null;
-		this.light = new Vector3f(0, 0, 0);
+		this(new Vector2f(), 0, DEF_SPR, null);
 	}
 	
 	/**

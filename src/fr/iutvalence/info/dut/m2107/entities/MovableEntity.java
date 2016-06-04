@@ -13,7 +13,6 @@ import fr.iutvalence.info.dut.m2107.storage.Layer;
  */
 public class MovableEntity extends Entity {
 	
-	public static final Vector2f DEF_VEL = new Vector2f(0, 0);
 	public static final short DEF_SPD = 4;
 	
 	/**
@@ -41,67 +40,21 @@ public class MovableEntity extends Entity {
 		this.spd = spd;
 	}
 	
+	public MovableEntity(AbstractSprite spr, Collider col, short spd) {
+		this(new Vector2f(), 0, spr, col, new Vector2f(), spd);
+	}
+	
 	/**
 	 * Constructor of a MovableEntity
 	 * @param pos The position of the entity
 	 * @param spr The sprite of the entity
 	 */
 	public MovableEntity(Vector2f pos, AbstractSprite spr) {
-		super(pos, spr);
-		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
-		this.spd = DEF_SPD;
-	}
-	
-	/**
-	 * Constructor of a MovableEntity
-	 * @param pos The position of the entity
-	 * @param spr The sprite of the entity
-	 * @param col The collider of the entity
-	 */
-	public MovableEntity(Vector2f pos, AbstractSprite spr, Collider col) {
-		super(pos, spr, col);
-		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
-		this.spd = DEF_SPD;
-	}
-	
-	/**
-	 * Constructor of a MovableEntity
-	 * @param pos The position of the entity
-	 * @param rot The rotation of the entity
-	 * @param spr The sprite of the entity
-	 * @param vel The velocity of the entity
-	 */
-	public MovableEntity(Vector2f pos, float rot, AbstractSprite spr, Vector2f vel) {
-		super(pos, rot, spr);
-		this.vel = vel;
-		this.spd = DEF_SPD;
+		this(pos, 0, spr, null, new Vector2f(), DEF_SPD);
 	}
 	
 	public MovableEntity(AbstractSprite spr) {
-		super(spr);
-		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
-		this.spd = DEF_SPD;
-	}
-	
-	public MovableEntity(AbstractSprite spr, Collider col) {
-		super(spr, col);
-		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
-		this.spd = DEF_SPD;
-	}
-	
-	/**
-	 * Constructor of a MovableEntity
-	 */
-	public MovableEntity() {
-		super();
-		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
-		this.spd = DEF_SPD;
-	}
-	
-	public MovableEntity(AbstractSprite spr, Collider col, short spd) {
-		super(spr, col);
-		this.vel = new Vector2f(DEF_VEL.x, DEF_VEL.y);
-		this.spd = spd;
+		this(new Vector2f(), 0, spr, null, new Vector2f(), DEF_SPD);
 	}
 
 	/* (non-Javadoc)
