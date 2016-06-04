@@ -96,7 +96,7 @@ public class Player extends Character{
 	 * Constructor of a player
 	 */
 	public Player() {
-		super(new Vector2f(), SpriteDatabase.getPlayerSpr() ,new Collider(-.75f, -1.75f, .75f, 1.75f), MovableEntity.DEF_SPD, LivingEntity.DEF_HEALTH, LivingEntity.DEF_JUMP_HEIGHT);
+		super(new Vector2f(7.5f, 0), SpriteDatabase.getPlayerSpr() ,new Collider(-.75f, -1.75f, .75f, 1.75f), MovableEntity.DEF_SPD, LivingEntity.DEF_HEALTH, LivingEntity.DEF_JUMP_HEIGHT);
 	}
 	
 	public void init() {
@@ -116,11 +116,7 @@ public class Player extends Character{
 	 */
 	public void initInventory() {
 		// TODO Take the item saved from a file save
-		addItem(ItemDatabase.get(0), (short)10);
-		addItem(ItemDatabase.get(1), (short)5);
-		addItem(ItemDatabase.get(4), (short)5);
-		addItem(ItemDatabase.get(5), (short)5);
-		addItem(ItemDatabase.get(7), (short)500);
+		addItem(ItemDatabase.get(3));
 		guiOn = true;
 	}
 	
@@ -324,10 +320,10 @@ public class Player extends Character{
 	 */
 	private void updateQuickBar() {
 		
-		if (Input.isKey1())	this.selectSlot = 0;
+		if (Input.isKey1())			this.selectSlot = 0;
 		else if (Input.isKey2())	this.selectSlot = 1;
-		else if (Input.isKey3()) this.selectSlot = 2;
-		else if (Input.isKey4()) this.selectSlot = 3;
+		else if (Input.isKey3()) 	this.selectSlot = 2;
+		else if (Input.isKey4()) 	this.selectSlot = 3;
 		else if (Input.isKey5())	this.selectSlot = 4;
 		else if (Input.isKey6())	this.selectSlot = 5;
 		else if (Input.isKey7())	this.selectSlot = 6;

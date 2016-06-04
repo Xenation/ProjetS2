@@ -3,8 +3,13 @@ package fr.iutvalence.info.dut.m2107.core;
 import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.entities.Chest;
+import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.Player;
+import fr.iutvalence.info.dut.m2107.entities.Slime;
+import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
+import fr.iutvalence.info.dut.m2107.entities.Zombie;
 import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUI;
@@ -291,19 +296,20 @@ public class GameManager {
 		GameWorld.camera.setTarget(GameWorld.player);
 		GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER).add(GameWorld.player);
 		
-		//Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
-		//Entity chest = new Entity(new Vector2f(6.5f, -3f), 0, SpriteDatabase.getChestSpr(), chestCollider);
-		//GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(chest);
+		Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
+		Chest chest = new Chest(new Vector2f(182, 6), SpriteDatabase.getChestSpr(), chestCollider, 10, ItemDatabase.get(2), ItemDatabase.get(0, (short) 10));
+		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(chest);
 		
-		Item item = Item.copyDropableItem(ItemDatabase.get(2), 106f, 25f);
-		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
+		for (int i = 0; i < 3; i++) {
+			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f((float)(90+Math.random()+i), (float)(20+Math.random()+i)), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f), (short) 2, 10, 0));
+			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Slime(new Vector2f((float)(145+Math.random()+i), (float)(10+Math.random()+i)), SpriteDatabase.getSlimeSpr() , new Collider(-.5f, -.625f, .5f, .625f), (short) 3, 7, 15));
+		}
 		
-		item = Item.copyDropableItem(ItemDatabase.get(10), 0, 10);
-		item.changeStack((short) 9);
-		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
+		//Item item = Item.copyDropableItem(ItemDatabase.get(10, (short) 10), 0, 10);
+		//GameWorld.layerMap.getStoredLayer(LayerStore.ITEM).add(item);
 		
-		item = Item.copyDropableItem(ItemDatabase.get(6), 0, 10);
-		GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION).add(item);
+		//item = Item.copyDropableItem(ItemDatabase.get(6), 0, 10);
+		//GameWorld.layerMap.getStoredLayer(LayerStore.ITEM).add(item);
 		
 //		org.junit.runner.JUnitCore.runClasses(InventoryTest.class);
 		

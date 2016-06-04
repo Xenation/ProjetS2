@@ -60,16 +60,15 @@ public class LivingEntity extends MovableEntity {
 	 */
 	@Override
 	public void update(Layer layer) {
-		if(this.health <= 0 || this.pos.y < -500) layer.remove(this);
-		
-		if(this.getHit[0] != 0 || this.getHit[1] != 0) {
-			takeKnockback(this.getHit[0]);
-			takeDamage(this.getHit[1]);
-			this.getHit[0] = 0;
-			this.getHit[1] = 0;
-		}
+		if(this.health <= 0 || this.pos.y < -500) this.dead(layer);
 		
 		if(this instanceof TerrestrialCreature) {
+			if(this.getHit[0] != 0 || this.getHit[1] != 0) {
+				takeKnockback(this.getHit[0]);
+				takeDamage(this.getHit[1]);
+				this.getHit[0] = 0;
+				this.getHit[1] = 0;
+			}
 			if(this.recoil != 0) {
 				if(!((TerrestrialCreature)this).isGrounded) {
 					this.vel.x = this.recoil + recoilVel;
@@ -79,8 +78,17 @@ public class LivingEntity extends MovableEntity {
 					this.recoil = 0;
 				}
 			}
+		} else {
+			if(this.getHit[1] != 0) {
+				takeDamage(this.getHit[1]);
+				this.getHit[1] = 0;
+			}
 		}
 		super.update(layer);
+	}
+
+	protected void dead(Layer layer) {
+		 layer.remove(this);
 	}
 
 	public void doDamage(int damage, int knockback) {
@@ -108,7 +116,7 @@ public class LivingEntity extends MovableEntity {
 	
 	private void takeKnockback(int knockback) {
 		this.recoil = knockback;
-		this.vel.y += this.jumpHeight/2;
+		this.vel.y += LivingEntity.DEF_JUMP_HEIGHT/2;
 	}
 	
 	/**

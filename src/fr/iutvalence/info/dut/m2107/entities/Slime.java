@@ -20,21 +20,23 @@ public class Slime extends TerrestrialCreature {
 
 	@Override
 	public void update(Layer layer) {
-		if(this.isGrounded) {
-			float moveX = GameWorld.player.pos.x - this.pos.x;
-			if(moveX < 0) this.spd = (short) -Maths.fastAbs(this.spd);
-			else if(moveX > 0) this.spd = (short) Maths.fastAbs(this.spd);
-		}
-		if(this.recoil == 0) {
-			if(!this.isGrounded) this.vel.x += this.spd;
-			
-			if(this.isGrounded && jumpDelay < Sys.getTime()) {
-				jumpDelay = (int) Sys.getTime() + jumpWaitTime;
-				this.vel.y = this.jumpHeight;
+		float moveX = GameWorld.player.pos.x - this.pos.x;
+		if(moveX < 40 && moveX > -40 && this.recoil == 0) {
+			if(this.isGrounded) {
+					if(moveX < 0) this.spd = (short) -Maths.fastAbs(this.spd);
+					else if(moveX > 0) this.spd = (short) Maths.fastAbs(this.spd);
 			}
-			
-			if(this.col.isCollidingWithPlayer())
-				GameWorld.player.doDamage(1, 10 * (int)(this.scale.x/Maths.fastAbs(this.scale.x)));
+			if(this.recoil == 0) {
+				if(!this.isGrounded) this.vel.x += this.spd;
+				
+				if(this.isGrounded && jumpDelay < Sys.getTime()) {
+					jumpDelay = (int) Sys.getTime() + jumpWaitTime;
+					this.vel.y = this.jumpHeight;
+				}
+				
+				if(this.col.isCollidingWithPlayer())
+					GameWorld.player.doDamage(1, 10 * (int)(this.scale.x/Maths.fastAbs(this.scale.x)));
+			}
 		}
 		super.update(layer);
 	}

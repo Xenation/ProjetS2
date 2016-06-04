@@ -193,9 +193,14 @@ public class GUI implements Listener {
 			}
 		}
 		if (Input.isEscape()) {
-			if (tileSelectOn) {
-				tileSelectOn = false;
-				tileSelect.unloadGUIElements();
+			if (tileSelectOn || GameWorld.player.getInventory().isDisplayed()) {
+				if(tileSelectOn) {
+					tileSelectOn = false;
+					tileSelect.unloadGUIElements();
+				}
+				if(GameWorld.player.getInventory().isDisplayed()) {
+					GameWorld.player.getInventory().changeDisplay();
+				}
 			} else if (pauseMenuOn) {
 				pauseMenuOn = false;
 				pauseMenu.unloadGUIElements();

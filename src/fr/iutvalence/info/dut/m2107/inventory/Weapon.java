@@ -116,6 +116,8 @@ public class Weapon extends Item {
 	
 	public short getHandRotation() {return handRotation;}
 	
+	public void setHandRotation(short handRotation) {this.handRotation = handRotation;}
+	
 	public Weapon copy() {
 		Item item = super.copy();
 		Weapon newWeapon = new Weapon((EntitySprite)item.getSprite(),

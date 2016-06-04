@@ -4,6 +4,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.inventory.Item;
+import fr.iutvalence.info.dut.m2107.inventory.Sword;
 import fr.iutvalence.info.dut.m2107.inventory.Weapon;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
@@ -53,7 +54,16 @@ public class Character extends TerrestrialCreature{
 	public void update(Layer layer) {
 		
 		if(this.itemOnHand != null) {
-			if(this.itemOnHand instanceof Weapon) this.pivot.rot = Maths.lerp(this.pivot.rot, ((Weapon)this.itemOnHand).getHandRotation(), 0.05f);
+			if(this.itemOnHand instanceof Weapon) {
+				if(this.itemOnHand instanceof Sword) {
+					if(this.rot > -((Weapon)this.itemOnHand).getHandRotation()) {
+						this.pivot.rot = Maths.lerp(this.pivot.rot, ((Weapon)this.itemOnHand).getHandRotation(), 0.2f);
+						if(Maths.round(this.pivot.rot+1, 0) == ((Weapon)this.itemOnHand).getHandRotation()) ((Weapon)this.itemOnHand).setHandRotation((short) -((Weapon)this.itemOnHand).getHandRotation());
+					}
+					else this.pivot.rot = Maths.lerp(this.pivot.rot, ((Weapon)this.itemOnHand).getHandRotation(), 0.05f);
+				} else
+					this.pivot.rot = Maths.lerp(this.pivot.rot, ((Weapon)this.itemOnHand).getHandRotation(), 0.05f);
+			}
 			this.itemOnHand.update(layer);
 		}
 		

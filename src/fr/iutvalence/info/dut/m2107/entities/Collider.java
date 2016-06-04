@@ -46,6 +46,8 @@ public class Collider {
 	 * The entity the collider is set to
 	 */
 	private Entity ent;
+	
+	private boolean isOnWater = false;
 
 	/**
 	 * Constructor of a collider
@@ -129,6 +131,7 @@ public class Collider {
 	private void TerrestrialContinuousCollision() {
 		updateColPos();
 		
+		this.isOnWater = false;
 		((TerrestrialCreature)ent).hasStepUp = false;
 		((TerrestrialCreature)ent).isGrounded = false;
 		if(this.ent instanceof Player) ((Player)ent).wallSlide = false;
@@ -175,7 +178,11 @@ public class Collider {
 			}
 			updateColPos();
 		}
-		if(!(this.ent instanceof Rat)) checkStepDown(globalTiles);
+		if(this.isOnWater) {
+			((MovableEntity)this.ent).vel.x /= 1.25f;
+			((MovableEntity)this.ent).vel.y /= 1.25f;
+		}
+		if(!(this.ent instanceof Rat) && !this.isOnWater) checkStepDown(globalTiles);
 	}
 	
 	/**
@@ -190,6 +197,13 @@ public class Collider {
 			if(tile.getType().hasBehavior(TileBehavior.DAMAGING)) {
 				((Player)this.ent).doDamage(((DamagingSupportedTile)tile).getDamage(), tile.x + Tile.TILE_SIZE/2 > this.ent.pos.x + this.getW()/2 ? -((DamagingSupportedTile)tile).getKnockback() : ((DamagingSupportedTile)tile).getKnockback());
 				nonSolidTiles.remove(tile);
+			}
+			if(tile.getType().hasBehavior(TileBehavior.LIQUID)) {
+				((TerrestrialCreature)this.ent).isGrounded = true;
+				if(!isOnDown(this, tile)) {
+					this.isOnWater = true;
+					nonSolidTiles.remove(tile);
+				}
 			}
 		}
 		if(surroundTile.size() == 0) return;
@@ -333,10 +347,8 @@ public class Collider {
 							modVel.y = 0;
 							ent.pos.y = tile.y + Tile.TILE_SIZE + this.getH()/2;
 							((TerrestrialCreature)ent).isGrounded = true;
+							((TerrestrialCreature)ent).hasStepUp = true;
 						} else {
-							if(!((TerrestrialCreature)this.ent).prevGrounded && ((TerrestrialCreature)this.ent).vel.y < 0) {
-								((TerrestrialCreature)this.ent).vel.y = Maths.lerp(((TerrestrialCreature)this.ent).vel.y, -5, 0.05f);
-							}
 							modVel.x = 0;
 							ent.pos.x = tile.x + Tile.TILE_SIZE + this.getW()/2;
 						}
@@ -374,9 +386,6 @@ public class Collider {
 							((TerrestrialCreature)ent).isGrounded = true;
 							((TerrestrialCreature)ent).hasStepUp = true;
 						} else {
-							if(!((TerrestrialCreature)this.ent).prevGrounded && ((TerrestrialCreature)this.ent).vel.y < 0) {
-								((TerrestrialCreature)this.ent).vel.y = Maths.lerp(((TerrestrialCreature)this.ent).vel.y, -5, 0.05f);
-							}
 							modVel.x = 0;
 							ent.pos.x = tile.x - this.getW()/2;
 						}
@@ -549,7 +558,7 @@ public class Collider {
 			Collider encompassCol = encompassCollider(ammo.col, nextPos, 0.5f);
 			
 			Tile tileColliding = isCollidingWithReducedMap(globalTiles, encompassCol);
-			Entity entColliding = isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.MOBS), GameWorld.layerMap.getStoredLayer(LayerStore.DECORATION)});
+			Entity entColliding = isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.MOBS), GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE)});
 			
 			if(tileColliding != null || entColliding != null) {
 				if(ammo instanceof Arrow) ammo.setVelocity(new Vector2f(0, 0));

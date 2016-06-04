@@ -2,6 +2,7 @@ package fr.iutvalence.info.dut.m2107.storage;
 
 import fr.iutvalence.info.dut.m2107.entities.Camera;
 import fr.iutvalence.info.dut.m2107.entities.Player;
+import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 /**
  * The GameWorld
@@ -60,7 +61,7 @@ public class GameWorld {
 		backChunkMap = new ChunkMap(-.5f, true);
 		
 		layerMap = new LayerMap();
-		layerMap.addEmpty(4);
+		layerMap.addEmpty(LayerStore.values().length);
 		
 		guiLayerMap = new GUILayerMap();
 		guiLayerMap.add(new GUILayer());

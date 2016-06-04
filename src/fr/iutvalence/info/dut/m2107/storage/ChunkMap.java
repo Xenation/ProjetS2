@@ -64,10 +64,10 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 			chk.update();
 		}
 		searchNb++;
-		if (isBackground)
-			System.out.println("Beckground search: "+searchNb);
-		else
-			System.out.println("Foreground search: "+searchNb);
+//		if (isBackground)
+//			System.out.println("Beckground search: "+searchNb);
+//		else
+//			System.out.println("Foreground search: "+searchNb);
 	}
 	
 	/**

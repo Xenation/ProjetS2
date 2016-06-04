@@ -21,9 +21,10 @@ public class Layer implements Iterable<Entity> {
 	
 	public static enum LayerStore {
 		AMMUNITION,
+		ITEM,
 		PLAYER,
 		MOBS,
-		DECORATION
+		FURNITURE;
 	}
 	
 	/**

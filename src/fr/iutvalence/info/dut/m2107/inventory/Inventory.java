@@ -254,4 +254,5 @@ public class Inventory {
 	
 	public GUIButton getExitButton() {return exitButton;}
 	
+	public boolean isDisplayed() {return isDisplayed;}
 }

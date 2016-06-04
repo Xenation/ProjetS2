@@ -12,6 +12,7 @@ import fr.iutvalence.info.dut.m2107.sound.OpenAL;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
 import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
+import fr.iutvalence.info.dut.m2107.toolbox.Maths;
 
 public class Sword extends Weapon {
 	
@@ -45,7 +46,8 @@ public class Sword extends Weapon {
 			//if(!(owner instanceof Player) || ((owner instanceof Player) && !((Player)owner).getWallSlide())) {
 			
 				OpenAL.source.play(AudioDataBase.sword());
-				owner.getPivot().setRotation(-75);
+				owner.getPivot().setRotation(-90);
+				this.handRotation = (short) Maths.fastAbs(this.handRotation); 
 				this.lockTime = Sys.getTime()+500;
 				if(GameWorld.player.getDegreeShoot() < 90 && GameWorld.player.getDegreeShoot() > -90)
 					owner.getScale().x = 1;
@@ -59,7 +61,7 @@ public class Sword extends Weapon {
 				Collider tmpCol = new Collider(owner.getCollider().getMin(), owner.getCollider().getMax());
 				if(owner.getScale().x > 0) tmpCol.extendRight(range);
 				else tmpCol.extendLeft(range);
-				Entity ent = tmpCol.isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.MOBS)});
+				Entity ent = tmpCol.isCollidingWithEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.MOBS), GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE)});
 				if(ent != owner && ent instanceof LivingEntity)
 					((LivingEntity) ent).doDamage(this.damage, this.knockback * (int)owner.getScale().x);
 				

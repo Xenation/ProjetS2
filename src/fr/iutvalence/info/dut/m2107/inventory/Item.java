@@ -106,6 +106,7 @@ public class Item extends MovableEntity {
 				if(collidingTile != null) {
 					this.pos.y = collidingTile.y + Tile.TILE_SIZE + this.col.getH()/3;
 					this.vel.y = 0;
+					this.vel.x = 0;
 				}
 			}
 		}
@@ -182,6 +183,7 @@ public class Item extends MovableEntity {
 								item.rarity,
 								item.MAX_STACK,
 								item.value);
+		newItem.stack = item.stack;
 		newItem.setCollider(new Collider(newItem.getSprite()));
 		newItem.getCollider().setEnt(newItem);
 		newItem.setPosition(new Vector2f(x, y));
