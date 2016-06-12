@@ -113,7 +113,7 @@ public class Renderer {
 		
 		// Background Chunks Rendering
 		prepareAtlas(Atlas.TILE_ATLAS);
-		for (Chunk chk : GameWorld.backChunkMap.getSurroundingChunks(BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_TOP, BOUNDARY_BOTTOM, GameWorld.camera.getPosition())) {
+		for (Chunk chk : GameWorld.backChunkMap.getSurroundingChunks(BOUNDARY_LEFT-.5f, BOUNDARY_RIGHT+.5f, BOUNDARY_TOP+.5f, BOUNDARY_BOTTOM-.5f, GameWorld.camera.getPosition())) {
 			for (TileVariant var : chk.variants()) {
 				prepareSprite(var.sprite);
 				

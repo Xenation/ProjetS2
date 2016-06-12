@@ -511,7 +511,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	 * @return a list of the chunks that touch the screen zone
 	 */
 	public List<Chunk> getScreenChunks() {
-		return getSurroundingChunks(Renderer.BOUNDARY_LEFT, Renderer.BOUNDARY_RIGHT, Renderer.BOUNDARY_TOP, Renderer.BOUNDARY_BOTTOM, GameWorld.camera.getPosition());
+		return getSurroundingChunks(Renderer.BOUNDARY_LEFT-tilesPositionOffset, Renderer.BOUNDARY_RIGHT+tilesPositionOffset, Renderer.BOUNDARY_TOP+tilesPositionOffset, Renderer.BOUNDARY_BOTTOM-tilesPositionOffset, GameWorld.camera.getPosition());
 	}
 	
 	/**
