@@ -29,6 +29,8 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
  */
 public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	
+	private static final float SAFETY_UPDATE_PERIM = 5f;
+	
 	/**
 	 * The Offset of position of the tiles. (same in x and y)
 	 */
@@ -511,7 +513,7 @@ public class ChunkMap implements Map<Vector2i, Chunk>, Iterable<Chunk> {
 	 * @return a list of the chunks that touch the screen zone
 	 */
 	public List<Chunk> getScreenChunks() {
-		return getSurroundingChunks(Renderer.BOUNDARY_LEFT-tilesPositionOffset, Renderer.BOUNDARY_RIGHT+tilesPositionOffset, Renderer.BOUNDARY_TOP+tilesPositionOffset, Renderer.BOUNDARY_BOTTOM-tilesPositionOffset, GameWorld.camera.getPosition());
+		return getSurroundingChunks(Renderer.BOUNDARY_LEFT+tilesPositionOffset-SAFETY_UPDATE_PERIM, Renderer.BOUNDARY_RIGHT+tilesPositionOffset+SAFETY_UPDATE_PERIM, Renderer.BOUNDARY_TOP+tilesPositionOffset+SAFETY_UPDATE_PERIM, Renderer.BOUNDARY_BOTTOM+tilesPositionOffset-SAFETY_UPDATE_PERIM, GameWorld.camera.getPosition());
 	}
 	
 	/**
