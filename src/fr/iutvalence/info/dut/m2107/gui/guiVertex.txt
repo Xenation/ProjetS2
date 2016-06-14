@@ -4,12 +4,15 @@ in vec2 position;
 in vec2 textureUVs;
 
 out vec2 pass_textureCoords;
+out vec3 pass_colourFilter;
 
 uniform mat4 transformation;
+uniform vec3 colourFilter;
 
 void main(void){
 	
 	gl_Position = transformation * vec4(position, 0.0, 1.0);
 	pass_textureCoords = textureUVs;
+	pass_colourFilter = colourFilter;
 	
 }

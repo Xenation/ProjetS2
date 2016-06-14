@@ -11,6 +11,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUIShader;
 import fr.iutvalence.info.dut.m2107.models.*;
 import fr.iutvalence.info.dut.m2107.shaders.Shader;
@@ -201,6 +202,11 @@ public class Renderer {
 						Matrix4f mat = Maths.createTransformationMatrix(ent.getPosition(), ent.getScale(), ent.getRotation());
 						
 						guiShader.loadTransformation(mat);
+						if (ent instanceof GUIText) {
+							guiShader.loadColourFilter(((GUIText)ent).getColour());
+						} else {
+							guiShader.loadColourFilter(new Vector3f(1, 1, 1));
+						}
 						
 						glDrawArrays(GL_QUADS, 0, ent.getSprite().getVertexCount());
 						
@@ -276,6 +282,11 @@ public class Renderer {
 					mat = Maths.createTransformationMatrix(nPos, ent.getScale(), ent.getRotation());
 					
 					guiShader.loadTransformation(mat);
+					if (ent instanceof GUIText) {
+						guiShader.loadColourFilter(((GUIText)ent).getColour());
+					} else {
+						guiShader.loadColourFilter(new Vector3f(1, 1, 1));
+					}
 					
 					glDrawArrays(GL_QUADS, 0, ent.getSprite().getVertexCount());
 					
