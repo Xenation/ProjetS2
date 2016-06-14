@@ -11,7 +11,7 @@ import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 public class Door extends Entity {
 
-	private final Collider openCol = new Collider(-.75f, -2, 75f, 2);
+	private final Collider openCol = new Collider(-.75f, -2, .75f, 2);
 	private final Collider closedCol = new Collider(-.33f, -2, .33f, 2);
 	
 	private int count = 0;
@@ -26,7 +26,6 @@ public class Door extends Entity {
 	public void update(Layer layer) {
 		if(Input.isMouseRightUp() && GameWorld.camera.getMouseWorldX() > this.pos.x - this.col.getW()/2 && GameWorld.camera.getMouseWorldX() < this.pos.x + this.col.getW()/2 &&
 				GameWorld.camera.getMouseWorldY() > this.pos.y - this.col.getH()/2 && GameWorld.camera.getMouseWorldY() < this.pos.y + this.col.getH()/2) {
-			System.out.println("change");
 			if(count != (int)Sys.getTime()) {
 				layer.remove(this);
 				if(open) {
@@ -34,14 +33,14 @@ public class Door extends Entity {
 					this.pos.x -= .75f * this.getScale().x;
 					open = false;
 					this.col = new Collider(closedCol);
-					col.setEnt(this);
+					this.col.setEnt(this);
 					this.col.updateColPos();
 				} else {
 					GameWorld.layerMap.getStoredLayer(LayerStore.DOOR).add(this);
 					this.pos.x += .75f * this.getScale().x;
 					open = true;
 					this.col = new Collider(openCol);
-					col.setEnt(this);
+					this.col.setEnt(this);
 					this.col.updateColPos();
 				}
 				this.getSprite().updateAtlasIndex(this.getSprite().getAtlasIndex() + 1);
