@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Chest;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
+import fr.iutvalence.info.dut.m2107.entities.Door;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.Player;
 import fr.iutvalence.info.dut.m2107.entities.Slime;
@@ -19,6 +20,8 @@ import fr.iutvalence.info.dut.m2107.gui.GUISlot;
 import fr.iutvalence.info.dut.m2107.inventory.Item;
 import fr.iutvalence.info.dut.m2107.inventory.ItemDatabase;
 import fr.iutvalence.info.dut.m2107.listeners.GUIListener;
+import fr.iutvalence.info.dut.m2107.models.Atlas;
+import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Loader;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
@@ -296,9 +299,16 @@ public class GameManager {
 		GameWorld.camera.setTarget(GameWorld.player);
 		GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER).add(GameWorld.player);
 		
-		Collider chestCollider = new Collider(-SpriteDatabase.getChestSpr().getSize().x/2, -SpriteDatabase.getChestSpr().getSize().y/2, SpriteDatabase.getChestSpr().getSize().x/2, SpriteDatabase.getChestSpr().getSize().y/2 - 0.5f);
-		Chest chest = new Chest(new Vector2f(182, 6), SpriteDatabase.getChestSpr(), chestCollider, 10, ItemDatabase.get(2), ItemDatabase.get(0, (short) 10));
-		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(chest);
+		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(new Chest(new Vector2f(182, 6), SpriteDatabase.getChestSpr(), new Collider(SpriteDatabase.getChestSpr()), 10, ItemDatabase.get(2), ItemDatabase.get(0, (short) 10)));
+		
+		Door door = new Door(new Vector2f(171.5f, 7), new EntitySprite(new Atlas("entities/door", 2, 1, Loader.SPRITE_LOADER), new Vector2f(2, 4)));
+		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(door);
+		Door door2 = new Door(new Vector2f(192.5f, 7), new EntitySprite(new Atlas("entities/door", 2, 1, Loader.SPRITE_LOADER), new Vector2f(2, 4)));
+		door2.setScale(-1, 1);
+		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(door2);
+		
+		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(new Entity(new Vector2f(185, 14), new EntitySprite("entities/bed", new Vector2f(4, 2)), new Collider(new EntitySprite("entities/bed", new Vector2f(4, 2)))));
+		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(new Entity(new Vector2f(180, 14), new EntitySprite("entities/locker", new Vector2f(4, 2)), new Collider(new EntitySprite("entities/bed", new Vector2f(4, 2)))));
 		
 		for (int i = 0; i < 3; i++) {
 			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f((float)(90+Math.random()+i), (float)(20+Math.random()+i)), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f), (short) 2, 10, 0));

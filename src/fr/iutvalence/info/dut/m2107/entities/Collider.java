@@ -161,6 +161,15 @@ public class Collider {
 			
 			Collider encompassCol = encompassCollider(this, nextPos, 0.5f);
 			
+			List<Entity> ents = encompassCol.isCollidingWithMultipleEntity(new Layer[] {GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE)});
+			
+			if(!ents.isEmpty()) {
+				for (Entity ent : ents) {
+					if(isOnUp(this, ent.col) || isOnDown(this, ent.col)) ((MovableEntity)this.ent).vel.y = 0;
+					if(isOnLeft(this, ent.col) || isOnRight(this, ent.col)) ((MovableEntity)this.ent).vel.x = 0;
+				}
+			}
+			
 			if(this.ent instanceof Player)
 				checkPlayerCollision(globalTiles, nonSolidTiles, encompassCol);
 			else if(this.ent instanceof Rat)
@@ -650,6 +659,16 @@ public class Collider {
 					return ent;
 		}
 		return null;
+	}
+	
+	public List<Entity> isCollidingWithMultipleEntity(Layer[] layer) {
+		List<Entity> ents = new ArrayList<Entity>();
+		for (Layer lay : layer) {			
+			for (Entity ent : lay)
+				if(isColliding(this, ent.col))
+					ents.add(ent);
+		}
+		return ents;
 	}
 	
 	public boolean isCollidingWithPlayer() {			

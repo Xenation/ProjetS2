@@ -24,7 +24,8 @@ public class Layer implements Iterable<Entity> {
 		ITEM,
 		PLAYER,
 		MOBS,
-		FURNITURE;
+		FURNITURE,
+		DOOR;
 	}
 	
 	/**
