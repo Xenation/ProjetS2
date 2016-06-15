@@ -79,7 +79,9 @@ public class GUIText extends Entity {
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
 		if (isDebug)
-			this.colour = GUIMaster.debugColor;
+			setColour(GUIMaster.debugColor.x, GUIMaster.debugColor.y, GUIMaster.debugColor.z);
+		else
+			setColour(0, 0, 0);
 		GUIMaster.loadText(this);
 	}
 	

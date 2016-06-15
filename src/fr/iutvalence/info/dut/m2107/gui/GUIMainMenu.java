@@ -43,6 +43,7 @@ public class GUIMainMenu implements Listener {
 	 */
 	public GUIMainMenu() {
 		this.text_title = new GUIText("\nEAGL GAME", 3, -1, 1, 1, true);
+		this.text_title.setColour(1, 1, 1);
 		this.btn_play = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(0, .35f), .5f, .2f, "PLAY");
 		this.btn_play.registerListener(this);
 		this.btn_credits = new GUIButton(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(0, -.125f), .5f, .2f, "CREDITS");

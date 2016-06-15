@@ -6,6 +6,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
+import fr.iutvalence.info.dut.m2107.core.GameManager;
 import fr.iutvalence.info.dut.m2107.models.EntitySprite;
 import fr.iutvalence.info.dut.m2107.render.DisplayManager;
 import fr.iutvalence.info.dut.m2107.render.Renderer;
@@ -153,10 +154,12 @@ public class Camera {
 				target = GameWorld.player;
 				this.isFocusing = true;
 				GameWorld.layerMap.getLayer(1).remove(preview);
+				GameManager.gui.hideDebugBtn();
 			} else {
 				target = null;
 				this.isFocusing = false;
 				GameWorld.layerMap.getLayer(1).add(preview);
+				GameManager.gui.showDebugBtn();
 			}
 		}
 		

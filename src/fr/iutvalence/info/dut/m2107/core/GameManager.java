@@ -64,7 +64,7 @@ public class GameManager {
 	/**
 	 * The game GUI
 	 */
-	private static GUI gui;
+	public static GUI gui;
 	/**
 	 * Whether the game GUI needs to be unloaded.<br>
 	 * Used to avoid concurrent modifications

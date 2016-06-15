@@ -82,6 +82,7 @@ public class GUI implements Listener {
 	 * Whether the debug texts are displayed
 	 */
 	private boolean debugOn;
+	private boolean debugBtnOn;
 	/**
 	 * Whether the in-game GUI elements are loaded.
 	 */
@@ -233,26 +234,52 @@ public class GUI implements Listener {
 	 * Hides the debug texts
 	 */
 	public void hideDebugTexts() {
-		debugOn = false;
-		GUIMaster.removeText(chunkStatsLabel);
-		GUIMaster.removeText(chunkStats);
-		GUIMaster.removeText(loaderStatsLabel);
-		GUIMaster.removeText(loaderStats);
-		GUIMaster.removeText(cameraStats);
-		GUIMaster.removeText(debugConsole);
+		if (debugOn) {
+			debugOn = false;
+			GUIMaster.removeText(chunkStatsLabel);
+			GUIMaster.removeText(chunkStats);
+			GUIMaster.removeText(loaderStatsLabel);
+			GUIMaster.removeText(loaderStats);
+			GUIMaster.removeText(cameraStats);
+			GUIMaster.removeText(debugConsole);
+		}
 	}
 	
 	/**
 	 * Shows the debug texts
 	 */
 	public void showDebugTexts() {
+		if (!debugOn) {
 		debugOn = true;
-		GUIMaster.addText(chunkStatsLabel);
-		GUIMaster.addText(chunkStats);
-		GUIMaster.addText(loaderStatsLabel);
-		GUIMaster.addText(loaderStats);
-		GUIMaster.addText(cameraStats);
-		GUIMaster.addText(debugConsole);
+			GUIMaster.addText(chunkStatsLabel);
+			GUIMaster.addText(chunkStats);
+			GUIMaster.addText(loaderStatsLabel);
+			GUIMaster.addText(loaderStats);
+			GUIMaster.addText(cameraStats);
+			GUIMaster.addText(debugConsole);
+		}
+	}
+	
+	public void hideDebugBtn() {
+		if (debugBtnOn) {
+			debugBtnOn = false;
+			GameWorld.guiLayerMap.getLayer(1).remove(btn_debug);
+			GameWorld.guiLayerMap.getLayer(1).remove(btn_save);
+			GameWorld.guiLayerMap.getLayer(1).remove(btn_load);
+			GameWorld.guiLayerMap.getLayer(1).remove(btn_clear);
+			GameWorld.guiLayerMap.getLayer(1).remove(field_save);
+		}
+	}
+	
+	public void showDebugBtn() {
+		if (!debugBtnOn) {
+			debugBtnOn = true;
+			GameWorld.guiLayerMap.getLayer(1).add(btn_debug);
+			GameWorld.guiLayerMap.getLayer(1).add(btn_save);
+			GameWorld.guiLayerMap.getLayer(1).add(btn_load);
+			GameWorld.guiLayerMap.getLayer(1).add(btn_clear);
+			GameWorld.guiLayerMap.getLayer(1).add(field_save);
+		}
 	}
 	
 	/**
@@ -264,11 +291,6 @@ public class GUI implements Listener {
 //		GUIMaster.addElement(btn_load, 1);
 //		GUIMaster.addElement(btn_clear, 1);
 //		GUIMaster.addElement(field_save, 1);
-		GameWorld.guiLayerMap.getLayer(1).add(btn_debug);
-		GameWorld.guiLayerMap.getLayer(1).add(btn_save);
-		GameWorld.guiLayerMap.getLayer(1).add(btn_load);
-		GameWorld.guiLayerMap.getLayer(1).add(btn_clear);
-		GameWorld.guiLayerMap.getLayer(1).add(field_save);
 		isLoaded = true;
 	}
 	
@@ -281,13 +303,11 @@ public class GUI implements Listener {
 //		GUIMaster.removeElement(btn_load);
 //		GUIMaster.removeElement(btn_clear);
 //		GUIMaster.removeElement(field_save);
-		GameWorld.guiLayerMap.getLayer(1).remove(btn_debug);
-		GameWorld.guiLayerMap.getLayer(1).remove(btn_save);
-		GameWorld.guiLayerMap.getLayer(1).remove(btn_load);
-		GameWorld.guiLayerMap.getLayer(1).remove(btn_clear);
-		GameWorld.guiLayerMap.getLayer(1).remove(field_save);
 		if (debugOn) {
 			hideDebugTexts();
+		}
+		if (debugBtnOn) {
+			hideDebugBtn();
 		}
 		if (tileSelectOn) {
 			hideTileSelect();
