@@ -22,11 +22,13 @@ public class TimedTile extends Tile {
 	}
 	
 	public void softUpdate() {
+		super.softUpdate();
 		if (time >= 0) {
 			time -= DisplayManager.deltaTime();
 		} else {
 			EventManager.sendEvent(new TileTimeElapsedEvent(this));
 			this.toUpdate = true;
+			this.updateBehavior = true;
 		}
 	}
 	

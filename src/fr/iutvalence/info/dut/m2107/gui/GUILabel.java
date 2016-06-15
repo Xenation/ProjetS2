@@ -33,4 +33,8 @@ public class GUILabel extends GUIElement {
 		this.getLayer().add(textElem);
 	}
 	
+	public void setTextColour(float r, float g, float b) {
+		this.textElem.setColour(r, g, b);
+	}
+	
 }

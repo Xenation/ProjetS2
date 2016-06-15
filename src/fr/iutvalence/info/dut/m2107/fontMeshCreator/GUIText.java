@@ -27,7 +27,7 @@ public class GUIText extends Entity {
 	/**
 	 * The colour of the text
 	 */
-	private Vector3f colour = new Vector3f(0f, 0f, 0f);
+	private Vector3f colour = new Vector3f(1f, 1f, 1f);
 	
 	/**
 	 * The max size of a line
@@ -78,7 +78,8 @@ public class GUIText extends Entity {
 		this.font = GUIMaster.font;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		this.colour = GUIMaster.debugColor;
+		if (isDebug)
+			this.colour = GUIMaster.debugColor;
 		GUIMaster.loadText(this);
 	}
 	

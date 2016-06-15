@@ -1,6 +1,7 @@
 package fr.iutvalence.info.dut.m2107.gui;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import fr.iutvalence.info.dut.m2107.shaders.ShaderProgram;
 
@@ -19,6 +20,8 @@ public class GUIShader extends ShaderProgram {
 	
 	private int location_transformation;
 	
+	private int location_colourFilter;
+	
 	
 	public GUIShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -27,6 +30,7 @@ public class GUIShader extends ShaderProgram {
 	@Override
 	protected void getAllUniformLocations() {
 		location_transformation = super.getUniformLocation("transformation");
+		location_colourFilter = super.getUniformLocation("colourFilter");
 	}
 	
 	@Override
@@ -37,6 +41,10 @@ public class GUIShader extends ShaderProgram {
 	
 	public void loadTransformation(Matrix4f matrix) {
 		super.loadMatrix(location_transformation, matrix);
+	}
+	
+	public void loadColourFilter(Vector3f color) {
+		super.loadVector(location_colourFilter, color);
 	}
 	
 }

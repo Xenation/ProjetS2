@@ -55,6 +55,8 @@ public class Tile {
 	
 	public boolean updateAdjacents;
 	
+	protected boolean updateBehavior;
+	
 	public Vector3f light = new Vector3f(0, 0, 0);
 	public Vector3f prevLight = new Vector3f(0, 0, 0);
 	
@@ -204,7 +206,11 @@ public class Tile {
 			adjacentsToUpdate();
 			updateAdjacents = false;
 		}
-		return this.type.updateBehaviors(this);
+		if (updateBehavior) {
+			this.updateBehavior = false;
+			return this.type.updateBehaviors(this);
+		}
+		return true;
 	}
 	
 	public void updateNaturalLight() {
