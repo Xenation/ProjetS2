@@ -1,5 +1,6 @@
 package fr.iutvalence.info.dut.m2107.entities;
 
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -19,6 +20,7 @@ import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.tiles.TileVariant;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
+import javafx.scene.control.Skinnable;
 
 /**
  * A Camera with a position and rotation
@@ -90,6 +92,8 @@ public class Camera {
 	private float timeBeforeDraw;
 	private boolean canDraw = true;
 	
+	private int timeShaking = 0;
+	
 	/**
 	 * A new Camera at 0,0 and with a rotation of 0
 	 */
@@ -120,6 +124,10 @@ public class Camera {
 	 *  - Right click: remove a single tile
 	 */
 	public void update() {
+		
+		if(Input.isKeyWater()) timeShaking = (int) Sys.getTime() + 5000;
+		
+		if(timeShaking > Sys.getTime()) this.screenShaking();
 		
 		float mWorldX = getMouseWorldX();
 		float mWorldY = getMouseWorldY();
@@ -292,6 +300,13 @@ public class Camera {
 		}
 		this.preview.pos.x -= (drawEnd.x - drawStart.x)/2 + addX;
 		this.preview.pos.y -= (drawEnd.y - drawStart.y)/2 + addY;
+	}
+	
+	public void screenShaking() {
+		float shakingStrength = (5 - (this.timeShaking - (int)Sys.getTime())/1000f)/2f;
+		System.out.println(shakingStrength);
+		this.position.x += Math.random()*shakingStrength-shakingStrength/2f;
+		this.position.y += Math.random()*shakingStrength-shakingStrength/2f;
 	}
 	
 	/**

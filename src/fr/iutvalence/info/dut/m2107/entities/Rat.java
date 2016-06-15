@@ -21,36 +21,39 @@ public class Rat extends TerrestrialCreature {
 
 	@Override
 	public void update(Layer layer) {
-		if(!wallWalk && previousWalk) {
-			if(this.scale.x > 0)
-				this.vel.y = -this.spd;
-			else this.vel.y = this.spd;
+		Vector2f move = new Vector2f();
+		Vector2f.sub(GameWorld.player.pos, this.pos, move);
+		if(move.length() > -30 && move.length() < 30 && this.recoil == 0) {
+			if(!wallWalk && previousWalk) {
+				if(this.scale.x > 0)
+					this.vel.y = -this.spd;
+				else this.vel.y = this.spd;
+			}
+			
+			if(this.isGrounded || wallWalk) atlasCount += DisplayManager.deltaTime()*15;
+			if(atlasCount >= 3) atlasCount -= 3;
+			if(Maths.fastFloor(atlasCount) != this.getSprite().getAtlasIndex())
+				this.getSprite().updateAtlasIndex(Maths.fastFloor(atlasCount));
+			
+			previousWalk = wallWalk;
+			
+			if(wallWalk) {
+				this.rot = -90;
+				this.vel.y += Maths.fastAbs(this.spd);
+				this.vel.y += GameWorld.gravity * DisplayManager.deltaTime();
+			} else {
+				this.rot = 0;
+			}
+			this.vel.x += this.spd;
+			
+			Collider tmpCol = new Collider(this.col.getMin(), this.col.getMax());
+			
+			if(this.scale.x > 0) tmpCol.extendRight(this.col.getW());
+			else tmpCol.extendLeft(this.col.getW());
+			if(tmpCol.isCollidingWithPlayer()) {
+				GameWorld.player.doDamage(0, 10 * (int)(this.scale.x/Maths.fastAbs(this.scale.x)));
+			}
 		}
-		
-		if(this.isGrounded || wallWalk) atlasCount += DisplayManager.deltaTime()*15;
-		if(atlasCount >= 3) atlasCount -= 3;
-		if(Maths.fastFloor(atlasCount) != this.getSprite().getAtlasIndex())
-			this.getSprite().updateAtlasIndex(Maths.fastFloor(atlasCount));
-		
-		previousWalk = wallWalk;
-		
-		if(wallWalk) {
-			this.rot = -90;
-			this.vel.y += Maths.fastAbs(this.spd);
-			this.vel.y += GameWorld.gravity * DisplayManager.deltaTime();
-		} else {
-			this.rot = 0;
-		}
-		this.vel.x += this.spd;
-		
-		Collider tmpCol = new Collider(this.col.getMin(), this.col.getMax());
-		
-		if(this.scale.x > 0) tmpCol.extendRight(this.col.getW());
-		else tmpCol.extendLeft(this.col.getW());
-		if(tmpCol.isCollidingWithPlayer()) {
-			GameWorld.player.doDamage(0, 10 * (int)(this.scale.x/Maths.fastAbs(this.scale.x)));
-		}
-		
 		super.update(layer);
 	}
 }

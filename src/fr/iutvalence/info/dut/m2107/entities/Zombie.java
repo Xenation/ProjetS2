@@ -15,10 +15,11 @@ public class Zombie extends Character {
 
 	@Override
 	public void update(Layer layer) {
-		float moveX = GameWorld.player.pos.x - this.pos.x;
-		if(moveX < 40 && moveX > -40 && this.recoil == 0) {
-			if(moveX > 2) this.vel.x += this.spd/2;
-			else if(moveX < -2) this.vel.x += -this.spd/2;
+		Vector2f move = new Vector2f();
+		Vector2f.sub(GameWorld.player.pos, this.pos, move);
+		if(move.length() > -30 && move.length() < 30 && this.recoil == 0) {
+			if(move.x > 2) this.vel.x += this.spd;
+			else if(move.x < -2) this.vel.x += -this.spd;
 			else {
 				Collider tmpCol = new Collider(this.col.getMin(), this.col.getMax());
 				if(this.scale.x == 1) tmpCol.extendRight(2);

@@ -18,7 +18,7 @@ public class GUIMainMenu implements Listener {
 	/**
 	 * the title 
 	 */
-	private GUIText text_title;
+	public GUIText text_title;
 	
 	/**
 	 * the play button

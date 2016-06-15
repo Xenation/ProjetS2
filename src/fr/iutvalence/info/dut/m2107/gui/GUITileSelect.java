@@ -36,7 +36,7 @@ public class GUITileSelect implements Listener {
 	private List<GUIButtonIcon> variantSlots;
 	
 	public GUITileSelect() {
-		this.background = new GUIElement(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(0, .2f), 1, .8f);
+		this.background = new GUIElement(new GUISprite("gui/slot", new Vector2f(1, 1)), new Vector2f(0, .2f), 1, .8f);
 		this.background.initLayer();
 		this.slots = new ArrayList<GUIButtonIcon>(SLOTS_NB_WIDTH*SLOTS_NB_HEIGHT);
 		float startX = -background.getScale().x/2 + SLOT_SIZE;
@@ -44,7 +44,7 @@ public class GUITileSelect implements Listener {
 		for (int i = 0; i < SLOTS_NB_WIDTH*SLOTS_NB_HEIGHT; i++) {
 			int iX = i % SLOTS_NB_WIDTH;
 			int iY = -i / SLOTS_NB_WIDTH;
-			GUIButtonIcon slot = new GUIButtonIcon(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(startX + iX * (background.getScale().x-SLOT_SIZE/2)/SLOTS_NB_WIDTH, startY + iY * (background.getScale().y-SLOT_SIZE)/SLOTS_NB_HEIGHT), SLOT_SIZE, SLOT_SIZE, null);
+			GUIButtonIcon slot = new GUIButtonIcon(new GUISprite("gui/tile_slot", new Vector2f(1, 1)), new Vector2f(startX + iX * (background.getScale().x-SLOT_SIZE/2)/SLOTS_NB_WIDTH, startY + iY * (background.getScale().y-SLOT_SIZE)/SLOTS_NB_HEIGHT), SLOT_SIZE, SLOT_SIZE, null);
 			slot.registerListener(this);
 			slots.add(slot);
 			slot.setParent(background);
@@ -52,7 +52,7 @@ public class GUITileSelect implements Listener {
 		for (int i = 0; i < TileType.values().length; i++) {
 			slots.get(i).setIcon(TileType.values()[i].getBaseVariant().sprite.getGUISprite());
 		}
-		this.backVariantSelect = new GUIElement(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(0, 0), .5f, .25f);
+		this.backVariantSelect = new GUIElement(new GUISprite("gui/slot", new Vector2f(1, 1)), new Vector2f(0, 0), .5f, .25f);
 		this.backVariantSelect.initLayer();
 		this.variantSlots = new ArrayList<GUIButtonIcon>(VARSLOTS_NB_WIDTH*VARSLOTS_NB_HEIGHT);
 		startX = -backVariantSelect.getScale().x/2 + SLOT_SIZE;
@@ -60,7 +60,7 @@ public class GUITileSelect implements Listener {
 		for (int i = 0; i < VARSLOTS_NB_WIDTH*VARSLOTS_NB_HEIGHT; i++) {
 			int iX = i % VARSLOTS_NB_WIDTH;
 			int iY = -i / VARSLOTS_NB_WIDTH;
-			GUIButtonIcon vslot = new GUIButtonIcon(new GUISprite("gui/quick_bar_slot", new Vector2f(1, 1)), new Vector2f(startX + iX * (backVariantSelect.getScale().x-SLOT_SIZE/2)/VARSLOTS_NB_WIDTH, startY + iY * (backVariantSelect.getScale().y-SLOT_SIZE)/VARSLOTS_NB_HEIGHT), SLOT_SIZE, SLOT_SIZE, null);
+			GUIButtonIcon vslot = new GUIButtonIcon(new GUISprite("gui/tile_slot", new Vector2f(1, 1)), new Vector2f(startX + iX * (backVariantSelect.getScale().x-SLOT_SIZE/2)/VARSLOTS_NB_WIDTH, startY + iY * (backVariantSelect.getScale().y-SLOT_SIZE)/VARSLOTS_NB_HEIGHT), SLOT_SIZE, SLOT_SIZE, null);
 			vslot.registerListener(this);
 			variantSlots.add(vslot);
 			vslot.setParent(backVariantSelect);

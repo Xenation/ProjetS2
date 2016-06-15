@@ -11,7 +11,7 @@ import fr.iutvalence.info.dut.m2107.storage.Layer.LayerStore;
 
 public class Door extends Entity {
 
-	private final Collider openCol = new Collider(-.75f, -2, .75f, 2);
+	private final Collider openCol = new Collider(-1f, -2, 1f, 2);
 	private final Collider closedCol = new Collider(-.33f, -2, .33f, 2);
 	
 	private int count = 0;

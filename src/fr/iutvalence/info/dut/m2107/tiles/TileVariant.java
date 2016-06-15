@@ -28,7 +28,8 @@ public enum TileVariant {
 	Leaves_corner(18),
 	Stone_bricks_corner(19),
 	Planks(20),
-	Torch(21);
+	Torch(21),
+	Cobweb(22);
 	
 	/**
 	 * The sprite of this variant

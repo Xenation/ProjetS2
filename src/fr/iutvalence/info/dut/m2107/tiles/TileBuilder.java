@@ -31,6 +31,7 @@ public class TileBuilder {
 		case Leaves:
 		case Sand:
 		case Water:
+		case Cobweb:
 			t = new Tile(type, x, y);
 			break;
 		case Fader:

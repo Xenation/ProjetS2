@@ -7,7 +7,10 @@ import fr.iutvalence.info.dut.m2107.entities.Chest;
 import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Door;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
+import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
+import fr.iutvalence.info.dut.m2107.entities.MovableEntity;
 import fr.iutvalence.info.dut.m2107.entities.Player;
+import fr.iutvalence.info.dut.m2107.entities.Rat;
 import fr.iutvalence.info.dut.m2107.entities.Slime;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.entities.Zombie;
@@ -50,7 +53,7 @@ public class GameManager {
 	/**
 	 * The Main Menu
 	 */
-	private static GUIMainMenu mainMenu;
+	public static GUIMainMenu mainMenu;
 	/**
 	 * Whether the main menu needs to be unloaded.<br>
 	 * Used to avoid concurrent modifications
@@ -116,6 +119,7 @@ public class GameManager {
 		
 		mainMenu = new GUIMainMenu();
 		gui = new GUI();
+		
 	}
 	
 	public static GUIListener getGUIListener() {
@@ -299,7 +303,11 @@ public class GameManager {
 		GameWorld.camera.setTarget(GameWorld.player);
 		GameWorld.layerMap.getStoredLayer(LayerStore.PLAYER).add(GameWorld.player);
 		
-		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(new Chest(new Vector2f(182, 6), SpriteDatabase.getChestSpr(), new Collider(SpriteDatabase.getChestSpr()), 10, ItemDatabase.get(2), ItemDatabase.get(0, (short) 10)));
+		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(new Chest(new Vector2f(182, 6), SpriteDatabase.getChestSpr(), new Collider(SpriteDatabase.getChestSpr()), 10, ItemDatabase.get(2), ItemDatabase.get(0, (short) 10), ItemDatabase.get(6), ItemDatabase.get(7, (short)10)));
+		
+		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(new Chest(new Vector2f(267, 24), SpriteDatabase.getGoldenChestSpr(), new Collider(SpriteDatabase.getGoldenChestSpr()), 10, ItemDatabase.get(4, (short) 10), ItemDatabase.get(5, (short) 10) , ItemDatabase.get(10, (short)10)));
+		
+		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(new Chest(new Vector2f(185.5f, -67), SpriteDatabase.getGoldenChestSpr(), new Collider(SpriteDatabase.getGoldenChestSpr()), 10, ItemDatabase.get(8)));
 		
 		Door door = new Door(new Vector2f(171.5f, 7), new EntitySprite(new Atlas("entities/door", 2, 1, Loader.SPRITE_LOADER), new Vector2f(2, 4)));
 		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(door);
@@ -310,10 +318,19 @@ public class GameManager {
 		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(new Entity(new Vector2f(185, 14), new EntitySprite("entities/bed", new Vector2f(4, 2)), new Collider(new EntitySprite("entities/bed", new Vector2f(4, 2)))));
 		GameWorld.layerMap.getStoredLayer(LayerStore.FURNITURE).add(new Entity(new Vector2f(180, 14), new EntitySprite("entities/locker", new Vector2f(4, 2)), new Collider(new EntitySprite("entities/bed", new Vector2f(4, 2)))));
 		
-		for (int i = 0; i < 3; i++) {
-			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f((float)(90+Math.random()+i), (float)(20+Math.random()+i)), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f), (short) 2, 10, 0));
-			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Slime(new Vector2f((float)(145+Math.random()+i), (float)(10+Math.random()+i)), SpriteDatabase.getSlimeSpr() , new Collider(-.5f, -.625f, .5f, .625f), (short) 3, 7, 15));
+		for (int i = 0; i < 2; i++) {
+			//GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f((float)(90+Math.random()+i), 20), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.55f, .5f, 1.55f), (short) 2, 10, 0));
+			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Slime(new Vector2f((float)(90+Math.random()+i*2), 20), SpriteDatabase.getSlimeSpr() , new Collider(-.5f, -.625f, .5f, .625f), (short) 3, 7, 15));
+			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Slime(new Vector2f((float)(117+Math.random()+i*2), 15), SpriteDatabase.getSlimeSpr() , new Collider(-.5f, -.625f, .5f, .625f), (short) 3, 7, 15));
+			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Slime(new Vector2f((float)(145+Math.random()+i*2), 10), SpriteDatabase.getSlimeSpr() , new Collider(-.5f, -.625f, .5f, .625f), (short) 3, 7, 15));
+			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Rat(new Vector2f(110 + i, -66), SpriteDatabase.getRatSpr(), new Collider(-.25f, -.25f, .25f, .25f), (short) 6, 1, 0));
 		}
+		
+		for (int i = 0; i < 5; i++)
+			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Rat(new Vector2f(260+i, -5), SpriteDatabase.getRatSpr(), new Collider(-.25f, -.25f, .25f, .25f), (short) -6, 1, 0));
+		
+		for (int i = 0; i < 2; i++)			
+			GameWorld.layerMap.getStoredLayer(LayerStore.MOBS).add(new Zombie(new Vector2f(180+i, -115), SpriteDatabase.getZombieSpr(), new Collider(-.5f, -1.75f, .5f, 1.75f), (short) 2, 10, LivingEntity.DEF_JUMP_HEIGHT));
 		
 		//Item item = Item.copyDropableItem(ItemDatabase.get(10, (short) 10), 0, 10);
 		//GameWorld.layerMap.getStoredLayer(LayerStore.ITEM).add(item);

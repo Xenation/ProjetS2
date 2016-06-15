@@ -18,14 +18,15 @@ public enum TileType {
 	Log(4, TileVariant.Log),
 	Leaves(5, TileVariant.Leaves, TileVariant.Leaves_corner),
 	Fader(6, TileVariant.Fader, true, TileBehavior.FADING),
-	Spikes(7, TileVariant.Spikes, false, TileBehavior.DAMAGING, TileBehavior.DEPENDANT),
+	Spikes(7, TileVariant.Spikes, false, TileBehavior.DAMAGING),
 	Sand(8, TileVariant.Sand, TileVariant.Sand_corner),
 	Creator(9, TileVariant.Creator, true, TileBehavior.CREATOR),
 	Piston(10, TileVariant.Piston_retracted, true, TileBehavior.PISTON),
 	PistonArm(11, TileVariant.Piston_arm, true, TileBehavior.FIXEDDEPENDANT),
 	Water(12, TileVariant.Water, false, TileBehavior.LIQUID),
 	Planks(13, TileVariant.Planks),
-	Torch(14, TileVariant.Torch, false);
+	Torch(14, TileVariant.Torch, false),
+	Cobweb(15, TileVariant.Cobweb, false , TileBehavior.LIQUID);
 	
 	static {
 		//// Add variants here

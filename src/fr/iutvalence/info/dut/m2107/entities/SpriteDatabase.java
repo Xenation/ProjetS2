@@ -55,6 +55,9 @@ public class SpriteDatabase {
 	private final static EntitySprite chestSpr = new EntitySprite("entities/chest", new Vector2f(2, 2));
 	public static EntitySprite getChestSpr() {return chestSpr;}
 	
+	private final static EntitySprite goldenChestSpr = new EntitySprite("entities/golden_chest", new Vector2f(2, 2));
+	public static EntitySprite getGoldenChestSpr() {return goldenChestSpr;}
+	
 	@SuppressWarnings("unused")
 	private final static EntitySprite slime0Spr = new EntitySprite("entities/slime_0", new Vector2f(1.75f, 1.75f));
 	@SuppressWarnings("unused")
