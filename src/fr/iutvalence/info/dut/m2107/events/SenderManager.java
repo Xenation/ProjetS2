@@ -58,7 +58,7 @@ public class SenderManager {
 		List<Listener> listeners = preciseListeners.get(sender);
 		if (listeners != null) {
 			for (Listener listener : listeners) {
-				Method handlingMeth = ListenersScanner.getPreciseHandler(listener, event.getClass());
+				Method handlingMeth = getHandlingMethod(listener, event.getClass());
 				if (handlingMeth != null) {
 					try {
 						handlingMeth.invoke(listener, event);
@@ -75,6 +75,17 @@ public class SenderManager {
 				}
 			}
 		}
+	}
+	
+	private static Method getHandlingMethod(Listener listener, Class<? extends Event> eventClass) {
+		try {
+			return listener.getClass().getMethod("on"+eventClass.getSimpleName().substring(0, eventClass.getSimpleName().length()-5), eventClass);
+		} catch (NoSuchMethodException e) {
+			// Ignored
+		} catch (SecurityException e) {
+			// Ignored
+		}
+		return null;
 	}
 	
 }

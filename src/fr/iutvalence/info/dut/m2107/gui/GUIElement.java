@@ -3,7 +3,6 @@ package fr.iutvalence.info.dut.m2107.gui;
 import org.lwjgl.util.vector.Vector2f;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
-import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.GUIMouseEnteredEvent;
 import fr.iutvalence.info.dut.m2107.events.GUIMouseLeavedEvent;
 import fr.iutvalence.info.dut.m2107.events.GUIMouseLeftDownEvent;
@@ -66,6 +65,7 @@ public class GUIElement extends Entity implements Sender {
 		this.scale.y = height*DisplayManager.aspectRatio;
 	}
 	
+	@Override
 	public void update(Layer layer) {
 		if (this.layer != null) {
 			((GUILayer)this.layer).update();
@@ -86,7 +86,6 @@ public class GUIElement extends Entity implements Sender {
 			// Hover Start
 			if (!mouseHover) {
 				sendPreciseEvent(new GUIMouseEnteredEvent(this));
-				EventManager.sendEvent(new GUIMouseEnteredEvent(this));
 //				Input.isOverGUI = true;
 				mouseHover = true;
 			}
@@ -122,7 +121,6 @@ public class GUIElement extends Entity implements Sender {
 				rightClicked = false;
 			}
 			sendPreciseEvent(new GUIMouseLeavedEvent(this));
-			EventManager.sendEvent(new GUIMouseLeavedEvent(this));
 			mouseHover = false;
 		}
 	}
@@ -207,6 +205,7 @@ public class GUIElement extends Entity implements Sender {
 		this.layer = new GUILayer();
 	}
 	
+	@Override
 	public GUILayer getLayer() {
 		return (GUILayer) this.layer;
 	}

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
-import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.GUIMouseEnteredEvent;
 import fr.iutvalence.info.dut.m2107.events.GUIMouseLeavedEvent;
 import fr.iutvalence.info.dut.m2107.events.Listener;
@@ -46,7 +45,7 @@ public class GUIListener implements Listener {
 					GUIElement e = (GUIElement) ent;
 					if (e.isMouseHover()) {
 						e.setMouseHover(false);
-						EventManager.sendEvent(new GUIMouseLeavedEvent(e));
+						e.sendPreciseEvent(new GUIMouseLeavedEvent(e));
 					}
 				}
 			}

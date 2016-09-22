@@ -8,13 +8,11 @@ import fr.iutvalence.info.dut.m2107.entities.Collider;
 import fr.iutvalence.info.dut.m2107.entities.Door;
 import fr.iutvalence.info.dut.m2107.entities.Entity;
 import fr.iutvalence.info.dut.m2107.entities.LivingEntity;
-import fr.iutvalence.info.dut.m2107.entities.MovableEntity;
 import fr.iutvalence.info.dut.m2107.entities.Player;
 import fr.iutvalence.info.dut.m2107.entities.Rat;
 import fr.iutvalence.info.dut.m2107.entities.Slime;
 import fr.iutvalence.info.dut.m2107.entities.SpriteDatabase;
 import fr.iutvalence.info.dut.m2107.entities.Zombie;
-import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.gui.GUI;
 import fr.iutvalence.info.dut.m2107.gui.GUIMainMenu;
@@ -107,19 +105,18 @@ public class GameManager {
 		ItemDatabase.create();
 		// Renderer
 		renderer = new Renderer();
-		// GUI Initialisation
-		GUIMaster.init();
+		
 		// GameWorld Initialisation
 		GameWorld.init();
-		// Events Initialisation
-		EventManager.init();
 		
 		guiListener = new GUIListener();
-		EventManager.register(guiListener);
+		// GUI Initialisation
+		GUIMaster.init(guiListener);
+		
+		GameWorld.initPlayer();
 		
 		mainMenu = new GUIMainMenu();
 		gui = new GUI();
-		
 	}
 	
 	public static GUIListener getGUIListener() {
@@ -296,7 +293,7 @@ public class GameManager {
 	 */
 	public static void loadDefaultEntities() {
 		// Start Time Initialisation
-		DisplayManager.setStartTime((float)Sys.getTime());
+		DisplayManager.setStartTime(Sys.getTime());
 		
 		if (GameWorld.player.getLayer() == null)
 			GameWorld.player.init();

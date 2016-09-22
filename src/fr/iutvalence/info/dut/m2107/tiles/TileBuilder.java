@@ -2,7 +2,6 @@ package fr.iutvalence.info.dut.m2107.tiles;
 
 import java.util.ArrayList;
 
-import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.TileDestroyedEvent;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 
@@ -76,37 +75,37 @@ public class TileBuilder {
 		case Sand:
 		case Water:
 		case Planks:
-			EventManager.sendEvent(new TileDestroyedEvent(tile));
+			tile.sendPreciseEvent(new TileDestroyedEvent(tile));
 //			EventManager.unregister(tile);
 			break;
 		case Fader:
 			FadingTile fading = (FadingTile) tile;
-			EventManager.sendEvent(new TileDestroyedEvent(fading));
+			tile.sendPreciseEvent(new TileDestroyedEvent(fading));
 //			EventManager.unregister(t);
 			break;
 		case Spikes:
 			DamagingSupportedTile spike = (DamagingSupportedTile) tile;
-			EventManager.sendEvent(new TileDestroyedEvent(spike));
+			tile.sendPreciseEvent(new TileDestroyedEvent(spike));
 //			EventManager.unregister(damaging);
 			break;
 		case Creator:
 			CreatingTile creating = (CreatingTile) tile;
-			EventManager.sendEvent(new TileDestroyedEvent(creating));
+			tile.sendPreciseEvent(new TileDestroyedEvent(creating));
 //			EventManager.unregister(creating);
 			break;
 		case Piston:
 			PushingTile pushing = (PushingTile) tile;
-			EventManager.sendEvent(new TileDestroyedEvent(pushing));
+			tile.sendPreciseEvent(new TileDestroyedEvent(pushing));
 //			EventManager.unregister(pushing);
 			break;
 		case PistonArm:
 			DependantFixedTile dependant = (DependantFixedTile) tile;
-			EventManager.sendEvent(new TileDestroyedEvent(dependant));
+			tile.sendPreciseEvent(new TileDestroyedEvent(dependant));
 //			EventManager.unregister(dependant);
 			break;
 		case Torch:
 			LightingTile torch = (LightingTile) tile;
-			EventManager.sendEvent(new TileDestroyedEvent(torch));
+			tile.sendPreciseEvent(new TileDestroyedEvent(torch));
 			break;
 		default:
 //			EventManager.unregister(tile);

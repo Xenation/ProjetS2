@@ -70,7 +70,9 @@ public class GameWorld {
 		guiLayerMap.add(new GUILayer());
 		
 		camera = new Camera();
-		
+	}
+	
+	public static void initPlayer() {
 		player = new Player();
 	}
 	

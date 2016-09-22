@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import fr.iutvalence.info.dut.m2107.entities.Entity;
-import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.GUIMouseLeavedEvent;
 import fr.iutvalence.info.dut.m2107.events.Listener;
 import fr.iutvalence.info.dut.m2107.gui.GUIElement;
@@ -25,6 +24,7 @@ public class GUILayer extends Layer implements Listener {
 	 */
 	private Map<Atlas, List<Entity>> layer = new HashMap<Atlas, List<Entity>>();
 	
+	@Override
 	public void update() {
 		for (Atlas atl : layer.keySet()) {
 			for (Entity ent : layer.get(atl)) {
@@ -52,7 +52,7 @@ public class GUILayer extends Layer implements Listener {
 				GUIElement elem = (GUIElement) ent;
 				if (elem.isMouseHover()) {
 					elem.setMouseHover(false);
-					EventManager.sendEvent(new GUIMouseLeavedEvent(elem));
+					elem.sendPreciseEvent(new GUIMouseLeavedEvent(elem));
 				}
 			}
 			if (rList.size() == 0) {

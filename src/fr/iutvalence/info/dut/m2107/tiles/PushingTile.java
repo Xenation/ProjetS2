@@ -1,6 +1,5 @@
 package fr.iutvalence.info.dut.m2107.tiles;
 
-import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.Listener;
 import fr.iutvalence.info.dut.m2107.events.TileActivatedEvent;
 
@@ -21,8 +20,9 @@ public class PushingTile extends TimedTile implements Listener {
 
 	public void setPushing(boolean isPushing) {
 		this.isPushing = isPushing;
-		if (isPushing)
-			EventManager.sendEvent(new TileActivatedEvent(this));
+		if (isPushing) {
+			sendPreciseEvent(new TileActivatedEvent(this));
+		}
 	}
 
 }

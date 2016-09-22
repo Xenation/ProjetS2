@@ -11,11 +11,11 @@ public class GUIShader extends ShaderProgram {
 	/**
 	 * The location of the Vertex Shader file
 	 */
-	private static final String VERTEX_FILE = "src/fr/iutvalence/info/dut/m2107/gui/guiVertex.txt";
+	private static final String VERTEX_FILE = "/fr/iutvalence/info/dut/m2107/gui/guiVertex.txt";
 	/**
 	 * The location of the Fragment Shader file
 	 */
-	private static final String FRAGMENT_FILE = "src/fr/iutvalence/info/dut/m2107/gui/guiFragment.txt";
+	private static final String FRAGMENT_FILE = "/fr/iutvalence/info/dut/m2107/gui/guiFragment.txt";
 	
 	
 	private int location_transformation;

@@ -5,11 +5,12 @@ import java.util.Map;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import fr.iutvalence.info.dut.m2107.events.EventManager;
 import fr.iutvalence.info.dut.m2107.events.GUIMouseLeavedEvent;
+import fr.iutvalence.info.dut.m2107.events.SenderManager;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.FontType;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.GUIText;
 import fr.iutvalence.info.dut.m2107.fontMeshCreator.TextMeshData;
+import fr.iutvalence.info.dut.m2107.listeners.GUIListener;
 import fr.iutvalence.info.dut.m2107.render.Loader;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
 import fr.iutvalence.info.dut.m2107.storage.Layer;
@@ -30,6 +31,8 @@ public class GUIMaster {
 	 * The Loader used to load gui elements
 	 */
 	private static Loader guiLoader;
+	
+	private static GUIListener listener;
 	
 	/**
 	 * The default font to use
@@ -53,9 +56,10 @@ public class GUIMaster {
 	/**
 	 * Initialises the renderer, loader and font
 	 */
-	public static void init() {
+	public static void init(GUIListener listen) {
 		textLoader = Loader.TEXT_LOADER;
 		guiLoader = Loader.GUI_LOADER;
+		listener = listen;
 		font = new FontType("Pixel");
 	}
 	
@@ -107,6 +111,7 @@ public class GUIMaster {
 		Layer lay = GameWorld.guiLayerMap.getLayer(layerIndex);
 		elementLinks.put(elem, lay);
 		lay.add(elem);
+		SenderManager.registerPreciseListener(elem, listener);
 		return elem;
 	}
 	
@@ -130,12 +135,13 @@ public class GUIMaster {
 	public static void deleteElement(GUIElement elem) {
 		guiLoader.unloadVAO(elem.getSprite().getVaoID());
 		elementLinks.get(elem).remove(elem);
+		SenderManager.unregisterPreciseListener(elem, listener);
 	}
 	
 	public static void removeElement(GUIElement elem) {
 		elementLinks.get(elem).remove(elem);
 		if (elem.isMouseHover()) {
-			EventManager.sendEvent(new GUIMouseLeavedEvent(elem));
+			elem.sendPreciseEvent(new GUIMouseLeavedEvent(elem));
 		}
 	}
 	

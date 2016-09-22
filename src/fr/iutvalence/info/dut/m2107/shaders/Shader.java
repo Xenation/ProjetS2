@@ -16,11 +16,11 @@ public class Shader extends ShaderProgram {
 	/**
 	 * The location of the Vertex Shader file
 	 */
-	private static final String VERTEX_FILE = "src/fr/iutvalence/info/dut/m2107/shaders/vertexShader.txt";
+	private static final String VERTEX_FILE = "/fr/iutvalence/info/dut/m2107/shaders/vertexShader.txt";
 	/**
 	 * The location of the Fragment Shader file
 	 */
-	private static final String FRAGMENT_FILE = "src/fr/iutvalence/info/dut/m2107/shaders/fragmentShader.txt";
+	private static final String FRAGMENT_FILE = "/fr/iutvalence/info/dut/m2107/shaders/fragmentShader.txt";
 	
 	/**
 	 * The location of the transformation matrix uniform variable in the Shader

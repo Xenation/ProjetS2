@@ -21,7 +21,6 @@ import fr.iutvalence.info.dut.m2107.tiles.TileBuilder;
 import fr.iutvalence.info.dut.m2107.tiles.TileType;
 import fr.iutvalence.info.dut.m2107.tiles.TileVariant;
 import fr.iutvalence.info.dut.m2107.toolbox.Maths;
-import javafx.scene.control.Skinnable;
 
 /**
  * A Camera with a position and rotation
@@ -401,7 +400,7 @@ public class Camera {
 	 * @return the X coordinate of the mouse in the world
 	 */
 	public float getMouseWorldX() {
-		return this.position.x + (Mouse.getX() - Display.getDisplayMode().getWidth()/2) / ((float) Display.getDisplayMode().getHeight() / Renderer.UNITS_Y);
+		return this.position.x + (Mouse.getX() - Display.getDisplayMode().getWidth()/2) / (Display.getDisplayMode().getHeight() / Renderer.UNITS_Y);
 	}
 	
 	/**
@@ -409,7 +408,7 @@ public class Camera {
 	 * @return the Y coordinate of the mouse in the world
 	 */
 	public float getMouseWorldY() {
-		return this.position.y + (Mouse.getY() - Display.getDisplayMode().getHeight()/2) / ((float) Display.getDisplayMode().getHeight() / Renderer.UNITS_Y);
+		return this.position.y + (Mouse.getY() - Display.getDisplayMode().getHeight()/2) / (Display.getDisplayMode().getHeight() / Renderer.UNITS_Y);
 	}
 	
 	/**

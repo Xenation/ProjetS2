@@ -3,7 +3,7 @@ package fr.iutvalence.info.dut.m2107.tiles;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import fr.iutvalence.info.dut.m2107.events.EventManager;
+import fr.iutvalence.info.dut.m2107.events.Sender;
 import fr.iutvalence.info.dut.m2107.events.TileVariantChangedEvent;
 import fr.iutvalence.info.dut.m2107.storage.Chunk;
 import fr.iutvalence.info.dut.m2107.storage.GameWorld;
@@ -14,7 +14,7 @@ import fr.iutvalence.info.dut.m2107.toolbox.Maths;
  * @author Xenation
  *
  */
-public class Tile {
+public class Tile implements Sender {
 	
 	/**
 	 * The SIZE of a tile
@@ -376,7 +376,7 @@ public class Tile {
 		TileVariant old = this.variant;
 		this.variant = var;
 		chunk.updateVariant(this, old);
-		EventManager.sendEvent(new TileVariantChangedEvent(this, old));
+		sendPreciseEvent(new TileVariantChangedEvent(this, old));
 	}
 	
 	/**
